@@ -1,12 +1,8 @@
 # homebrew-freecad
 
--------------------------------
-
-This is a collection of recipes that make it easy to build FreeCAD and dependencies on OSX.
+This is a collection of recipes that make it easier to build FreeCAD and dependencies on OSX.
 
 # Installation
-
--------------------------------
 
 These steps have been tested on Mavericks 10.9.2 with Xcode 5.1.
 
@@ -14,10 +10,15 @@ These steps have been tested on Mavericks 10.9.2 with Xcode 5.1.
 
 * An up-to-date installation of [homebrew](http://brew.sh)
 * The [homebrew/science](https://github.com/Homebrew/homebrew-science) tap
+* The patched python recipe (2.7.6) from this tap
 
 It's easy to install the homebrew/science tap
 
     brew tap homebrew/science
+
+Next, install the python recipe from this repo
+
+    brew install --build-from-source python
 
 ## Building FreeCAD
 
@@ -30,3 +31,4 @@ For now, build the latest code in the [FreeCAD repo](https://github.com/FreeCAD/
 # Caveats
 
 * I have only tested this recipe with the HEAD revision.  Version 0.13 is untested and not supported in this recipe.
+* The "Robot" Mod is currently disabled since it seems to have some build issues with Clang and Libc++
