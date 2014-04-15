@@ -16,9 +16,13 @@ It's easy to install the homebrew/science tap
 
     brew tap homebrew/science
 
+Clone this repository
+
+    git clone https://github.com/sanelson/homebrew-freecad.git
+
 Next, install the python recipe from this repo
 
-    brew install --build-from-source python
+    brew install --build-from-source homebrew-freecad/python.rb
 
 ## Building FreeCAD
 
@@ -26,7 +30,7 @@ Once the prerequisites are in place you can build FreeCAD.  Only the 'HEAD' revi
 
 For now, build the latest code in the [FreeCAD repo](https://github.com/FreeCAD/FreeCAD_sf_master) with the following command
 
-    brew install --HEAD freecad
+    brew install --HEAD homebrew-freecad/freecad.rb
 
 # Caveats
 
