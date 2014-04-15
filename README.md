@@ -4,10 +4,6 @@ This is a collection of recipes that make it easier to build FreeCAD and depende
 
 # Installation
 
-This is a collection of recipes that make it easy to build FreeCAD and dependencies on OSX.
-
-# Installation
-
 These steps have been tested on Mavericks 10.9.2 with Xcode 5.1.
 
 ## Prerequisites
