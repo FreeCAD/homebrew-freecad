@@ -49,3 +49,4 @@ Here are a few features that I would like to add to the recipe.  I'm open to oth
 * Finish setting up OCE / OpenCascade build options and test.
 * Fix Fortran build issues (may require upstream patching of FreeCAD CMakeLists)
 * Sanitize FreeCAD homebrew formula and documentation to follow homebrew standards
+* Add '--with-debug' option to recipe (disables 'strip' in make and sets CMAKE_BUILD_TYPE=Debug)

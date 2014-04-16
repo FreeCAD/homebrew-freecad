@@ -5,6 +5,9 @@ class Freecad < Formula
   head "git://git.code.sf.net/p/free-cad/code"
   version '0.14-HEAD'
 
+  # Debugging Support
+  option 'with-debug', 'Enable debugging build'
+
   # Should work with OCE (OpenCascade Community Edition) or Open Cascade
   # OCE is the prefered option
   option 'with-opencascade', 'Build with OpenCascade'
@@ -13,7 +16,7 @@ class Freecad < Formula
   else
     depends_on 'oce'
   end
- 
+
   # Build dependencies
   depends_on 'doxygen' => :build
   depends_on 'cmake' => :build
@@ -41,6 +44,10 @@ class Freecad < Formula
   depends_on :x11 => :recommended
 
   def install
+    if build.with? 'debug'
+      ohai "Creating debugging build..."
+    end
+
     # Clang support for main CMakeLists.txt, credit to peterl94 and mrlukeparry
     inreplace "CMakeLists.txt", "if(CMAKE_COMPILER_IS_GNUCXX)\n    include(cMake/ConfigureChecks.cmake)", "if(${CMAKE_CXX_COMPILER_ID} STREQUAL \"GNU\" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL \"Clang\")\n    include(cMake/ConfigureChecks.cmake)"
     inreplace "CMakeLists.txt", "endif(UNIX)\nendif(CMAKE_COMPILER_IS_GNUCXX)", "endif(UNIX)\nendif(${CMAKE_CXX_COMPILER_ID} STREQUAL \"GNU\" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL \"Clang\")"
@@ -77,19 +84,27 @@ class Freecad < Formula
     # Set up needed cmake args
     # TODO: Patch Robot Mod so that it builds cleanly
     args = std_cmake_args + %W[
-        -DPYTHON_LIBRARY=#{python_library}
-        -DPYTHON_INCLUDE_DIR=#{python_include_dir}
-        -DFREECAD_BUILD_ROBOT=OFF
-        -DOCE_DIR=#{oce_dir}
-        -DFREETYPE_INCLUDE_DIRS=#{freetype_include_dirs}
-        -DCOIN3D_INCLUDE_DIR=#{coin3d_include_dir}
-        -DCOIN3D_LIBRARY=#{coin3d_library}
+      -DPYTHON_LIBRARY=#{python_library}
+      -DPYTHON_INCLUDE_DIR=#{python_include_dir}
+      -DFREECAD_BUILD_ROBOT=OFF
+      -DOCE_DIR=#{oce_dir}
+      -DFREETYPE_INCLUDE_DIRS=#{freetype_include_dirs}
+      -DCOIN3D_INCLUDE_DIR=#{coin3d_include_dir}
+      -DCOIN3D_LIBRARY=#{coin3d_library}
     ]
 
-    # Tack on the build directory
-    args << '.'
-
-    system "cmake", *args
-    system "make", "install/strip"
+    if build.with? 'debug'
+      # Create debugging build and tack on the build directory
+      args << '-DCMAKE_BUILD_TYPE=Debug' << '.'
+    
+      system "cmake", *args
+      system "make", "install"
+    else
+      # Create standard build and tack on the build directory
+      args << '.'
+    
+      system "cmake", *args
+      system "make", "install/strip"
+    end
   end
 end
