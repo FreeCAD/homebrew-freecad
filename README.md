@@ -10,7 +10,8 @@ These steps have been tested on Mavericks 10.9.2 with Xcode 5.1.
 
 * An up-to-date installation of [homebrew](http://brew.sh)
 * The [homebrew/science](https://github.com/Homebrew/homebrew-science) tap
-* The patched python recipe (2.7.6) from this tap
+* The patched **python** recipe (2.7.6) from this tap
+* The patched **coin** recipe from this tap
 
 It's easy to install the homebrew/science tap
 
