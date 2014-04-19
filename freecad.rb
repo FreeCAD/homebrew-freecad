@@ -64,10 +64,6 @@ class Freecad < Formula
     inreplace "src/Mod/Fem/Gui/CMakeLists.txt", "link_directories(${OCC_LIBRARY_DIR})", 'link_directories(${OCC_LIBRARY_DIR} /usr/local/opt/gfortran/gfortran/lib)'
     inreplace "src/Mod/Fem/Gui/CMakeLists.txt", "target_link_libraries(FemGui ${FemGui_LIBS})", "target_link_libraries(FemGui ${FemGui_LIBS} gfortran)"
 
-    # Get coin include and lib info
-    coin3d_include_dir = `coin-config --includedir`.chomp
-    coin3d_library = `coin-config --frameworkdir`.chomp + '/Libraries/libCoin.dylib'
-
     # Get freetype include info
     freetype_include_dirs = `freetype-config --prefix`.chomp
 
@@ -89,8 +85,6 @@ class Freecad < Formula
       -DFREECAD_BUILD_ROBOT=OFF
       -DOCE_DIR=#{oce_dir}
       -DFREETYPE_INCLUDE_DIRS=#{freetype_include_dirs}
-      -DCOIN3D_INCLUDE_DIR=#{coin3d_include_dir}
-      -DCOIN3D_LIBRARY=#{coin3d_library}
     ]
 
     if build.with? 'debug'
