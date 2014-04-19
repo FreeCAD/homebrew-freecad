@@ -24,6 +24,10 @@ Next, install the python recipe from this repo
 
     brew install --build-from-source homebrew-freecad/python.rb
 
+Install the modified coin/soqt recipe from this repo
+
+    brew install --without-framework homebrew-freecad/coin.rb
+
 ## Building FreeCAD
 
 Once the prerequisites are in place you can build FreeCAD.  Only the 'HEAD' revision is currently built.  When a 0.14 version tarball is released it will be added as the default build version.
@@ -49,4 +53,4 @@ Here are a few features that I would like to add to the recipe.  I'm open to oth
 * Finish setting up OCE / OpenCascade build options and test.
 * Fix Fortran build issues (may require upstream patching of FreeCAD CMakeLists)
 * Sanitize FreeCAD homebrew formula and documentation to follow homebrew standards
-* Add '--with-debug' option to recipe (disables 'strip' in make and sets CMAKE_BUILD_TYPE=Debug)
+* DONE ~~Add '--with-debug' option to recipe (disables 'strip' in make and sets CMAKE_BUILD_TYPE=Debug)~~
