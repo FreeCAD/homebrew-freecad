@@ -21,8 +21,9 @@ Clone this repository
 
     git clone https://github.com/sanelson/homebrew-freecad.git
 
-Next, install the python recipe from this repo
+Next, install the python recipe and dependencies from this repo (two step install avoids installing all python dependencies from source, which can be rather slow)
 
+    brew install --only-dependencies homebrew-freecad/python.rb
     brew install --build-from-source homebrew-freecad/python.rb
 
 Install the modified coin/soqt recipe from this repo
