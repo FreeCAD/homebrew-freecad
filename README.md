@@ -12,23 +12,24 @@ These steps have been tested on Mavericks 10.9.2 with Xcode 5.1.
 * The [homebrew/science](https://github.com/Homebrew/homebrew-science) tap
 * The patched **python** recipe (2.7.6) from this tap
 * The patched **coin** recipe from this tap
+* The patched **orocos-kdl** recipe from this tap
 
 It's easy to install the homebrew/science tap
 
     brew tap homebrew/science
 
-Clone this repository
+Tap this repository (you can safely ignore warnings about coin and python recipe conflicts)
 
-    git clone https://github.com/sanelson/homebrew-freecad.git
+    brew tap sanelson/freecad
 
-Next, install the python recipe and dependencies from this repo (two step install avoids installing all python dependencies from source, which can be rather slow)
+Next, install the python recipe and dependencies from this tap (two step install avoids installing all python dependencies from source, which can be rather slow)
 
-    brew install --only-dependencies homebrew-freecad/python.rb
-    brew install --build-from-source homebrew-freecad/python.rb
+    brew install --only-dependencies sanelson/freecad/python
+    brew install --build-from-source sanelson/freecad/python
 
-Install the modified coin/soqt recipe from this repo
+Install the modified coin/soqt recipe from this tap
 
-    brew install --without-framework homebrew-freecad/coin.rb
+    brew install --without-framework sanelson/freecad/coin
 
 ## Building FreeCAD
 
@@ -36,7 +37,7 @@ Once the prerequisites are in place you can build FreeCAD.  Only the 'HEAD' revi
 
 For now, build the latest code in the [FreeCAD repo](https://github.com/FreeCAD/FreeCAD_sf_master) with the following command
 
-    brew install --HEAD homebrew-freecad/freecad.rb
+    brew install --HEAD sanelson/freecad/freecad
 
 # Caveats
 
