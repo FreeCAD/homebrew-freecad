@@ -39,9 +39,10 @@ class Freecad < Formula
   depends_on 'python'
 
   # Recommended dependencies
-  # TODO: Make X11 ':optional' instead of ':recommended'
   depends_on 'freetype' => :recommended
-  depends_on :x11 => :recommended
+
+  # Optional Dependencies
+  depends_on :x11 => :optional
 
   def install
     if build.with? 'debug'

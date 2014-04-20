@@ -47,7 +47,7 @@ For now, build the latest code in the [FreeCAD repo](https://github.com/FreeCAD/
 
 Here are a few features that I would like to add to the recipe.  I'm open to other suggestions, please let me know.
 
-* Make X11 support optional
+* DONE ~~Make X11 support optional~~
 * Add support for [spnav](https://pypi.python.org/pypi/spnav/0.9)
 * Add custom branching build support, for example the FreeCAD [Assembly](http://sourceforge.net/p/free-cad/code/ci/jriegel/dev-assembly/~/tree/) branch
 * Remove requirement for custom python build
