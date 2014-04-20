@@ -37,6 +37,7 @@ class Freecad < Formula
   # Currently depends on custom build of python 2.7.6
   # see: http://bugs.python.org/issue10910 
   depends_on 'python'
+  depends_on 'orocos-kdl' # Enables Robot module
 
   # Recommended dependencies
   depends_on 'freetype' => :recommended
@@ -79,11 +80,9 @@ class Freecad < Formula
     oce_dir = "#{Formula['oce'].opt_prefix}/OCE.framework/Versions/#{Formula['oce'].version}/Resources"
 
     # Set up needed cmake args
-    # TODO: Patch Robot Mod so that it builds cleanly
     args = std_cmake_args + %W[
       -DPYTHON_LIBRARY=#{python_library}
       -DPYTHON_INCLUDE_DIR=#{python_include_dir}
-      -DFREECAD_BUILD_ROBOT=OFF
       -DOCE_DIR=#{oce_dir}
       -DFREETYPE_INCLUDE_DIRS=#{freetype_include_dirs}
     ]
