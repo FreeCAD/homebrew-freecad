@@ -8,6 +8,7 @@ class OrocosKdl < Formula
 
   option 'with-check', 'Enable build-time checking'
 
+  depends_on 'eigen'
   depends_on 'cmake' => :build
   depends_on 'cppunit' => :build if build.with? 'check'
 
