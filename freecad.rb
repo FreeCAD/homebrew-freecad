@@ -49,10 +49,6 @@ class Freecad < Formula
       ohai "Creating debugging build..."
     end
 
-    # Clang support for main CMakeLists.txt, credit to peterl94 and mrlukeparry
-    inreplace "CMakeLists.txt", "if(CMAKE_COMPILER_IS_GNUCXX)\n    include(cMake/ConfigureChecks.cmake)", "if(${CMAKE_CXX_COMPILER_ID} STREQUAL \"GNU\" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL \"Clang\")\n    include(cMake/ConfigureChecks.cmake)"
-    inreplace "CMakeLists.txt", "endif(UNIX)\nendif(CMAKE_COMPILER_IS_GNUCXX)", "endif(UNIX)\nendif(${CMAKE_CXX_COMPILER_ID} STREQUAL \"GNU\" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL \"Clang\")"
-
     # Enable Fortran (there is probably a cleaner way to do this)
     inreplace "CMakeLists.txt", "if(CMAKE_COMPILER_IS_GNUCXX)\nENABLE_LANGUAGE(Fortran)\nendif(CMAKE_COMPILER_IS_GNUCXX)", 'ENABLE_LANGUAGE(Fortran)'
     inreplace "src/3rdParty/salomesmesh/CMakeLists.txt", "link_directories(${OCC_LIBRARY_DIR})", 'link_directories(${OCC_LIBRARY_DIR} /usr/local/opt/gfortran/gfortran/lib)'
