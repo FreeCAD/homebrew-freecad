@@ -97,4 +97,13 @@ class Freecad < Formula
       system "make", "install/strip"
     end
   end
+
+  def caveats; <<-EOS.undent
+    After installing FreeCAD you may want to do the following:
+
+    1. Amend your PYTHONPATH environmental variable to point to
+       the FreeCAD directory
+         export PYTHONPATH=#{bin}:$PYTHONPATH
+    EOS
+  end
 end
