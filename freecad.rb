@@ -54,9 +54,6 @@ class Freecad < Formula
     ENV.append 'LDFLAGS', "-L#{File.dirname libgfortran} -lgfortran"
     inreplace "CMakeLists.txt", "if(CMAKE_COMPILER_IS_GNUCXX)\nENABLE_LANGUAGE(Fortran)\nendif(CMAKE_COMPILER_IS_GNUCXX)", 'ENABLE_LANGUAGE(Fortran)'
 
-    # Get freetype include info
-    freetype_include_dirs = `freetype-config --prefix`.chomp
-
     # Brewed python include and lib info
     # TODO: Don't hardcode bin path
     python_prefix = `/usr/local/bin/python-config --prefix`.strip
@@ -73,7 +70,7 @@ class Freecad < Formula
       -DPYTHON_LIBRARY=#{python_library}
       -DPYTHON_INCLUDE_DIR=#{python_include_dir}
       -DOCE_DIR=#{oce_dir}
-      -DFREETYPE_INCLUDE_DIRS=#{freetype_include_dirs}
+      -DFREETYPE_INCLUDE_DIRS=#{Formula.factory('freetype').opt_prefix}/include/freetype2/
     ]
 
     if build.with? 'debug'
