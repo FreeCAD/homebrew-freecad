@@ -49,17 +49,10 @@ class Freecad < Formula
       ohai "Creating debugging build..."
     end
 
-    # Enable Fortran (there is probably a cleaner way to do this)
+    # Enable Fortran
+    libgfortran = `$FC --print-file-name libgfortran.a`.chomp
+    ENV.append 'LDFLAGS', "-L#{File.dirname libgfortran} -lgfortran"
     inreplace "CMakeLists.txt", "if(CMAKE_COMPILER_IS_GNUCXX)\nENABLE_LANGUAGE(Fortran)\nendif(CMAKE_COMPILER_IS_GNUCXX)", 'ENABLE_LANGUAGE(Fortran)'
-    inreplace "src/3rdParty/salomesmesh/CMakeLists.txt", "link_directories(${OCC_LIBRARY_DIR})", 'link_directories(${OCC_LIBRARY_DIR} /usr/local/opt/gfortran/gfortran/lib)'
-    inreplace "src/Mod/Fem/App/CMakeLists.txt", "link_directories(${OCC_LIBRARY_DIR})", 'link_directories(${OCC_LIBRARY_DIR} /usr/local/opt/gfortran/gfortran/lib)'
-    inreplace "src/Mod/Fem/App/CMakeLists.txt", "target_link_libraries(Fem ${Fem_LIBS})", "target_link_libraries(Fem ${Fem_LIBS} gfortran)"
-    inreplace "src/Mod/MeshPart/App/CMakeLists.txt", "link_directories(${OCC_LIBRARY_DIR})", 'link_directories(${OCC_LIBRARY_DIR} /usr/local/opt/gfortran/gfortran/lib)'
-    inreplace "src/Mod/MeshPart/App/CMakeLists.txt", "target_link_libraries(MeshPart ${MeshPart_LIBS})", "target_link_libraries(MeshPart ${MeshPart_LIBS} gfortran)"
-    inreplace "src/Mod/MeshPart/Gui/CMakeLists.txt", "link_directories(${OCC_LIBRARY_DIR})", 'link_directories(${OCC_LIBRARY_DIR} /usr/local/opt/gfortran/gfortran/lib)'
-    inreplace "src/Mod/MeshPart/Gui/CMakeLists.txt", "target_link_libraries(MeshPartGui ${MeshPartGui_LIBS})", "target_link_libraries(MeshPartGui ${MeshPartGui_LIBS} gfortran)"
-    inreplace "src/Mod/Fem/Gui/CMakeLists.txt", "link_directories(${OCC_LIBRARY_DIR})", 'link_directories(${OCC_LIBRARY_DIR} /usr/local/opt/gfortran/gfortran/lib)'
-    inreplace "src/Mod/Fem/Gui/CMakeLists.txt", "target_link_libraries(FemGui ${FemGui_LIBS})", "target_link_libraries(FemGui ${FemGui_LIBS} gfortran)"
 
     # Get freetype include info
     freetype_include_dirs = `freetype-config --prefix`.chomp
