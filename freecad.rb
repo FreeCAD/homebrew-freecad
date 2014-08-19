@@ -52,7 +52,6 @@ class Freecad < Formula
     # Enable Fortran
     libgfortran = `$FC --print-file-name libgfortran.a`.chomp
     ENV.append 'LDFLAGS', "-L#{File.dirname libgfortran} -lgfortran"
-    inreplace "CMakeLists.txt", "if(CMAKE_COMPILER_IS_GNUCXX)\nENABLE_LANGUAGE(Fortran)\nendif(CMAKE_COMPILER_IS_GNUCXX)", 'ENABLE_LANGUAGE(Fortran)'
 
     # Brewed python include and lib info
     # TODO: Don't hardcode bin path
