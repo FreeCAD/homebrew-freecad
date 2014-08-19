@@ -50,7 +50,7 @@ Here are a few features that I would like to add to the recipe.  I'm open to oth
 * DONE ~~Make X11 support optional~~
 * Add support for [spnav](https://pypi.python.org/pypi/spnav/0.9)
 * Add custom branching build support, for example the FreeCAD [Assembly](http://sourceforge.net/p/free-cad/code/ci/jriegel/dev-assembly/~/tree/) branch
-* Remove requirement for custom python build
+* Remove requirement for custom python build (Created PR# [31691](https://github.com/Homebrew/homebrew/pull/31691) to fix the pyport.h macro issue in the main homebrew recipe)
 * Patch [orocos](https://github.com/orocos/orocos_kinematics_dynamics/commit/0c6f37fdbe62f863ea3e27765d99e9ea562149b7) library so the "Robot" module will build cleanly on OSX.
 * Finish setting up OCE / OpenCascade build options and test.
 * DONE ~~Fix Fortran build issues (may require upstream patching of FreeCAD CMakeLists)~~

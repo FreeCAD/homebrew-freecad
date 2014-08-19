@@ -1,56 +1,50 @@
-require 'formula'
+require "formula"
 
 class Python < Formula
-  homepage 'http://www.python.org'
-  head 'http://hg.python.org/cpython', :using => :hg, :branch => '2.7'
-  url 'http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz'
-  sha1 '8328d9f1d55574a287df384f4931a3942f03da64'
-  revision 1
+  homepage "http://www.python.org"
+  head "http://hg.python.org/cpython", :using => :hg, :branch => "2.7"
+  url "http://www.python.org/ftp/python/2.7.8/Python-2.7.8.tgz"
+  sha1 "511960dd78451a06c9df76509635aeec05b2051a"
 
   bottle do
-    sha1 "bcf43a9f8f5f587a86bdc680dd735a853fa3a8a5" => :mavericks
-    sha1 "781310a1d8d0d6283c2c6c1a88674aad3ada6064" => :mountain_lion
-    sha1 "3a79b8d747f66fb000197cd9b9e0a4596f814d7e" => :lion
+    sha1 "11c4ad33f1a0ec2a9dee025f246e67a0783e8bdb" => :mavericks
+    sha1 "522a99761335205b29f348dd9861dc6630a29a35" => :mountain_lion
+    sha1 "07ba7ee28c2d6a6d8fcc613b27574090f0e2f27e" => :lion
   end
 
   option :universal
-  option 'quicktest', "Run `make quicktest` after the build (for devs; may fail)"
-  option 'with-brewed-tk', "Use Homebrew's Tk (has optional Cocoa and threads support)"
-  option 'with-poll', "Enable select.poll, which is not fully implemented on OS X (http://bugs.python.org/issue5154)"
-  option 'with-dtrace', "Experimental DTrace support (http://bugs.python.org/issue13405)"
+  option "quicktest", "Run `make quicktest` after the build (for devs; may fail)"
+  option "with-brewed-tk", "Use Homebrew's Tk (has optional Cocoa and threads support)"
+  option "with-poll", "Enable select.poll, which is not fully implemented on OS X (http://bugs.python.org/issue5154)"
+  option "with-dtrace", "Experimental DTrace support (http://bugs.python.org/issue13405)"
 
-  depends_on 'pkg-config' => :build
-  depends_on 'readline' => :recommended
-  depends_on 'sqlite' => :recommended
-  depends_on 'gdbm' => :recommended
-  depends_on 'openssl'
-  depends_on 'homebrew/dupes/tcl-tk' if build.with? 'brewed-tk'
-  depends_on :x11 if build.with? 'brewed-tk' and Tab.for_name('tcl-tk').used_options.include?('with-x11')
+  depends_on "pkg-config" => :build
+  depends_on "readline" => :recommended
+  depends_on "sqlite" => :recommended
+  depends_on "gdbm" => :recommended
+  depends_on "openssl"
+  depends_on "homebrew/dupes/tcl-tk" if build.with? "brewed-tk"
+  depends_on :x11 if build.with? "brewed-tk" and Tab.for_name("tcl-tk").with? "x11"
 
-  skip_clean 'bin/pip', 'bin/pip-2.7'
-  skip_clean 'bin/easy_install', 'bin/easy_install-2.7'
+  skip_clean "bin/pip", "bin/pip-2.7"
+  skip_clean "bin/easy_install", "bin/easy_install-2.7"
 
-  resource 'setuptools' do
-    url 'https://pypi.python.org/packages/source/s/setuptools/setuptools-3.4.1.tar.gz'
-    sha1 '1a7bb4736d915ec140b4225245b585c14b39b8dd'
+  resource "setuptools" do
+    url "https://pypi.python.org/packages/source/s/setuptools/setuptools-5.4.2.tar.gz"
+    sha1 "a681ba56c30c0eb66528215842d3e3fcb5157614"
   end
 
-  resource 'pip' do
-    url 'https://pypi.python.org/packages/source/p/pip/pip-1.5.4.tar.gz'
-    sha1 '35ccb7430356186cf253615b70f8ee580610f734'
+  resource "pip" do
+    url "https://pypi.python.org/packages/source/p/pip/pip-1.5.6.tar.gz"
+    sha1 "e6cd9e6f2fd8d28c9976313632ef8aa8ac31249e"
   end
 
-  # Patch to address pyport.h macro issue
+  # Patch for pyport.h macro issue
   # http://bugs.python.org/issue10910
+  # https://trac.macports.org/ticket/44288
   patch do
     url "http://bugs.python.org/file30805/issue10910-workaround.txt"
     sha1 "9926640cb7c8e273e4b451469a2b13d4b9df5ba3"
-  end
-
-  # Backported security fix for CVE-2014-1912: http://bugs.python.org/issue20246
-  patch :p0 do
-    url "https://gist.githubusercontent.com/leepa/9351856/raw/7f9130077fd760fcf9a25f50b69d9c77b155fbc5/CVE-2014-1912.patch"
-    sha1 "db25abc381f62e9f501ad56aaa2537e48e1b0889"
   end
 
   # Patch to disable the search for Tk.framework, since Homebrew's Tk is
@@ -70,13 +64,21 @@ class Python < Formula
     HOMEBREW_PREFIX/"lib/python2.7/site-packages"
   end
 
+  # setuptools remembers the build flags python is built with and uses them to
+  # build packages later. Xcode-only systems need different flags.
+  def pour_bottle?
+    MacOS::CLT.installed?
+  end
+
   def install
-    opoo 'The given option --with-poll enables a somewhat broken poll() on OS X (http://bugs.python.org/issue5154).' if build.with? 'poll'
+    if build.with? "poll"
+      opoo "The given option --with-poll enables a somewhat broken poll() on OS X (http://bugs.python.org/issue5154)."
+    end
 
     # Unset these so that installing pip and setuptools puts them where we want
     # and not into some other Python the user has installed.
-    ENV['PYTHONHOME'] = nil
-    ENV['PYTHONPATH'] = nil
+    ENV["PYTHONHOME"] = nil
+    ENV["PYTHONPATH"] = nil
 
     args = %W[
              --prefix=#{prefix}
@@ -86,8 +88,8 @@ class Python < Formula
              --enable-framework=#{frameworks}
            ]
 
-    args << '--without-gcc' if ENV.compiler == :clang
-    args << '--with-dtrace' if build.with? 'dtrace'
+    args << "--without-gcc" if ENV.compiler == :clang
+    args << "--with-dtrace" if build.with? "dtrace"
 
     if superenv?
       distutils_fix_superenv(args)
@@ -100,8 +102,11 @@ class Python < Formula
       args << "--enable-universalsdk=/" << "--with-universal-archs=intel"
     end
 
-    # Allow sqlite3 module to load extensions: http://docs.python.org/library/sqlite3.html#f1
-    inreplace("setup.py", 'sqlite_defines.append(("SQLITE_OMIT_LOAD_EXTENSION", "1"))', '') if build.with? 'sqlite'
+    # Allow sqlite3 module to load extensions:
+    # http://docs.python.org/library/sqlite3.html#f1
+    if build.with? "sqlite"
+      inreplace("setup.py", 'sqlite_defines.append(("SQLITE_OMIT_LOAD_EXTENSION", "1"))', '')
+    end
 
     # Allow python modules to use ctypes.find_library to find homebrew's stuff
     # even if homebrew is not a /usr/local/lib. Try this with:
@@ -111,22 +116,25 @@ class Python < Formula
       f.gsub! 'DEFAULT_FRAMEWORK_FALLBACK = [', "DEFAULT_FRAMEWORK_FALLBACK = [ '#{HOMEBREW_PREFIX}/Frameworks',"
     end
 
-    if build.with? 'brewed-tk'
+    if build.with? "brewed-tk"
       tcl_tk = Formula["tcl-tk"].opt_prefix
-      ENV.append 'CPPFLAGS', "-I#{tcl_tk}/include"
-      ENV.append 'LDFLAGS', "-L#{tcl_tk}/lib"
+      ENV.append "CPPFLAGS", "-I#{tcl_tk}/include"
+      ENV.append "LDFLAGS", "-L#{tcl_tk}/lib"
     end
 
     system "./configure", *args
 
-    # HAVE_POLL is "broken" on OS X
-    # See: http://trac.macports.org/ticket/18376 and http://bugs.python.org/issue5154
-    inreplace 'pyconfig.h', /.*?(HAVE_POLL[_A-Z]*).*/, '#undef \1' if build.without? "poll"
+    # HAVE_POLL is "broken" on OS X. See:
+    # http://trac.macports.org/ticket/18376
+    # http://bugs.python.org/issue5154
+    if build.without? "poll"
+      inreplace "pyconfig.h", /.*?(HAVE_POLL[_A-Z]*).*/, '#undef \1'
+    end
 
     system "make"
 
-    ENV.deparallelize # Installs must be serialized
-    # Tell Python not to install into /Applications (default for framework builds)
+    ENV.deparallelize # installs must be serialized
+    # Tell Python not to install into /Applications
     system "make", "install", "PYTHONAPPSDIR=#{prefix}"
     # Demos and Tools
     system "make", "frameworkinstallextras", "PYTHONAPPSDIR=#{share}/python"
@@ -155,6 +163,7 @@ class Python < Formula
     site_packages.mkpath
 
     # Symlink the prefix site-packages into the cellar.
+    site_packages_cellar.unlink if site_packages_cellar.exist?
     site_packages_cellar.parent.install_symlink site_packages
 
     # Write our sitecustomize.py
@@ -168,11 +177,13 @@ class Python < Formula
     rm_rf Dir["#{site_packages}/setuptools*"]
     rm_rf Dir["#{site_packages}/distribute*"]
 
-    setup_args = [ "-s", "setup.py", "--no-user-cfg", "install", "--force", "--verbose",
-                   "--install-scripts=#{bin}", "--install-lib=#{site_packages}" ]
+    setup_args = ["-s", "setup.py", "--no-user-cfg", "install", "--force",
+                  "--verbose",
+                  "--install-scripts=#{bin}",
+                  "--install-lib=#{site_packages}"]
 
-    (libexec/'setuptools').cd { system "#{bin}/python", *setup_args }
-    (libexec/'pip').cd { system "#{bin}/python", *setup_args }
+    (libexec/"setuptools").cd { system "#{bin}/python", *setup_args }
+    (libexec/"pip").cd { system "#{bin}/python", *setup_args }
 
     # When building from source, these symlinks will not exist, since
     # post_install happens after linking.
@@ -182,8 +193,7 @@ class Python < Formula
 
     # And now we write the distutils.cfg
     cfg = lib_cellar/"distutils/distutils.cfg"
-    cfg.delete if cfg.exist?
-    cfg.write <<-EOF.undent
+    cfg.atomic_write <<-EOF.undent
       [global]
       verbose=1
       [install]
@@ -198,7 +208,7 @@ class Python < Formula
     sqlite = Formula["sqlite"].opt_prefix
     cflags = "CFLAGS=-I#{HOMEBREW_PREFIX}/include -I#{sqlite}/include"
     ldflags = "LDFLAGS=-L#{HOMEBREW_PREFIX}/lib -L#{sqlite}/lib"
-    if build.with? 'brewed-tk'
+    if build.with? "brewed-tk"
       tcl_tk = Formula["tcl-tk"].opt_prefix
       cflags += " -I#{tcl_tk}/include"
       ldflags += " -L#{tcl_tk}/lib"
@@ -211,7 +221,7 @@ class Python < Formula
       # Same zlib.h-not-found-bug as in env :std (see below)
       args << "CPPFLAGS=-I#{MacOS.sdk_path}/usr/include"
       # For the Xlib.h, Python needs this header dir with the system Tk
-      if build.without? 'brewed-tk'
+      if build.without? "brewed-tk"
         cflags += " -I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
       end
     end
@@ -231,7 +241,7 @@ class Python < Formula
     # the needed includes with "-I" here to avoid this err:
     #     building dbm using ndbm
     #     error: /usr/include/zlib.h: No such file or directory
-    ENV.append 'CPPFLAGS', "-I#{MacOS.sdk_path}/usr/include" unless MacOS::CLT.installed?
+    ENV.append "CPPFLAGS", "-I#{MacOS.sdk_path}/usr/include" unless MacOS::CLT.installed?
 
     # Don't use optimizations other than "-Os" here, because Python's distutils
     # remembers (hint: `python-config --cflags`) and reuses them for C
@@ -244,9 +254,8 @@ class Python < Formula
     ENV.enable_warnings
     if ENV.compiler == :clang
       # http://docs.python.org/devguide/setup.html#id8 suggests to disable some Warnings.
-      ENV.append_to_cflags '-Wno-unused-value'
-      ENV.append_to_cflags '-Wno-empty-body'
-      ENV.append_to_cflags '-Qunused-arguments'
+      ENV.append_to_cflags "-Wno-unused-value"
+      ENV.append_to_cflags "-Wno-empty-body"
     end
   end
 
