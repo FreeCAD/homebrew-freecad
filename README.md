@@ -4,13 +4,13 @@ This is a collection of recipes that make it easier to build FreeCAD and depende
 
 # Installation
 
-These steps have been tested on Mavericks 10.9.2 with Xcode 5.1.
+These steps have been tested on Mavericks 10.9.2 through 10.9.4 with Xcode 5.1.
 
 ## Prerequisites
 
 * An up-to-date installation of [homebrew](http://brew.sh)
 * The [homebrew/science](https://github.com/Homebrew/homebrew-science) tap
-* The patched **python** recipe (2.7.6) from this tap
+* The patched **python** recipe (2.7.8) from this tap
 * The patched **coin** recipe from this tap
 
 It's easy to install the homebrew/science tap
