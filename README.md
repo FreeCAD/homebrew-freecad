@@ -32,15 +32,16 @@ Install the modified coin/soqt recipe from this tap
 
 ## Building FreeCAD
 
-Once the prerequisites are in place you can build FreeCAD.  Only the 'HEAD' revision is currently built.  When a 0.14 version tarball is released it will be added as the default build version.
+Once the prerequisites are in place you can build FreeCAD.  The current STABLE version is v0.14.  To build this version, run the following command
 
-For now, build the latest code in the [FreeCAD repo](https://github.com/FreeCAD/FreeCAD_sf_master) with the following command
+    brew install sanelson/freecad/freecad
+
+If instead you'd like to build the very latest bleeding edge version (HEAD) from the [FreeCAD repo](https://github.com/FreeCAD/FreeCAD_sf_master), use the following command
 
     brew install --HEAD sanelson/freecad/freecad
 
 # Caveats
 
-* I have only tested this recipe with the HEAD revision.  Version 0.13 is untested and not supported in this recipe.
 * The "Robot" Mod is currently disabled since it seems to have some build issues with Clang and Libc++
 
 # ToDo
@@ -54,5 +55,5 @@ Here are a few features that I would like to add to the recipe.  I'm open to oth
 * Patch [orocos](https://github.com/orocos/orocos_kinematics_dynamics/commit/0c6f37fdbe62f863ea3e27765d99e9ea562149b7) library so the "Robot" module will build cleanly on OSX.
 * Finish setting up OCE / OpenCascade build options and test.
 * DONE ~~Fix Fortran build issues (may require upstream patching of FreeCAD CMakeLists)~~
-* Sanitize FreeCAD homebrew formula and documentation to follow homebrew standards
+* DONE ~~Sanitize FreeCAD homebrew formula and documentation to follow homebrew standards~~
 * DONE ~~Add '--with-debug' option to recipe (disables 'strip' in make and sets CMAKE_BUILD_TYPE=Debug)~~
