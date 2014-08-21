@@ -10,7 +10,6 @@ These steps have been tested on Mavericks 10.9.2 through 10.9.4 with Xcode 5.1.
 
 * An up-to-date installation of [homebrew](http://brew.sh)
 * The [homebrew/science](https://github.com/Homebrew/homebrew-science) tap
-* The patched **python** recipe (2.7.8) from this tap
 * The patched **coin** recipe from this tap
 
 It's easy to install the homebrew/science tap
@@ -20,11 +19,6 @@ It's easy to install the homebrew/science tap
 Tap this repository (you can safely ignore warnings about coin and python recipe conflicts)
 
     brew tap sanelson/freecad
-
-Next, install the python recipe and dependencies from this tap (two step install avoids installing all python dependencies from source, which can be rather slow)
-
-    brew install --only-dependencies sanelson/freecad/python
-    brew install --build-from-source sanelson/freecad/python
 
 Install the modified coin/soqt recipe from this tap
 
@@ -43,6 +37,7 @@ If instead you'd like to build the very latest bleeding edge version (HEAD) from
 # Caveats
 
 * The "Robot" Mod is currently disabled since it seems to have some build issues with Clang and Libc++
+* You will need to run the very latest python 2.7.8+ from homebrew, earlier versions had a bug which causes compilation to fail. See ToDo below for details
 
 # ToDo
 
@@ -51,7 +46,7 @@ Here are a few features that I would like to add to the recipe.  I'm open to oth
 * DONE ~~Make X11 support optional~~
 * Add support for [spnav](https://pypi.python.org/pypi/spnav/0.9)
 * Add custom branching build support, for example the FreeCAD [Assembly](http://sourceforge.net/p/free-cad/code/ci/jriegel/dev-assembly/~/tree/) branch
-* Remove requirement for custom python build (Created PR# [31691](https://github.com/Homebrew/homebrew/pull/31691) to fix the pyport.h macro issue in the main homebrew recipe)
+* DONE ~~Remove requirement for custom python build (Created PR# [31691](https://github.com/Homebrew/homebrew/pull/31691) to fix the pyport.h macro issue in the main homebrew recipe)~~
 * Patch [orocos](https://github.com/orocos/orocos_kinematics_dynamics/commit/0c6f37fdbe62f863ea3e27765d99e9ea562149b7) library so the "Robot" module will build cleanly on OSX.
 * Finish setting up OCE / OpenCascade build options and test.
 * DONE ~~Fix Fortran build issues (may require upstream patching of FreeCAD CMakeLists)~~

@@ -5,7 +5,6 @@ class Freecad < Formula
   head "git://git.code.sf.net/p/free-cad/code"
   url "http://downloads.sourceforge.net/project/free-cad/FreeCAD%20Source/freecad-0.14.3702.tar.gz"
   sha1 "048f2aa9cabc71fa4e2b6e10c9a61d8e728faa36"
-#  version '0.14'
 
   # Debugging Support
   option 'with-debug', 'Enable debugging build'
@@ -35,9 +34,6 @@ class Freecad < Formula
   depends_on 'pyqt'
   depends_on 'shiboken'
   depends_on 'pyside'
-  #depends_on :python
-  # Currently depends on custom build of python 2.7.6
-  # see: http://bugs.python.org/issue10910 
   depends_on 'python'
 
   # Recommended dependencies
