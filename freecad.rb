@@ -61,9 +61,17 @@ class Freecad < Formula
     # TODO add opencascade support/detection
     oce_dir = "#{Formula['oce'].opt_prefix}/OCE.framework/Versions/#{Formula['oce'].version}/Resources"
 
+    # Handle recent CMAKE build prefix changes
+    cmake_build_robot_arg = ''
+    if build.head?
+      cmake_build_robot_arg = '-DBUILD_ROBOT=OFF'
+    else
+      cmake_build_robot_arg = '-DFREECAD_BUILD_ROBOT=OFF'
+    end
+
     # Set up needed cmake args
     args = std_cmake_args + %W[
-      -DFREECAD_BUILD_ROBOT=OFF
+      #{cmake_build_robot_arg}
       -DPYTHON_LIBRARY=#{python_library}
       -DPYTHON_INCLUDE_DIR=#{python_include_dir}
       -DOCE_DIR=#{oce_dir}
