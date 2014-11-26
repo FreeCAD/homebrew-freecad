@@ -34,6 +34,7 @@ class Freecad < Formula
   depends_on 'pyqt'
   depends_on 'shiboken'
   depends_on 'pyside'
+  depends_on 'pyside-tools'
   depends_on 'python'
 
   # Recommended dependencies
@@ -68,6 +69,10 @@ class Freecad < Formula
     else
       cmake_build_robot_arg = '-DFREECAD_BUILD_ROBOT=OFF'
     end
+
+    # Fix FindPySideTools.cmake script issues
+    inreplace "cMake/FindPySideTools.cmake", "FIND_PROGRAM( PYSIDEUIC4BINARY PYSIDEUIC4", 'FIND_PROGRAM( PYSIDEUIC4BINARY pyside-uic'
+    inreplace "cMake/FindPySideTools.cmake", "FIND_PROGRAM(PYSIDERCC4BINARY PYSIDERCC4", 'FIND_PROGRAM(PYSIDERCC4BINARY pyside-rcc'
 
     # Set up needed cmake args
     args = std_cmake_args + %W[
