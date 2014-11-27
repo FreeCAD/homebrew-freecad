@@ -12,10 +12,16 @@ class Freecad < Formula
   # Should work with OCE (OpenCascade Community Edition) or Open Cascade
   # OCE is the prefered option
   option 'with-opencascade', 'Build with OpenCascade'
+  
+  occ_options = []
+  if MacOS.version < 10.7
+    occ_options = ['--without-tbb']
+  end
+  
   if build.with? 'opencascade'
-    depends_on 'opencascade'
+    depends_on 'opencascade' => occ_options
   else
-    depends_on 'oce'
+    depends_on 'oce' => occ_options
   end
 
   # Build dependencies
