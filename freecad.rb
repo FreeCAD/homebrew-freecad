@@ -77,8 +77,10 @@ class Freecad < Formula
     end
 
     # Fix FindPySideTools.cmake script issues
-    inreplace "cMake/FindPySideTools.cmake", "FIND_PROGRAM( PYSIDEUIC4BINARY PYSIDEUIC4", 'FIND_PROGRAM( PYSIDEUIC4BINARY pyside-uic'
-    inreplace "cMake/FindPySideTools.cmake", "FIND_PROGRAM(PYSIDERCC4BINARY PYSIDERCC4", 'FIND_PROGRAM(PYSIDERCC4BINARY pyside-rcc'
+    if build.head?
+      inreplace "cMake/FindPySideTools.cmake", "FIND_PROGRAM( PYSIDEUIC4BINARY PYSIDEUIC4", 'FIND_PROGRAM( PYSIDEUIC4BINARY pyside-uic'
+      inreplace "cMake/FindPySideTools.cmake", "FIND_PROGRAM(PYSIDERCC4BINARY PYSIDERCC4", 'FIND_PROGRAM(PYSIDERCC4BINARY pyside-rcc'
+    end
 
     # Set up needed cmake args
     args = std_cmake_args + %W[
