@@ -27,7 +27,6 @@ class Freecad < Formula
   # Build dependencies
   depends_on 'doxygen' => :build
   depends_on 'cmake' => :build
-  depends_on 'swig' => :build
   depends_on :fortran => :build
 
   # Required dependencies
@@ -45,6 +44,7 @@ class Freecad < Formula
 
   # Recommended dependencies
   depends_on 'freetype' => :recommended
+  depends_on 'pivy' => [:recommended, '--HEAD']
 
   # Optional Dependencies
   depends_on :x11 => :optional
@@ -85,6 +85,7 @@ class Freecad < Formula
     # Set up needed cmake args
     args = std_cmake_args + %W[
       #{cmake_build_robot_arg}
+      -DFREECAD_USE_EXTERNAL_PIVY=ON
       -DPYTHON_LIBRARY=#{python_library}
       -DPYTHON_INCLUDE_DIR=#{python_include_dir}
       -DOCE_DIR=#{oce_dir}
