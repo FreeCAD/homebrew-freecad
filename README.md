@@ -4,33 +4,39 @@ This is a collection of recipes that make it easier to build FreeCAD and depende
 
 # Installation
 
-These steps have been tested on Mavericks 10.9.2 through 10.9.4 with Xcode 5.1.
+These steps have been tested on Mavericks 10.9.2 through 10.10.1 with Xcode 5.1.
 
-## Prerequisites
+## Common Prerequisites
 
 * An up-to-date installation of [homebrew](http://brew.sh)
 * The [homebrew/science](https://github.com/Homebrew/homebrew-science) tap
-* The patched **coin** recipe from this tap
+* The patched **coin** recipe from this tap (see install instructions for release version of FreeCAD vs HEAD version)
 
 It's easy to install the homebrew/science tap
 
     brew tap homebrew/science
 
-Tap this repository (you can safely ignore warnings about coin and python recipe conflicts)
+Tap this repository (you can safely ignore warnings about coin recipe conflicts)
 
     brew tap sanelson/freecad
 
-Install the modified coin/soqt recipe from this tap
+## Building Current Release Version of FreeCAD
+
+For the v0.14 release of FreeCAD you will need to build Coin without frameworks enabled but *with* soqt included.  Install the modified coin/soqt recipe from this tap
 
     brew install --without-framework sanelson/freecad/coin
-
-## Building FreeCAD
 
 Once the prerequisites are in place you can build FreeCAD.  The current STABLE version is v0.14.  To build this version, run the following command
 
     brew install sanelson/freecad/freecad
 
-If instead you'd like to build the very latest bleeding edge version (HEAD) from the [FreeCAD repo](https://github.com/FreeCAD/FreeCAD_sf_master), use the following command
+## Building HEAD Version of FreeCAD
+
+If instead you'd like to build the very latest bleeding edge version (HEAD) from the [FreeCAD repo](https://github.com/FreeCAD/FreeCAD_sf_master), first install the coin dependency using the following command
+
+    brew install --without-framework --without-soqt sanelson/freecad/coin
+
+Then install FreeCAD
 
     brew install --HEAD sanelson/freecad/freecad
 
