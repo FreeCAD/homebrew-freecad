@@ -12,6 +12,9 @@ class Freecad < Formula
   # Should work with OCE (OpenCascade Community Edition) or Open Cascade
   # OCE is the prefered option
   option 'with-opencascade', 'Build with OpenCascade'
+
+  # Build without external pivy (use old bundled version)
+  option 'without-external-pivy', 'Build without external Pivy (use old bundled version)'
   
   occ_options = []
   if MacOS.version < 10.7
@@ -44,7 +47,12 @@ class Freecad < Formula
 
   # Recommended dependencies
   depends_on 'freetype' => :recommended
-  depends_on 'pivy' => [:recommended, '--HEAD']
+
+  # v0.14 vs HEAD fixes
+  # TODO: When v0.15 is released, these fixes will be removed
+  unless build.without? 'external-pivy' or not build.head?
+    depends_on 'pivy' => [:recommended, '--HEAD']
+  end
 
   # Optional Dependencies
   depends_on :x11 => :optional
@@ -52,6 +60,14 @@ class Freecad < Formula
   def install
     if build.with? 'debug'
       ohai "Creating debugging build..."
+    end
+
+    # v0.14 vs HEAD fixes
+    # TODO: When v0.15 is released, these fixes will be removed
+    use_external_pivy='ON'
+    if build.without? 'external-pivy' or not build.head?
+      ohai "Building without external Pivy"
+      use_external_pivy='OFF'
     end
 
     # Enable Fortran
@@ -68,6 +84,8 @@ class Freecad < Formula
     # TODO add opencascade support/detection
     oce_dir = "#{Formula['oce'].opt_prefix}/OCE.framework/Versions/#{Formula['oce'].version}/Resources"
 
+    # v0.14 vs HEAD fixes
+    # TODO: When v0.15 is released, these fixes will be removed
     # Handle recent CMAKE build prefix changes
     cmake_build_robot_arg = ''
     if build.head?
@@ -85,7 +103,7 @@ class Freecad < Formula
     # Set up needed cmake args
     args = std_cmake_args + %W[
       #{cmake_build_robot_arg}
-      -DFREECAD_USE_EXTERNAL_PIVY=ON
+      -DFREECAD_USE_EXTERNAL_PIVY=#{use_external_pivy}
       -DPYTHON_LIBRARY=#{python_library}
       -DPYTHON_INCLUDE_DIR=#{python_include_dir}
       -DOCE_DIR=#{oce_dir}
