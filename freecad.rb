@@ -3,8 +3,8 @@ require "formula"
 class Freecad < Formula
   homepage "http://sourceforge.net/projects/free-cad/"
   head "git://git.code.sf.net/p/free-cad/code"
-  url "http://downloads.sourceforge.net/project/free-cad/FreeCAD%20Source/freecad-0.14.3702.tar.gz"
-  sha1 "048f2aa9cabc71fa4e2b6e10c9a61d8e728faa36"
+  url "http://downloads.sourceforge.net/project/free-cad/FreeCAD%20Source/freecad_0.15.4671.tar.gz"
+  sha256 "8dda8f355cb59866a55c9c6096f39a3ebc5347892284db4c305352cc9be03bbc"
 
   # Debugging Support
   option 'with-debug', 'Enable debugging build'
@@ -37,7 +37,7 @@ class Freecad < Formula
   depends_on 'sip'
   depends_on 'xerces-c'
   depends_on 'eigen'
-  depends_on 'coin'
+  depends_on 'coin' => ['--without-framework', '--without-soqt']
   depends_on 'qt'
   depends_on 'pyqt'
   depends_on 'shiboken'
@@ -48,9 +48,8 @@ class Freecad < Formula
   # Recommended dependencies
   depends_on 'freetype' => :recommended
 
-  # v0.14 vs HEAD fixes
-  # TODO: When v0.15 is released, these fixes will be removed
-  unless build.without? 'external-pivy' or not build.head?
+  # Allow building with internal pivy
+  unless build.without? 'external-pivy'
     depends_on 'pivy' => [:recommended, '--HEAD']
   end
 
@@ -62,10 +61,9 @@ class Freecad < Formula
       ohai "Creating debugging build..."
     end
 
-    # v0.14 vs HEAD fixes
-    # TODO: When v0.15 is released, these fixes will be removed
+    # Allow building with internal pivy
     use_external_pivy='ON'
-    if build.without? 'external-pivy' or not build.head?
+    if build.without? 'external-pivy'
       ohai "Building without external Pivy"
       use_external_pivy='OFF'
     end
@@ -84,16 +82,6 @@ class Freecad < Formula
     # TODO add opencascade support/detection
     oce_dir = "#{Formula['oce'].opt_prefix}/OCE.framework/Versions/#{Formula['oce'].version}/Resources"
 
-    # v0.14 vs HEAD fixes
-    # TODO: When v0.15 is released, these fixes will be removed
-    # Handle recent CMAKE build prefix changes
-    cmake_build_robot_arg = ''
-    if build.head?
-      cmake_build_robot_arg = '-DBUILD_ROBOT=OFF'
-    else
-      cmake_build_robot_arg = '-DFREECAD_BUILD_ROBOT=OFF'
-    end
-
     # Fix FindPySideTools.cmake script issues
     if build.head?
       inreplace "cMake/FindPySideTools.cmake", "FIND_PROGRAM( PYSIDEUIC4BINARY PYSIDEUIC4", 'FIND_PROGRAM( PYSIDEUIC4BINARY pyside-uic'
@@ -102,7 +90,7 @@ class Freecad < Formula
 
     # Set up needed cmake args
     args = std_cmake_args + %W[
-      #{cmake_build_robot_arg}
+      -DBUILD_ROBOT=OFF
       -DFREECAD_USE_EXTERNAL_PIVY=#{use_external_pivy}
       -DPYTHON_LIBRARY=#{python_library}
       -DPYTHON_INCLUDE_DIR=#{python_include_dir}
