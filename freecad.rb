@@ -82,12 +82,6 @@ class Freecad < Formula
     # TODO add opencascade support/detection
     oce_dir = "#{Formula['oce'].opt_prefix}/OCE.framework/Versions/#{Formula['oce'].version}/Resources"
 
-    # Fix FindPySideTools.cmake script issues
-    if build.head?
-      inreplace "cMake/FindPySideTools.cmake", "FIND_PROGRAM( PYSIDEUIC4BINARY PYSIDEUIC4", 'FIND_PROGRAM( PYSIDEUIC4BINARY pyside-uic'
-      inreplace "cMake/FindPySideTools.cmake", "FIND_PROGRAM(PYSIDERCC4BINARY PYSIDERCC4", 'FIND_PROGRAM(PYSIDERCC4BINARY pyside-rcc'
-    end
-
     # Set up needed cmake args
     args = std_cmake_args + %W[
       -DBUILD_ROBOT=OFF
