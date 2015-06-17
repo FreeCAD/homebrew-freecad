@@ -20,21 +20,17 @@ Tap this repository (you can safely ignore warnings about coin recipe conflicts)
 
     brew tap sanelson/freecad
 
+Install the coin dependency using the following command
+
+    brew install --without-framework --without-soqt sanelson/freecad/coin
+
 ## Building Current Release Version of FreeCAD
-
-For the v0.15 release of FreeCAD you will need to build Coin without frameworks enabled but *with* soqt included.  Install the modified coin/soqt recipe from this tap
-
-    brew install --without-framework sanelson/freecad/coin
 
 Once the prerequisites are in place you can build FreeCAD.  The current STABLE version is v0.15.  To build this version, run the following command
 
     brew install sanelson/freecad/freecad
 
 ## Building HEAD Version of FreeCAD
-
-If instead you'd like to build the very latest bleeding edge version (HEAD) from the [FreeCAD repo](https://github.com/FreeCAD/FreeCAD_sf_master), first install the coin dependency using the following command
-
-    brew install --without-framework --without-soqt sanelson/freecad/coin
 
 Then install FreeCAD
 
