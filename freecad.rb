@@ -44,6 +44,7 @@ class Freecad < Formula
   depends_on 'pyside'
   depends_on 'pyside-tools'
   depends_on 'python'
+  depends_on 'orocos-kdl'
 
   # Recommended dependencies
   depends_on 'freetype' => :recommended
@@ -84,8 +85,8 @@ class Freecad < Formula
 
     # Set up needed cmake args
     args = std_cmake_args + %W[
-      -DBUILD_ROBOT=OFF
       -DFREECAD_USE_EXTERNAL_PIVY=#{use_external_pivy}
+      -DFREECAD_USE_EXTERNAL_KDL=ON
       -DPYTHON_LIBRARY=#{python_library}
       -DPYTHON_INCLUDE_DIR=#{python_include_dir}
       -DOCE_DIR=#{oce_dir}
