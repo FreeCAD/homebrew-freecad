@@ -11,6 +11,7 @@ These steps have been tested on Mavericks 10.9.2 through 10.10.3 with Xcode 6.3.
 * An up-to-date installation of [homebrew](http://brew.sh)
 * The [homebrew/science](https://github.com/Homebrew/homebrew-science) tap
 * The patched **coin** recipe from this tap (see install instructions for release version of FreeCAD vs HEAD version)
+* Mercurial (for downloading coin) if not already installed on your system
 
 It's easy to install the homebrew/science tap
 
@@ -23,6 +24,10 @@ Tap this repository (you can safely ignore warnings about coin recipe conflicts)
 Install the coin dependency using the following command
 
     brew install --without-framework --without-soqt sanelson/freecad/coin
+    
+Install Mercurial like
+   
+    brew install hg
 
 ## Building Current Release Version of FreeCAD
 
