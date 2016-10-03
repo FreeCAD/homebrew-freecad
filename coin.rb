@@ -7,6 +7,12 @@ class Coin < Formula
   option "with-soqt", "Build with SoQt"
   option "with-framework", "Package as a Framework"
 
+  bottle do
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
+    cellar :any
+    sha256 "035234f145a77884883198dda0911a2539f48eebd4523956ff7cc4dc1ab4ae9d" => :yosemite
+  end
+
   if build.with? "soqt"
     depends_on "pkg-config" => :build
     depends_on "qt"

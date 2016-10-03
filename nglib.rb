@@ -5,6 +5,12 @@ class Nglib < Formula
   sha256 "cb97f79d8f4d55c00506ab334867285cde10873c8a8dc783522b47d2bc128bf9"
   version "5.3.1"
 
+  bottle do
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
+    cellar :any
+    sha256 "01d5bff960275426bf03904ddf5fadbdb9aed40dce434c6a27d0594abc9af774" => :yosemite
+  end
+
   # These two conflict with each other, so we'll have at most one.
   depends_on "opencascade" => :optional
   depends_on "oce" => :optional

@@ -8,6 +8,11 @@ class Vtk < Formula
 
   head "https://github.com/Kitware/VTK.git"
 
+  bottle do
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
+    sha256 "b5cb8bbe914bf7e229e49e4397b6cf29b59ee3bbbb21ab4a19e2007826b872df" => :yosemite
+  end
+
   deprecated_option "examples" => "with-examples"
   deprecated_option "qt-extern" => "with-qt-extern"
   deprecated_option "tcl" => "with-tcl"

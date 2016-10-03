@@ -5,6 +5,12 @@ class MedFile < Formula
   sha256 "d52e9a1bdd10f31aa154c34a5799b48d4266dc6b4a5ee05a9ceda525f2c6c138"
   version "3.2.0"
 
+  bottle do
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
+    cellar :any
+    sha256 "b3cca03c59844e53a8d521e452a05ff4bf843b6353218bebe53172dfc1919914" => :yosemite
+  end
+
   option "with-python", "Build Python bindings"
   option "with-fortran", "Build Python bindings"
   option "with-tests", "Build tests"
