@@ -1,5 +1,3 @@
-require "formula"
-
 class Pivy < Formula
   homepage "https://bitbucket.org/Coin3D/pivy/overview"
   head "https://bitbucket.org/Coin3D/pivy", :using => :hg
@@ -8,8 +6,8 @@ class Pivy < Formula
   version "0.5.0"
 
   depends_on :python
-  depends_on "coin"
-  depends_on 'swig' => :build
+  depends_on "FreeCAD/freecad/coin"
+  depends_on 'swig' => :recommended
 
   def install
     system "python", "setup.py", "install", "--prefix=#{prefix}"
