@@ -1,18 +1,16 @@
-require 'formula'
-
 class Coin < Formula
+  desc "Retained-mode toolkit for 3D graphics development"
   homepage 'https://bitbucket.org/Coin3D/coin/wiki/Home'
   url 'https://bitbucket.org/Coin3D/coin/downloads/Coin-3.1.3.tar.gz'
   sha256 '583478c581317862aa03a19f14c527c3888478a06284b9a46a0155fa5886d417'
 
-  option "without-soqt", "Build without SoQt"
+  option "with-soqt", "Build with SoQt"
+  option "with-framework", "Package as a Framework"
 
   if build.with? "soqt"
     depends_on "pkg-config" => :build
     depends_on "qt"
   end
-
-  option "without-framework", "Build without creating Framework"
 
   resource "soqt" do
     url "https://bitbucket.org/Coin3D/coin/downloads/SoQt-1.5.0.tar.gz"
@@ -32,6 +30,8 @@ class Coin < Formula
     sha256 'ab0c44f55c2e102ea641140652c1a02266b63b075266dd1e8b5e08599fc086e9'
   end
 
+  patch :DATA
+
   def install
     # https://bitbucket.org/Coin3D/coin/issue/47 (fix misspelled test flag)
     inreplace "configure", '-fno-for-scoping', '-fno-for-scope'
@@ -40,15 +40,10 @@ class Coin < Formula
     # http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/graphics/Coin/patches/patch-include_Inventor_C_base_math-undefs.h
     inreplace "include/Inventor/C/base/math-undefs.h", "#ifndef COIN_MATH_UNDEFS_H", "#if false"
 
-    if build.without? "framework"
-      system "./configure", "--disable-debug", "--disable-dependency-tracking",
-                            "--prefix=#{prefix}",
-                            "--without-framework"
-    else 
-      system "./configure", "--disable-debug", "--disable-dependency-tracking",
-                            "--prefix=#{prefix}",
-                            "--with-framework-prefix=#{frameworks}"
-    end
+    system "./configure", "--disable-debug",
+                          "--disable-dependency-tracking",
+                          "--prefix=#{prefix}",
+                          build.with?("framework") ? "--with-framework-prefix=#{frameworks}" : "--without-framework"
 
     system "make install"
 
@@ -59,20 +54,37 @@ class Coin < Formula
         # https://bitbucket.org/Coin3D/coin/issue/40#comment-7888751
         inreplace "configure", /^(LIBS=\$sim_ac_uniqued_list)$/, "# \\1"
 
-        if build.without? "framework"
-          system "./configure", "--disable-debug",
-            "--disable-dependency-tracking",
-            "--without-framework",
-            "--prefix=#{prefix}"
-        else
-          system "./configure", "--disable-debug",
-            "--disable-dependency-tracking",
-            "--with-framework-prefix=#{frameworks}",
-            "--prefix=#{prefix}"
-        end
+        system "./configure",
+               "--disable-debug",
+               "--disable-dependency-tracking",
+               build.with?("framework") ? "--with-framework-prefix=#{frameworks}" : "--without-framework"
 
         system "make", "install"
       end
     end
   end
 end
+
+__END__
+diff --git a/Info.plist.in b/Info.plist.in
+index 0116d77..97d5831 100644
+--- a/Info.plist.in
++++ b/Info.plist.in
+@@ -7,7 +7,7 @@
+ 	<key>CFBundleExecutable</key>
+ 	<string>Inventor</string>
+ 	<key>CFBundleGetInfoString</key>
+-	<string>Coin framework, copyright Kongsberg Oil & Gas Technologies 1998-2010</string>
++	<string>Coin framework, copyright Kongsberg Oil &amp; Gas Technologies 1998-2010</string>
+ 	<key>CFBundleIdentifier</key>
+ 	<string>org.coin3d.Coin.framework</string>
+ 	<key>CFBundleInfoDictionaryVersion</key>
+@@ -23,6 +23,6 @@
+ 	<key>CFBundleVersion</key>
+ 	<string>@COIN_VERSION@</string>
+ 	<key>NSHumanReadableCopyright</key>
+-	<string>Copyright Kongsberg Oil & Gas Technologies 1998-2010</string>
++	<string>Copyright Kongsberg Oil &amp; Gas Technologies 1998-2010</string>
+ </dict>
+ </plist>
+
