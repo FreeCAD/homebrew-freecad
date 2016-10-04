@@ -14,6 +14,7 @@ class MedFile < Formula
   option "with-python", "Build Python bindings"
   option "with-fortran", "Build Python bindings"
   option "with-tests", "Build tests"
+  option "with-docs", "Install documentation"
 
   depends_on "cmake" => :build
   depends_on "homebrew/science/hdf5"
@@ -31,6 +32,10 @@ class MedFile < Formula
  
     if build.without? "tests"
        cmake_args << "-DMEDFILE_BUILD_TESTS:BOOL=OFF"
+    end
+
+    if build.without? "docs"
+       cmake_args << "-DMEDFILE_INSTALL_DOC:BOOL=OFF"
     end
 
     system "cmake", ".", *cmake_args
