@@ -11,6 +11,7 @@ class Vtk < Formula
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
     sha256 "b5cb8bbe914bf7e229e49e4397b6cf29b59ee3bbbb21ab4a19e2007826b872df" => :yosemite
+    sha256 "5641fb3a34dae3e68c2e7a39ba6a69ea8d55dde44eaa54c002012ddb91073b38" => :el_capitan
   end
 
   deprecated_option "examples" => "with-examples"

@@ -11,6 +11,7 @@ class Coin < Formula
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
     cellar :any
     sha256 "035234f145a77884883198dda0911a2539f48eebd4523956ff7cc4dc1ab4ae9d" => :yosemite
+    sha256 "d434e5e7dcf9536a961f3025c3ae135cc4f3233f25587a27f81bc02ff9f3abca" => :el_capitan
   end
 
   if build.with? "soqt"

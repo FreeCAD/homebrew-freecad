@@ -9,6 +9,7 @@ class MedFile < Formula
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
     cellar :any
     sha256 "79f838ab993744b44ada576d8e49108a16b5058d4edc0745ee64d8c43c13106d" => :yosemite
+    sha256 "cb03f676d6e90059c5308dc38b930a7724feccaac080081b6c992b3e43d105cd" => :el_capitan
   end
 
   option "with-python", "Build Python bindings"
