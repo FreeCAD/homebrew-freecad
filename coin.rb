@@ -4,15 +4,14 @@ class Coin < Formula
   url 'https://bitbucket.org/Coin3D/coin/downloads/Coin-3.1.3.tar.gz'
   sha256 '583478c581317862aa03a19f14c527c3888478a06284b9a46a0155fa5886d417'
 
-  option "with-soqt", "Build with SoQt"
-  option "with-framework", "Package as a Framework"
-
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
-    cellar :any
-    sha256 "035234f145a77884883198dda0911a2539f48eebd4523956ff7cc4dc1ab4ae9d" => :yosemite
     sha256 "d434e5e7dcf9536a961f3025c3ae135cc4f3233f25587a27f81bc02ff9f3abca" => :el_capitan
+    sha256 "035234f145a77884883198dda0911a2539f48eebd4523956ff7cc4dc1ab4ae9d" => :yosemite
   end
+
+  option "without-soqt", "Build without SoQt"
+  option "without-framework", "Install as a library; do not package as a Framework"
 
   if build.with? "soqt"
     depends_on "pkg-config" => :build
@@ -37,6 +36,7 @@ class Coin < Formula
     sha256 'ab0c44f55c2e102ea641140652c1a02266b63b075266dd1e8b5e08599fc086e9'
   end
 
+  # Patch Info.plist xml to be well-formed
   patch :DATA
 
   def install
@@ -47,8 +47,7 @@ class Coin < Formula
     # http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/graphics/Coin/patches/patch-include_Inventor_C_base_math-undefs.h
     inreplace "include/Inventor/C/base/math-undefs.h", "#ifndef COIN_MATH_UNDEFS_H", "#if false"
 
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
+    system "./configure", "--disable-debug", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           build.with?("framework") ? "--with-framework-prefix=#{frameworks}" : "--without-framework"
 
@@ -61,10 +60,10 @@ class Coin < Formula
         # https://bitbucket.org/Coin3D/coin/issue/40#comment-7888751
         inreplace "configure", /^(LIBS=\$sim_ac_uniqued_list)$/, "# \\1"
 
-        system "./configure",
-               "--disable-debug",
-               "--disable-dependency-tracking",
-               build.with?("framework") ? "--with-framework-prefix=#{frameworks}" : "--without-framework"
+        system "./configure", "--disable-debug",
+                              "--disable-dependency-tracking",
+                              build.with?("framework") ? "--with-framework-prefix=#{frameworks}" : "--without-framework",
+                              "--prefix=#{prefix}"
 
         system "make", "install"
       end
