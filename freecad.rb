@@ -8,13 +8,16 @@ class Freecad < Formula
   # Debugging Support
   option 'with-debug', 'Enable debugging build'
 
+  # Option to use custom bottles built with FreeCAD-specific option primarily 
+  # to reduce Travis build times
+  option 'with-freecad-bottles', 'Build using FreeCAD hosted bottles pre-built with FreeCAD-specific options'
+
   # Build without external pivy (use old bundled version)
   option 'without-external-pivy', 'Build without external Pivy (use old bundled version)'
   
   # Build dependencies
   depends_on 'cmake'   => :build
   depends_on 'ccache'  => :build
-  depends_on 'doxygen' => :build
 
   # Required dependencies
   depends_on :macos => :mavericks
@@ -29,11 +32,21 @@ class Freecad < Formula
   depends_on 'homebrew/science/opencascade'
   depends_on 'homebrew/science/orocos-kdl'
   depends_on 'homebrew/python/matplotlib'
-  depends_on 'FreeCAD/freecad/pivy' unless build.without? 'external-pivy'
-  depends_on 'FreeCAD/freecad/vtk'      #Custom bottle using --without-python
-  depends_on 'FreeCAD/freecad/coin'     #Custom bottle without-soqt and without-framework
-  depends_on 'FreeCAD/freecad/nglib'    #Custom bottle for use with opencascade 7
   depends_on 'FreeCAD/freecad/med-file'
+  depends_on 'FreeCAD/freecad/pivy' unless build.without? 'external-pivy'
+
+  if build.with?("freecad-bottles") && MacOS.version == "10.10" then
+     ohai "Building with pre-packaged FreeCAD bottles"
+     depends_on 'FreeCAD/freecad/coin'     #Bottled using options --without-soqt --without-framework
+     depends_on 'FreeCAD/freecad/vtk'      #Bottled using options --without-python
+     depends_on 'FreeCAD/freecad/nglib'    #Bottled using options --with-opencascade
+  else
+     ohai "Pre-packaged FreeCAD bottles are only available on macOS yosemite (10.10)"
+     ohai "You are running #{MacOS.version}, installing without using FreeCAD custom bottles"
+     depends_on 'FreeCAD/freecad/coin'   => ['--without-framework', '--without-soqt'] 
+     depends_on 'homebrew/science/vtk'   =>  '--without-python'
+     depends_on 'homebrew/science/nglib' =>  '--with-opencascade'
+  end
 
   def install
 
