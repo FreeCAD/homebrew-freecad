@@ -1,8 +1,7 @@
 class Freecad < Formula
   homepage "http://www.freecadweb.org"
-  url "https://github.com/FreeCAD/FreeCAD/archive/0.16.tar.gz"
-  version "0.16"
-  sha256 "6cc71ab4b0dc60b493d3aaa4b42f1ce1af9d4fcd539309ab0792804579e18e09"
+  url "https://github.com/FreeCAD/FreeCAD/archive/0.17_pre.tar.gz"
+  sha256 "25648fbaac8a96d7e63d8881fbc79f1829eff2852927e427cfe6d5f4f60a4f95"
   head "https://github.com/FreeCAD/FreeCAD.git", :branch => "master"
 
   # Debugging Support
@@ -35,22 +34,26 @@ class Freecad < Formula
   depends_on 'FreeCAD/freecad/med-file'
   depends_on 'FreeCAD/freecad/pivy' unless build.without? 'external-pivy'
 
-  if build.with?("freecad-bottles") && MacOS.version == "10.10" then
-     ohai "Building with pre-packaged FreeCAD bottles"
-     depends_on 'FreeCAD/freecad/coin'     #Bottled using options --without-soqt --without-framework
-     depends_on 'FreeCAD/freecad/vtk'      #Bottled using options --without-python
-     depends_on 'FreeCAD/freecad/nglib'    #Bottled using options --with-opencascade
+  if build.with?("freecad-bottles") && MacOS.version == :yosemite then
+     ohai "Using pre-packaged FreeCAD bottles"
+     depends_on 'FreeCAD/freecad/coin'   #Bottled using options --without-soqt --without-framework
+     depends_on 'FreeCAD/freecad/vtk'    #Bottled using options --without-python
+     depends_on 'FreeCAD/freecad/nglib'  #Bottled using options --with-opencascade
   else
-     ohai "Pre-packaged FreeCAD bottles are only available on macOS yosemite (10.10)"
-     ohai "You are running #{MacOS.version}, installing without using FreeCAD custom bottles"
-     depends_on 'FreeCAD/freecad/coin'   => ['--without-framework', '--without-soqt'] 
-     depends_on 'homebrew/science/vtk'   =>  '--without-python'
-     depends_on 'homebrew/science/nglib' =>  '--with-opencascade'
+     depends_on 'FreeCAD/freecad/coin'   => ['without-framework', 'without-soqt'] 
+     depends_on 'homebrew/science/vtk'   =>  'without-python'
+     depends_on 'FreeCAD/freecad/nglib'  =>  'with-opencascade'
   end
 
   def install
 
-    system "rm", "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-science/nglib.rb"
+    # Patch CMakeLists.txt to resolve to installed nglib (either freecad or science)
+    # Swallow exceptions so future FreeCAD releases that do not include the errnoeous cMake files will not fail
+    begin
+      inreplace "cMake/FindNETGEN.cmake", "EXEC_PROGRAM(brew ARGS --prefix nglib OUTPUT_VARIABLE NGLIB_PREFIX)", "SET(NGLIB_PREFIX ${HOMEBREW_PREFIX})"
+      rescue Utils::InreplaceError
+        ohai "Caught inreplace exception"
+    end
 
     # Set up needed cmake args
     args = std_cmake_args + %W[
