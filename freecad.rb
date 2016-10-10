@@ -13,6 +13,9 @@ class Freecad < Formula
 
   # Build without external pivy (use old bundled version)
   option 'without-external-pivy', 'Build without external Pivy (use old bundled version)'
+
+  # Optionally install packaging dependencies
+  option 'with-packaging-utils'
   
   # Build dependencies
   depends_on 'cmake'   => :build
@@ -45,7 +48,16 @@ class Freecad < Formula
      depends_on 'FreeCAD/freecad/nglib'  =>  'with-opencascade'
   end
 
+  if build.with?("packaging-utils") then
+     depends_on 'node'
+     depends_on 'jq'
+  end
+
   def install
+
+    if build.with?("packaging-utils")
+       system "node", "install", "-g", "app_dmg"
+    end
 
     # Patch CMakeLists.txt to resolve to installed nglib (either freecad or science)
     # Swallow exceptions so future FreeCAD releases that do not include the errnoeous cMake files will not fail
@@ -59,7 +71,7 @@ class Freecad < Formula
     args = std_cmake_args + %W[
       -DBUILD_FEM_NETGEN:BOOL=ON
       -DFREECAD_USE_EXTERNAL_KDL=ON
-      -DCMAKE_USE_EXTERNAL_PIVY:BOOL=#{build.with?('external-pivy') ? 'ON' : 'OFF'}
+      -DFREECAD_USE_EXTERNAL_PIVY:BOOL=#{build.with?('external-pivy') ? 'ON' : 'OFF'}
       -DCMAKE_BUILD_TYPE=#{build.with?('debug') ? 'Debug' : 'Release'}
     ]
 
@@ -69,6 +81,7 @@ class Freecad < Formula
     end
 
   end
+
 
   def caveats; <<-EOS.undent
     After installing FreeCAD you may want to do the following:
