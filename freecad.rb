@@ -28,9 +28,9 @@ class Freecad < Formula
   depends_on 'qt'
   depends_on 'python'
   depends_on 'boost-python'
-  depends_on 'pyside'
-  depends_on 'pyside-tools'
   depends_on 'xerces-c'
+  depends_on 'FreeCAD/freecad/pyside'       #Exumed from homebrew/boneyard and bottled for efficiency
+  depends_on 'FreeCAD/freecad/pyside-tools' #Exumed from homebrew/boneyard and bottled for efficiency
   depends_on 'homebrew/science/opencascade'
   depends_on 'homebrew/science/orocos-kdl'
   depends_on 'homebrew/python/matplotlib'
