@@ -1,17 +1,16 @@
 class Vtk < Formula
   desc "Toolkit for 3D computer graphics, image processing, and visualization."
   homepage "http://www.vtk.org"
-  url "http://www.vtk.org/files/release/7.0/VTK-7.0.0.tar.gz"
-  mirror "https://fossies.org/linux/misc/VTK-7.0.0.tar.gz"
-  sha256 "78a990a15ead79cdc752e86b83cfab7dbf5b7ef51ba409db02570dbdd9ec32c3"
-  revision 4
+  url "http://www.vtk.org/files/release/7.1/VTK-7.1.0.tar.gz"
+  mirror "https://fossies.org/linux/misc/VTK-7.1.0.tar.gz"
+  sha256 "5f3ea001204d4f714be972a810a62c0f2277fbb9d8d2f8df39562988ca37497a"
+  revision 1
 
   head "https://github.com/Kitware/VTK.git"
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
-    sha256 "b5cb8bbe914bf7e229e49e4397b6cf29b59ee3bbbb21ab4a19e2007826b872df" => :yosemite
-    sha256 "5641fb3a34dae3e68c2e7a39ba6a69ea8d55dde44eaa54c002012ddb91073b38" => :el_capitan
+    sha256 "05d84e3468efe3872505c0146f18e0b757badb36eb9932cdff306063c15ca8fc" => :yosemite
   end
 
   deprecated_option "examples" => "with-examples"
@@ -25,11 +24,10 @@ class Vtk < Formula
   option "with-tcl",        "Enable Tcl wrapping of VTK classes"
   option "with-matplotlib", "Enable matplotlib support"
   option "without-legacy",  "Disable legacy APIs"
-  option "with-python",     "Build with python2 support"
+  option "without-python",  "Build without python2 support"
 
   depends_on "cmake" => :build
   depends_on :x11 => :optional
-  depends_on "qt" => :optional
   depends_on "qt5" => :optional
 
   depends_on :python => :recommended if MacOS.version <= :snow_leopard
@@ -44,21 +42,11 @@ class Vtk < Formula
   depends_on "matplotlib" => :python if build.with?("matplotlib") && build.with?("python")
 
   # If --with-qt and --with-python, then we automatically use PyQt, too!
-  if build.with? "python"
-    if build.with? "qt"
-      depends_on "sip"
-      depends_on "pyqt"
-    elsif build.with? "qt5"
+  if build.with? "qt5"
+    if build.with? "python"
       depends_on "sip"
       depends_on "pyqt5" => ["with-python", "without-python3"]
-    end
-  end
-
-  if build.with? "python3"
-    if build.with? "qt"
-      depends_on "sip" => ["with-python3", "without-python"]
-      depends_on "pyqt" => ["with-python3", "without-python"]
-    elsif build.with? "qt5"
+    elsif build.with? "python3"
       depends_on "sip"   => ["with-python3", "without-python"]
       depends_on "pyqt5"
     end
@@ -83,8 +71,8 @@ class Vtk < Formula
       args << "-DBUILD_TESTING=OFF"
     end
 
-    if build.with?("qt") || build.with?("qt5") || build.with?("qt-extern")
-      args << "-DVTK_QT_VERSION:STRING=5" if build.with? "qt5"
+    if build.with?("qt5")
+      args << "-DVTK_QT_VERSION:STRING=5"
       args << "-DVTK_Group_Qt=ON"
     end
 
@@ -94,6 +82,9 @@ class Vtk < Formula
     if build.with? "x11"
       args << "-DVTK_USE_COCOA=OFF"
       args << "-DVTK_USE_X=ON"
+      args << "-DOPENGL_INCLUDE_DIR:PATH=/usr/X11R6/include"
+      args << "-DOPENGL_gl_LIBRARY:STRING=/usr/X11R6/lib/libGL.dylib"
+      args << "-DOPENGL_glu_LIBRARY:STRING=/usr/X11R6/lib/libGLU.dylib"
     else
       args << "-DVTK_USE_COCOA=ON"
     end
@@ -117,29 +108,36 @@ class Vtk < Formula
     ENV.cxx11 if build.cxx11?
 
     mkdir "build" do
-      if build.with?("python") && build.without?("python3")
+      if build.with?("python3") && build.with?("python")
+        # VTK Does not support building both python 2 and 3 versions
+        odie "VTK: Does not support building both python 2 and 3 wrappers"
+      elsif build.with?("python") || build.with?("python3")
+        python_executable = `which python`.strip if build.with? "python"
+        python_executable = `which python3`.strip if build.with? "python3"
+
+        python_prefix = `#{python_executable} -c 'import sys;print(sys.prefix)'`.chomp
+        python_include = `#{python_executable} -c 'from distutils import sysconfig;print(sysconfig.get_python_inc(True))'`.chomp
+        python_version = "python" + `#{python_executable} -c 'import sys;print(sys.version[:3])'`.chomp
+        py_site_packages = "#{lib}/#{python_version}/site-packages"
+
         args << "-DVTK_WRAP_PYTHON=ON"
-        # CMake picks up the system"s python dylib, even if we have a brewed one.
-        args << "-DPYTHON_LIBRARY='#{`python-config --prefix`.chomp}/lib/libpython2.7.dylib'"
+        args << "-DPYTHON_EXECUTABLE='#{python_executable}'"
+        args << "-DPYTHON_INCLUDE_DIR='#{python_include}'"
+        # CMake picks up the system's python dylib, even if we have a brewed one.
+        if File.exist? "#{python_prefix}/Python"
+          args << "-DPYTHON_LIBRARY='#{python_prefix}/Python'"
+        elsif File.exist? "#{python_prefix}/lib/lib#{python_version}.a"
+          args << "-DPYTHON_LIBRARY='#{python_prefix}/lib/lib#{python_version}.a'"
+        else
+          args << "-DPYTHON_LIBRARY='#{python_prefix}/lib/lib#{python_version}.dylib'"
+        end
         # Set the prefix for the python bindings to the Cellar
-        args << "-DVTK_INSTALL_PYTHON_MODULE_DIR='#{lib}/python2.7/site-packages'"
-      elsif build.without?("python") && build.with?("python3")
-        args << "-DVTK_WRAP_PYTHON=ON"
-        args << "-DPYTHON_EXECUTABLE=/usr/local/bin/python3"
-        args << "-DPYTHON_INCLUDE_DIR='#{`python3-config --prefix`.chomp}/include/python3.5m'"
-        # CMake picks up the system"s python dylib, even if we have a brewed one.
-        args << "-DPYTHON_LIBRARY='#{`python3-config --prefix`.chomp}/lib/libpython3.5.dylib'"
-        # Set the prefix for the python bindings to the Cellar
-        args << "-DVTK_INSTALL_PYTHON_MODULE_DIR='#{lib}/python3.5/site-packages'"
-      elsif build.with?("python3") && build.with?("python")
-        # Does not currenly support building both python 2 and 3 versions
-        odie "VTK: Does not currently support building both python 2 and 3 wrappers"
+        args << "-DVTK_INSTALL_PYTHON_MODULE_DIR='#{py_site_packages}/'"
       end
 
-      if build.with?("qt") || build.with?("qt5")
+      if build.with?("qt5")
         args << "-DVTK_WRAP_PYTHON_SIP=ON"
-        args << "-DSIP_PYQT_DIR='#{Formula["pyqt"].opt_share}/sip'" if build.with? "qt"
-        args << "-DSIP_PYQT_DIR='#{Formula["pyqt5"].opt_share}/sip'" if build.with? "qt5"
+        args << "-DSIP_PYQT_DIR='#{Formula["pyqt5"].opt_share}/sip'"
       end
 
       args << ".."
@@ -193,10 +191,10 @@ class Vtk < Formula
   def caveats
     s = ""
     s += <<-EOS.undent
-        Even without the --with-qt option, you can display native VTK render windows
+        Even without the --with-qt5 option, you can display native VTK render windows
         from python. Alternatively, you can integrate the RenderWindowInteractor
-        in PyQt, PySide, Tk or Wx at runtime. Read more:
-            import vtk.qt4; help(vtk.qt4) or import vtk.wx; help(vtk.wx)
+        in PyQt4, Tk or Wx at runtime. Read more:
+            import vtk.qt5; help(vtk.qt5) or import vtk.wx; help(vtk.wx)
     EOS
 
     if build.with? "examples"
@@ -225,20 +223,13 @@ class Vtk < Formula
         int main(int, char *[])
         {
           assert (vtkVersion::GetVTKMajorVersion()==7);
-          assert (vtkVersion::GetVTKMinorVersion()==0);
+          assert (vtkVersion::GetVTKMinorVersion()==1);
           return EXIT_SUCCESS;
         }
       EOS
 
-    (testpath/"CMakeLists.txt").write <<-EOS
-      cmake_minimum_required(VERSION 2.8)
-      PROJECT(Version)
-      find_package(VTK REQUIRED)
-      include(${VTK_USE_FILE})
-      add_executable( Version Version.cpp )
-      target_link_libraries(Version ${VTK_LIBRARIES})
-      EOS
-    system "cmake", "."
-    system "make && ./Version"
+    system ENV.cxx, "Version.cpp", "-I#{opt_include}/vtk-7.1"
+    system "./a.out"
+    system "#{bin}/vtkpython", "-c", "exit()"
   end
 end
