@@ -7,8 +7,10 @@ class PysideTools < Formula
   head "https://github.com/PySide/Tools.git"
 
   bottle do
-    root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
-    sha256 "c860f7e7995ccb6caab52c94eb3e2563d37465e521fa8c68759bb1ee826b4a11" => :yosemite
+    root_url "https://homebrew.bintray.com/bottles"
+    sha256 "f1513592aa38f8595825e2a339fd0cf4ab7ffbdd4cc71814291aa861ebbd5713" => :el_capitan
+    sha256 "1f61192245b05946057f47d6a73788a998c86eefc846e1d09821a316c5bc2975" => :yosemite
+    sha256 "2cb88ceddebde2c5ff388a090b53f9a8c6dc986d881a1eab1f57ff2cdb43edf0" => :mavericks
   end
 
   depends_on "cmake" => :build

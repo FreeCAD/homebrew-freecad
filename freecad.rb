@@ -11,9 +11,6 @@ class Freecad < Formula
   # to reduce Travis build times
   option 'with-freecad-bottles', 'Build using FreeCAD hosted bottles pre-built with FreeCAD-specific options'
 
-  # Build without external pivy (use old bundled version)
-  option 'without-external-pivy', 'Build without external Pivy (use old bundled version)'
-
   # Optionally install packaging dependencies
   option 'with-packaging-utils'
   
@@ -25,17 +22,17 @@ class Freecad < Formula
   depends_on :macos => :mavericks
   depends_on 'eigen'
   depends_on 'freetype'
-  depends_on 'qt'
+  depends_on 'FreeCAD/freecad/qt'           #Exhumed from homebrew/boneyard
   depends_on 'python'
   depends_on 'boost-python'
   depends_on 'xerces-c'
-  depends_on 'FreeCAD/freecad/pyside'       #Exumed from homebrew/boneyard and bottled for efficiency
-  depends_on 'FreeCAD/freecad/pyside-tools' #Exumed from homebrew/boneyard and bottled for efficiency
+  depends_on 'FreeCAD/freecad/pyside'       #Exhumed from homebrew/boneyard
+  depends_on 'FreeCAD/freecad/pyside-tools' #Exhumed from homebrew/boneyard
   depends_on 'homebrew/science/opencascade'
   depends_on 'homebrew/science/orocos-kdl'
   depends_on 'homebrew/python/matplotlib'
   depends_on 'FreeCAD/freecad/med-file'
-  depends_on 'FreeCAD/freecad/pivy' unless build.without? 'external-pivy'
+  depends_on 'FreeCAD/freecad/pivy' 
 
   if build.with?("freecad-bottles") && MacOS.version == :yosemite then
      ohai "Using pre-packaged FreeCAD bottles"
@@ -71,7 +68,6 @@ class Freecad < Formula
     args = std_cmake_args + %W[
       -DBUILD_FEM_NETGEN:BOOL=ON
       -DFREECAD_USE_EXTERNAL_KDL=ON
-      -DFREECAD_USE_EXTERNAL_PIVY:BOOL=#{build.with?('external-pivy') ? 'ON' : 'OFF'}
       -DCMAKE_BUILD_TYPE=#{build.with?('debug') ? 'Debug' : 'Release'}
     ]
 

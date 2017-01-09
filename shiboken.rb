@@ -8,8 +8,11 @@ class Shiboken < Formula
   head "https://github.com/PySide/Shiboken.git"
 
   bottle do
-    root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
-    sha256 "9a6237dc642d61c1a08bc9e3024b14b36d876b4f3f22f06bd2374b2eea1f9949" => :yosemite
+    root_url "https://homebrew.bintray.com/bottles"
+    rebuild 2
+    sha256 "70c2218fd33120644707710aca6cb12a68272b85afdc694a4a3fe28eb5135f8f" => :el_capitan
+    sha256 "f0f159f81858e514afd5cfc55f9c05a40ad5155baffc788974f4e632bfd97726" => :yosemite
+    sha256 "a1306b5980598839dfba0ba4ea23251fafebc87307bfb3c2ebcc5d006c63c9cb" => :mavericks
   end
 
   depends_on "cmake" => :build
