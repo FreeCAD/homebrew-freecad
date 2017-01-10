@@ -4,14 +4,14 @@ class Nglib < Formula
   url "https://downloads.sourceforge.net/project/netgen-mesher/netgen-mesher/5.3/netgen-5.3.1.tar.gz"
   sha256 "cb97f79d8f4d55c00506ab334867285cde10873c8a8dc783522b47d2bc128bf9"
   version "5.3.1"
-  revision 1
+  revision 2
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
     cellar :any
-    sha256 "4f4162b45d5da071ccea77d2cd552503f7065317f6c594c8767eab00310d8d9e" => :sierra
-    sha256 "d6265c1b3390cb3bdd106ae1859028d7f598b2c69cfd3a7ae9b3132ecf5af13b" => :el_capitan
-    sha256 "1030d23c592c91b712bdc34514d1f50de279ffc794d4a6e3c3bb97b21e60cc4e" => :yosemite
+    sha256 "578236db1580fdcea78e1f5d66b57fd45081573a9998734ab48590403b361158" => :sierra
+    sha256 "9a94749cdee9e6a73b66e562eab189e5b8dd9925561d74f616595cbdce6b9859" => :el_capitan
+    sha256 "c26ce6e39e5bc2c4743a8b8ae87aff4abf8c7f0e97eb46da2a513422b431c74d" => :yosemite
   end
 
   # These two conflict with each other, so we'll have at most one.
@@ -85,11 +85,14 @@ end
 
 __END__
 diff -ur a/configure b/configure
---- a/configure	2014-10-07 00:04:36.000000000 +1300
-+++ b/configure	2016-11-12 21:43:00.000000000 +1300
-@@ -15354,7 +15354,7 @@
+--- a/configure	2017-01-10 10:31:50.000000000 -0800
++++ b/configure	2017-01-10 10:31:53.000000000 -0800
+@@ -15352,9 +15352,9 @@
  
- 	OCCFLAGS="-DOCCGEOMETRY -I$occdir/inc -I/usr/include/opencascade"
+ if test a$occon = atrue ; then
+ 
+-	OCCFLAGS="-DOCCGEOMETRY -I$occdir/inc -I/usr/include/opencascade"
++	OCCFLAGS="-DOCCGEOMETRY -I$occdir/include -I/usr/local/include/opencascade"
  
 -	OCCLIBS="-L$occdir/lib -lTKernel -lTKGeomBase -lTKMath -lTKG2d -lTKG3d -lTKXSBase -lTKOffset -lTKFillet -lTKShHealing -lTKMesh -lTKMeshVS -lTKTopAlgo -lTKGeomAlgo -lTKBool -lTKPrim -lTKBO -lTKIGES -lTKBRep -lTKSTEPBase -lTKSTEP -lTKSTL -lTKSTEPAttr -lTKSTEP209 -lTKXDESTEP -lTKXDEIGES -lTKXCAF -lTKLCAF -lFWOSPlugin"
 +	OCCLIBS="-L$occdir/lib -lFWOSPlugin"
