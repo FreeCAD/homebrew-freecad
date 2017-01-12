@@ -22,12 +22,11 @@ class Freecad < Formula
   depends_on :macos => :mavericks
   depends_on 'eigen'
   depends_on 'freetype'
-  depends_on 'FreeCAD/freecad/qt'           #Exhumed from homebrew/boneyard
   depends_on 'python'
   depends_on 'boost-python'
   depends_on 'xerces-c'
-  depends_on 'FreeCAD/freecad/pyside'       #Exhumed from homebrew/boneyard
-  depends_on 'FreeCAD/freecad/pyside-tools' #Exhumed from homebrew/boneyard
+  depends_on 'cartr/qt4/qt'
+  depends_on 'cartr/qt4/pyside-tools'
   depends_on 'homebrew/science/opencascade'
   depends_on 'homebrew/science/orocos-kdl'
   depends_on 'homebrew/python/matplotlib'
