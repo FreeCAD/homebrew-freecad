@@ -29,7 +29,7 @@ class Freecad < Formula
   depends_on 'cartr/qt4/pyside-tools'
   depends_on 'homebrew/science/opencascade'
   depends_on 'homebrew/science/orocos-kdl'
-  depends_on 'homebrew/python/matplotlib'
+  depends_on 'homebrew/science/matplotlib'
   depends_on 'FreeCAD/freecad/med-file'
   depends_on 'FreeCAD/freecad/pivy' 
 
