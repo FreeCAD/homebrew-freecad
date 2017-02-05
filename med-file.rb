@@ -4,12 +4,11 @@ class MedFile < Formula
   url "http://files.salome-platform.org/Salome/other/med-3.2.0.tar.gz"
   sha256 "d52e9a1bdd10f31aa154c34a5799b48d4266dc6b4a5ee05a9ceda525f2c6c138"
   version "3.2.0"
+  revision 1
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
-    rebuild 1
-    sha256 "c54ee07ceb245ba21158028620a17b99eff1a18be101fce11b47b7ff3fab5bd2" => :yosemite
-    sha256 "cb03f676d6e90059c5308dc38b930a7724feccaac080081b6c992b3e43d105cd" => :el_capitan
+    sha256 "a0302bb0f9a47d0d343cdc9da953b516347d17fde02b427f268ead583f24e412" => :yosemite
   end
 
   option "with-python", "Build Python bindings"
@@ -19,6 +18,8 @@ class MedFile < Formula
 
   depends_on "cmake" => :build
   depends_on "homebrew/science/hdf5"
+
+  patch :DATA
 
   def install
     cmake_args = std_cmake_args
@@ -56,3 +57,19 @@ class MedFile < Formula
     system "#{bin}/cmake", "test"
   end
 end
+
+__END__
+diff --git a/src/2.3.6/ci/MEDequivInfo.c b/src/2.3.6/ci/MEDequivInfo.c
+index 60a97e8..d157cb9 100644
+--- a/src/2.3.6/ci/MEDequivInfo.c
++++ b/src/2.3.6/ci/MEDequivInfo.c
+@@ -24,7 +24,7 @@
+ #include <stdlib.h>
+ 
+ int
+-MEDequivInfo(int fid, char *maa, int ind, char *eq, char *des)
++MEDequivInfo(med_idt fid, char *maa, int ind, char *eq, char *des)
+ {
+   med_idt eqid;
+   med_err ret;
+

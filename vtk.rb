@@ -1,22 +1,33 @@
 class Vtk < Formula
   desc "Toolkit for 3D computer graphics, image processing, and visualization."
   homepage "http://www.vtk.org"
-  url "http://www.vtk.org/files/release/7.1/VTK-7.1.0.tar.gz"
-  mirror "https://fossies.org/linux/misc/VTK-7.1.0.tar.gz"
-  sha256 "5f3ea001204d4f714be972a810a62c0f2277fbb9d8d2f8df39562988ca37497a"
-  revision 1
-
+  revision 2
   head "https://github.com/Kitware/VTK.git"
+
+  stable do
+    url "http://www.vtk.org/files/release/7.1/VTK-7.1.0.tar.gz"
+    sha256 "5f3ea001204d4f714be972a810a62c0f2277fbb9d8d2f8df39562988ca37497a"
+    mirror "https://fossies.org/linux/misc/VTK-7.1.0.tar.gz"
+    patch do
+      # Fixes python linking. This is a modified version of
+      # https://github.com/Kitware/VTK/commit/5668595ea778e81acaed451ae4dc1125a43a8aa0
+      # This patch has been merged upstream and can be removed for the next VTK
+      # release containing the patch.
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/master/vtk/vtk-nopythonlinking-7.1.0.patch"
+      sha256 "b243eb77567f822540e299a9ee44f4fd646abb6fa3b8e889af3e69f97ff3993e"
+    end
+  end
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
-    sha256 "05d84e3468efe3872505c0146f18e0b757badb36eb9932cdff306063c15ca8fc" => :yosemite
+    sha256 "f706c36d096b33726d5bcce3467d69d261c000ec3ff69b1a26a4158f6e963de9" => :yosemite
   end
 
   deprecated_option "examples" => "with-examples"
   deprecated_option "qt-extern" => "with-qt-extern"
   deprecated_option "tcl" => "with-tcl"
   deprecated_option "remove-legacy" => "without-legacy"
+  deprecated_option "with-qt5" => "with-qt@5.6"
 
   option :cxx11
   option "with-examples",   "Compile and install various examples"
@@ -26,9 +37,10 @@ class Vtk < Formula
   option "without-legacy",  "Disable legacy APIs"
   option "without-python",  "Build without python2 support"
 
+  depends_on "netcdf"
   depends_on "cmake" => :build
   depends_on :x11 => :optional
-  depends_on "qt5" => :optional
+  depends_on "qt@5.6" => :optional
 
   depends_on :python => :recommended if MacOS.version <= :snow_leopard
   depends_on :python3 => :optional
@@ -40,9 +52,10 @@ class Vtk < Formula
   depends_on "libpng" => :recommended
   depends_on "libtiff" => :recommended
   depends_on "matplotlib" => :python if build.with?("matplotlib") && build.with?("python")
+  depends_on "libxml2" unless OS.mac?
 
   # If --with-qt and --with-python, then we automatically use PyQt, too!
-  if build.with? "qt5"
+  if build.with? "qt@5.6"
     if build.with? "python"
       depends_on "sip"
       depends_on "pyqt5" => ["with-python", "without-python3"]
@@ -53,6 +66,8 @@ class Vtk < Formula
   end
 
   def install
+    dylib = OS.mac? ? "dylib" : "so"
+
     args = std_cmake_args + %W[
       -DVTK_REQUIRED_OBJCXX_FLAGS=''
       -DBUILD_SHARED_LIBS=ON
@@ -61,6 +76,7 @@ class Vtk < Formula
       -DVTK_USE_SYSTEM_EXPAT=ON
       -DVTK_USE_SYSTEM_LIBXML2=ON
       -DVTK_USE_SYSTEM_ZLIB=ON
+      -DVTK_USE_SYSTEM_NETCDF=ON
     ]
 
     args << "-DBUILD_EXAMPLES=" + ((build.with? "examples") ? "ON" : "OFF")
@@ -71,7 +87,7 @@ class Vtk < Formula
       args << "-DBUILD_TESTING=OFF"
     end
 
-    if build.with?("qt5")
+    if build.with? "qt@5.6"
       args << "-DVTK_QT_VERSION:STRING=5"
       args << "-DVTK_Group_Qt=ON"
     end
@@ -129,13 +145,13 @@ class Vtk < Formula
         elsif File.exist? "#{python_prefix}/lib/lib#{python_version}.a"
           args << "-DPYTHON_LIBRARY='#{python_prefix}/lib/lib#{python_version}.a'"
         else
-          args << "-DPYTHON_LIBRARY='#{python_prefix}/lib/lib#{python_version}.dylib'"
+          args << "-DPYTHON_LIBRARY='#{python_prefix}/lib/lib#{python_version}.#{dylib}'"
         end
         # Set the prefix for the python bindings to the Cellar
         args << "-DVTK_INSTALL_PYTHON_MODULE_DIR='#{py_site_packages}/'"
       end
 
-      if build.with?("qt5")
+      if build.with? "qt@5.6"
         args << "-DVTK_WRAP_PYTHON_SIP=ON"
         args << "-DSIP_PYQT_DIR='#{Formula["pyqt5"].opt_share}/sip'"
       end
@@ -149,49 +165,10 @@ class Vtk < Formula
     pkgshare.install "Examples" if build.with? "examples"
   end
 
-  def post_install
-    # This is a horrible, horrible hack because VTK's build system links
-    # directly against libpython, breaking all installs for users of brewed
-    # Python. See tracking issues:
-    #
-    # https://github.com/Homebrew/homebrew-science/pull/3811
-    # https://github.com/Homebrew/homebrew-science/issues/3401
-    # https://gitlab.kitware.com/vtk/vtk/merge_requests/1713
-    #
-    # This postinstall block should be removed once upstream issues a fix.
-    return unless OS.mac? && build.with?("python")
-    # Detect if we are using brewed Python 2
-    python = Formula["python"]
-    brewed_python = python.opt_frameworks/"Python.framework"
-    system_python = "/System/Library/Frameworks/Python.framework"
-    if python.linked_keg.exist?
-      ohai "Patching VTK to use Homebrew's Python 2"
-      from = system_python
-      to = brewed_python
-    else
-      ohai "Patching VTK to use system Python 2"
-      from = brewed_python
-      to = system_python
-    end
-
-    # Patch it all up
-    keg = Keg.new(prefix)
-    keg.mach_o_files.each do |file|
-      file.ensure_writable do
-        keg.each_install_name_for(file) do |old_name|
-          next unless old_name.start_with? from
-          new_name = old_name.sub(from, to)
-          puts "#{file}:\n  #{old_name} => #{new_name}" if ARGV.verbose?
-          keg.change_install_name(old_name, new_name, file)
-        end
-      end
-    end
-  end
-
   def caveats
     s = ""
     s += <<-EOS.undent
-        Even without the --with-qt5 option, you can display native VTK render windows
+        Even without the --with-qt@5.6 option, you can display native VTK render windows
         from python. Alternatively, you can integrate the RenderWindowInteractor
         in PyQt4, Tk or Wx at runtime. Read more:
             import vtk.qt5; help(vtk.qt5) or import vtk.wx; help(vtk.wx)
