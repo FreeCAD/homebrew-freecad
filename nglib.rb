@@ -95,7 +95,7 @@ diff -ur a/configure b/configure
 +	OCCFLAGS="-DOCCGEOMETRY -I$occdir/include -I/usr/local/include/opencascade"
  
 -	OCCLIBS="-L$occdir/lib -lTKernel -lTKGeomBase -lTKMath -lTKG2d -lTKG3d -lTKXSBase -lTKOffset -lTKFillet -lTKShHealing -lTKMesh -lTKMeshVS -lTKTopAlgo -lTKGeomAlgo -lTKBool -lTKPrim -lTKBO -lTKIGES -lTKBRep -lTKSTEPBase -lTKSTEP -lTKSTL -lTKSTEPAttr -lTKSTEP209 -lTKXDESTEP -lTKXDEIGES -lTKXCAF -lTKLCAF -lFWOSPlugin"
-+	OCCLIBS="-L$occdir/lib -lFWOSPlugin"
++	OCCLIBS="-L$occdir/lib"
  
  
  #  -lTKDCAF
