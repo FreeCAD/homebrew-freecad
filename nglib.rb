@@ -15,7 +15,7 @@ class Nglib < Formula
   end
 
   # These two conflict with each other, so we'll have at most one.
-  depends_on "opencascade" => :optional
+  depends_on "opencascade" => :recommended
   depends_on "oce" => :optional
 
   # Fixes two issues.
@@ -24,6 +24,7 @@ class Nglib < Formula
   patch :DATA
 
   def install
+    ENV.cxx11 if build.with? "opencascade"
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
