@@ -3,7 +3,6 @@ class MedFile < Formula
   homepage "http://www.salome-platform.org"
   url "http://files.salome-platform.org/Salome/other/med-3.2.0.tar.gz"
   sha256 "d52e9a1bdd10f31aa154c34a5799b48d4266dc6b4a5ee05a9ceda525f2c6c138"
-  version "3.2.0"
   revision 1
 
   bottle do
@@ -13,7 +12,7 @@ class MedFile < Formula
 
   option "with-python", "Build Python bindings"
   option "with-fortran", "Build Python bindings"
-  option "with-tests", "Build tests"
+  option "with-test", "Build tests"
   option "with-docs", "Install documentation"
 
   depends_on "cmake" => :build
@@ -24,37 +23,25 @@ class MedFile < Formula
   def install
     cmake_args = std_cmake_args
 
-    if !build.with? "fortran"
-	cmake_args << "-DCMAKE_Fortran_COMPILER:BOOL=OFF"
-    end
-
-    if build.with? "python"
-       cmake_args << "-DMEDFILE_BUILD_PYTHON:BOOL=ON"
-    end
- 
-    if build.without? "tests"
-       cmake_args << "-DMEDFILE_BUILD_TESTS:BOOL=OFF"
-    end
-
-    if build.without? "docs"
-       cmake_args << "-DMEDFILE_INSTALL_DOC:BOOL=OFF"
-    end
+    cmake_args << "-DCMAKE_Fortran_COMPILER:BOOL=OFF" if build.without? "fortran"
+    cmake_args << "-DMEDFILE_BUILD_PYTHON:BOOL=ON"    if build.with? "python"
+    cmake_args << "-DMEDFILE_BUILD_TESTS:BOOL=OFF"    if build.without? "tests"
+    cmake_args << "-DMEDFILE_INSTALL_DOC:BOOL=OFF"    if build.without? "docs"
 
     system "cmake", ".", *cmake_args
-    system "make", "install" # if this fails, try separate make/make install steps
+    system "make", "install"
   end
 
   test do
-    # `test do` will create, run in and delete a temporary directory.
-    #
-    # This test will fail and we won't accept that! It's enough to just replace
-    # "false" with the main program this formula installs, but it'd be nice if you
-    # were more thorough. Run the test with `brew test med`. Options passed
-    # to `brew install` such as `--HEAD` also need to be provided to `brew test`.
-    #
-    # The installed folder is not in the path, so use the entire path to any
-    # executables being tested: `system "#{bin}/program", "do", "something"`.
-    system "#{bin}/cmake", "test"
+    (testpath/"test.c").write <<-EOS.undent
+      #include <med.h>
+      int main() {
+        med_int major, minor, release;
+        return MEDlibraryNumVersion(&major, &minor, &release);
+      }
+    EOS
+    system ENV.cc, "test.c", "-L#{lib}", "-L/usr/local/lib", "-lmedC", "-o", "test"
+    system "./test"
   end
 end
 
