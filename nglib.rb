@@ -9,9 +9,8 @@ class Nglib < Formula
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
     cellar :any
-    sha256 "578236db1580fdcea78e1f5d66b57fd45081573a9998734ab48590403b361158" => :sierra
-    sha256 "9a94749cdee9e6a73b66e562eab189e5b8dd9925561d74f616595cbdce6b9859" => :el_capitan
-    sha256 "c26ce6e39e5bc2c4743a8b8ae87aff4abf8c7f0e97eb46da2a513422b431c74d" => :yosemite
+    rebuild 1
+    sha256 "42fb23c1624d7efbca8455e9e62768fca0900730a6f20ba4597af47a933d443c" => :yosemite
   end
 
   # These two conflict with each other, so we'll have at most one.
