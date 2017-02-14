@@ -3,7 +3,6 @@ class Nglib < Formula
   homepage "https://sourceforge.net/projects/netgen-mesher/"
   url "https://downloads.sourceforge.net/project/netgen-mesher/netgen-mesher/5.3/netgen-5.3.1.tar.gz"
   sha256 "cb97f79d8f4d55c00506ab334867285cde10873c8a8dc783522b47d2bc128bf9"
-  version "5.3.1"
   revision 2
 
   bottle do
@@ -17,13 +16,27 @@ class Nglib < Formula
   depends_on "opencascade" => :recommended
   depends_on "oce" => :optional
 
-  # Fixes two issues.
-  # 1) A #define PI was used rather than M_PI
-  # 2) Prevent installation of TCL scripts that aren't needed without NETGEN
-  patch :DATA
+  patch :DATA if build.with? "opencascade"
 
   def install
     ENV.cxx11 if build.with? "opencascade"
+
+    # Set OCC search path to Homebrew prefix
+    ohai "patching file configure"
+    inreplace "configure" do |s|
+      s.gsub!(%r{(OCCFLAGS="-DOCCGEOMETRY -I\$occdir/inc -I)(.*$)}, "\\1#{HOMEBREW_PREFIX}/include/opencascade\"")
+      s.gsub!(%r{(OCCLIBS="-L\$occdir/lib)(.*$)}, "\\1\"")
+    end
+
+    # Prevent installation of TCL scripts that aren't needed without NETGEN
+    ohai "patching file ng/Makefile.in"
+    inreplace "ng/Makefile.in" do |s|
+      s.gsub!(/(^dist_bin_SCRIPTS =)(.*$)/, "\\1")
+      s.gsub!(/(^ngvisual.tcl .*$)/, "#\\1")
+      s.gsub!(/(^ngtesting.tcl .*$)/, "#\\1")
+      s.gsub!(/(^occgeom.tcl .*$)/, "#\\1")
+    end
+
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
@@ -82,23 +95,7 @@ class Nglib < Formula
     system "./test"
   end
 end
-
 __END__
-diff -ur a/configure b/configure
---- a/configure	2017-01-10 10:31:50.000000000 -0800
-+++ b/configure	2017-01-10 10:31:53.000000000 -0800
-@@ -15352,9 +15352,9 @@
- 
- if test a$occon = atrue ; then
- 
--	OCCFLAGS="-DOCCGEOMETRY -I$occdir/inc -I/usr/include/opencascade"
-+	OCCFLAGS="-DOCCGEOMETRY -I$occdir/include -I/usr/local/include/opencascade"
- 
--	OCCLIBS="-L$occdir/lib -lTKernel -lTKGeomBase -lTKMath -lTKG2d -lTKG3d -lTKXSBase -lTKOffset -lTKFillet -lTKShHealing -lTKMesh -lTKMeshVS -lTKTopAlgo -lTKGeomAlgo -lTKBool -lTKPrim -lTKBO -lTKIGES -lTKBRep -lTKSTEPBase -lTKSTEP -lTKSTL -lTKSTEPAttr -lTKSTEP209 -lTKXDESTEP -lTKXDEIGES -lTKXCAF -lTKLCAF -lFWOSPlugin"
-+	OCCLIBS="-L$occdir/lib"
- 
- 
- #  -lTKDCAF
 diff -ur a/libsrc/occ/Partition_Loop2d.cxx b/libsrc/occ/Partition_Loop2d.cxx
 --- a/libsrc/occ/Partition_Loop2d.cxx	2016-03-16 07:44:06.000000000 -0700
 +++ b/libsrc/occ/Partition_Loop2d.cxx	2016-03-16 07:45:40.000000000 -0700
@@ -113,21 +110,6 @@ diff -ur a/libsrc/occ/Partition_Loop2d.cxx b/libsrc/occ/Partition_Loop2d.cxx
  //=======================================================================
  //function : Partition_Loop2d
  //purpose  :
-diff -ur a/ng/Makefile.in b/ng/Makefile.in
---- a/ng/Makefile.in	2014-10-06 04:04:37.000000000 -0700
-+++ b/ng/Makefile.in	2016-03-19 14:43:51.000000000 -0700
-@@ -327,10 +327,7 @@
- #   /opt/netgen/lib/libngsolve.a /opt/netgen/lib/libngcomp.a /opt/netgen/lib/libngcomp.a  /opt/netgen/lib/libngfemng.a   /opt/netgen/lib/libngmg.a  /opt/netgen/lib/libngla.a  /opt/netgen/lib/libngbla.a  /opt/netgen/lib/libngstd.a -L/opt/intel/mkl/10.2.1.017/lib/em64t /opt/intel/mkl/10.2.1.017/lib/em64t/libmkl_solver_lp64.a  -lmkl_intel_lp64  -lmkl_gnu_thread -lmkl_core
- #
- #
--dist_bin_SCRIPTS = dialog.tcl menustat.tcl ngicon.tcl ng.tcl	  \
--ngvisual.tcl sockets.tcl drawing.tcl nghelp.tcl ngshell.tcl	  \
--ngtesting.tcl parameters.tcl variables.tcl csgeom.tcl stlgeom.tcl \
--occgeom.tcl acisgeom.tcl netgen.ocf
-+dist_bin_SCRIPTS =
-
- netgen_LDFLAGS = -export-dynamic
- all: all-am
 diff -r -u a/libsrc/meshing/improve2.hpp b/libsrc/meshing/improve2.hpp
 --- a/libsrc/meshing/improve2.hpp	2014-08-29 02:54:05.000000000 -0700
 +++ b/libsrc/meshing/improve2.hpp	2016-05-19 21:59:58.000000000 -0700
