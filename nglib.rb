@@ -25,7 +25,8 @@ class Nglib < Formula
     ohai "patching file configure"
     inreplace "configure" do |s|
       s.gsub!(%r{(OCCFLAGS="-DOCCGEOMETRY -I\$occdir/inc -I)(.*$)}, "\\1#{HOMEBREW_PREFIX}/include/opencascade\"")
-      s.gsub!(%r{(OCCLIBS="-L\$occdir/lib)(.*$)}, "\\1\"")
+      s.gsub!(/(^.*OCCLIBS="-L.*)( -lFWOSPlugin")/, "\\1\"")
+      s.gsub!(%r{(OCCLIBS="-L\$occdir/lib)(.*$)}, "\\1\"") if OS.mac?
     end
 
     # Prevent installation of TCL scripts that aren't needed without NETGEN
