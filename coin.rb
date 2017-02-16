@@ -10,7 +10,7 @@ class Coin < Formula
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
     cellar :any
-    sha256 "356ad388ed4c15009df105d558958f14c9f6dfb549197bebe38b7fe5d8c90cca" => :yosemite
+    sha256 "f3d8ef9934d0ac2d88d76cd4256613f4a31e0d380179e6ed62955a6268b537a0" => :yosemite
   end
 
   option "with-docs",       "Install documentation"
@@ -30,6 +30,8 @@ class Coin < Formula
     url "https://bitbucket.org/Coin3D/coin/downloads/SoQt-1.5.0.tar.gz"
     sha256 'f6a34b4c19e536c00f21aead298cdd274a7a0b03a31826fbe38fc96f3d82ab91'
   end
+
+  patch :DATA
 
   def install
 
@@ -67,3 +69,30 @@ class Coin < Formula
     end
   end
 end
+__END__
+diff --git a/include/Inventor/system/inttypes.h.cmake.in b/include/Inventor/system/inttypes.h.cmake.in
+index 2aa7153..39ef9d9 100755
+--- a/include/Inventor/system/inttypes.h.cmake.in
++++ b/include/Inventor/system/inttypes.h.cmake.in
+@@ -76,7 +76,7 @@
+    configure?  20010711 mortene. */
+ 
+ /* The <inttypes.h> header file. */
+-#cmakedefine HAVE_INTTYPES_H
++#cmakedefine HAVE_INTTYPES_H 1
+ /* The <stdint.h> header file. */
+ #cmakedefine HAVE_STDINT_H 1
+ /* The <sys/types.h> header file. */
+diff --git a/src/config.h.cmake.in b/src/config.h.cmake.in
+index 7f34365..4ccc1e8 100755
+--- a/src/config.h.cmake.in
++++ b/src/config.h.cmake.in
+@@ -208,7 +208,7 @@
+ #define HAVE_INTPTR_T 1
+ 
+ /* Define to 1 if you have the <inttypes.h> header file. */
+-#cmakedefine HAVE_INTTYPES_H
++#cmakedefine HAVE_INTTYPES_H 1
+ 
+ /* Define to 1 if you have the <io.h> header file. */
+ #cmakedefine HAVE_IO_H
