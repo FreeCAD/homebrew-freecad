@@ -1,21 +1,29 @@
 class Coin < Formula
   desc "Retained-mode toolkit for 3D graphics development"
   homepage 'https://bitbucket.org/Coin3D/coin/wiki/Home'
-  url 'https://bitbucket.org/Coin3D/coin/downloads/Coin-3.1.3.tar.gz'
-  sha256 '583478c581317862aa03a19f14c527c3888478a06284b9a46a0155fa5886d417'
+  url 'https://bitbucket.org/Coin3D/coin/get/035e53e53730c5cc96bfdb5ea9131ce57bffb2d3.tgz'
+  sha256 'e93d77e6ac61f166d93b66e60c644928935263ded1c27205f2e4352adaafdf97'
+  version "4.0.0a"
+
+  head "https://bitbucket.org/Coin3D/coin/get/tip.tgz"
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
-    sha256 "d434e5e7dcf9536a961f3025c3ae135cc4f3233f25587a27f81bc02ff9f3abca" => :el_capitan
-    sha256 "035234f145a77884883198dda0911a2539f48eebd4523956ff7cc4dc1ab4ae9d" => :yosemite
+    cellar :any
+    sha256 "356ad388ed4c15009df105d558958f14c9f6dfb549197bebe38b7fe5d8c90cca" => :yosemite
   end
 
-  option "without-soqt", "Build without SoQt"
-  option "without-framework", "Install as a library; do not package as a Framework"
+  option "with-docs",       "Install documentation"
+  option "with-threadsafe", "Include Thread safe traverals (experimental)"
+  option "with-soqt",       "Build without SoQt"
+  option "with-framework",  "Install SoQT as a library; do not package as a Framework"
+
+  depends_on "cmake"   => :build
+  depends_on "doxygen" => :build if build.with? "docs"
 
   if build.with? "soqt"
     depends_on "pkg-config" => :build
-    #depends_on "qt" 
+    #depends_on "qt@5.6" 
   end
 
   resource "soqt" do
@@ -23,35 +31,24 @@ class Coin < Formula
     sha256 'f6a34b4c19e536c00f21aead298cdd274a7a0b03a31826fbe38fc96f3d82ab91'
   end
 
-  # https://bitbucket.org/Coin3D/coin/pull-request/3/missing-include/diff
-  patch do
-    url "https://bitbucket.org/cbuehler/coin/commits/e146a6a93a6b807c28c3d73b3baba80fa41bc5f6/raw"
-    sha256 '6ecbd868ed574339b7fec3882e5fdccd40a60094800f9b5c081899091fdc3ab5'
-  end
- 
-  # https://bitbucket.org/Coin3D/coin/issue/23/xcode-clang-error-compiling-freetypecpp
-  # Fixes freetype.cpp build issue
-  patch :p0 do
-    url "https://bitbucket.org/Coin3D/coin/issue-attachment/23/Coin3D/coin/1351441783.52/23/fix-weird-error.diff"
-    sha256 'ab0c44f55c2e102ea641140652c1a02266b63b075266dd1e8b5e08599fc086e9'
-  end
-
-  # Patch Info.plist xml to be well-formed
-  patch :DATA
-
   def install
-    # https://bitbucket.org/Coin3D/coin/issue/47 (fix misspelled test flag)
-    inreplace "configure", '-fno-for-scoping', '-fno-for-scope'
 
-    # https://bitbucket.org/Coin3D/coin/issue/45 (suppress math-undefs)
-    # http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/graphics/Coin/patches/patch-include_Inventor_C_base_math-undefs.h
-    inreplace "include/Inventor/C/base/math-undefs.h", "#ifndef COIN_MATH_UNDEFS_H", "#if false"
+    cmake_args = std_cmake_args
+    cmake_args << "-DCOIN_THREADSAFE:BOOL=OFF" if build.without? "threadsafe"
+    cmake_args << "-DCOIN_BUILD_DOCUMENTATION:BOOL=OFF" if build.without? "docs"
 
-    system "./configure", "--disable-debug", "--disable-dependency-tracking",
-                          "--prefix=#{prefix}",
-                          build.with?("framework") ? "--with-framework-prefix=#{frameworks}" : "--without-framework"
+    mkdir "build-lib" do
+      system "cmake", "..", *cmake_args
+      system "make", "install"
+    end
 
-    system "make install"
+    # Certain apps, like pivy, need coin-config. Cmake does not yet generate the coin-default.cfg
+    mkdir "build-cfg" do
+      system "../configure", "--prefix=#{prefix}", "--without-framework", "--enable-3ds-import", "--disable-dependency-tracking"
+      make "coin-default.cfg"
+      (share/"Coin/conf").install "coin-default.cfg"
+    end
+    bin.install "bin/coin-config"
 
     if build.with? "soqt"
       resource("soqt").stage do
@@ -60,7 +57,7 @@ class Coin < Formula
         # https://bitbucket.org/Coin3D/coin/issue/40#comment-7888751
         inreplace "configure", /^(LIBS=\$sim_ac_uniqued_list)$/, "# \\1"
 
-        system "./configure", "--disable-debug",
+        system "./configure", "--disable-debug", 
                               "--disable-dependency-tracking",
                               build.with?("framework") ? "--with-framework-prefix=#{frameworks}" : "--without-framework",
                               "--prefix=#{prefix}"
@@ -70,27 +67,3 @@ class Coin < Formula
     end
   end
 end
-
-__END__
-diff --git a/Info.plist.in b/Info.plist.in
-index 0116d77..97d5831 100644
---- a/Info.plist.in
-+++ b/Info.plist.in
-@@ -7,7 +7,7 @@
- 	<key>CFBundleExecutable</key>
- 	<string>Inventor</string>
- 	<key>CFBundleGetInfoString</key>
--	<string>Coin framework, copyright Kongsberg Oil & Gas Technologies 1998-2010</string>
-+	<string>Coin framework, copyright Kongsberg Oil &amp; Gas Technologies 1998-2010</string>
- 	<key>CFBundleIdentifier</key>
- 	<string>org.coin3d.Coin.framework</string>
- 	<key>CFBundleInfoDictionaryVersion</key>
-@@ -23,6 +23,6 @@
- 	<key>CFBundleVersion</key>
- 	<string>@COIN_VERSION@</string>
- 	<key>NSHumanReadableCopyright</key>
--	<string>Copyright Kongsberg Oil & Gas Technologies 1998-2010</string>
-+	<string>Copyright Kongsberg Oil &amp; Gas Technologies 1998-2010</string>
- </dict>
- </plist>
-

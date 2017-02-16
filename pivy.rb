@@ -8,13 +8,13 @@ class Pivy < Formula
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
     cellar :any
-    sha256 "270e4422e36c8085f0654f99d199a891f5bc8365484a0efa60b33223a94548e5" => :yosemite
-    sha256 "e3a4a42469be05d1b2a7ec745b25ceed0922f57b64d268ebb2cee0a55225c056" => :el_capitan
+    rebuild 2
+    sha256 "899afa2ad74eecaf93c4c961f3c5339bef0f030b55fc8de765ad8c6e6e96cc48" => :yosemite
   end
 
-  depends_on :python
+  depends_on :python => :build
+  depends_on 'swig'  => :build
   depends_on "FreeCAD/freecad/coin"
-  depends_on 'swig' => :recommended
 
   def install
     system "python", "setup.py", "install", "--prefix=#{prefix}"
