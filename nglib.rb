@@ -21,10 +21,12 @@ class Nglib < Formula
   def install
     ENV.cxx11 if build.with? "opencascade"
 
+    cad_kernel = Formula[build.with?("opencascade") ? "opencascade" : "oce"]
+
     # Set OCC search path to Homebrew prefix
     ohai "patching file configure"
     inreplace "configure" do |s|
-      s.gsub!(%r{(OCCFLAGS="-DOCCGEOMETRY -I\$occdir/inc -I)(.*$)}, "\\1#{HOMEBREW_PREFIX}/include/opencascade\"")
+      s.gsub!(%r{(OCCFLAGS="-DOCCGEOMETRY -I\$occdir/inc )(.*$)}, "\\1-I#{HOMEBREW_PREFIX}/include/#{cad_kernel}\"")
       s.gsub!(/(^.*OCCLIBS="-L.*)( -lFWOSPlugin")/, "\\1\"")
       s.gsub!(%r{(OCCLIBS="-L\$occdir/lib)(.*$)}, "\\1\"") if OS.mac?
     end
@@ -47,8 +49,6 @@ class Nglib < Formula
 
     if build.with?("opencascade") || build.with?("oce")
       args << "--enable-occ"
-
-      cad_kernel = Formula[build.with?("opencascade") ? "opencascade" : "oce"]
 
       if build.with? "opencascade"
         args << "--with-occ=#{cad_kernel.opt_prefix}"
