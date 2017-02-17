@@ -31,7 +31,11 @@ class Coin < Formula
     sha256 'f6a34b4c19e536c00f21aead298cdd274a7a0b03a31826fbe38fc96f3d82ab91'
   end
 
-  patch :DATA
+  # Apply upstream patch: CMake HAVE_INTTYPES_H implementation issue #130
+  patch :p1 do
+    url "https://bitbucket.org/Coin3D/coin/issues/attachments/130/Coin3D/coin/1487268985.0/130/HAVE_INTTYPES_H.patch"
+    sha256 'e65b44a2f19a366091e244c76b97951d0087723f51ec8ea2b686c43429377558'
+  end
 
   def install
 
@@ -69,30 +73,3 @@ class Coin < Formula
     end
   end
 end
-__END__
-diff --git a/include/Inventor/system/inttypes.h.cmake.in b/include/Inventor/system/inttypes.h.cmake.in
-index 2aa7153..39ef9d9 100755
---- a/include/Inventor/system/inttypes.h.cmake.in
-+++ b/include/Inventor/system/inttypes.h.cmake.in
-@@ -76,7 +76,7 @@
-    configure?  20010711 mortene. */
- 
- /* The <inttypes.h> header file. */
--#cmakedefine HAVE_INTTYPES_H
-+#cmakedefine HAVE_INTTYPES_H 1
- /* The <stdint.h> header file. */
- #cmakedefine HAVE_STDINT_H 1
- /* The <sys/types.h> header file. */
-diff --git a/src/config.h.cmake.in b/src/config.h.cmake.in
-index 7f34365..4ccc1e8 100755
---- a/src/config.h.cmake.in
-+++ b/src/config.h.cmake.in
-@@ -208,7 +208,7 @@
- #define HAVE_INTPTR_T 1
- 
- /* Define to 1 if you have the <inttypes.h> header file. */
--#cmakedefine HAVE_INTTYPES_H
-+#cmakedefine HAVE_INTTYPES_H 1
- 
- /* Define to 1 if you have the <io.h> header file. */
- #cmakedefine HAVE_IO_H
