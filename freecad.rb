@@ -32,7 +32,7 @@ class Freecad < Formula
   depends_on "homebrew/science/opencascade"
   depends_on "homebrew/science/orocos-kdl"
   depends_on "homebrew/science/matplotlib"
-  depends_on "FreeCAD/freecad/med-file"
+  depends_on "homebrew/science/med-file"
   depends_on "FreeCAD/freecad/pivy"
   depends_on "FreeCAD/freecad/coin"
   depends_on "FreeCAD/Freecad/nglib"
