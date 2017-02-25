@@ -33,17 +33,11 @@ class Freecad < Formula
   depends_on "homebrew/science/orocos-kdl"
   depends_on "homebrew/science/matplotlib"
   depends_on "homebrew/science/med-file"
+  depends_on "homebrew/science/vtk"
   depends_on "FreeCAD/freecad/pivy"
   depends_on "FreeCAD/freecad/coin"
   depends_on "FreeCAD/Freecad/nglib"
   depends_on "swig" => :build
-
-  if build.with?("freecad-bottles") && MacOS.version == :yosemite
-    ohai "Using pre-packaged FreeCAD bottles"
-    depends_on "FreeCAD/freecad/vtk" # Bottled using options --without-python
-  else
-    depends_on "homebrew/science/vtk" => "without-python"
-  end
 
   if build.with?("packaging-utils")
     depends_on "node"
