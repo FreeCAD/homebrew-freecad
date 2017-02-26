@@ -34,9 +34,9 @@ class Freecad < Formula
   depends_on "homebrew/science/matplotlib"
   depends_on "homebrew/science/med-file"
   depends_on "homebrew/science/vtk"
+  depends_on "homebrew/science/nglib"
   depends_on "FreeCAD/freecad/pivy"
   depends_on "FreeCAD/freecad/coin"
-  depends_on "FreeCAD/Freecad/nglib"
   depends_on "swig" => :build
 
   if build.with?("packaging-utils")
