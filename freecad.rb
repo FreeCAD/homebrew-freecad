@@ -9,9 +9,8 @@ class Freecad < Formula
   # Debugging Support
   option "with-debug", "Enable debug build"
 
-  # Option to use custom bottles built with FreeCAD-specific option primarily
-  # to reduce Travis build times
-  option "with-freecad-bottles", "Build using FreeCAD hosted bottles pre-built with FreeCAD-specific options"
+  # Option to build with legacy qt4
+  option 'with-qt4'
 
   # Optionally install packaging dependencies
   option "with-packaging-utils"
@@ -27,16 +26,21 @@ class Freecad < Formula
   depends_on "python"
   depends_on "boost-python"
   depends_on "xerces-c"
-  depends_on "cartr/qt4/qt"
-  depends_on "cartr/qt4/pyside-tools"
+  if build.with?("qt4") then
+     depends_on "cartr/qt4/qt"
+     depends_on "cartr/qt4/pyside-tools"
+  else
+     depends_on "qt@5.6"
+     depends_on "FreeCAD/freecad/pyside-tools"
+  end
   depends_on "homebrew/science/opencascade"
   depends_on "homebrew/science/orocos-kdl"
   depends_on "homebrew/science/matplotlib"
   depends_on "homebrew/science/med-file"
   depends_on "homebrew/science/vtk"
   depends_on "homebrew/science/nglib"
-  depends_on "FreeCAD/freecad/pivy"
   depends_on "FreeCAD/freecad/coin"
+  depends_on "FreeCAD/freecad/pivy"
   depends_on "swig" => :build
 
   if build.with?("packaging-utils")

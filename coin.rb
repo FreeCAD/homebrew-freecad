@@ -23,7 +23,7 @@ class Coin < Formula
 
   if build.with? "soqt"
     depends_on "pkg-config" => :build
-    #depends_on "qt@5.6" 
+    depends_on "qt@5.6" 
   end
 
   resource "soqt" do
