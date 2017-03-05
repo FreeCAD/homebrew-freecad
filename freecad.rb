@@ -28,7 +28,7 @@ class Freecad < Formula
   depends_on "xerces-c"
   if build.with?("qt4") then
      depends_on "cartr/qt4/qt"
-     depends_on "cartr/qt4/pyside-tools"
+     depends_on "cartr/qt4/pyside-tools@1.2"
   else
      depends_on "qt@5.6"
      depends_on "FreeCAD/freecad/pyside-tools"
