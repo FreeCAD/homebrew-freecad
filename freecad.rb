@@ -66,7 +66,7 @@ class Freecad < Formula
 
     mkdir "Build" do
       system "cmake", *args, ".."
-      system "make", "install"
+      system "make", "-j#{ENV.make_jobs}", "install"
     end
   end
 
