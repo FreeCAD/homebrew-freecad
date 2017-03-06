@@ -54,7 +54,11 @@ class Freecad < Formula
     end
 
     # Set up needed cmake args
-    args = std_cmake_args + %W[
+    args = std_cmake_args
+    if build.without?("qt4")
+      args << "-DBUILD_QT5=ON"
+    end
+    args << %W[
       -DBUILD_FEM_NETGEN:BOOL=ON
       -DFREECAD_USE_EXTERNAL_KDL=ON
       -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
