@@ -57,6 +57,7 @@ class Freecad < Formula
     args = std_cmake_args
     if build.without?("qt4")
       args << "-DBUILD_QT5=ON"
+      args << "-DCMAKE_PREFIX_PATH=" + Formula["qt@5.6"].opt_prefix + "/lib/cmake"
     end
     args << %W[
       -DBUILD_FEM_NETGEN:BOOL=ON
