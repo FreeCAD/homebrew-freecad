@@ -1,5 +1,5 @@
 class Freecad < Formula
-  desc "A parametric 3D modeler"
+  desc "Parametric 3D modeler"
   homepage "http://www.freecadweb.org"
   url "https://github.com/FreeCAD/FreeCAD/archive/0.17_pre.tar.gz"
   version "0.17-pre"
@@ -10,7 +10,7 @@ class Freecad < Formula
   option "with-debug", "Enable debug build"
 
   # Option to build with legacy qt4
-  option 'with-qt4'
+  option "with-qt4"
 
   # Optionally install packaging dependencies
   option "with-packaging-utils"
@@ -26,12 +26,12 @@ class Freecad < Formula
   depends_on "python"
   depends_on "boost-python"
   depends_on "xerces-c"
-  if build.with?("qt4") then
-     depends_on "cartr/qt4/qt"
-     depends_on "cartr/qt4/pyside-tools@1.2"
+  if build.with?("qt4")
+    depends_on "cartr/qt4/qt"
+    depends_on "cartr/qt4/pyside-tools@1.2"
   else
-     depends_on "qt@5.6"
-     depends_on "FreeCAD/freecad/pyside-tools"
+    depends_on "qt@5.6"
+    depends_on "FreeCAD/freecad/pyside-tools"
   end
   depends_on "homebrew/science/opencascade"
   depends_on "homebrew/science/orocos-kdl"
