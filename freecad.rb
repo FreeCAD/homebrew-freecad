@@ -65,7 +65,7 @@ class Freecad < Formula
     ]
 
     mkdir "Build" do
-      system "cmake", "..", *args
+      system "cmake", *args, ".."
       system "make", "install"
     end
   end
