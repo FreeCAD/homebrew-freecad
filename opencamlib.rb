@@ -45,8 +45,11 @@ class Opencamlib < Formula
       cmake_args << "-DCMAKE_C_FLAGS=-I#{llvm_inc}"
       cmake_args << "-DCMAKE_CXX_FLAGS=-I#{llvm_inc} -std=c++11"
 
-      cmake_args << "-DPYTHON_INCLUDE_DIR=#{pyinclude}"
-      cmake_args << "-DPYTHON_LIBRARY=#{pylib}"
+      if build.with? "python"
+        cmake_args << "-DPYTHON_INCLUDE_DIR=#{pyinclude}"
+        cmake_args << "-DPYTHON_LIBRARY=#{pylib}"
+      end
+
       system "cmake", *cmake_args, ".."
       system "make", "-j#{ENV.make_jobs}", "install"
     end
