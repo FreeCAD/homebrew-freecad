@@ -52,6 +52,7 @@ class Pyside < Formula
           -DSITE_PACKAGE=#{lib}/python#{version}/site-packages
           -DQT_SRC_DIR=#{qt.include}
           -DALTERNATIVE_QT_INCLUDE_DIR=#{qt.opt_prefix}/include
+          -DCMAKE_PREFIX_PATH=#{qt.prefix}/lib/cmake/
           -DBUILD_TESTS:BOOL=ON
         ]
         args << ".."

@@ -25,6 +25,7 @@ class Shiboken < Formula
   def install
     # ENV.deparallelize  # if your formula fails when building in parallel
 
+    qt = Formula["qt@5.6"]
     # As of 1.1.1 the install fails unless you do an out of tree build and put
     # the source dir last in the args.
     Language::Python.each_python(build) do |python, version|
@@ -38,6 +39,7 @@ class Shiboken < Formula
           args << "-DPYTHON3_LIBRARY:FILEPATH=#{python_framework}/lib/libpython#{version}.dylib"
         end
         args << "-DUSE_PYTHON3:BOOL=ON" if python == "python3"
+        args << "-DCMAKE_PREFIX_PATH=#{qt.prefix}/lib/cmake/"
         args << ".."
         system "cmake", *args
         system "make", "install"
