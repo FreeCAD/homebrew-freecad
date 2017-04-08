@@ -53,13 +53,16 @@ class Pyside < Formula
           -DQT_SRC_DIR=#{qt.include}
           -DALTERNATIVE_QT_INCLUDE_DIR=#{qt.opt_prefix}/include
           -DCMAKE_PREFIX_PATH=#{qt.prefix}/lib/cmake/
-          -DBUILD_TESTS:BOOL=ON
+          -DBUILD_TESTS:BOOL=OFF
         ]
         args << ".."
         system "cmake", *args
         system "make"
         system "make", "install"
       end
+
+      # Work-around to https://bugreports.qt.io/browse/PYSIDE-494
+      rm prefix/"lib/python2.7/site-packages/PySide2/QtTest.so"
     end
 
     #inreplace include/"PySide2/pyside2_global.h", qt.prefix, qt.opt_prefix
