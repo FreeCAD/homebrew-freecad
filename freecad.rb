@@ -21,7 +21,6 @@ class Freecad < Formula
 
   # Required dependencies
   depends_on :macos => :mavericks
-  depends_on "eigen"
   depends_on "freetype"
   depends_on "python"
   depends_on "boost-python"
