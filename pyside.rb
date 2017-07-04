@@ -10,6 +10,7 @@ class Pyside < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
+    sha256 "76830d888a8c4056a08d51dd3bf3d476f1f1d07bf1e073d8f4bdf3b7e6086648" => :sierra
     sha256 "224ec2f0e9a8832b81dce1f82c63dc9bc0cd3e8e8da9207b21722359eb192129" => :yosemite
   end
 

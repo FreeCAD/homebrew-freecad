@@ -11,6 +11,7 @@ class PysideTools < Formula
   bottle do
     cellar :any
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
+    sha256 "b22623b0c8614886bda0bfc6240037f1a2ce61eca5586ab2669db9adedf0a063" => :sierra
     sha256 "bb74cec1a97adcb8daf50e6cfa3d85256d53eb06b80896a6216fcb44614982d0" => :yosemite
   end
 

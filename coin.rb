@@ -10,6 +10,7 @@ class Coin < Formula
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
     cellar :any
+    sha256 "d0f8c51f8be072196f01310b4bd58652ccc84730d0d0d1b2a76164b9e51bdbf6" => :sierra
     sha256 "f3d8ef9934d0ac2d88d76cd4256613f4a31e0d380179e6ed62955a6268b537a0" => :yosemite
   end
 
