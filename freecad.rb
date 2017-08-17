@@ -36,7 +36,7 @@ class Freecad < Formula
   depends_on "homebrew/science/orocos-kdl"
   depends_on "homebrew/science/matplotlib"
   depends_on "homebrew/science/med-file"
-  depends_on "homebrew/science/vtk"
+  depends_on "vtk"
   depends_on "homebrew/science/nglib"
   depends_on "FreeCAD/freecad/coin"
   depends_on "FreeCAD/freecad/pivy"
