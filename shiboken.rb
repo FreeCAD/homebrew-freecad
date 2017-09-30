@@ -12,6 +12,7 @@ class Shiboken < Formula
     cellar :any
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
     sha256 "2d0308e032de9b74a37b4084e258329ca1b8da60c81f1378c2c49e7938d37cd2" => :sierra
+    sha256 "8f97df82f7f070cfbc3f2811f7e3179efb54c00f3e6c190d4eb2d479532483b7" => :el_capitan
     sha256 "16decaf4ae93080d5ae4ae320a743645be10f424457bf41d5cce5239038e7770" => :yosemite
   end
 
