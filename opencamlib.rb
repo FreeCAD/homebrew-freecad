@@ -35,7 +35,7 @@ class Opencamlib < Formula
       end
 
       if build.with? "python"
-        cmake_args << "-DPYTHON_EXECUTABLE=#{Formula["python"].bin}/python"
+        cmake_args << "-DPYTHON_EXECUTABLE=#{Formula["python"].bin}/python2"
       else
         cmake_args << "-DBUILD_PY_LIB=0"
       end
