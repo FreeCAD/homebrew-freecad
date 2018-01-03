@@ -32,8 +32,8 @@ class Freecad < Formula
     depends_on "qt@5.6"
     depends_on "FreeCAD/freecad/pyside-tools"
   end
-  depends_on "homebrew/science/opencascade"
-  depends_on "homebrew/science/orocos-kdl"
+  depends_on "opencascade"
+  depends_on "orocos-kdl"
   depends_on "homebrew/science/matplotlib"
   depends_on "homebrew/science/med-file"
   depends_on "vtk"
