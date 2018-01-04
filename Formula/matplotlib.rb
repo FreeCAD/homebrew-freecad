@@ -81,8 +81,8 @@ class Matplotlib < Formula
   cxxstdlib_check :skip
 
   resource "setuptools" do
-    url "https://files.pythonhosted.org/packages/69/56/f0f52281b5175e3d9ca8623dadbc3b684e66350ea9e0006736194b265e99/setuptools-38.2.4.zip"
-    sha256 "9c671a6291a5b1171fb9da81665eb4f9625c7dbddc613d82abdc6002a4bce896"
+    url "https://pypi.python.org/packages/e9/c3/5986db56819bd88e1a250cad2a97249211686b1b7b5d95f9ab64d403a2cb/setuptools-38.2.5.zip"
+    sha256 "b080f276cc868670540b2c03cee06cc14d2faf9da7bec0f15058d1b402c94507"
   end
 
   resource "Cycler" do
@@ -118,8 +118,8 @@ class Matplotlib < Formula
 
   # python2 only
   resource "subprocess32" do
-    url "https://files.pythonhosted.org/packages/b8/2f/49e53b0d0e94611a2dc624a1ad24d41b6d94d0f1b0a078443407ea2214c2/subprocess32-3.2.7.tar.gz"
-    sha256 "1e450a4a4c53bf197ad6402c564b9f7a53539385918ef8f12bdf430a61036590"
+    url "https://pypi.python.org/packages/28/91/d1283618eba07c4e8e18c58b3fd8b5ff3a8992fb652a3720535ddf2f2916/subprocess32-3.5.0rc1.tar.gz"
+    sha256 "2733defaf2cb24282fdc94cc9f2e0682308d4b20e4b7a6e384580410f314c9af"
   end
 
   def install
