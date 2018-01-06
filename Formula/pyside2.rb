@@ -1,11 +1,9 @@
 class Pyside2 < Formula
   desc "Python bindings for Qt"
   homepage "https://wiki.qt.io/PySide2"
-  url "https://this-should-get-the-particular-file-we-want"
-  sha256 "0123456789"
-  version "2.0.0-something"
-  # http://code.qt.io/cgit/pyside/pyside-setup.git/
-
+  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=fbb90fbf357f5632b3c87c8766e6d56c48f6a45a;sf=tgz"
+  sha256 "03876f5150f21e939f6c697208aa29b3262289839c49541fa2dea3b7b2778ce8"
+  version "2.0.0-fbb90fb"
   head "https://code.qt.io/pyside/pyside-setup.git", :branch => "dev"
 
   # don't use depends_on :python because then bottles install Homebrew's python
@@ -14,6 +12,7 @@ class Pyside2 < Formula
   depends_on :python3 => :optional
 
   depends_on "cmake" => :build
+  # depends_on "llvm" => :build
   depends_on "qt"
 
   resource "libclang" do
@@ -23,15 +22,15 @@ class Pyside2 < Formula
 
   def install
     ENV.cxx11
-
+    
     # libclang unpacks in to a subdirectory called libclang
     resource("libclang").stage(buildpath)
-    ENV["CLANG_INSTALL_DIR"] = "#{buildpath}/libclang"
+    ENV["LLVM_INSTALL_DIR"] = "#{buildpath}/libclang"
 
     qt = Formula["qt"]
 
     Language::Python.each_python(build) do |python, version|
-      system python, "setup.py", "--qmake=#{qt.prefix}/bin/qmake", "build"
+      system python, "setup.py", "build"
 # "--jobs=#{ENV.make_jobs}", 
     end
   end
