@@ -1,12 +1,11 @@
 class Pyside2 < Formula
   desc "Python bindings for Qt"
   homepage "https://wiki.qt.io/PySide2"
-  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=fbb90fbf357f5632b3c87c8766e6d56c48f6a45a;sf=tgz"
-  sha256 "03876f5150f21e939f6c697208aa29b3262289839c49541fa2dea3b7b2778ce8"
-  version "2.0.0-fbb90fb"
+  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=04af851b4b886675fc68e0f8e637d9e399d4000c;sf=tgz"
+  sha256 "46c750e4f67f87b78627f45c4a4f74bd3a418681f6dc66468b140c23b1265965"
+  version "2.0.0-04af851"
   head "https://code.qt.io/pyside/pyside-setup.git", :branch => "dev"
 
-  # don't use depends_on :python because then bottles install Homebrew's python
   option "without-python", "Build without python 2 support"
   depends_on "python" => :recommended
   depends_on "python3" => :optional
@@ -16,13 +15,10 @@ class Pyside2 < Formula
   depends_on "qt"
 
   def install
-    ENV.cxx11
-
     ENV["LLVM_INSTALL_DIR"] = "#{Formula["llvm"].opt_prefix}"
 
     Language::Python.each_python(build) do |python, version|
-      system python, "setup.py", "build"
-      # , "--jobs=#{ENV.make_jobs}"
+      system "python", *Language::Python.setup_install_args(prefix)
     end
   end
 
