@@ -15,10 +15,15 @@ class Pyside2 < Formula
   depends_on "qt"
 
   def install
-    ENV["LLVM_INSTALL_DIR"] = "#{Formula["llvm"].opt_prefix}"
+    llvm_path = Formula["llvm"].opt_prefix
+
+    # The Homebrew clang++ shim causes problems with Shiboken2
+    ENV.prepend_path "PATH", "#{llvm_path}/bin"
+
+    ENV["LLVM_INSTALL_DIR"] = llvm_path
 
     Language::Python.each_python(build) do |python, version|
-      system "python", *Language::Python.setup_install_args(prefix)
+      system "python", *Language::Python.setup_install_args(prefix), "--debug"
     end
   end
 
