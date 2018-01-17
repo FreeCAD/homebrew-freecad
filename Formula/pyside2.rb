@@ -19,7 +19,7 @@ class Pyside2 < Formula
     ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
 
     Language::Python.each_python(build) do |python, version|
-      system "python", *Language::Python.setup_install_args(prefix)
+      system python, *Language::Python.setup_install_args(prefix)
     end
   end
 
