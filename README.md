@@ -1,6 +1,6 @@
 # homebrew-freecad
 ![img_0039](https://cloud.githubusercontent.com/assets/4140247/26723866/91e6a282-4764-11e7-9e3b-b8eb4fdc03f1.PNG) ![img_0040](https://cloud.githubusercontent.com/assets/4140247/26723951/f96fd95a-4764-11e7-96eb-4889cab6d246.PNG)  
-**FreeCAD** is a Free (as in Libre) multiplatform Open Source Parametric 3D CAM software.   
+**FreeCAD** is a Free (as in Libre) multiplatform Open Source Parametric 3D CAD software.   
 **Homebrew** is a MacOSX Package Manager.
 ## Overview
 The primary and frequent use case for this formula is for developers to conveniently install all the required FreeCAD dependencies to support FreeCAD development.  
