@@ -3,7 +3,7 @@ class Opencamlib < Formula
   homepage "http://www.anderswallin.net/CAM/"
   version "0.0.1" # TODO Specify a real version here - note usage below
   url "https://github.com/aewallin/opencamlib.git",
-      :revision => "398f7c7fac60169fda067ea0f5ebc15083361f5c"
+      :revision => "f8bd0a66ad4f1114a3caf84f430027c2da79c91d"
   head "https://github.com/aewallin/opencamlib.git", :using => :git
 
   depends_on "cmake" => :build
