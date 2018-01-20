@@ -18,6 +18,9 @@ class Pyside2 < Formula
   def install
     ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
 
+    # This is a workaround for current problems with Shiboken2
+    ENV["HOMEBREW_INCLUDE_PATHS"] = ENV["HOMEBREW_INCLUDE_PATHS"].sub(Formula["qt"].include, "")
+
     Language::Python.each_python(build) do |python, version|
       system python, *Language::Python.setup_install_args(prefix)
     end
