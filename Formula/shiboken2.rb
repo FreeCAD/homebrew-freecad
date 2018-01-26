@@ -1,15 +1,15 @@
 class Shiboken2 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
   homepage "https://wiki.qt.io/PySide2"
-  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=5c5ad6eb7a48b940841e6a15e3a802936b1adcae;sf=tgz"
-  sha256 "07c16f64a6e52e11c9643ef11e798a256a857ec4b791ee518704601f594ca4f3"
-  version "5.9-1"
+  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=285f5ffeac9db359ef7775d3f3a4d59c4e844d4a;sf=tgz"
+  sha256 "9d5ad12c056787bb95249cb89dbd440242a07aaaa467d1c23de0db1ac588304d"
+  version "5.9-285f5ff"
   # Git commits 'https://codereview.qt-project.org/gitweb?p=pyside/shiboken.git'
 
   head "https://codereview.qt-project.org/#/admin/projects/pyside/pyside-setup", :branch => "5.9"
 
   depends_on "cmake" => :build
-  depends_on "llvm"
+  depends_on "llvm" => :build
   depends_on "qt"
 
   # don't use depends_on :python because then bottles install Homebrew's python
