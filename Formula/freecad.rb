@@ -29,8 +29,8 @@ class Freecad < Formula
     depends_on "cartr/qt4/qt@4"
     depends_on "cartr/qt4/pyside-tools@1.2"
   else
-    depends_on "qt@5.6"
-    depends_on "FreeCAD/freecad/pyside-tools"
+    depends_on "qt"
+    depends_on "FreeCAD/freecad/pyside2-tools"
   end
   depends_on "opencascade"
   depends_on "orocos-kdl"
