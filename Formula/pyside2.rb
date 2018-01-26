@@ -1,9 +1,9 @@
 class Pyside2 < Formula
   desc "Python bindings for Qt5 and greater"
   homepage "https://wiki.qt.io/PySide2"
-  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=5c5ad6eb7a48b940841e6a15e3a802936b1adcae;sf=tgz"
-  sha256 "2ae1a65cae10e197975d11d7f8c72c524cad973403c83f3d470d0e993c56f8d6"
-  version "5.9-1"
+  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=285f5ffeac9db359ef7775d3f3a4d59c4e844d4a;sf=tgz"
+  sha256 "9d5ad12c056787bb95249cb89dbd440242a07aaaa467d1c23de0db1ac588304d"
+  version "5.9-285f5f"
   # Git commits
   # 'https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=shortlog;h=refs/heads/5.9'
 
