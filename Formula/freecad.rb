@@ -39,6 +39,7 @@ class Freecad < Formula
   depends_on "vtk"
   depends_on "FreeCAD/freecad/nglib"
   depends_on "FreeCAD/freecad/coin"
+  depends_on "FreeCAD/freecad/soqt"
   depends_on "FreeCAD/freecad/pivy"
   depends_on "swig" => :build
 
