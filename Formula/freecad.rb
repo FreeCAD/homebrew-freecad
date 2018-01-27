@@ -34,10 +34,10 @@ class Freecad < Formula
   end
   depends_on "opencascade"
   depends_on "orocos-kdl"
-  depends_on "matplotlib"
-  depends_on "homebrew/science/med-file"
+  depends_on "freecad/freecad/matplotlib"
+  depends_on "brewsci/science/med-file"
   depends_on "vtk"
-  depends_on "homebrew/science/nglib"
+  depends_on "FreeCAD/freecad/nglib"
   depends_on "FreeCAD/freecad/coin"
   depends_on "FreeCAD/freecad/pivy"
   depends_on "swig" => :build
