@@ -57,7 +57,7 @@ class Pyside2 < Formula
         ]
         args << "../sources/pyside2"
         system "cmake", *args
-        system "make"
+        system "make", "-j#{ENV.make_jobs}"
         system "make", "install"
       end
 
