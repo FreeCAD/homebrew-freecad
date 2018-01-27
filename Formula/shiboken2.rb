@@ -13,47 +13,33 @@ class Shiboken2 < Formula
   depends_on "numpy"
   depends_on "qt"
 
-  # don't use depends_on :python because then bottles install Homebrew's python
   option "without-python", "Build without python 2 support"
   depends_on "python" => :recommended
   depends_on "python3" => :optional
 
   def install
-    # ENV.deparallelize  # if your formula fails when building in parallel
     qt = Formula["qt"]
-    llvm = Formula["llvm"]
-    ENV['LLVM_INSTALL_DIR']="#{llvm.prefix}"
-    # As of 1.1.1 the install fails unless you do an out of tree build and put
-    # the source dir last in the args.
+
+    ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
+
     Language::Python.each_python(build) do |python, version|
       mkdir "macbuild#{version}" do
         args = std_cmake_args
-        # Building the tests also runs them.
+
+        # Building the tests, is effectively a test of Shiboken
         args << "-DBUILD_TESTS=ON"
-        if python == "python3" && Formula["python3"].installed?
-          python_framework = Formula["python3"].opt_prefix/"Frameworks/Python.framework/Versions/#{version}"
-          args << "-DPYTHON3_INCLUDE_DIR:PATH=#{python_framework}/Headers"
-          args << "-DPYTHON3_LIBRARY:FILEPATH=#{python_framework}/lib/libpython#{version}.dylib"
-        end
-        args << "-DUSE_PYTHON3:BOOL=ON" if python == "python3"
+
+        args << "-DUSE_PYTHON_VERSION=#{version}"
         args << "-DCMAKE_PREFIX_PATH=#{qt.prefix}/lib/cmake/"
         args << "../sources/shiboken2"
+
         system "cmake", *args
-        system "make", "install"
+        system "make", "-j#{ENV.make_jobs}", "install"
       end
     end
   end
 
   test do
-    # `test do` will create, run in and delete a temporary directory.
-    #
-    # This test will fail and we won't accept that! It's enough to just replace
-    # "false" with the main program this formula installs, but it'd be nice if you
-    # were more thorough. Run the test with `brew test shiboken2`. Options passed
-    # to `brew install` such as `--HEAD` also need to be provided to `brew test`.
-    #
-    # The installed folder is not in the path, so use the entire path to any
-    # executables being tested: `system "#{bin}/program", "do", "something"`.
-    system "false"
+    system "shiboken2", "--version"
   end
 end
