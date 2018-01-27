@@ -7,8 +7,7 @@ class Opencamlib < Formula
   head "https://github.com/aewallin/opencamlib.git", :using => :git
 
   depends_on "cmake" => :build
-
-  depends_on :python => :recommended
+  depends_on "python" => :recommended
 
   option "with-openmp", "Build with support for OpenMP parallel processing"
   depends_on "llvm" => :build if build.with?("openmp")
