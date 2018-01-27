@@ -15,7 +15,7 @@ class Pivy < Formula
   end
 
   depends_on "python" => :build
-  depends_on 'swig'  => :build
+  depends_on "swig"  => :build
   depends_on "FreeCAD/freecad/coin"
 
   def install
