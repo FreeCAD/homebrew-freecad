@@ -14,7 +14,7 @@ class Pyside2Tools < Formula
   def install
     mkdir "macbuild" do
       system "cmake", "..", "-DSITE_PACKAGE=lib/python2.7/site-packages", *std_cmake_args
-      system "make", "install"
+      system "make", "-j#{ENV.make_jobs}", "install"
     end
   end
 end
