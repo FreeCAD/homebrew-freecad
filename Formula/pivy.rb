@@ -14,8 +14,8 @@ class Pivy < Formula
     sha256 "899afa2ad74eecaf93c4c961f3c5339bef0f030b55fc8de765ad8c6e6e96cc48" => :yosemite
   end
 
-  depends_on :python => :build
-  depends_on 'swig'  => :build
+  depends_on "python" => :build
+  depends_on "swig"  => :build
   depends_on "FreeCAD/freecad/coin"
 
   def install
