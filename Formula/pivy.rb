@@ -1,9 +1,9 @@
 class Pivy < Formula
   homepage "https://bitbucket.org/Coin3D/pivy/overview"
+  url "https://bitbucket.org/Coin3D/pivy/get/d8c4fefe5a19954f23b6caff2931319976228b79.tar.gz"
+  sha256 "43216e708ed51ded96f31116a22846aca53a16120cb7d7a9daf14296270dbb53"
   head "https://bitbucket.org/Coin3D/pivy", :using => :hg
-  url "https://bitbucket.org/Coin3D/pivy/get/tip.tar.gz"
-  sha256 "4b84e76470a97a4aad63ddfa4a7ce79fbb74029cdb0e0b86be2cd4248af35912"
-  version "0.5.0"
+  version "0.5.0-4b84e76"
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/0.17"
