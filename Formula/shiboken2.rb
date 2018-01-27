@@ -10,6 +10,7 @@ class Shiboken2 < Formula
 
   depends_on "cmake" => :build
   depends_on "llvm" => :build
+  depends_on "numpy"
   depends_on "qt"
 
   # don't use depends_on :python because then bottles install Homebrew's python
