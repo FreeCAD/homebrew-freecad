@@ -1,15 +1,12 @@
 class Pyside2 < Formula
   desc "Python bindings for Qt5 and greater"
   homepage "https://wiki.qt.io/PySide2"
-  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=285f5ffeac9db359ef7775d3f3a4d59c4e844d4a;sf=tgz"
-  sha256 "9d5ad12c056787bb95249cb89dbd440242a07aaaa467d1c23de0db1ac588304d"
-  version "5.9-285f5f"
-  # Git commits
-  # 'https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=shortlog;h=refs/heads/5.9'
+   url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=18ae2b64af6a1f48ff014c22f3b0bc7026b7ce43;sf=tgz"
+  sha256 "c2d47cf4f0b61b86f4f293de8e54c1efe890efbbd0c2512cb665c46c15fa14b8"
+  version "5.9-18ae2b6"
 
-  head "https://codereview.qt-project.org/pyside/pyside-setup", :branch => "5.9"
+  head "https://codereview.qt-project.org/p/pyside/pyside-setup.git", :branch => "5.9"
 
-  # don't use depends_on :python because then bottles install Homebrew's python
   option "without-python", "Build without python 2 support"
   depends_on "python" => :recommended
   depends_on "python3" => :optional
