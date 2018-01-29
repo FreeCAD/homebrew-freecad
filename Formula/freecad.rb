@@ -35,7 +35,7 @@ class Freecad < Formula
   depends_on "opencascade"
   depends_on "orocos-kdl"
   depends_on "freecad/freecad/matplotlib"
-  depends_on "brewsci/science/med-file"
+  depends_on "freecad/freecad/med-file"
   depends_on "vtk"
   depends_on "FreeCAD/freecad/nglib"
   depends_on "FreeCAD/freecad/coin"
