@@ -22,7 +22,7 @@ class Freecad < Formula
   # Required dependencies
   depends_on :macos => :mavericks
   depends_on "freetype"
-  depends_on "python"
+  depends_on "python@2"
   depends_on "boost-python"
   depends_on "xerces-c"
   if build.with?("qt4")
@@ -56,12 +56,17 @@ class Freecad < Formula
     args = std_cmake_args
     if build.without?("qt4")
       args << "-DBUILD_QT5=ON"
-      args << "-DCMAKE_PREFIX_PATH=" + Formula["qt@5.6"].opt_prefix + "/lib/cmake"
+      args << "-DCMAKE_PREFIX_PATH=" + Formula["qt"].opt_prefix + "/lib/cmake"
     end
-    args << %W[
+    python_root = "#{Formula["python@2"].opt_prefix}/Frameworks/Python.framework/Versions/2.7"
+    args.concat %W[
       -DBUILD_FEM_NETGEN:BOOL=ON
       -DFREECAD_USE_EXTERNAL_KDL=ON
       -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
+      -DPYTHON_LIBRARY=#{python_root}/lib/libpython2.7.dylib
+      -DPYTHON_INCLUDE_DIR=#{python_root}/include/python2.7
+      -DPYTHON_EXECUTABLE=#{python_root}/bin/python2
+      -DPYTHON_MAJOR_VERSION=2
     ]
 
     mkdir "Build" do
@@ -70,7 +75,7 @@ class Freecad < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     After installing FreeCAD you may want to do the following:
 
     1. Amend your PYTHONPATH environmental variable to point to

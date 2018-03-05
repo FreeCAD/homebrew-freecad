@@ -13,7 +13,7 @@ class Shiboken2 < Formula
   depends_on "qt"
 
   option "without-python", "Build without python 2 support"
-  depends_on "python" => :recommended
+  depends_on "python@2" => :recommended
   depends_on "python3" => :optional
 
   def install
