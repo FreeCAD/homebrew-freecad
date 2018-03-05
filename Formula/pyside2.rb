@@ -8,7 +8,7 @@ class Pyside2 < Formula
   head "https://codereview.qt-project.org/p/pyside/pyside-setup.git", :branch => "5.9"
 
   option "without-python", "Build without python 2 support"
-  depends_on "python" => :recommended
+  depends_on "python@2" => :recommended
   depends_on "python3" => :optional
 
   option "without-docs", "Skip building documentation"
@@ -35,10 +35,10 @@ class Pyside2 < Formula
     # Add out of tree build because one of its deps, shiboken, itself needs an
     # out of tree build in shiboken.rb.
     Language::Python.each_python(build) do |python, version|
-      pyhome = `python#{version}-config --prefix`.chomp
+      pyhome = Formula["python@#{version.to_i}"].prefix.to_s + "/Frameworks/Python.framework/Versions/#{version}"
       ENV["PYTHONHOME"] = pyhome
-      py_library = "#{pyhome}/lib/libpython2.7.dylib"
-      py_include = "#{pyhome}/include/python2.7"
+      py_library = "#{pyhome}/lib/libpython#{version}.dylib"
+      py_include = "#{pyhome}/include/python#{version}"
 
       mkdir "macbuild#{version}" do
 
