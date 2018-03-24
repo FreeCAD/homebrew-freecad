@@ -1,9 +1,9 @@
 class Pyside2Tools < Formula
   desc "PySide development tools (pyuic and pyrcc)"
   homepage "https://wiki.qt.io/PySide2"
-  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-tools.git;a=snapshot;h=b09fde6260b255e8b93b0d20a337e701bc940a99;sf=tgz"
-  sha256 "47a1dde02358045bd2441ab470d4d917a6b449daa389b3e5d41c513f50645f2f"
-  version "5.9-b09fde6"
+  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-tools.git;a=snapshot;h=ad85c747fc905d75570d9c255e8f76ae020f3d0b;sf=tgz"
+  sha256 "2b411f157e7c5bf3ca50a9e3302c2b339f9a0acd00b8f2564bddffdde214dfd7"
+  version "5.9-413ecc7"
 
   head "https://codereview.qt-project.org/p/pyside/pyside-tools.git", :branch => "5.9"
 
