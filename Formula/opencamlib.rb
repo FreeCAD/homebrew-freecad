@@ -7,7 +7,7 @@ class Opencamlib < Formula
   head "https://github.com/aewallin/opencamlib.git", :using => :git
 
   depends_on "cmake" => :build
-  depends_on "python" => :recommended
+  depends_on "python@2" => :recommended
 
   option "with-openmp", "Build with support for OpenMP parallel processing"
   depends_on "llvm" => :build if build.with?("openmp")
@@ -34,7 +34,7 @@ class Opencamlib < Formula
       end
 
       if build.with? "python"
-        cmake_args << "-DPYTHON_EXECUTABLE=#{Formula["python"].bin}/python2"
+        cmake_args << "-DPYTHON_EXECUTABLE=#{Formula["python@2"].bin}/python2"
       else
         cmake_args << "-DBUILD_PY_LIB=0"
       end
