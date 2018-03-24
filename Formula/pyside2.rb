@@ -1,14 +1,14 @@
 class Pyside2 < Formula
   desc "Python bindings for Qt5 and greater"
   homepage "https://wiki.qt.io/PySide2"
-   url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=18ae2b64af6a1f48ff014c22f3b0bc7026b7ce43;sf=tgz"
-  sha256 "c2d47cf4f0b61b86f4f293de8e54c1efe890efbbd0c2512cb665c46c15fa14b8"
-  version "5.9-18ae2b6"
+   url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=b09fde6260b255e8b93b0d20a337e701bc940a99;sf=tgz"
+  sha256 "47a1dde02358045bd2441ab470d4d917a6b449daa389b3e5d41c513f50645f2f"
+  version "5.9-b09fde6"
 
   head "https://codereview.qt-project.org/p/pyside/pyside-setup.git", :branch => "5.9"
 
   option "without-python", "Build without python 2 support"
-  depends_on "python" => :recommended
+  depends_on "python@2" => :recommended
   depends_on "python3" => :optional
 
   option "without-docs", "Skip building documentation"
@@ -36,9 +36,8 @@ class Pyside2 < Formula
     # out of tree build in shiboken.rb.
     Language::Python.each_python(build) do |python, version|
       pyhome = `python#{version}-config --prefix`.chomp
-      ENV["PYTHONHOME"] = pyhome
-      py_library = "#{pyhome}/lib/libpython2.7.dylib"
-      py_include = "#{pyhome}/include/python2.7"
+      py_library = "#{pyhome}/lib/libpython#{version}.dylib"
+      py_include = "#{pyhome}/include/python#{version}"
 
       mkdir "macbuild#{version}" do
 
@@ -46,10 +45,9 @@ class Pyside2 < Formula
           -DPYTHON_EXECUTABLE=#{pyhome}/bin/python#{version}
           -DPYTHON_LIBRARY=#{py_library}
           -DPYTHON_INCLUDE_DIR=#{py_include}
-          -DSITE_PACKAGE=#{lib}/python#{version}/site-packages
           -DQT_SRC_DIR=#{qt.include}
           -DALTERNATIVE_QT_INCLUDE_DIR=#{qt.opt_prefix}/include
-          -DCMAKE_PREFIX_PATH=#{qt.prefix}/lib/cmake/
+          -DCMAKE_PREFIX_PATH=#{qt.prefix}/lib/cmake
           -DBUILD_TESTS:BOOL=OFF
         ]
         args << "../sources/pyside2"

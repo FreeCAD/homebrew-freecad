@@ -22,7 +22,7 @@ class Freecad < Formula
   # Required dependencies
   depends_on :macos => :mavericks
   depends_on "freetype"
-  depends_on "python"
+  depends_on "python@2"
   depends_on "boost-python"
   depends_on "xerces-c"
   if build.with?("qt4")
@@ -30,6 +30,7 @@ class Freecad < Formula
     depends_on "cartr/qt4/pyside-tools@1.2"
   else
     depends_on "qt"
+    depends_on "qtwebkit"
     depends_on "FreeCAD/freecad/pyside2-tools"
   end
   depends_on "opencascade"
@@ -56,7 +57,7 @@ class Freecad < Formula
     args = std_cmake_args
     if build.without?("qt4")
       args << "-DBUILD_QT5=ON"
-      args << "-DCMAKE_PREFIX_PATH=" + Formula["qt@5.6"].opt_prefix + "/lib/cmake"
+      args << '-DCMAKE_PREFIX_PATH="' + Formula["qt"].opt_prefix + "/lib/cmake;" + Formula["qtwebkit"].opt_prefix + '/lib/cmake"'
     end
     args << %W[
       -DBUILD_FEM_NETGEN:BOOL=ON

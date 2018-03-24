@@ -1,9 +1,9 @@
 class Shiboken2 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
   homepage "https://wiki.qt.io/PySide2"
-  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=18ae2b64af6a1f48ff014c22f3b0bc7026b7ce43;sf=tgz"
-  sha256 "c2d47cf4f0b61b86f4f293de8e54c1efe890efbbd0c2512cb665c46c15fa14b8"
-  version "5.9-18ae2b6"
+  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=b09fde6260b255e8b93b0d20a337e701bc940a99;sf=tgz"
+  sha256 "47a1dde02358045bd2441ab470d4d917a6b449daa389b3e5d41c513f50645f2f"
+  version "5.9-b09fde6"
 
   head "https://codereview.qt-project.org/p/pyside/pyside-setup.git", :branch => "5.9"
 
@@ -13,7 +13,7 @@ class Shiboken2 < Formula
   depends_on "qt"
 
   option "without-python", "Build without python 2 support"
-  depends_on "python" => :recommended
+  depends_on "python@2" => :recommended
   depends_on "python3" => :optional
 
   def install
@@ -27,7 +27,6 @@ class Shiboken2 < Formula
 
         # Building the tests, is effectively a test of Shiboken
         args << "-DBUILD_TESTS=ON"
-
         args << "-DUSE_PYTHON_VERSION=#{version}"
         args << "-DCMAKE_PREFIX_PATH=#{qt.prefix}/lib/cmake/"
         args << "../sources/shiboken2"

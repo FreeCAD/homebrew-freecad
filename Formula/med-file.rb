@@ -8,7 +8,7 @@ class MedFile < Formula
   depends_on "gcc" => :build   # for gfortan
   depends_on "swig" => :build
   depends_on "hdf5"
-  depends_on "python"
+  depends_on "python@2"
 
   # Apply HDF5 64-bit patches (1.10)
   patch :p0 do
@@ -30,7 +30,7 @@ class MedFile < Formula
   patch :DATA
 
   def install
-    python_prefix=`#{Formula["python"].opt_bin}/python2-config --prefix`.chomp
+    python_prefix=`#{Formula["python@2"].opt_bin}/python2-config --prefix`.chomp
     python_include=Dir["#{python_prefix}/include/*"].first
 
     #ENV.cxx11
