@@ -7,6 +7,8 @@ class Qtwebkit < Formula
   version "5.212-72cfbd"
   sha256 ""
   depends_on "qt"
+  depends_on "jpeg"
+  depends_on "libpng"
   depends_on "cmake" => :build
   depends_on "ninja" => :build
   

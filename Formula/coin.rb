@@ -12,6 +12,7 @@ class Coin < Formula
 
   depends_on "cmake"   => :build
   depends_on "doxygen" => :build if build.with? "docs"
+  depends_on "boost"
 
   def install
 
