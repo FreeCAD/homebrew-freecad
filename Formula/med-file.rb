@@ -4,6 +4,14 @@ class MedFile < Formula
   url "http://files.salome-platform.org/Salome/other/med-3.2.0.tar.gz"
   sha256 "d52e9a1bdd10f31aa154c34a5799b48d4266dc6b4a5ee05a9ceda525f2c6c138"
 
+  bottle do
+    root_url "https://dl.bintray.com/freecad/bottles-freecad"
+    cellar :any
+    sha256 "64053b9bca8bd4fe8f79213f56db8e573ea3af5d3db7f5687eada2650c3c4c2c" => :high_sierra
+    sha256 "908767bc3b738442050ae8e434acc94957626631d83686190391249739c8f21e" => :sierra
+    sha256 "2e1f077dcaac43c4530f3497faa87584e776b40c633cceb29de9f62de04cc9a5" => :el_capitan
+  end
+
   depends_on "cmake" => :build
   depends_on "gcc" => :build   # for gfortan
   depends_on "swig" => :build
