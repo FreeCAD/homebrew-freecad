@@ -7,6 +7,15 @@ class Coin < Formula
 
   head "https://bitbucket.org/Coin3D/coin/get/tip.tgz"
 
+  bottle do
+    root_url "https://dl.bintray.com/freecad/bottles-freecad"
+    cellar :any
+    rebuild 1
+    sha256 "303303abdbbafcb0c3b0e5fc805b220080409c05d25b004b1cf90c3e17837c14" => :high_sierra
+    sha256 "de83f853f3ad5d5e44ac9cac2693a3488ec2c06f99213c56e487dd7eccb0595f" => :sierra
+    sha256 "7c9edda90f6b82bd6de9e38f39d299a9f6f7d0ceadfc61fde1be47b8749b2d30" => :el_capitan
+  end
+
   option "with-docs",       "Install documentation"
   option "with-threadsafe", "Include Thread safe traverals (experimental)"
 
