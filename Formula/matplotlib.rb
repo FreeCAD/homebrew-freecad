@@ -39,6 +39,14 @@ class Matplotlib < Formula
   sha256 "659f5e1aa0e0f01488c61eff47560c43b8be511c6a29293d7f3896ae17bd8b23"
   head "https://github.com/matplotlib/matplotlib.git"
 
+  bottle do
+    root_url "https://dl.bintray.com/freecad/bottles-freecad"
+    cellar :any
+    sha256 "90c79d71e4d5720bc6c6f82b7675a0cdca49e419ca2c7c216acb1efabcfee051" => :high_sierra
+    sha256 "30446df7e53afa7d2f9968fe28db0da43dc4c17cebdef9d1e433290ae3dfaa1c" => :sierra
+    sha256 "e8257b66075bdd7b698be6306e0041a7cdaa10d3a627e0009d52d677cb56c9b9" => :el_capitan
+  end
+
   option "without-python", "Build without python2 support"
   option "with-cairo", "Build with cairo backend support"
   option "with-pygtk", "Build with pygtk backend support (python2 only)"
