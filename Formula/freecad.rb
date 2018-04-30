@@ -1,9 +1,9 @@
 class Freecad < Formula
   desc "Parametric 3D modeler"
   homepage "http://www.freecadweb.org"
-  url "https://github.com/FreeCAD/FreeCAD/archive/0.17_pre.tar.gz"
-  version "0.17-pre"
-  sha256 "25648fbaac8a96d7e63d8881fbc79f1829eff2852927e427cfe6d5f4f60a4f95"
+  url "https://github.com/FreeCAD/FreeCAD/archive/0.17.tar.gz"
+  version "0.17"
+  sha256 "ae017393476b6dc7f1192bcaf91ceedc2f9b791f2495307ce7c45efadb5266fb"
   head "https://github.com/FreeCAD/FreeCAD.git", :branch => "master"
 
   # Debugging Support
