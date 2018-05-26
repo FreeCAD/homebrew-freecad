@@ -5,6 +5,8 @@ class Qtwebkit < Formula
     :revisoin => '72cfbd7664f21fcc0e62b869a6b01bf73eb5e7da'
   head "https://codereview.qt-project.org/qt/qtwebkit", :using => :git, :branch => '5.212'
   version "5.212-72cfbd"
+  revision 1
+  
   bottle do
     root_url "https://dl.bintray.com/freecad/bottles-freecad"
     cellar :any
