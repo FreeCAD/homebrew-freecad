@@ -9,9 +9,10 @@ class Shiboken2 < Formula
   bottle do
     root_url "https://dl.bintray.com/freecad/bottles-freecad"
     cellar :any
-    sha256 "e56fae1b55cfad565e17156eb72dc98b7df8d9e7736433012173e32a88709d28" => :high_sierra
-    sha256 "75bd31aed53f87f25c3d1ff050b9a8e38b51d43adfe349a8881d0dfbd91e75e2" => :sierra
-    sha256 "f401088b28dec8d6c5d20ebaff0352d73d2e210316495f23dbcca5056cda89a7" => :el_capitan
+    rebuild 1
+    sha256 "184660611b3090c2cac0410f70e733c8be9f52eda4ca62d1b898a49f5399d9a3" => :high_sierra
+    sha256 "a19e8fdf5cdb5210fe207ef035bae494f12e642c256988fe17ce10041fc7e3ba" => :sierra
+    sha256 "1b640a04934f21a2551567ba9bf00043d194731b26006924c9e8d5ffab1d841b" => :el_capitan
   end
 
   depends_on "cmake" => :build
