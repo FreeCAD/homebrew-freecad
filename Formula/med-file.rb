@@ -8,9 +8,10 @@ class MedFile < Formula
   bottle do
     root_url "https://dl.bintray.com/freecad/bottles-freecad"
     cellar :any
-    sha256 "64053b9bca8bd4fe8f79213f56db8e573ea3af5d3db7f5687eada2650c3c4c2c" => :high_sierra
-    sha256 "908767bc3b738442050ae8e434acc94957626631d83686190391249739c8f21e" => :sierra
-    sha256 "2e1f077dcaac43c4530f3497faa87584e776b40c633cceb29de9f62de04cc9a5" => :el_capitan
+    rebuild 1
+    sha256 "4d7699814a4a397f12a8b29ef4184e9931db5aa1b0beda4a618cd1fd940b10ea" => :high_sierra
+    sha256 "a2e7c26ef974463dcade9b23e33ce7ddd9a06443e38ce5998262283f93884220" => :sierra
+    sha256 "1e39acd656809a4dc88b64f9ae1e205d41c7e03f1bf65269788ba75fbb7e4296" => :el_capitan
   end
 
   depends_on "cmake" => :build
