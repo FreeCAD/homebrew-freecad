@@ -1,17 +1,9 @@
 class Pyside2 < Formula
   desc "Python bindings for Qt5 and greater"
   homepage "https://wiki.qt.io/PySide2"
-  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=e0a8f2dfb759ef4eff542d0a317a9370d4eddc52;sf=tgz"
-  sha256 "4030d658359e4515c52258387579979d4685d1623f74403c7ff0b02eae6a1349"
-  version "5.9-e0a8f2d"
-  head "https://codereview.qt-project.org/p/pyside/pyside-setup.git", :branch => "5.9"
-  bottle do
-    root_url "https://dl.bintray.com/freecad/bottles-freecad"
-    sha256 "9d9474e0442b1d8f7ba39f4d8bcb5432c82dc7fb6da51f1d609bb3cc5da0977a" => :high_sierra
-    sha256 "69c89c5dd135d75cb4b49bebcf1a317953e37e032c942d360c6f92e822f03c4e" => :sierra
-    sha256 "a0f8c27ce93b398314b5fcf1e0cd9c62d27ce83fd255bd06745c72e2f6c55bb7" => :el_capitan
-  end
-
+  url "http://code.qt.io/cgit/pyside/pyside-setup.git", :using => :git, :branch => "5.11.1"
+  version "5.11.1"
+  head "http://code.qt.io/cgit/pyside/pyside-setup.git", :branch => "5.11"
    
   option "without-python", "Build without python 2 support"
   depends_on "python@2" => :recommended
