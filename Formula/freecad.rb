@@ -32,6 +32,7 @@ class Freecad < Formula
     depends_on "qt"
     depends_on "qtwebkit"
     depends_on "FreeCAD/freecad/pyside2-tools"
+    depends_on "webp"
   end
   depends_on "opencascade"
   depends_on "orocos-kdl"
