@@ -10,7 +10,6 @@ class Qtwebkit < Formula
   bottle do
     root_url "https://dl.bintray.com/freecad/bottles-freecad"
     cellar :any
-    rebuild 2
     sha256 "e4ca33d44ef986883edc243d198b7fb692461d9ba817132e6152c092acce5be1" => :high_sierra
     sha256 "c49a105f7c8b29ac44c9b05b3ad7c96f53199360bc564ecbd688c8218b722fbd" => :sierra
     sha256 "b7d4e5ebd4b73b6527805842061ccb08d95280b824b4a5e3a55c2915c999744b" => :el_capitan
