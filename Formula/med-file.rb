@@ -1,18 +1,8 @@
 class MedFile < Formula
   desc "Modeling and Data Exchange standardized format library"
   homepage "http://www.salome-platform.org/"
-  url "http://files.salome-platform.org/Salome/other/med-3.2.0.tar.gz"
-  sha256 "d52e9a1bdd10f31aa154c34a5799b48d4266dc6b4a5ee05a9ceda525f2c6c138"
-  revision 1
-
-  bottle do
-    root_url "https://dl.bintray.com/freecad/bottles-freecad"
-    cellar :any
-    rebuild 1
-    sha256 "4d7699814a4a397f12a8b29ef4184e9931db5aa1b0beda4a618cd1fd940b10ea" => :high_sierra
-    sha256 "a2e7c26ef974463dcade9b23e33ce7ddd9a06443e38ce5998262283f93884220" => :sierra
-    sha256 "1e39acd656809a4dc88b64f9ae1e205d41c7e03f1bf65269788ba75fbb7e4296" => :el_capitan
-  end
+  url "http://files.salome-platform.org/Salome/other/med-3.3.1.tar.gz"
+  sha256 "dd631ef813838bc7413ff0dd6461d7a0d725bcfababdf772ece67610a8d22588"
 
   depends_on "cmake" => :build
   depends_on "gcc" => :build   # for gfortan
@@ -20,26 +10,15 @@ class MedFile < Formula
   depends_on "hdf5"
   depends_on "python@2"
 
-  # Apply HDF5 64-bit patches (1.10)
-  patch :p0 do
-    url "https://aur.archlinux.org/cgit/aur.git/plain/patch-include_med.h.in?h=med"
-    sha256 "3463c4690d12d338c6ef890db2d78c6a170ea643af4750102be832707e9103ce"
+  # Apply HDF5 1.10 support patch
+  patch do
+    url "https://aur.archlinux.org/cgit/aur.git/plain/hdf5-1.10-support.patch?h=med"
+    sha256 "55cf95f1a3b7abf529bb2ded6c9a491459623c830dc16518058ff53ab203291c"
   end
-
-  patch :p0 do
-    url "https://aur.archlinux.org/cgit/aur.git/plain/patch-int2long?h=med"
-    sha256 "e4ddecd9a1496eb9479813cefded57dcdf7487e0a4a741c9dcd467ab971d6e9f"
-  end
-
-  patch :p0 do
-    url "https://aur.archlinux.org/cgit/aur.git/plain/patch-src_2.3.6_ci_MEDequivInfo.c?h=med"
-    sha256 "7b20b319ae427f8bf2af40079141be8444714a4a1b5fa5d5d0298f989f4bbe66"
-  end
-
-  # Patch python bindings
-  patch :DATA
 
   def install
+    inreplace "config/cmake_files/medMacros.cmake", "HDF_VERSION_MINOR_REF EQUAL 8", "HDF_VERSION_MINOR_REF EQUAL 10"
+
     python_prefix=`#{Formula["python@2"].opt_bin}/python2-config --prefix`.chomp
     python_include=Dir["#{python_prefix}/include/*"].first
 
@@ -67,61 +46,4 @@ class MedFile < Formula
     system "./test"
   end
 end
-__END__
-diff --git a/include/H5public_extract.h.in b/include/H5public_extract.h.in
-index c38765e..0e9451c 100644
---- a/include/H5public_extract.h.in
-+++ b/include/H5public_extract.h.in
-@@ -28,10 +28,6 @@ extern "C" {
- @HDF5_TYPEDEF_HID_T@
- @HDF5_TYPEDEF_HSIZE_T@
- 
--#typedef int herr_t;
--#typedef int hid_t;
--#typedef unsigned long long   hsize_t;
--
- #ifdef __cplusplus
- }
- #endif
-diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
-index 4016f7c..1e45797 100644
---- a/python/CMakeLists.txt
-+++ b/python/CMakeLists.txt
-@@ -26,8 +26,12 @@ SET(_swig_files
-   medsubdomain_module.i
- )
- 
-+IF(APPLE)
-+  SET(PYTHON_LIBRARIES "-undefined dynamic_lookup")
-+ENDIF(APPLE)
-+
- SET(_link_libs
--  med
-+  medC
-   ${PYTHON_LIBRARIES}
-   )
- 
-diff --git a/python/medenum_module.i b/python/medenum_module.i
-index 91fc0d8..920c9eb 100644
---- a/python/medenum_module.i
-+++ b/python/medenum_module.i
-@@ -6,6 +6,7 @@
- 
- %{
- #include "med.h"
-+#include <utility>
- %}
- 
- %include "H5public_extract.h"
-diff --git a/python/medenumtest_module.i b/python/medenumtest_module.i
-index 7bfc32b..efda37d 100644
---- a/python/medenumtest_module.i
-+++ b/python/medenumtest_module.i
-@@ -4,6 +4,7 @@
- 
- %{
- #include "med.h"
-+#include <utility>
- %}
- 
- %include "H5public_extract.h"
+
