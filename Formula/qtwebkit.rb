@@ -7,6 +7,14 @@ class Qtwebkit < Formula
   version "5.212-72cfbd"
   revision 3
 
+  bottle do
+    root_url "https://dl.bintray.com/freecad/bottles-freecad"
+    cellar :any
+    sha256 "dc170b2ab3b109dc6e9fe8c923387c6d4e293f856104c3a3f0f8bf4b73dfc658" => :high_sierra
+    sha256 "038de58c8da8225178e3f34961b34caca1e09eed91659f7652d8e00db03dfd81" => :sierra
+    sha256 "8a88836b859f1d739d2d5942732c7adc63822989a91384dd4966eb14b6abc9c4" => :el_capitan
+  end
+
   depends_on "qt"
   depends_on "jpeg"
   depends_on "libpng"
