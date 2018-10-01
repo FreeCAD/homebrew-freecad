@@ -12,9 +12,6 @@ class Freecad < Formula
   # Option to build with legacy qt4
   option "with-qt4"
 
-  # Optionally install packaging dependencies
-  option "with-packaging-utils"
-
   # Build dependencies
   depends_on "cmake"   => :build
   depends_on "ccache"  => :build
@@ -44,16 +41,7 @@ class Freecad < Formula
   depends_on "FreeCAD/freecad/pivy"
   depends_on "swig" => :build
 
-  if build.with?("packaging-utils")
-    depends_on "node"
-    depends_on "jq"
-  end
-
   def install
-    if build.with?("packaging-utils")
-      system "node", "install", "-g", "app_dmg"
-    end
-
     # Set up needed cmake args
     args = std_cmake_args
     if build.without?("qt4")
@@ -63,6 +51,7 @@ class Freecad < Formula
     args << %W[
       -DBUILD_FEM_NETGEN:BOOL=ON
       -DFREECAD_USE_EXTERNAL_KDL=ON
+      -DFREECAD_CREATE_MAC_APP=ON
       -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
     ]
 
