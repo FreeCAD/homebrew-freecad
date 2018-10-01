@@ -2,7 +2,6 @@ class Freecad < Formula
   desc "Parametric 3D modeler"
   homepage "http://www.freecadweb.org"
   url "https://github.com/FreeCAD/FreeCAD/archive/0.17.tar.gz"
-  version "0.17"
   sha256 "ae017393476b6dc7f1192bcaf91ceedc2f9b791f2495307ce7c45efadb5266fb"
   head "https://github.com/FreeCAD/FreeCAD.git", :branch => "master"
 
@@ -12,16 +11,24 @@ class Freecad < Formula
   # Option to build with legacy qt4
   option "with-qt4"
 
-  # Build dependencies
-  depends_on "cmake"   => :build
-  depends_on "ccache"  => :build
+  depends_on "ccache" => :build
+  depends_on "cmake" => :build
+  depends_on "swig" => :build
 
-  # Required dependencies
-  depends_on :macos => :mavericks
-  depends_on "freetype"
-  depends_on "python@2"
   depends_on "boost-python"
+  depends_on "freecad/freecad/coin"
+  depends_on "freecad/freecad/matplotlib"
+  depends_on "freecad/freecad/med-file"
+  depends_on "freecad/freecad/nglib"
+  depends_on "freecad/freecad/pivy"
+  depends_on "freetype"
+  depends_on :macos => :mavericks
+  depends_on "opencascade"
+  depends_on "orocos-kdl"
+  depends_on "python@2"
+  depends_on "vtk"
   depends_on "xerces-c"
+
   if build.with?("qt4")
     depends_on "cartr/qt4/qt@4"
     depends_on "cartr/qt4/pyside-tools@1.2"
@@ -31,15 +38,6 @@ class Freecad < Formula
     depends_on "FreeCAD/freecad/pyside2-tools"
     depends_on "webp"
   end
-  depends_on "opencascade"
-  depends_on "orocos-kdl"
-  depends_on "freecad/freecad/matplotlib"
-  depends_on "freecad/freecad/med-file"
-  depends_on "vtk"
-  depends_on "FreeCAD/freecad/nglib"
-  depends_on "FreeCAD/freecad/coin"
-  depends_on "FreeCAD/freecad/pivy"
-  depends_on "swig" => :build
 
   def install
     # Set up needed cmake args
