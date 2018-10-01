@@ -61,7 +61,7 @@ class Freecad < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     After installing FreeCAD you may want to do the following:
 
     1. Amend your PYTHONPATH environmental variable to point to
