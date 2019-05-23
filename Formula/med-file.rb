@@ -1,16 +1,8 @@
 class MedFile < Formula
   desc "Modeling and Data Exchange standardized format library"
   homepage "http://www.salome-platform.org/"
-  url "http://files.salome-platform.org/Salome/other/med-3.3.1.tar.gz"
-  sha256 "dd631ef813838bc7413ff0dd6461d7a0d725bcfababdf772ece67610a8d22588"
-
-  bottle do
-    root_url "https://dl.bintray.com/freecad/bottles-freecad"
-    cellar :any
-    sha256 "59858e5775bd190e8d03ae937d40f9e0326715afe8b85c53d5412f3c6a2c7a89" => :high_sierra
-    sha256 "beb8e2ca9dc13e92d5651a201a8db20851bbb4015ac2ae66715997770bb25af2" => :sierra
-    sha256 "fabbf6e02b3e52130d59ed75e098083959cefc4d271df1a0cf001b229447e8a3" => :el_capitan
-  end
+  url "http://files.salome-platform.org/Salome/other/med-4.0.0.tar.gz"
+  sha256 "a474e90b5882ce69c5e9f66f6359c53b8b73eb448c5f631fa96e8cd2c14df004"
 
   depends_on "cmake" => :build
   depends_on "gcc" => :build   # for gfortan
@@ -18,14 +10,7 @@ class MedFile < Formula
   depends_on "hdf5"
   depends_on "python@2"
 
-  # Apply HDF5 1.10 support patch
-  patch do
-    url "https://aur.archlinux.org/cgit/aur.git/plain/hdf5-1.10-support.patch?h=med"
-    sha256 "55cf95f1a3b7abf529bb2ded6c9a491459623c830dc16518058ff53ab203291c"
-  end
-
   def install
-    inreplace "config/cmake_files/medMacros.cmake", "HDF_VERSION_MINOR_REF EQUAL 8", "HDF_VERSION_MINOR_REF EQUAL 10"
 
     python_prefix=`#{Formula["python@2"].opt_bin}/python2-config --prefix`.chomp
     python_include=Dir["#{python_prefix}/include/*"].first
