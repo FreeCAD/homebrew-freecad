@@ -1,9 +1,9 @@
 class Opencamlib < Formula
   desc "Computer Aided Manufacturing libraries"
   homepage "http://www.anderswallin.net/CAM/"
-  url "https://github.com/aewallin/opencamlib.git", :using => :git, :tag => "c3f3555270024104c51b27c33ecc7a293aae5dff"
+  url "https://github.com/aewallin/opencamlib.git", :using => :git, :revision => "c3f3555270024104c51b27c33ecc7a293aae5dff"
   version "0.0.1" # TODO Specify a real version here - note usage below
-  head "https://github.com/aewallin/opencamlib.git", :using => :git, :tag => "c3f3555270024104c51b27c33ecc7a293aae5dff"
+  head "https://github.com/aewallin/opencamlib.git", :using => :git, :revision => "c3f3555270024104c51b27c33ecc7a293aae5dff"
 
   patch :p0 do
     url "https://raw.githubusercontent.com/vejmarie/patches/master/OpenCAMlib/fix_mac.patch"
