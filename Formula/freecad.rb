@@ -1,16 +1,12 @@
 class Freecad < Formula
   desc "Parametric 3D modeler"
   homepage "http://www.freecadweb.org"
-  url "https://github.com/FreeCAD/FreeCAD/archive/0.17.tar.gz"
-  version "0.17"
-  sha256 "ae017393476b6dc7f1192bcaf91ceedc2f9b791f2495307ce7c45efadb5266fb"
-  head "https://github.com/FreeCAD/FreeCAD.git", :branch => "master"
+  url "https://github.com/vejmarie/FreeCAD.git", :using => :git, :branch => "cloud"
+  version "0.19pre"
+  head "https://github.com/vejmarie/FreeCAD.git", :branch => "cloud"
 
   # Debugging Support
   option "with-debug", "Enable debug build"
-
-  # Option to build with legacy qt4
-  option "with-qt4"
 
   # Optionally install packaging dependencies
   option "with-packaging-utils"
@@ -20,25 +16,19 @@ class Freecad < Formula
   depends_on "ccache"  => :build
 
   # Required dependencies
-  depends_on :macos => :mavericks
+  depends_on :macos => :catalina
   depends_on "freetype"
-  depends_on "python@2"
+  depends_on "python3"
   depends_on "boost-python"
   depends_on "xerces-c"
-  if build.with?("qt4")
-    depends_on "cartr/qt4/qt@4"
-    depends_on "cartr/qt4/pyside-tools@1.2"
-  else
-    depends_on "qt"
-    depends_on "qtwebkit"
-    depends_on "FreeCAD/freecad/pyside2-tools"
-    depends_on "webp"
-  end
+  depends_on "qt"
+  depends_on "FreeCAD/freecad/pyside2-tools"
+  depends_on "webp"
   depends_on "opencascade"
   depends_on "orocos-kdl"
   depends_on "freecad/freecad/matplotlib"
   depends_on "freecad/freecad/med-file"
-  depends_on "vtk"
+  depends_on "vtk@8.2"
   depends_on "FreeCAD/freecad/nglib"
   depends_on "FreeCAD/freecad/coin"
   depends_on "FreeCAD/freecad/pivy"
@@ -58,7 +48,11 @@ class Freecad < Formula
     args = std_cmake_args
     if build.without?("qt4")
       args << "-DBUILD_QT5=ON"
-      args << '-DCMAKE_PREFIX_PATH="' + Formula["qt"].opt_prefix + "/lib/cmake;" + Formula["qtwebkit"].opt_prefix + '/lib/cmake"'
+    args << "-DUSE_PYTHON3=1"
+    args << "-DCMAKE_CXX_FLAGS='-std=c++14'"
+    args << "-DBUILD_FEM_NETGEN=1"
+    args << "-DBUILD_FEM=1"
+      args << '-DCMAKE_PREFIX_PATH="' + Formula["qt"].opt_prefix + "/lib/cmake;" + Formula["nglib"].opt_prefix + "/Contents/Resources"
     end
     args << %W[
       -DBUILD_FEM_NETGEN:BOOL=ON
@@ -72,7 +66,7 @@ class Freecad < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<-EOS
     After installing FreeCAD you may want to do the following:
 
     1. Amend your PYTHONPATH environmental variable to point to
