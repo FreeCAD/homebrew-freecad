@@ -1,20 +1,11 @@
 class Pyside2 < Formula
   desc "Python bindings for Qt5 and greater"
   homepage "https://wiki.qt.io/PySide2"
-  url "http://code.qt.io/cgit/pyside/pyside-setup.git", :using => :git, :branch => "5.11.2"
-  version "5.11.2"
-  head "http://code.qt.io/cgit/pyside/pyside-setup.git", :branch => "5.11"
+  url "http://code.qt.io/pyside/pyside-setup.git", :using => :git, :branch => "5.15.0"
+  version "5.15.0"
+  head "http://code.qt.io/cgit/pyside/pyside-setup.git", :branch => "5.15.0"
 
-  bottle do
-    root_url "https://dl.bintray.com/freecad/bottles-freecad"
-    sha256 "e2492069174be9f63bfc39b419b21d47065fbd7210dba3ee147754be95afbd4a" => :high_sierra
-    sha256 "209516b69f2b9dfe5d2f29da53751379ebd9e2ada7257f6b8b141ed966c4c710" => :sierra
-    sha256 "939ba3ecc9a3a683dfbf7c83186fa4696440f384d1c32fc945e86af5b62b4015" => :el_capitan
-  end
-
-  option "without-python", "Build without python 2 support"
-  depends_on "python@2" => :recommended
-  depends_on "python3" => :optional
+  depends_on "python@3.8" => :build
 
   option "without-docs", "Skip building documentation"
 
@@ -22,11 +13,7 @@ class Pyside2 < Formula
   depends_on "sphinx-doc" => :build if build.with? "docs"
   depends_on "qt"
 
-  if build.with? "python3"
-    depends_on "FreeCAD/freecad/shiboken2" => "with-python3"
-  else
-    depends_on "FreeCAD/freecad/shiboken2"
-  end
+  depends_on "FreeCAD/freecad/shiboken2" 
 
   def install
     ENV.cxx11
@@ -39,33 +26,24 @@ class Pyside2 < Formula
 
     # Add out of tree build because one of its deps, shiboken, itself needs an
     # out of tree build in shiboken.rb.
-    Language::Python.each_python(build) do |python, version|
-      pyhome = `python#{version}-config --prefix`.chomp
-      py_library = "#{pyhome}/lib/libpython#{version}.dylib"
-      py_include = "#{pyhome}/include/python#{version}"
+    pyhome = `python3.8-config --prefix`.chomp
+    py_library = "#{pyhome}/lib/libpython3.8.dylib"
+    py_include = "#{pyhome}/include/python3.8"
 
-      mkdir "macbuild#{version}" do
-
+      mkdir "macbuild3.8" do
+        ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
+        ENV["CMAKE_PREFIX_PATH"] = Formula["shiboken2"].opt_prefix + "/lib/cmake"
         args = std_cmake_args + %W[
-          -DPYTHON_EXECUTABLE=#{pyhome}/bin/python#{version}
-          -DPYTHON_LIBRARY=#{py_library}
-          -DPYTHON_INCLUDE_DIR=#{py_include}
-          -DQT_SRC_DIR=#{qt.include}
-          -DALTERNATIVE_QT_INCLUDE_DIR=#{qt.opt_prefix}/include
-          -DCMAKE_PREFIX_PATH=#{qt.prefix}/lib/cmake
-          -DBUILD_TESTS:BOOL=OFF
+                -DPYTHON_EXECUTABLE=#{pyhome}/bin/python3.8
+                -DPYTHON_LIBRARY=#{py_library}
+                -DPYTHON_INCLUDE_DIR=#{py_include}
+                -DCMAKE_BUILD_TYPE=Release
         ]
         args << "../sources/pyside2"
         system "cmake", *args
         system "make", "-j#{ENV.make_jobs}"
         system "make", "install"
       end
-
-      # Work-around to https://bugreports.qt.io/browse/PYSIDE-494
-      #rm prefix/"lib/python2.7/site-packages/PySide2/QtTest.so"
-    end
-
-    #inreplace include/"PySide2/pyside2_global.h", qt.prefix, qt.opt_prefix
   end
 
   test do
