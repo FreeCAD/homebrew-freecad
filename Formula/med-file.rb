@@ -7,7 +7,7 @@ class MedFile < Formula
   depends_on "cmake" => :build
   depends_on "gcc" => :build   # for gfortan
   depends_on "swig" => :build
-  depends_on "hdf5"
+  depends_on "hdf5@1.10"
   depends_on "python3"
 
   def install
