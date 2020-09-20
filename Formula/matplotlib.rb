@@ -105,6 +105,24 @@ class Matplotlib < Formula
 
   def install
       system "python3", "setup.py", "install", "--prefix=#{prefix}"
+      version = "3.8"
+      bundle_path = libexec/"lib/python#{version}/site-packages"
+      bundle_path.mkpath
+      ENV.prepend_path "PYTHONPATH", bundle_path
+      res = if version.to_s.start_with? "2"
+        resources.map(&:name).to_set
+      else
+        resources.map(&:name).to_set - ["backports.functools_lru_cache", "subprocess32"]
+      end
+      p *Language::Python.setup_install_args(libexec)
+      res.each do |r|
+        resource(r).stage do
+          system "python3", *Language::Python.setup_install_args(libexec)
+        end
+      end
+      (lib/"python#{version}/site-packages/homebrew-matplotlib-bundle.pth").write "#{bundle_path}\n"
+
+      system "python3", *Language::Python.setup_install_args(prefix)
   end
 
   def caveats
