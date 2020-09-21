@@ -88,6 +88,9 @@ class Freecad < Formula
     mkdir "Build" do
       system "cmake", *args, ".."
       system "make", "-j#{ENV.make_jobs}", "install"
+      bin.install_symlink "../MacOS/FreeCAD" => "FreeCAD"
+      bin.install_symlink "../MacOS/FreeCADCmd" => "FreeCADCmd"
+      (lib/"python3.8/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
     end
   end
 
