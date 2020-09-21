@@ -10,6 +10,8 @@ class Freecad < Formula
 
   # Optionally install packaging dependencies
   option "with-packaging-utils"
+  option "with-cloud", "Build with CLOUD module"
+  option "with-unsecured-cloud", "Build with self signed certificate support CLOUD module"
 
   # Build dependencies
   depends_on "cmake"   => :build
@@ -71,14 +73,18 @@ class Freecad < Formula
 
     # Set up needed cmake args
     args = std_cmake_args
-    if build.without?("qt4")
-      args << "-DBUILD_QT5=ON"
+    args << "-DBUILD_QT5=ON"
     args << "-DUSE_PYTHON3=1"
     args << "-DCMAKE_CXX_FLAGS='-std=c++14'"
     args << "-DBUILD_FEM_NETGEN=1"
     args << "-DBUILD_FEM=1"
-      args << '-DCMAKE_PREFIX_PATH="' + Formula["qt"].opt_prefix + "/lib/cmake;" + Formula["nglib"].opt_prefix + "/Contents/Resources"
+    if build.with?("cloud")
+     args << "-DBUILD_CLOUD=1"
     end
+    if build.with?("unsecured-cloud")
+     args << "-DALLOW_SELF_SIGNED_CERTIFICATE=1"
+    end
+    args << '-DCMAKE_PREFIX_PATH="' + Formula["qt"].opt_prefix + "/lib/cmake;" + Formula["nglib"].opt_prefix + "/Contents/Resources"
     args << %W[
       -DBUILD_FEM_NETGEN:BOOL=ON
       -DFREECAD_USE_EXTERNAL_KDL=ON
@@ -88,10 +94,10 @@ class Freecad < Formula
     mkdir "Build" do
       system "cmake", *args, ".."
       system "make", "-j#{ENV.make_jobs}", "install"
+    end
       bin.install_symlink "../MacOS/FreeCAD" => "FreeCAD"
       bin.install_symlink "../MacOS/FreeCADCmd" => "FreeCADCmd"
       (lib/"python3.8/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
-    end
   end
 
   def caveats; <<-EOS
