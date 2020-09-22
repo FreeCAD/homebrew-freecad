@@ -102,6 +102,12 @@ class Matplotlib < Formula
     sha256 "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
   end
 
+  bottle do
+    root_url "https://dl.bintray.com/vejmarie/freecad"
+    cellar :any
+    rebuild 1
+    sha256 "e1096eb5a6aa449a945874771baa42ac28d44dabe1cda312f716b80275a30556" => :catalina
+  end
 
   def install
       system "python3", "setup.py", "install", "--prefix=#{prefix}"

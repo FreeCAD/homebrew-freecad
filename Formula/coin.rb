@@ -12,6 +12,12 @@ class Coin < Formula
   depends_on "doxygen" => :build if build.with? "docs"
   depends_on "boost"
 
+  bottle do
+    root_url "https://dl.bintray.com/vejmarie/freecad"
+    cellar :any
+    sha256 "7cd83f6446a8de8c11d8b33f7f21b942193b88a844b789a41111b1e107d0fc5e" => :catalina
+  end
+
   def install
 
     cmake_args = std_cmake_args

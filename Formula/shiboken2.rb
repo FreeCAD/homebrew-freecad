@@ -11,6 +11,12 @@ class Shiboken2 < Formula
   depends_on "qt"
   depends_on "python@3.8" => :build
 
+  bottle do
+    root_url "https://dl.bintray.com/vejmarie/freecad"
+    cellar :any
+    sha256 "d5e82fd10503342fdd8fa82ca00a69b79106673a5afda2707b97ef3eaf60b0dd" => :catalina
+  end
+
   def install
     qt = Formula["qt"]
 

@@ -15,6 +15,12 @@ class Pyside2 < Formula
 
   depends_on "FreeCAD/freecad/shiboken2" 
 
+  bottle do
+    root_url "https://dl.bintray.com/vejmarie/freecad"
+    cellar :any
+    sha256 "eb3c2ce7acc683a45df26fbb9dd1979d12aafa4ff3057f5c27a03fb95e38c245" => :catalina
+  end
+
   def install
     ENV.cxx11
 
