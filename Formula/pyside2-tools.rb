@@ -8,6 +8,11 @@ class Pyside2Tools < Formula
   depends_on "cmake" => :build
   depends_on "python3" => :build
   depends_on "FreeCAD/freecad/pyside2"
+  bottle do
+    root_url "https://dl.bintray.com/vejmarie/freecad"
+    cellar :any
+    sha256 "601b076fde585b1da7efcd8539a6f82d8a86b4bc3102be6c8e8f141690e0cadd" => :catalina
+  end
 
   def install
       mkdir "macbuild3.8" do

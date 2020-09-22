@@ -9,6 +9,11 @@ class MedFile < Formula
   depends_on "swig" => :build
   depends_on "hdf5@1.10"
   depends_on "python3"
+  bottle do
+    root_url "https://dl.bintray.com/vejmarie/freecad"
+    cellar :any
+    sha256 "1ee274c04ecbf98d92fb938f1939348b1840328f28ec586972e38258f5aa6bd9" => :catalina
+  end
 
   def install
 

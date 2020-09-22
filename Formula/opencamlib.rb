@@ -13,6 +13,12 @@ class Opencamlib < Formula
   depends_on "python@3.8" => :build
   depends_on "cmake" => :build
 
+  bottle do
+    root_url "https://dl.bintray.com/vejmarie/freecad"
+    cellar :any
+    sha256 "5ff3fd8fd5592177b7617c5d951edbadfa1a6eed7ae54a1dc2b0ee0c261188e2" => :catalina
+  end
+
   def install
       args = std_cmake_args
       system "cmake", *args, "-DVERSION_STRING=#{version}", "-DBUILD_TYPE=Release", "-DUSE_OPENMP=0", "-DBUILD_PY_LIB=ON","-DUSE_PY_3=TRUE", "-DPYTHON_VERSION_SUFFIX=3", "."
