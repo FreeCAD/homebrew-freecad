@@ -25,7 +25,7 @@ class Freecad < Formula
   depends_on "open-mpi"
 
   if #{Formula["boost"].version}?("1.73.0")
-    if (!File.exist?('/usr/local/opt/boost/include/boost/geometry/index/detail/rtree/visitors/insert.hpp'))
+    if (File.exist?('/usr/local/opt/boost/include/boost/geometry/index/detail/rtree/visitors/insert.hpp'))
      md5 = `md5 -q #{Formula["boost"].prefix}/include/boost/geometry/index/detail/rtree/visitors/insert.hpp` ; result=$?.success?
      if "#{md5}"=="bdffae5aee2ac909fe503f9afaae3ad9\n"
        # The include file needs to be patched
