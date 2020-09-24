@@ -22,10 +22,12 @@ class Freecad < Formula
   depends_on "freetype"
   depends_on "python3"
   depends_on "boost"
+  depends_on "open-mpi"
 
   if #{Formula["boost"].version}?("1.73.0")
-    md5 = `md5 -q #{Formula["boost"].prefix}/include/boost/geometry/index/detail/rtree/visitors/insert.hpp` ; result=$?.success?
-    if "#{md5}"=="bdffae5aee2ac909fe503f9afaae3ad9\n"
+    if (!File.exist?('/usr/local/opt/boost/include/boost/geometry/index/detail/rtree/visitors/insert.hpp'))
+     md5 = `md5 -q #{Formula["boost"].prefix}/include/boost/geometry/index/detail/rtree/visitors/insert.hpp` ; result=$?.success?
+     if "#{md5}"=="bdffae5aee2ac909fe503f9afaae3ad9\n"
        # The include file needs to be patched
        # https://github.com/boostorg/geometry/commit/a74a2b5814a8753013a8966606b8472178fffd14
        patch = "--- a/include/boost/geometry/index/detail/rtree/visitors/insert.hpp
@@ -43,7 +45,8 @@ class Freecad < Formula
       File.open("/tmp/include_insert_boost1.73.0.patch", "w") { |f| f.write "#{patch}\n" }
       system "patch", "-p1", "/usr/local/Cellar/boost/1.73.0/include/boost/geometry/index/detail/rtree/visitors/insert.hpp" , "/tmp/include_insert_boost1.73.0.patch"
       system "rm", "/tmp/include_insert_boost1.73.0.patch"
-    end
+     end
+   end
   end
 
   depends_on "boost-python"
@@ -65,12 +68,19 @@ class Freecad < Formula
     depends_on "node"
     depends_on "jq"
   end
+ 
+  bottle do
+    root_url "https://dl.bintray.com/vejmarie/freecad"
+    sha256 "25b6c673621a80204d1cd984ab38612db01e0c8276e09b22672daca7fb8f1429" => :catalina
+  end
 
   def install
     if build.with?("packaging-utils")
       system "node", "install", "-g", "app_dmg"
     end
-
+    if (!File.exist?('/usr/local/lib/python3.8/site-packages/six.py'))
+      system "pip3", "install", "six"
+    end
     # Set up needed cmake args
     args = std_cmake_args
     args << "-DBUILD_QT5=ON"
@@ -107,5 +117,15 @@ class Freecad < Formula
        the FreeCAD directory
          export PYTHONPATH=#{bin}:$PYTHONPATH
     EOS
+  end
+  def post_install
+    if (!File.exist?('/usr/local/lib/python3.8/site-packages/six.py'))
+      system "pip3", "install", "six"
+    end
+    bin.install_symlink "../MacOS/FreeCAD" => "FreeCAD"
+    bin.install_symlink "../MacOS/FreeCADCmd" => "FreeCADCmd"
+    if (!File.exist?('/usr/local/Cellar/freecad/0.19pre/lib/python3.8/site-packages/homebrew-freecad-bundle.pth'))
+     (lib/"python3.8/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
+    end
   end
 end
