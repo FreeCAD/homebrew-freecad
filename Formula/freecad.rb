@@ -49,7 +49,7 @@ class Freecad < Formula
    end
   end
 
-  depends_on "boost-python"
+  depends_on "boost-python3"
   depends_on "xerces-c"
   depends_on "qt"
   depends_on "FreeCAD/freecad/pyside2-tools"
