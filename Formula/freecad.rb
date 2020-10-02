@@ -23,6 +23,8 @@ class Freecad < Formula
   depends_on "python3"
   depends_on "boost"
   depends_on "open-mpi"
+  depends_on "openblas"
+  depends_on "pkg-config"
 
   if #{Formula["boost"].version}?("1.73.0")
     if (File.exist?('/usr/local/opt/boost/include/boost/geometry/index/detail/rtree/visitors/insert.hpp'))
@@ -85,6 +87,7 @@ class Freecad < Formula
     args = std_cmake_args
     args << "-DBUILD_QT5=ON"
     args << "-DUSE_PYTHON3=1"
+    args << "-DPYTHON_EXECUTABLE=/usr/local/bin/python3"
     args << "-DCMAKE_CXX_FLAGS='-std=c++14'"
     args << "-DBUILD_FEM_NETGEN=1"
     args << "-DBUILD_FEM=1"
@@ -94,7 +97,7 @@ class Freecad < Formula
     if build.with?("unsecured-cloud")
      args << "-DALLOW_SELF_SIGNED_CERTIFICATE=1"
     end
-    args << '-DCMAKE_PREFIX_PATH="' + Formula["qt"].opt_prefix + "/lib/cmake;" + Formula["nglib"].opt_prefix + "/Contents/Resources"
+    args << '-DCMAKE_PREFIX_PATH="' + Formula["qt"].opt_prefix + "/lib/cmake;" + Formula["nglib"].opt_prefix + "/Contents/Resources;" + Formula["vtk@8.2"].opt_prefix + "/lib/cmake;"
     args << %W[
       -DBUILD_FEM_NETGEN:BOOL=ON
       -DFREECAD_USE_EXTERNAL_KDL=ON

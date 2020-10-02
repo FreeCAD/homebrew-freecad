@@ -110,7 +110,7 @@ class Matplotlib < Formula
   end
 
   def install
-      system "python3", "setup.py", "install", "--prefix=#{prefix}"
+      system "python3", "-mpip", "install", "--prefix=#{prefix}", "."
       version = "3.8"
       bundle_path = libexec/"lib/python#{version}/site-packages"
       bundle_path.mkpath
@@ -127,7 +127,7 @@ class Matplotlib < Formula
         end
       end
       (lib/"python#{version}/site-packages/homebrew-matplotlib-bundle.pth").write "#{bundle_path}\n"
-
+   
       system "python3", *Language::Python.setup_install_args(prefix)
   end
 
