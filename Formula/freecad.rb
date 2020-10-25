@@ -20,7 +20,7 @@ class Freecad < Formula
   # Required dependencies
   depends_on :macos => :catalina
   depends_on "freetype"
-  depends_on "python3"
+  depends_on "python@3.9"
   depends_on "boost"
   depends_on "open-mpi"
   depends_on "openblas"
@@ -57,6 +57,7 @@ class Freecad < Formula
   depends_on "FreeCAD/freecad/pyside2-tools"
   depends_on "webp"
   depends_on "opencascade"
+  depends on "opencamlib"
   depends_on "orocos-kdl"
   depends_on "freecad/freecad/matplotlib"
   depends_on "freecad/freecad/med-file"
@@ -73,14 +74,14 @@ class Freecad < Formula
  
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
-    sha256 "34821ab5a42ba6daf577eed8d7480c7744b9b28b440111f79c94ed195e1e66a9" => :catalina
+    sha256 "97a95f3f19632160766730b394f70def97e0df7b33d8806979a0f6abca96105f" => :catalina
   end
 
   def install
     if build.with?("packaging-utils")
       system "node", "install", "-g", "app_dmg"
     end
-    if (!File.exist?('/usr/local/lib/python3.8/site-packages/six.py'))
+    if (!File.exist?('/usr/local/lib/python3.9/site-packages/six.py'))
       system "pip3", "install", "six"
     end
     # Set up needed cmake args
@@ -110,7 +111,7 @@ class Freecad < Formula
     end
       bin.install_symlink "../MacOS/FreeCAD" => "FreeCAD"
       bin.install_symlink "../MacOS/FreeCADCmd" => "FreeCADCmd"
-      (lib/"python3.8/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
+      (lib/"python3.9/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
   end
 
   def caveats; <<-EOS
@@ -122,13 +123,13 @@ class Freecad < Formula
     EOS
   end
   def post_install
-    if (!File.exist?('/usr/local/lib/python3.8/site-packages/six.py'))
+    if (!File.exist?('/usr/local/lib/python3.9/site-packages/six.py'))
       system "pip3", "install", "six"
     end
     bin.install_symlink "../MacOS/FreeCAD" => "FreeCAD"
     bin.install_symlink "../MacOS/FreeCADCmd" => "FreeCADCmd"
-    if (!File.exist?('/usr/local/Cellar/freecad/0.19pre/lib/python3.8/site-packages/homebrew-freecad-bundle.pth'))
-     (lib/"python3.8/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
+    if (!File.exist?('/usr/local/Cellar/freecad/0.19pre/lib/python3.9/site-packages/homebrew-freecad-bundle.pth'))
+     (lib/"python3.9/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
     end
   end
 end
