@@ -24,7 +24,6 @@ class Freecad < Formula
   depends_on "boost"
   depends_on "open-mpi"
   depends_on "openblas"
-  depends_on "opencamlib"
   depends_on "pkg-config"
 
   if #{Formula["boost"].version}?("1.73.0")
@@ -58,7 +57,7 @@ class Freecad < Formula
   depends_on "FreeCAD/freecad/pyside2-tools"
   depends_on "webp"
   depends_on "opencascade"
-  depends on "opencamlib"
+  depends_on "opencamlib"
   depends_on "orocos-kdl"
   depends_on "freecad/freecad/matplotlib"
   depends_on "freecad/freecad/med-file"
