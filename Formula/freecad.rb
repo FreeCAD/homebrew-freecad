@@ -24,7 +24,6 @@ class Freecad < Formula
   depends_on "boost"
   depends_on "open-mpi"
   depends_on "openblas"
-  depends_on "opencamlib"
   depends_on "pkg-config"
 
   if #{Formula["boost"].version}?("1.73.0")
