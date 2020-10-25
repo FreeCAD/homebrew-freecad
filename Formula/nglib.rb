@@ -10,7 +10,7 @@ class Nglib < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "36519a4627ac1797bdc7b6a4b128ea203282b643557f8bb926b9480b15d3d8d0" => :catalina
+    sha256 "6bdcd683d6945ef78e54ca17aa8f1194ff1014b50ea904514192e6a49de6d778" => :catalina
   end
 
   def install

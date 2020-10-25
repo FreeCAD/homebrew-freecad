@@ -10,13 +10,13 @@ class Opencamlib < Formula
     sha256 "e49a5a9ab1698019c53656f3ca6625db1b40012147998fd9b35f467917897295"
   end
 
-  depends_on "python@3.8" => :build
+  depends_on "python@3.9" => :build
   depends_on "cmake" => :build
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "5ff3fd8fd5592177b7617c5d951edbadfa1a6eed7ae54a1dc2b0ee0c261188e2" => :catalina
+    sha256 "158c0212b75a29a1be1096586bc2268c78d745efa0724b46d046f1209db7742e" => :catalina
   end
 
   def install

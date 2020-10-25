@@ -15,7 +15,7 @@ class Coin < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "7cd83f6446a8de8c11d8b33f7f21b942193b88a844b789a41111b1e107d0fc5e" => :catalina
+    sha256 "69ba7ade754a6a5840308d54a80583c94ea101ca156362e9688534fd9c64c284" => :catalina
   end
 
   def install

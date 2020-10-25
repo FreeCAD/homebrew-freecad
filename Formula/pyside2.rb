@@ -1,11 +1,11 @@
 class Pyside2 < Formula
   desc "Python bindings for Qt5 and greater"
   homepage "https://wiki.qt.io/PySide2"
-  url "http://code.qt.io/pyside/pyside-setup.git", :using => :git, :branch => "5.15.0"
-  version "5.15.0"
-  head "http://code.qt.io/cgit/pyside/pyside-setup.git", :branch => "5.15.0"
+  url "http://code.qt.io/pyside/pyside-setup.git", :using => :git, :branch => "5.15.1"
+  version "5.15.1"
+  head "http://code.qt.io/cgit/pyside/pyside-setup.git", :branch => "5.15.1"
 
-  depends_on "python@3.8" => :build
+  depends_on "python@3.9" => :build
 
   option "without-docs", "Skip building documentation"
 
@@ -18,7 +18,7 @@ class Pyside2 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "eb3c2ce7acc683a45df26fbb9dd1979d12aafa4ff3057f5c27a03fb95e38c245" => :catalina
+    sha256 "dbb5cfda42c1a20f60ed4f56110258ae013f6fcb4c9f3dc22b7933aa1800f1fc" => :catalina
   end
 
   def install
@@ -32,15 +32,15 @@ class Pyside2 < Formula
 
     # Add out of tree build because one of its deps, shiboken, itself needs an
     # out of tree build in shiboken.rb.
-    pyhome = `python3.8-config --prefix`.chomp
-    py_library = "#{pyhome}/lib/libpython3.8.dylib"
-    py_include = "#{pyhome}/include/python3.8"
+    pyhome = `python3.9-config --prefix`.chomp
+    py_library = "#{pyhome}/lib/libpython3.9.dylib"
+    py_include = "#{pyhome}/include/python3.9"
 
       mkdir "macbuild3.8" do
         ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
         ENV["CMAKE_PREFIX_PATH"] = Formula["shiboken2"].opt_prefix + "/lib/cmake"
         args = std_cmake_args + %W[
-                -DPYTHON_EXECUTABLE=#{pyhome}/bin/python3.8
+                -DPYTHON_EXECUTABLE=#{pyhome}/bin/python3.9
                 -DPYTHON_LIBRARY=#{py_library}
                 -DPYTHON_INCLUDE_DIR=#{py_include}
                 -DCMAKE_BUILD_TYPE=Release

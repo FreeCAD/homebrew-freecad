@@ -42,7 +42,7 @@ class Matplotlib < Formula
   option "with-cairo", "Build with cairo backend support"
   option "with-tex", "Build with tex support"
 
-  depends_on "python3" => :recommended
+  depends_on "python@3.9" => :recommended
 
   requires_py3 = []
   requires_py3 << "with-python3" 
@@ -111,7 +111,7 @@ class Matplotlib < Formula
 
   def install
       system "python3", "-mpip", "install", "--prefix=#{prefix}", "."
-      version = "3.8"
+      version = "3.9"
       bundle_path = libexec/"lib/python#{version}/site-packages"
       bundle_path.mkpath
       ENV.prepend_path "PYTHONPATH", bundle_path

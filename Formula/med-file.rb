@@ -8,16 +8,16 @@ class MedFile < Formula
   depends_on "gcc" => :build   # for gfortan
   depends_on "swig" => :build
   depends_on "hdf5@1.10"
-  depends_on "python3"
+  depends_on "python@3.9"
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "1ee274c04ecbf98d92fb938f1939348b1840328f28ec586972e38258f5aa6bd9" => :catalina
+    sha256 "a147ea364b002989a8b898ce8d9aef4fbc136728215f9c4941c6bcc4ebccd100" => :catalina
   end
 
   def install
 
-    python_prefix=`#{Formula["python3"].opt_bin}/python3-config --prefix`.chomp
+    python_prefix=`#{Formula["python@3.9"].opt_bin}/python3-config --prefix`.chomp
     python_include=Dir["#{python_prefix}/include/*"].first
 
     #ENV.cxx11
