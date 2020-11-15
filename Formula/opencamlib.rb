@@ -12,6 +12,8 @@ class Opencamlib < Formula
 
   depends_on "python@3.9" => :build
   depends_on "cmake" => :build
+  depends_on "boost" => :build
+  depends_on "boost-python3" => :build
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
