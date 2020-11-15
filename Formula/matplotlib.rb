@@ -107,6 +107,7 @@ class Matplotlib < Formula
     cellar :any
     rebuild 1
     sha256 "e1096eb5a6aa449a945874771baa42ac28d44dabe1cda312f716b80275a30556" => :catalina
+    sha256 "ba8db5b8e566bfdd8b884708ef20466ebf909fb6b89df0215a60085e8384ed6c" => :big_sur
   end
 
   def install

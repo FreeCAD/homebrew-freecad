@@ -12,11 +12,14 @@ class Opencamlib < Formula
 
   depends_on "python@3.9" => :build
   depends_on "cmake" => :build
+  depends_on "boost" => :build
+  depends_on "boost-python3" => :build
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "158c0212b75a29a1be1096586bc2268c78d745efa0724b46d046f1209db7742e" => :catalina
+    sha256 "3a7644de9647116f5b0686c2f3f4cfaef44c4ce8ddaf21e846505e108d7c36e4" => :big_sur
   end
 
   def install
