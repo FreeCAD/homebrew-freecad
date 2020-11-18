@@ -7,6 +7,9 @@ class Freecad < Formula
 
   # Debugging Support
   option "with-debug", "Enable debug build"
+  
+  # Build MacOS App
+  option "with-macos-app"
 
   # Optionally install packaging dependencies
   option "with-packaging-utils"
@@ -93,6 +96,9 @@ class Freecad < Formula
     args << "-DCMAKE_CXX_FLAGS='-std=c++14'"
     args << "-DBUILD_FEM_NETGEN=1"
     args << "-DBUILD_FEM=1"
+    if build.with?("macos-app")
+      args << "FREECAD_CREATE_MAC_APP=1"
+    end
     if build.with?("cloud")
      args << "-DBUILD_CLOUD=1"
     end
