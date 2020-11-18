@@ -97,7 +97,7 @@ class Freecad < Formula
     args << "-DBUILD_FEM_NETGEN=1"
     args << "-DBUILD_FEM=1"
     if build.with?("macos-app")
-      args << "FREECAD_CREATE_MAC_APP=1"
+      args << "-DFREECAD_CREATE_MAC_APP=1"
     end
     if build.with?("cloud")
      args << "-DBUILD_CLOUD=1"
