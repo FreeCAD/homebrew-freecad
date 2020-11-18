@@ -27,6 +27,10 @@ Developers may find it convenient to simply install the pre-requisites prior to 
 ## Building HEAD Version of FreeCAD
 
     brew install --HEAD freecad
+    
+## Building macOS App
+
+    brew install freecad --with-macos-app
 
 ## Continuous Integration Support
 The Travis CI system uses this freecad formula to build and test FreeCAD every time
