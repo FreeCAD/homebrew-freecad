@@ -23,18 +23,32 @@ class Freecad < Formula
   option "with-cloud", "Build with CLOUD module"
   option "with-unsecured-cloud", "Build with self signed certificate support CLOUD module"
 
-  # Build dependencies
-  depends_on "cmake"   => :build
-  depends_on "ccache"  => :build
-
-  # Required dependencies
-  depends_on :macos => :catalina
-  depends_on "freetype"
-  depends_on "python@3.9"
+  depends_on "ccache" => :build
+  depends_on "cmake" => :build
+  depends_on "swig" => :build
   depends_on "boost"
+  depends_on "boost-python3"
+  depends_on "freecad/freecad/coin"
+  depends_on "freecad/freecad/matplotlib"
+  depends_on "freecad/freecad/med-file"
+  depends_on "freecad/freecad/nglib"
+  depends_on "freecad/freecad/opencamlib"
+  depends_on "freecad/freecad/pivy"
+  depends_on "freecad/freecad/pyside2"
+  depends_on "freecad/freecad/pyside2-tools"
+  depends_on "freecad/freecad/shiboken2"
+  depends_on "freetype"
+  depends_on macos: :high_sierra # no access to sierra test box
   depends_on "open-mpi"
   depends_on "openblas"
+  depends_on "opencascade"
+  depends_on "orocos-kdl"
   depends_on "pkg-config"
+  depends_on "python@3.9"
+  depends_on "qt"
+  depends_on "vtk@8.2"
+  depends_on "webp"
+  depends_on "xerces-c"
 
   if #{Formula["boost"].version}?("1.73.0")
     if (File.exist?('/usr/local/opt/boost/include/boost/geometry/index/detail/rtree/visitors/insert.hpp'))
@@ -60,22 +74,6 @@ class Freecad < Formula
      end
    end
   end
-
-  depends_on "boost-python3"
-  depends_on "xerces-c"
-  depends_on "qt"
-  depends_on "FreeCAD/freecad/pyside2-tools"
-  depends_on "webp"
-  depends_on "opencascade"
-  depends_on "opencamlib"
-  depends_on "orocos-kdl"
-  depends_on "freecad/freecad/matplotlib"
-  depends_on "freecad/freecad/med-file"
-  depends_on "vtk@8.2"
-  depends_on "FreeCAD/freecad/nglib"
-  depends_on "FreeCAD/freecad/coin"
-  depends_on "FreeCAD/freecad/pivy"
-  depends_on "swig" => :build
 
   if build.with?("packaging-utils")
     depends_on "node"
