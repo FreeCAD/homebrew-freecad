@@ -120,6 +120,7 @@ class Freecad < Formula
       (lib/"python3.9/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
     end
   end
+
   def caveats
     <<-EOS
     After installing FreeCAD you may want to do the following:
