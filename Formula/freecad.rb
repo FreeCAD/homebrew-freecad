@@ -1,9 +1,16 @@
 class Freecad < Formula
   desc "Parametric 3D modeler"
   homepage "http://www.freecadweb.org"
-  url "https://github.com/freecad/FreeCAD.git", :using => :git, :commit => "34a083b15997a2694bb29328c440225cad976bd9"
+  license "GPL-2.0-only"
   version "0.19pre"
-  head "https://github.com/freecad/FreeCAD.git", :commit => "34a083b15997a2694bb29328c440225cad976bd9"
+  head "https://github.com/freecad/FreeCAD.git", branch: "master", shallow: false
+
+  stable do
+    # a tested commit that builds on macos high sierra 10.13, mojave 10.14, Catalina 10.15 & BigSur 11.0
+    url "https://github.com/freecad/freecad.git",
+      revision: "f35d30bc58cc2000754d4f30cf29d063416cfb9e"
+    version "0.19pre-dev"
+  end
 
   # Debugging Support
   option "with-debug", "Enable debug build"
