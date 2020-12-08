@@ -76,8 +76,6 @@ class Freecad < Formula
     end
   end
 
-  system "node", "install", "-g", "app_dmg" if build.with? "packaging-utils"
-
   def install
     if !File.exist?('/usr/local/lib/python3.9/site-packages/six.py')
       system "pip3", "install", "six"
@@ -94,11 +92,14 @@ class Freecad < Formula
       -DFREECAD_USE_EXTERNAL_KDL=ON
       -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
     ]
+
+    args << '-DCMAKE_PREFIX_PATH="' + Formula["qt"].opt_prefix + "/lib/cmake;" + Formula["nglib"].opt_prefix + "/Contents/Resources;" + Formula["vtk@8.2"].opt_prefix + "/lib/cmake;"
+
     args << "-DFREECAD_CREATE_MAC_APP=1" if build.with? "macos-app"
     args << "-DBUILD_CLOUD=1" if build.with? "cloud"
     args << "-DALLOW_SELF_SIGNED_CERTIFICATE=1" if build.with? "unsecured-cloud"
 
-    args << '-DCMAKE_PREFIX_PATH="' + Formula["qt"].opt_prefix + "/lib/cmake;" + Formula["nglib"].opt_prefix + "/Contents/Resources;" + Formula["vtk@8.2"].opt_prefix + "/lib/cmake;"
+    system "node", "install", "-g", "app_dmg" if build.with? "packaging-utils"
 
     mkdir "Build" do
       system "cmake", *args, ".."
@@ -119,6 +120,7 @@ class Freecad < Formula
       (lib/"python3.9/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
     end
   end
+
   def caveats
     <<-EOS
     After installing FreeCAD you may want to do the following:
