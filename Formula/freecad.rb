@@ -3,7 +3,7 @@ class Freecad < Formula
   homepage "http://www.freecadweb.org"
   url "https://github.com/freecad/FreeCAD.git", :using => :git, :commit => "34a083b15997a2694bb29328c440225cad976bd9"
   version "0.19pre"
-  head "https://github.com/freecad/FreeCAD.git", :commit => "34a083b15997a2694bb29328c440225cad976bd9"
+  head "https://github.com/freecad/FreeCAD.git", branch: "master", shallow: false
 
   # Debugging Support
   option "with-debug", "Enable debug build"
