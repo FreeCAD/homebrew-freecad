@@ -81,11 +81,17 @@ class Freecad < Formula
       system "pip3", "install", "six"
     end
 
+    # NOTE: brew clang compilers req, Xcode nowork on macOS 10.13 or 10.14
+    if MacOS.version <= :mojave
+      ENV["CC"] = Formula["llvm"].opt_bin/"clang"
+      ENV["CXX"] = Formula["llvm"].opt_bin/"clang++"
+    end
+
     args = std_cmake_args + %W[
       -DBUILD_QT5=ON
       -DUSE_PYTHON3=1
       -DPYTHON_EXECUTABLE=/usr/local/bin/python3
-      -DCMAKE_CXX_FLAGS=c++14
+      -std=c++14
       -DBUILD_FEM_NETGEN=1
       -DBUILD_FEM=1
       -DBUILD_FEM_NETGEN:BOOL=ON
