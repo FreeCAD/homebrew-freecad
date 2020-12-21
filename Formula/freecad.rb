@@ -92,6 +92,8 @@ class Freecad < Formula
       -DUSE_PYTHON3=1
       -DPYTHON_EXECUTABLE=/usr/local/bin/python3
       -std=c++14
+      -DCMAKE_CXX_STANDARD=14
+      -DBUILD_ENABLE_CXX_STD:STRING=C++14
       -DBUILD_FEM_NETGEN=1
       -DBUILD_FEM=1
       -DBUILD_FEM_NETGEN:BOOL=ON
