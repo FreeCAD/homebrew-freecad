@@ -1,9 +1,9 @@
 class Shiboken2 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
   homepage "https://wiki.qt.io/PySide2"
-  url "http://code.qt.io/pyside/pyside-setup.git", :using => :git, :branch => "5.15.1"
-  version "5.15.1"
-  head "http://code.qt.io/pyside/pyside-setup.git", :branch => "5.15.1"
+  url "http://code.qt.io/pyside/pyside-setup.git", :using => :git, :branch => "5.15.2"
+  version "5.15.2"
+  head "http://code.qt.io/pyside/pyside-setup.git", :branch => "5.15.2"
 
   depends_on "cmake" => :build
   depends_on "llvm"
@@ -14,8 +14,7 @@ class Shiboken2 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "5698e844e6c603357d46ccfaf06f999de30594f6ea6c7e60bbaf79b40f69c927" => :catalina
-    sha256 "e3b0ed85be3c0c3c1489ef5860fd96955161c10f01b8b083868743d43b5ff004" => :big_sur
+    sha256 "5a5fbbb25258cc9431a736777ba2425cca364ac470ff96bb88c8a0a356c1b360" => :catalina
   end
 
   def install
