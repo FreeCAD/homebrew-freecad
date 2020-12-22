@@ -15,6 +15,7 @@ class Shiboken2 < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "5a5fbbb25258cc9431a736777ba2425cca364ac470ff96bb88c8a0a356c1b360" => :catalina
+    sha256 "aff7c3d8c5b9047cad0f623cf102f5966fbfce6126dd71704fd5c255770ae49e" => :big_sur
   end
 
   def install

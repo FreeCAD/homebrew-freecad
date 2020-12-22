@@ -8,7 +8,7 @@ class Pivy < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "9d8e559302e47cf96dfbc4524b0338f1fbe3dcf6168f4dc7a85aba3709660f02" => :catalina
-    sha256 "40041b41817b65c5468398d4fca36d0bd5ba031b159dee982aa62905af8e9bba" => :big_sur
+    sha256 "63957e093dc108f4ed1d8595f9d9cb00a54f455c22af06e0a51c05f39c3f823f" => :big_sur
   end
 
   depends_on "python@3.9" => :build

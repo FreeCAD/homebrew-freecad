@@ -15,7 +15,7 @@ class Freecad < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     sha256 "25e5a68ca81266e893df19cb43f3a6c20690fe6fa1ade36baf063a95482f64f1" => :catalina
-    sha256 "804bb741de90e59a701053b22a8be04105ebe07fd29bc8d83245c3d013768536" => :big_sur
+    sha256 "72371590c1f17ed4e93b838409b785d7d2bfff59ece3cd44e07fc50a6d4f269a" => :big_sur
   end
 
   option "with-debug", "Enable debug build"

@@ -12,7 +12,7 @@ class Pyside2Tools < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "e64630744ab15424496579a5938ed83d06f731296b750525d021c52028706e6d" => :catalina
-    sha256 "0254ab2d031299c9940a7be979e7e0b09125ff545ba7f215236e8fc6899004ae" => :big_sur
+    sha256 "90ce8404911f99539b4147e220453698ed43c33044c48d480f40fb72d6fc8954" => :big_sur
   end
 
   def install
