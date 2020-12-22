@@ -1,9 +1,9 @@
 class Pyside2 < Formula
   desc "Python bindings for Qt5 and greater"
   homepage "https://wiki.qt.io/PySide2"
-  url "http://code.qt.io/pyside/pyside-setup.git", :using => :git, :branch => "5.15.1"
-  version "5.15.1"
-  head "http://code.qt.io/cgit/pyside/pyside-setup.git", :branch => "5.15.1"
+  url "http://code.qt.io/pyside/pyside-setup.git", :using => :git, :branch => "5.15.2"
+  version "5.15.2"
+  head "http://code.qt.io/cgit/pyside/pyside-setup.git", :branch => "5.15.2"
 
   depends_on "python@3.9" => :build
 
@@ -18,8 +18,7 @@ class Pyside2 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "dbb5cfda42c1a20f60ed4f56110258ae013f6fcb4c9f3dc22b7933aa1800f1fc" => :catalina
-    sha256 "81120e79791dfc44a6d0274e3b36e5f4f8bbbc5df468059eff6eb7ba02a5175a" => :big_sur
+    sha256 "c1977f83457b1a34c3762b1cbf70df7d43280058d7630efda51bf7d15f3e2851" => :catalina
   end
 
   def install
