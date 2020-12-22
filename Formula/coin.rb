@@ -16,7 +16,7 @@ class Coin < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "69ba7ade754a6a5840308d54a80583c94ea101ca156362e9688534fd9c64c284" => :catalina
-    sha256 "924ace4807f72ff3691fcbd029c15fbe53b89f74321746c6e322dd7a5635eef2" => :big_sur
+    sha256 "1039b8cee7f85d85c118eddedc864091a5a24602880985329c18f4c2e74fc525" => :big_sur
   end
 
   def install
