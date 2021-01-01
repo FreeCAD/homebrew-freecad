@@ -1,4 +1,4 @@
-class Coin < Formula
+class CoinAT400 < Formula
   desc "Retained-mode toolkit for 3D graphics development"
   homepage "https://coin3d.github.io"
   url "https://github.com/coin3d/coin", :using => :git, :tag => "Coin-4.0.0"
@@ -10,13 +10,14 @@ class Coin < Formula
 
   depends_on "cmake"   => :build
   depends_on "doxygen" => :build if build.with? "docs"
-  depends_on "boost"
+  depends_on "freecad/freecad/boost@1.75.0"
+ 
+  keg_only "Provided by homebrew"
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "69ba7ade754a6a5840308d54a80583c94ea101ca156362e9688534fd9c64c284" => :catalina
-    sha256 "1039b8cee7f85d85c118eddedc864091a5a24602880985329c18f4c2e74fc525" => :big_sur
+    sha256 "79904beca01b2e8bfa395807eb3e4746f965ea4aa16b0a305d383c5b68d12001" => :big_sur
   end
 
   def install

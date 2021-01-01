@@ -6,19 +6,20 @@ class MedFile < Formula
 
   depends_on "cmake" => :build
   depends_on "gcc" => :build   # for gfortan
-  depends_on "swig" => :build
+  depends_on "freecad/freecad/swig@4.0.2" => :build
   depends_on "hdf5@1.10"
-  depends_on "python@3.9"
+  depends_on "freecad/freecad/python3.9"
+
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "a147ea364b002989a8b898ce8d9aef4fbc136728215f9c4941c6bcc4ebccd100" => :catalina
-    sha256 "5706da2e82467537064079dcc2a5e0a202c9eb479bc8a92d5ff33bb93a005663" => :big_sur
+    rebuild 1
+    sha256 "ca67562c163ebe38f3338ebe644851d2102b946e406271d967aeab9d047320ad" => :big_sur
   end
 
   def install
 
-    python_prefix=`#{Formula["python@3.9"].opt_bin}/python3-config --prefix`.chomp
+    python_prefix=`#{Formula["freecad/freecad/python3.9"].opt_bin}/python3-config --prefix`.chomp
     python_include=Dir["#{python_prefix}/include/*"].first
 
     #ENV.cxx11

@@ -4,19 +4,19 @@ class Nglib < Formula
   url "https://github.com/NGSolve/netgen.git", :using => :git, :tag => "v6.2.2007"
   version "v6.2.2007"
 
-  depends_on "opencascade" => :required
+  depends_on "freecad/freecad/opencascade@7.5.0" => :required
   depends_on "cmake" => :build
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "f4983c240f1500f5a6779018ba4cf0688515f4e6c394c77b4761583aaf16820d" => :catalina
-    sha256 "c950b0410951c9e9e5a42a6b99996769ff4a905e60c8105f775a31779c50359c" => :big_sur
+    rebuild 1
+    sha256 "41455949676a578a45168f81eacf95bba03dbe8806b6f358262e455dd3d93ecf" => :big_sur
   end
 
   def install
     mkdir "Build" do
-     system "cmake", "-DUSE_PYTHON=OFF" , "-DUSE_GUI=OFF" , "-DUSE_OCC=ON" , *std_cmake_args , ".."
+     system "cmake", "-DUSE_PYTHON=OFF" , "-DUSE_GUI=OFF" , "-DUSE_OCC=ON" , '-DCMAKE_PREFIX_PATH="' + Formula["freecad/freecad/opencascade@7.5.0"].opt_prefix + "/lib/cmake;", *std_cmake_args , ".."
      system "make", "-j#{ENV.make_jobs}" , "install"
     end
 
