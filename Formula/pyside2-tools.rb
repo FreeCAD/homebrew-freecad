@@ -6,13 +6,14 @@ class Pyside2Tools < Formula
   head "http://code.qt.io/pyside/pyside-setup.git", :branch => "5.15.2" 
 
   depends_on "cmake" => :build
-  depends_on "python@3.9" => :build
-  depends_on "FreeCAD/freecad/pyside2"
+  depends_on "freecad/freecad/python3.9" => :build
+  depends_on "freecad/freecad/pyside2"
+
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "e64630744ab15424496579a5938ed83d06f731296b750525d021c52028706e6d" => :catalina
-    sha256 "90ce8404911f99539b4147e220453698ed43c33044c48d480f40fb72d6fc8954" => :big_sur
+    rebuild 1
+    sha256 "9e2e93fc6daaf7054aac512da137674d802fa614317405181fa2521f99fe9d37" => :big_sur
   end
 
   def install

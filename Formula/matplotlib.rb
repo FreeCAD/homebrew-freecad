@@ -42,7 +42,7 @@ class Matplotlib < Formula
   option "with-cairo", "Build with cairo backend support"
   option "with-tex", "Build with tex support"
 
-  depends_on "python@3.9" => :recommended
+  depends_on "freecad/freecad/python3.9" => :recommended
 
   requires_py3 = []
   requires_py3 << "with-python3" 
@@ -54,7 +54,7 @@ class Matplotlib < Formula
 
   depends_on "freetype"
   depends_on "libpng"
-  depends_on "numpy" => requires_py3
+  depends_on "freecad/freecad/numpy@1.19.4" => requires_py3
   depends_on "ghostscript" => :optional
   depends_on "tcl-tk" => :optional
 
@@ -105,9 +105,8 @@ class Matplotlib < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    rebuild 1
-    sha256 "5edc6f8be7835607a90914a5a455885ca3e907a6536a987c24700c9f9041e235" => :catalina
-    sha256 "3d49cf341592d5fad40ec4171f92f7391cf3ed21ebe4b5a881a86f254e6a02b2" => :big_sur
+    rebuild 2
+    sha256 "5680b32da9720591e56c7e22bd097f4014315e56458b747e25dc42cfd1af040d" => :big_sur
   end
 
   def install

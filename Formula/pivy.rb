@@ -4,17 +4,17 @@ class Pivy < Formula
   head "https://bitbucket.org/Coin3D/pivy", :using => :git
   version "0.6.5"
 
+  depends_on "freecad/freecad/python3.9" => :build
+  depends_on "freecad/freecad/swig@4.0.2"  => :build
+  depends_on "cmake" => :build
+  depends_on "freecad/freecad/coin@4.0.0"
+
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "9d8e559302e47cf96dfbc4524b0338f1fbe3dcf6168f4dc7a85aba3709660f02" => :catalina
-    sha256 "63957e093dc108f4ed1d8595f9d9cb00a54f455c22af06e0a51c05f39c3f823f" => :big_sur
+    rebuild 1
+    sha256 "30827cf238afa9fe55a6e1c8d0d65ff6a10d1a6fe9349a35046c354b48fe8b18" => :big_sur
   end
-
-  depends_on "python@3.9" => :build
-  depends_on "swig"  => :build
-  depends_on "cmake" => :build
-  depends_on "FreeCAD/freecad/coin"
 
   def install
     system "python3", "setup.py", "install", "--prefix=#{prefix}"

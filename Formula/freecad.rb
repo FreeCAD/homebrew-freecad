@@ -12,12 +12,6 @@ class Freecad < Formula
     version "0.19pre-dev"
   end
 
-  bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
-    sha256 "25e5a68ca81266e893df19cb43f3a6c20690fe6fa1ade36baf063a95482f64f1" => :catalina
-    sha256 "72371590c1f17ed4e93b838409b785d7d2bfff59ece3cd44e07fc50a6d4f269a" => :big_sur
-  end
-
   option "with-debug", "Enable debug build"
   option "with-macos-app", "Build MacOS App bundle"
   option "with-packaging-utils", "Optionally install packaging dependencies"
@@ -27,9 +21,9 @@ class Freecad < Formula
   depends_on "ccache" => :build
   depends_on "cmake" => :build
   depends_on "swig" => :build
-  depends_on "boost"
-  depends_on "boost-python3"
-  depends_on "freecad/freecad/coin"
+  depends_on "freecad/freecad/boost@1.75.0"
+  depends_on "freecad/freecad/boost-python3@1.75.0"
+  depends_on "freecad/freecad/coin@4.0.0"
   depends_on "freecad/freecad/matplotlib"
   depends_on "freecad/freecad/med-file"
   depends_on "freecad/freecad/nglib"
@@ -42,14 +36,20 @@ class Freecad < Formula
   depends_on macos: :high_sierra # no access to sierra test box
   depends_on "open-mpi"
   depends_on "openblas"
-  depends_on "opencascade"
+  depends_on "freecad/freecad/opencascade@7.5.0"
   depends_on "orocos-kdl"
   depends_on "pkg-config"
-  depends_on "python@3.9"
-  depends_on "qt"
-  depends_on "vtk@8.2"
+  depends_on "freecad/freecad/python3.9"
+  depends_on "freecad/freecad/qt5152"
+  depends_on "freecad/freecad/vtk@8.2.0"
   depends_on "webp"
   depends_on "xerces-c"
+
+  bottle do
+    root_url "https:/dl.bintray.com/vejmarie/freecad"
+    rebuild 1
+    sha256 "dc6fdff7ab5e76414d497b84e8a386619f59120b4c39b69174d7583a3dacfa57" => :big_sur
+  end
 
   def install
     if !File.exist?('/usr/local/lib/python3.9/site-packages/six.py')
@@ -65,7 +65,7 @@ class Freecad < Formula
     args = std_cmake_args + %W[
       -DBUILD_QT5=ON
       -DUSE_PYTHON3=1
-      -DPYTHON_EXECUTABLE=/usr/local/bin/python3
+      -DPYTHON_EXECUTABLE=/usr/local/opt/python3.9/bin/python3
       -std=c++14
       -DCMAKE_CXX_STANDARD=14
       -DBUILD_ENABLE_CXX_STD:STRING=C++14
@@ -76,7 +76,7 @@ class Freecad < Formula
       -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
     ]
 
-    args << '-DCMAKE_PREFIX_PATH="' + Formula["qt"].opt_prefix + "/lib/cmake;" + Formula["nglib"].opt_prefix + "/Contents/Resources;" + Formula["vtk@8.2"].opt_prefix + "/lib/cmake;"
+    args << '-DCMAKE_PREFIX_PATH="' + Formula["freecad/freecad/qt5152"].opt_prefix + "/lib/cmake;" + Formula["freecad/freecad/nglib"].opt_prefix + "/Contents/Resources;" + Formula["freecad/freecad/vtk@8.2.0"].opt_prefix + "/lib/cmake;" + Formula["freecad/freecad/opencascade@7.5.0"].opt_prefix + "/lib/cmake;"+ Formula["freecad/freecad/med-file"].opt_prefix + "/share/cmake/;" + Formula["freecad/freecad/shiboken2"].opt_prefix + "/lib/cmake;" + Formula["freecad/freecad/pyside2"].opt_prefix+ "/lib/cmake;" + Formula["freecad/freecad/coin@4.0.0"].opt_prefix+ "/lib/cmake;" + Formula["freecad/freecad/boost@1.75.0"].opt_prefix+ "/lib/cmake;" + Formula["freecad/freecad/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;"
 
     args << "-DFREECAD_CREATE_MAC_APP=1" if build.with? "macos-app"
     args << "-DBUILD_CLOUD=1" if build.with? "cloud"
