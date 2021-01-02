@@ -110,7 +110,8 @@ class Matplotlib < Formula
   end
 
   def install
-      system "python3", "-mpip", "install", "--prefix=#{prefix}", "."
+      system "#{Formula["freecad/freecad/python3.9"].opt_bin}"+"/pip3", "install", "pytz"
+      system "#{Formula["freecad/freecad/python3.9"].opt_bin}"+"/python3", "-mpip", "install", "--prefix=#{prefix}", "."
       version = "3.9"
       bundle_path = libexec/"lib/python#{version}/site-packages"
       bundle_path.mkpath
@@ -123,12 +124,12 @@ class Matplotlib < Formula
       p *Language::Python.setup_install_args(libexec)
       res.each do |r|
         resource(r).stage do
-          system "python3", *Language::Python.setup_install_args(libexec)
+          system "#{Formula["freecad/freecad/python3.9"].opt_bin}"+"/python3", *Language::Python.setup_install_args(libexec)
         end
       end
       (lib/"python#{version}/site-packages/homebrew-matplotlib-bundle.pth").write "#{bundle_path}\n"
    
-      system "python3", *Language::Python.setup_install_args(prefix)
+      system "#{Formula["freecad/freecad/python3.9"].opt_bin}"+"/python3", *Language::Python.setup_install_args(prefix)
   end
 
   def caveats
