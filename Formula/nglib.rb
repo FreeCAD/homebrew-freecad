@@ -15,6 +15,7 @@ class Nglib < Formula
   end
 
   def install
+	inreplace "CMakeLists.txt", "find_package(OpenCasCade REQUIRED)", "find_package(OpenCasCade REQUIRED HINTS \""+Formula["freecad/freecad/opencascade@7.5.0"].opt_lib+"/cmake/opencascade\")\n   set(OCC_INCLUDE_DIR ${OpenCASCADE_INCLUDE_DIR})\n   message(${OpenCASCADE_INCLUDE_DIR})"
     mkdir "Build" do
      system "cmake", "-DUSE_PYTHON=OFF" , "-DUSE_GUI=OFF" , "-DUSE_OCC=ON" , '-DCMAKE_PREFIX_PATH="' + Formula["freecad/freecad/opencascade@7.5.0"].opt_prefix + "/lib/cmake;", *std_cmake_args , ".."
      system "make", "-j#{ENV.make_jobs}" , "install"
