@@ -19,7 +19,10 @@ class SipAT41924 < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any_skip_relocation
     sha256 "76e10ee255c7dda2f716ee4c2f3394d1fa7c1af7298f0ac58ff3863664e323bb" => :big_sur
+    sha256 "c3b3dafcf16f0e65bea4ba6daf62d8e15394ee7201073008a7c7aa22c9864e81" => :catalina
   end
+  
+  keg_only "provided by homebrew core"
 
   def install
     ENV.prepend_path "PATH", Formula["freecad/freecad/python3.9"].opt_bin

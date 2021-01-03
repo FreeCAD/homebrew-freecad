@@ -16,7 +16,7 @@ class PyqtAT5152 < Formula
 
   resource "PyQt5-sip" do
     url "https://files.pythonhosted.org/packages/73/8c/c662b7ebc4b2407d8679da68e11c2a2eb275f5f2242a92610f6e5024c1f2/PyQt5_sip-12.8.1.tar.gz"
-    sha256 "30e944db9abee9cc757aea16906d4198129558533eb7fadbe48c5da2bd18e0bd"
+    sha256 "30e944db9abee9cc757aea16906d4198129558533eb7fadbe48c5da2bd18e0bd" 
   end
 
   keg_only "Also provided by core..."
@@ -25,6 +25,7 @@ class PyqtAT5152 < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "ded8473f706348d888701ade06f26bbdcbfbd8cc972fe49d208464a09045d254" => :big_sur
+    sha256 "25424bdc32b5a43929e637f2e6c0f1bc3b20bf03c13756ea7ba80bec819a9d43" => :catalina
   end
 
   def install

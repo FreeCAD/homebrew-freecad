@@ -38,6 +38,7 @@ class Qt5152 < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "e9e1286681483cd74427c7d5e0a680d45c45b562dc5e311aa8921738946922e0" => :big_sur
+    sha256 "e71e5f33519372f3f9776fc159b9bce93891a1b3c2a6778aa0b1663abcb2f8c3" => :catalina
   end
 
   def install

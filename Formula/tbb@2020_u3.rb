@@ -15,6 +15,7 @@ class TbbAT2020U3 < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "0047007332d04f4b4c7677b4909e4929c9c436365f6399ee421c000c6884a18b" => :big_sur
+    sha256 "0a2ea081cf8647fd270229d9da1b01909d77b4052e1b516b01e2998176567d9a" => :catalina
   end
 
   # Remove when upstream fix is released

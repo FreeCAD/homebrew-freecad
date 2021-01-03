@@ -18,8 +18,8 @@ class Opencamlib < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    rebuild 1
     sha256 "d1c4b8123618d76103e95c0156df5f6718bc4b29f35c1471ce1223a456c92040" => :big_sur
+    sha256 "695a0c707cc565aaa181049a2958e80fcaf21a76c573983e9d1314a19e90c8bd" => :catalina
   end
 
   def install

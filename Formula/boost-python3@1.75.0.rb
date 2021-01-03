@@ -23,6 +23,7 @@ class BoostPython3AT1750 < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "25a559efebce0f9e4d4a8682853e64aaf94ace29004028fe7768275fea827c36" => :big_sur
+    sha256 "3b1bf01ad68f74b340a4a384347f25b7e6ca0d0180ded19fe28cbaa5330b77cd" => :catalina
   end
 
   def install

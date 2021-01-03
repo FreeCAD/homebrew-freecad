@@ -18,13 +18,14 @@ class Icu4cAT671 < Formula
   # Remove with next release (ICU 68).
   patch :p2 do
     url "https://github.com/unicode-org/icu/commit/715d254a02b0b22681cb6f861b0921ae668fa7d6.patch?full_index=1"
-    sha256 "a87e1b9626ec5803b1220489c0d6cc544a5f293f1c5280e3b27871780c4ecde8"
+    sha256 "a87e1b9626ec5803b1220489c0d6cc544a5f293f1c5280e3b27871780c4ecde8" 
   end
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "9a8c506433feac36aa161aaf6a3e579d83293fcf363781e3cda11611c649efb8" => :big_sur
+    sha256 "02832f36ac5c5e7e3003c40b7b0abdc76026010f9be5b9a50d3c092d27aacc14" => :catalina
   end
 
   def install

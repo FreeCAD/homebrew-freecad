@@ -29,6 +29,7 @@ class BoostAT1750 < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "00b9b53fab0a0451e45ed4603af55ca81ab215fd6fedbd01a92701a8cab45c37" => :big_sur
+    sha256 "21fc3612d49249ff563dacedb633dbf8050a8e1ab3feb0100395a500fa610624" => :catalina
   end
   def install
     # Force boost to compile with the desired compiler

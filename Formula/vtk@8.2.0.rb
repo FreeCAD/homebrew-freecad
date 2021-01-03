@@ -43,6 +43,7 @@ class VtkAT820 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     sha256 "b43c9b7b466e5c5a2c75d39dc33d611ad864f0df2b46e85364886892d20376d2" => :big_sur
+    sha256 "da4cf1a9a932149b920c60290b4dc139a62f73abce12389fb25053a5fff42a4a" => :catalina
   end
 
   def install
