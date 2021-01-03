@@ -90,7 +90,7 @@ class Python39 < Formula
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
-    sha256 "e9d9bbe341441a86db89a62d2d366f156524438b5746a89fba79cfdec3cf28f1" => :big_sur
+    sha256 "847f0924e04052940cb66733267e31d3338131822863d1ff73d4cc5d5c90005b" => :big_sur
     sha256 "5448b5eb25fde4859c568821e59bfb5d488eb1f00bce5ecd97a545585f411aca" => :catalina
   end
 

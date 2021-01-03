@@ -20,7 +20,7 @@ class OpencascadeAT750 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "56fe2f8a9e38fa3577450f7c1b73489aedbd191655ba44cdb13c97b61a56d29d" => :big_sur
+    sha256 "1f625aeaef44b9a78714fae89f5feaa79ce43ae1515b3cb6139cfce3d603e412" => :big_sur
     sha256 "721771a181d3d8b3c2863df9ebf91d6f50e858ef81ed9cf2440c60bc6569fcc8" => :catalina
   end
 

@@ -47,7 +47,7 @@ class Freecad < Formula
 
   bottle do
     root_url "https:/dl.bintray.com/vejmarie/freecad"
-    sha256 "dc6fdff7ab5e76414d497b84e8a386619f59120b4c39b69174d7583a3dacfa57" => :big_sur
+    sha256 "2c05ad81cab7cc29ceeccf94f4d5de0f44a6d0bea641b7f6a7f9d080c79a6f68" => :big_sur
     sha256 "8ef75eb7cea8ca34dc4037207fb213332b9ed27976106fd83c31de1433c2dd29" => :catalina
   end
 
