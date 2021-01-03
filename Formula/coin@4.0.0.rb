@@ -18,6 +18,7 @@ class CoinAT400 < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
     sha256 "79904beca01b2e8bfa395807eb3e4746f965ea4aa16b0a305d383c5b68d12001" => :big_sur
+    sha256 "841ef05f4072eedc91a16845e3a8ed2e4c941faef5b338b7fd424649806de983" => :catalina
   end
 
   def install

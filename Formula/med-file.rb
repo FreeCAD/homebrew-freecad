@@ -13,8 +13,8 @@ class MedFile < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    rebuild 1
     sha256 "ca67562c163ebe38f3338ebe644851d2102b946e406271d967aeab9d047320ad" => :big_sur
+    sha256 "d66199bb1cbd71baf8f17bbef258fe64f02fe6f7cfc21427555f3c5b31297e1d" => :catalina
   end
 
   def install

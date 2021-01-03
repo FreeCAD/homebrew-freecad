@@ -20,6 +20,7 @@ class CythonAT02921 < Formula
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any_skip_relocation
     sha256 "5a1f369209b5b612c04cb895a06482b256e268c3c7c9da9992d5b4125bf6227e" => :big_sur
+    sha256 "780c1424d627c4f8a642f4c9323e09859e2fcece5c0f2c3b8868e77a907c692a" => :catalina
   end
   def install
     xy = Language::Python.major_minor_version Formula["freecad/freecad/python3.9"].opt_bin/"python3"

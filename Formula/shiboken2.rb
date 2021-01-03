@@ -14,8 +14,8 @@ class Shiboken2 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    rebuild 1
     sha256 "441481c9396c59ecb214402834a25e0ca4e2e0bb512a9bc3a3db86fbe5f313e3" => :big_sur
+    sha256 "94c2375a547b26b06128cd8705de6bd3f42f8a445dea5a2d9202040f9e61a033" => :catalina
   end
 
   def install

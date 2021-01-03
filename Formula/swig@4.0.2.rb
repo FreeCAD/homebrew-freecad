@@ -23,6 +23,7 @@ class SwigAT402 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     sha256 "31cc002987ed19c4fa8ea150381e6cbb5d6250e39fb7b0468b458a1c8f630ebd" => :big_sur
+    sha256 "bc218307d7a855276c2d97ceb81c4cac4d48c60f3be41e231bd62cde3629ba61" => :catalina
   end
 
   def install
