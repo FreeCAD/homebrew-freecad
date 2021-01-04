@@ -24,7 +24,7 @@ class Icu4cAT671 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "9a8c506433feac36aa161aaf6a3e579d83293fcf363781e3cda11611c649efb8" => :big_sur
+    sha256 "550f2586ae316232721903c627a53932a9a2f2032cade00ed31ec5dab3e2727e" => :big_sur
     sha256 "02832f36ac5c5e7e3003c40b7b0abdc76026010f9be5b9a50d3c092d27aacc14" => :catalina
   end
 

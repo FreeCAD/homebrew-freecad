@@ -12,7 +12,7 @@ class Pyside2Tools < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "9e2e93fc6daaf7054aac512da137674d802fa614317405181fa2521f99fe9d37" => :big_sur
+    sha256 "d3ab67c4bd9e47f8505b36445c496fca3109aab1a4ad59a0c370734c9001c3c3" => :big_sur
     sha256 "313cdb6754ad9f62abd03e8bfcc9f270bc308a5405fe91a56659d26d420db287" => :catalina
   end
 
