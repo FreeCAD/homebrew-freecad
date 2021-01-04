@@ -28,6 +28,7 @@ class Python39 < Formula
   depends_on "readline"
   depends_on "sqlite"
   depends_on "xz"
+  depends_on "gettext"
 
   uses_from_macos "bzip2"
   uses_from_macos "libffi"
