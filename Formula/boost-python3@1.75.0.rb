@@ -22,7 +22,7 @@ class BoostPython3AT1750 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "25a559efebce0f9e4d4a8682853e64aaf94ace29004028fe7768275fea827c36" => :big_sur
+    sha256 "3dd7c81b4cf643895a8c3c7a514a3edd9249387e9251bad646eb51ff77873f1c" => :big_sur
     sha256 "3b1bf01ad68f74b340a4a384347f25b7e6ca0d0180ded19fe28cbaa5330b77cd" => :catalina
   end
 

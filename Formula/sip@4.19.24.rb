@@ -18,7 +18,7 @@ class SipAT41924 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any_skip_relocation
-    sha256 "76e10ee255c7dda2f716ee4c2f3394d1fa7c1af7298f0ac58ff3863664e323bb" => :big_sur
+    sha256 "a3e1a54c30560552e7c4dc4bd0da95925be88c7eef2a9349b72e11b24f827616" => :big_sur
     sha256 "c3b3dafcf16f0e65bea4ba6daf62d8e15394ee7201073008a7c7aa22c9864e81" => :catalina
   end
   

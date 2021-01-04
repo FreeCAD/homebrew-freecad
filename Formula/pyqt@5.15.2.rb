@@ -24,7 +24,7 @@ class PyqtAT5152 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "ded8473f706348d888701ade06f26bbdcbfbd8cc972fe49d208464a09045d254" => :big_sur
+    sha256 "7bb680628800decb3c84adc40081fa44f8151c5241ede9c5534af16fe41612e0" => :big_sur
     sha256 "25424bdc32b5a43929e637f2e6c0f1bc3b20bf03c13756ea7ba80bec819a9d43" => :catalina
   end
 

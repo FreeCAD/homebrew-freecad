@@ -14,7 +14,7 @@ class Shiboken2 < Formula
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any
-    sha256 "441481c9396c59ecb214402834a25e0ca4e2e0bb512a9bc3a3db86fbe5f313e3" => :big_sur
+    sha256 "9fcaf2c809c9d335bf6e7f3009ddfec63040051c8d9dff7f47d5430579319e5d" => :big_sur
     sha256 "94c2375a547b26b06128cd8705de6bd3f42f8a445dea5a2d9202040f9e61a033" => :catalina
   end
 
