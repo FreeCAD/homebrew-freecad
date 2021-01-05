@@ -1,6 +1,6 @@
 class Shiboken2 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
-  homepage "https://wiki.qt.io/PySide2"
+  homepage "https://doc.qt.io/qtforpython/shiboken2/"
   url "http://code.qt.io/pyside/pyside-setup.git", :using => :git, :branch => "5.15.2"
   version "5.15.2"
   head "http://code.qt.io/pyside/pyside-setup.git", :branch => "5.15.2"
