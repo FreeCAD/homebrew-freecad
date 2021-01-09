@@ -3,6 +3,7 @@ class Nglib < Formula
   homepage "https://sourceforge.net/projects/netgen-mesher/"
   url "https://github.com/NGSolve/netgen.git", using: :git, tag: "v6.2.2007"
   version "v6.2.2007"
+  head "https://github.com/NGSolve/netgen.git"
 
   bottle do
     root_url "https://justyour.parts:8080/freecad"
