@@ -18,7 +18,7 @@ class CoinAT400 < Formula
 
   depends_on "cmake"   => :build
   depends_on "doxygen" => :build if build.with? "docs"
-  depends_on "#{@tap}/boost@1.75.0"
+  depends_on "boost@1.76"
 
   def install
     cmake_args = std_cmake_args

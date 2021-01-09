@@ -13,17 +13,14 @@ class Nglib < Formula
   end
 
   depends_on "cmake" => :build
-  depends_on "#{@tap}/opencascade@7.5.0"
+  depends_on "opencascade"
 
   def install
-    inreplace "CMakeLists.txt", "find_package(OpenCasCade REQUIRED)",
-"find_package(OpenCasCade REQUIRED HINTS \""+Formula["#{@tap}/opencascade@7.5.0"].opt_lib+"/cmake/opencascade\")\n   set(OCC_INCLUDE_DIR ${OpenCASCADE_INCLUDE_DIR})\n   message(${OpenCASCADE_INCLUDE_DIR})"
-
     args = std_cmake_args + %W[
       -DUSE_PYTHON=OFF
       -DUSE_GUI=OFF
       -DUSE_OCC=ON
-      -DOCC_INCLUDE_DIR=#{Formula["#{@tap}/opencascade@7.5.0"].include}/opencascade
+      -DOCC_INCLUDE_DIR=#{Formula["opencascade"].include}/opencascade
     ]
 
     mkdir "build" do

@@ -11,8 +11,8 @@ class Pivy < Formula
     sha256 cellar: :any, catalina: "90cb40af64f8827838af9312fd5481c6d52a88bf61c04bdf2b7f6593baad6609"
   end
 
-  depends_on "#{@tap}/python3.9" => :build
-  depends_on "#{@tap}/swig@4.0.2" => :build
+  depends_on "python@3.9" => :build
+  depends_on "swig@4.0"  => :build
   depends_on "cmake" => :build
   depends_on "#{@tap}/coin@4.0.0"
 

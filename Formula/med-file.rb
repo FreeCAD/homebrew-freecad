@@ -12,12 +12,12 @@ class MedFile < Formula
 
   depends_on "cmake" => :build
   depends_on "gcc" => :build   # for gfortan
-  depends_on "#{@tap}/swig@4.0.2" => :build
+  depends_on "swig@4.0" => :build
   depends_on "hdf5@1.10"
-  depends_on "#{@tap}/python3.9"
+  depends_on "python@3.9"
 
   def install
-    python_prefix=`#{Formula["#{@tap}/python3.9"].opt_bin}/python3-config --prefix`.chomp
+    python_prefix=`#{Formula["python@3.9"].opt_bin}/python3-config --prefix`.chomp
     python_include=Dir["#{python_prefix}/include/*"].first
 
     args = std_cmake_args + %W[

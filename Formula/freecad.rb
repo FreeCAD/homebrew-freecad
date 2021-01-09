@@ -26,31 +26,27 @@ class Freecad < Formula
 
   depends_on "ccache" => :build
   depends_on "cmake" => :build
-  depends_on "#{@tap}/swig@4.0.2" => :build
-  depends_on "#{@tap}/boost@1.75.0"
-  depends_on "#{@tap}/boost-python3@1.75.0"
-  depends_on "#{@tap}/coin@4.0.0"
-  depends_on "#{@tap}/matplotlib"
+  depends_on "swig@4.0" => :build
+  depends_on "boost-python3"
+  depends_on "boost@1.76"
+  depends_on "coin3d"
   depends_on "#{@tap}/med-file"
   depends_on "#{@tap}/nglib"
   depends_on "#{@tap}/opencamlib"
-  depends_on "#{@tap}/pivy"
-  depends_on "#{@tap}/pyside2"
-  depends_on "#{@tap}/pyside2-tools"
-  depends_on "#{@tap}/shiboken2"
   depends_on "freetype"
   depends_on macos: :high_sierra # no access to sierra test box
+  depends_on "numpy" # for matplotlib
   depends_on "open-mpi"
   depends_on "openblas"
-  depends_on "#{@tap}/opencascade@7.5.0"
+  depends_on "opencascade"
   depends_on "orocos-kdl"
   depends_on "pkg-config"
-  depends_on "#{@tap}/python3.9"
-  depends_on "#{@tap}/qt5152"
-  depends_on "#{@tap}/vtk@8.2.0"
+  depends_on "pyside@2"
+  depends_on "python@3.9"
+  depends_on "qt@5"
+  depends_on "vtk@8.2"
   depends_on "webp"
   depends_on "xerces-c"
-  depends_on "numpy" # for matplotlib
 
   # Matplot lib w. dependencies
   resource "Cycler" do
@@ -111,10 +107,8 @@ class Freecad < Formula
       -DBUILD_FEM_NETGEN:BOOL=ON
       -DFREECAD_USE_EXTERNAL_KDL=ON
       -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
+      -DCMAKE_PREFIX_PATH=#{Formula["#{@tap}/nglib"].opt_prefix}/Contents/Resources
     ]
-    args << "-DPYTHON_EXECUTABLE=" + Formula["#{@tap}/python3.9"].opt_prefix + "/bin/python3"
-    args << "-DPYTHON_INCLUDE_DIR=" + Formula["#{@tap}/python3.9"].opt_prefix + "/Frameworks/Python.framework/Headers"
-    args << '-DCMAKE_PREFIX_PATH="' + Formula["#{@tap}/qt5152"].opt_prefix + "/lib/cmake;" + Formula["#{@tap}/nglib"].opt_prefix + "/Contents/Resources;" + Formula["#{@tap}/vtk@8.2.0"].opt_prefix + "/lib/cmake;" + Formula["#{@tap}/opencascade@7.5.0"].opt_prefix + "/lib/cmake;"+ Formula["#{@tap}/med-file"].opt_prefix + "/share/cmake/;" + Formula["#{@tap}/shiboken2"].opt_prefix + "/lib/cmake;" + Formula["#{@tap}/pyside2"].opt_prefix+ "/lib/cmake;" + Formula["#{@tap}/coin@4.0.0"].opt_prefix+ "/lib/cmake;" + Formula["#{@tap}/boost@1.75.0"].opt_prefix+ "/lib/cmake;" + Formula["#{@tap}/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;"
 
     # The web widget is disabled in QT on Apple silicon due to missing
     # upstream support.
