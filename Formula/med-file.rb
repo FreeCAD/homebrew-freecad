@@ -20,13 +20,17 @@ class MedFile < Formula
     python_prefix=`#{Formula["#{@tap}/python3.9"].opt_bin}/python3-config --prefix`.chomp
     python_include=Dir["#{python_prefix}/include/*"].first
 
-    # ENV.cxx11
-    system "cmake", ".", "-DMEDFILE_BUILD_PYTHON=ON",
-                         "-DMEDFILE_BUILD_TESTS=OFF",
-                         "-DMEDFILE_INSTALL_DOC=OFF",
-                         "-DPYTHON_INCLUDE_DIR=#{python_include}",
-                         *std_cmake_args
-    system "make", "install"
+    args = std_cmake_args + %W[
+      -DMEDFILE_BUILD_PYTHON=ON
+      -DMEDFILE_BUILD_TESTS=OFF
+      -DMEDFILE_INSTALL_DOC=OFF
+      -DPYTHON_INCLUDE_DIR=#{python_include}
+    ]
+
+    mkdir "build" do
+      system "cmake", *args, ".."
+      system "make", "install"
+    end
   end
 
   test do
