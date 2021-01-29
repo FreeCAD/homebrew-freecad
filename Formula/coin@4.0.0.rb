@@ -10,7 +10,7 @@ class CoinAT400 < Formula
 
   depends_on "cmake"   => :build
   depends_on "doxygen" => :build if build.with? "docs"
-  depends_on "freecad/freecad/boost@1.75.0"
+  depends_on "#@tap/boost@1.75.0"
  
   keg_only "Provided by homebrew"
 

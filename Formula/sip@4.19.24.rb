@@ -13,7 +13,7 @@ class SipAT41924 < Formula
     regex(/href=.*?sip[._-]v?(\d+(\.\d+)+)\.t/i)
   end
 
-  depends_on "freecad/freecad/python3.9"
+  depends_on "#@tap/python3.9"
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
@@ -25,7 +25,7 @@ class SipAT41924 < Formula
   keg_only "provided by homebrew core"
 
   def install
-    ENV.prepend_path "PATH", Formula["freecad/freecad/python3.9"].opt_bin
+    ENV.prepend_path "PATH", Formula["#@tap/python3.9"].opt_bin
     ENV.delete("SDKROOT") # Avoid picking up /Application/Xcode.app paths
 
     if build.head?

@@ -10,9 +10,9 @@ class PyqtAT5152 < Formula
     url :stable
   end
 
-  depends_on "freecad/freecad/python3.9"
-  depends_on "freecad/freecad/qt5152"
-  depends_on "freecad/freecad/sip@4.19.24"
+  depends_on "#@tap/python3.9"
+  depends_on "#@tap/qt5152"
+  depends_on "#@tap/sip@4.19.24"
 
   resource "PyQt5-sip" do
     url "https://files.pythonhosted.org/packages/73/8c/c662b7ebc4b2407d8679da68e11c2a2eb275f5f2242a92610f6e5024c1f2/PyQt5_sip-12.8.1.tar.gz"
@@ -29,23 +29,23 @@ class PyqtAT5152 < Formula
   end
 
   def install
-    version = Language::Python.major_minor_version Formula["freecad/freecad/python3.9"].opt_bin/"python3"
+    version = Language::Python.major_minor_version Formula["#@tap/python3.9"].opt_bin/"python3"
     args = ["--confirm-license",
             "--bindir=#{bin}",
             "--destdir=#{lib}/python#{version}/site-packages",
             "--stubsdir=#{lib}/python#{version}/site-packages/PyQt5",
             "--sipdir=#{share}/sip/Qt5",
             # sip.h could not be found automatically
-            "--sip-incdir=#{Formula["freecad/freecad/sip@4.19.24"].opt_include}",
-            "--qmake=#{Formula["freecad/freecad/qt5152"].bin}/qmake",
+            "--sip-incdir=#{Formula["#@tap/sip@4.19.24"].opt_include}",
+            "--qmake=#{Formula["#@tap/qt5152"].bin}/qmake",
             # Force deployment target to avoid libc++ issues
             "QMAKE_MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}",
             "--designer-plugindir=#{pkgshare}/plugins",
             "--qml-plugindir=#{pkgshare}/plugins",
-            "--pyuic5-interpreter=#{Formula["freecad/freecad/python3.9"].opt_bin}/python3",
+            "--pyuic5-interpreter=#{Formula["#@tap/python3.9"].opt_bin}/python3",
             "--verbose"]
 
-    system Formula["freecad/freecad/python3.9"].opt_bin/"python3", "configure.py", *args
+    system Formula["#@tap/python3.9"].opt_bin/"python3", "configure.py", *args
     system "make"
     ENV.deparallelize { system "make", "install" }
   end
@@ -54,7 +54,7 @@ class PyqtAT5152 < Formula
     system "#{bin}/pyuic5", "--version"
     system "#{bin}/pylupdate5", "-version"
 
-    system Formula["freecad/freecad/python3.9"].opt_bin/"python3", "-c", "import PyQt5"
+    system Formula["#@tap/python3.9"].opt_bin/"python3", "-c", "import PyQt5"
     %w[
       Gui
       Location
@@ -64,6 +64,6 @@ class PyqtAT5152 < Formula
       Svg
       Widgets
       Xml
-    ].each { |mod| system Formula["freecad/freecad/python3.9"].opt_bin/"python3", "-c", "import PyQt5.Qt#{mod}" }
+    ].each { |mod| system Formula["#@tap/python3.9"].opt_bin/"python3", "-c", "import PyQt5.Qt#{mod}" }
   end
 end

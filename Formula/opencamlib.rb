@@ -10,10 +10,10 @@ class Opencamlib < Formula
     sha256 "e49a5a9ab1698019c53656f3ca6625db1b40012147998fd9b35f467917897295"
   end
 
-  depends_on "freecad/freecad/python3.9" => :build
+  depends_on "#@tap/python3.9" => :build
   depends_on "cmake" => :build
-  depends_on "freecad/freecad/boost@1.75.0" => :build
-  depends_on "freecad/freecad/boost-python3@1.75.0" => :build
+  depends_on "#@tap/boost@1.75.0" => :build
+  depends_on "#@tap/boost-python3@1.75.0" => :build
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
@@ -24,7 +24,7 @@ class Opencamlib < Formula
 
   def install
       args = std_cmake_args
-      system "cmake", *args, "-DVERSION_STRING=#{version}", "-DBUILD_TYPE=Release", "-DUSE_OPENMP=0", "-DBUILD_PY_LIB=ON","-DUSE_PY_3=TRUE", "-DPYTHON_VERSION_SUFFIX=3", "-DCMAKE_PREFIX_PATH=" + Formula["freecad/freecad/boost@1.75.0"].opt_prefix+ "/lib/cmake;" + Formula["freecad/freecad/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;",  "."
+      system "cmake", *args, "-DVERSION_STRING=#{version}", "-DBUILD_TYPE=Release", "-DUSE_OPENMP=0", "-DBUILD_PY_LIB=ON","-DUSE_PY_3=TRUE", "-DPYTHON_VERSION_SUFFIX=3", "-DCMAKE_PREFIX_PATH=" + Formula["#@tap/boost@1.75.0"].opt_prefix+ "/lib/cmake;" + Formula["#@tap/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;",  "."
       system "make", "-j#{ENV.make_jobs}", "install"
   end
 end

@@ -6,8 +6,8 @@ class Pyside2Tools < Formula
   head "http://code.qt.io/pyside/pyside-setup.git", :branch => "5.15.2" 
 
   depends_on "cmake" => :build
-  depends_on "freecad/freecad/python3.9" => :build
-  depends_on "freecad/freecad/pyside2"
+  depends_on "#@tap/python3.9" => :build
+  depends_on "#@tap/pyside2"
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"

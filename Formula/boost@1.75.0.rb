@@ -13,7 +13,7 @@ class BoostAT1750 < Formula
     regex(/>Version v?(\d+(?:\.\d+)+)</i)
   end
 
-  depends_on "freecad/freecad/icu4c@67.1"
+  depends_on "#@tap/icu4c@67.1"
 
   uses_from_macos "bzip2"
   uses_from_macos "zlib"
@@ -38,7 +38,7 @@ class BoostAT1750 < Formula
     end
 
     # libdir should be set by --prefix but isn't
-    icu4c_prefix = Formula["freecad/freecad/icu4c@67.1"].opt_prefix
+    icu4c_prefix = Formula["#@tap/icu4c@67.1"].opt_prefix
     bootstrap_args = %W[
       --prefix=#{prefix}
       --libdir=#{lib}
