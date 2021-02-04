@@ -24,12 +24,14 @@ class Opencamlib < Formula
   end
 
   depends_on "cmake" => :build
+  depends_on "ninja" => :build
   depends_on "boost-python3"
   depends_on "boost@1.76"
   depends_on "python@3.9"
 
   def install
     args = std_cmake_args + %W[
+      -GNinja
       -DVERSION_STRING=#{version}
       -DBUILD_TYPE=Release
       -DUSE_OPENMP=0
@@ -40,7 +42,7 @@ class Opencamlib < Formula
 
     mkdir "build" do
       system "cmake", *args, ".."
-      system "make", "install"
+      system "ninja", "install"
     end
   end
 end

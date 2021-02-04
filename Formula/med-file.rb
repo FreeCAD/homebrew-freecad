@@ -12,6 +12,7 @@ class MedFile < Formula
 
   depends_on "cmake" => :build
   depends_on "gcc" => :build   # for gfortan
+  depends_on "ninja" => :build
   depends_on "swig@4.0" => :build
   depends_on "hdf5@1.10"
   depends_on "python@3.9"
@@ -21,6 +22,7 @@ class MedFile < Formula
     python_include=Dir["#{python_prefix}/include/*"].first
 
     args = std_cmake_args + %W[
+      -GNinja
       -DMEDFILE_BUILD_PYTHON=ON
       -DMEDFILE_BUILD_TESTS=OFF
       -DMEDFILE_INSTALL_DOC=OFF
@@ -29,7 +31,7 @@ class MedFile < Formula
 
     mkdir "build" do
       system "cmake", *args, ".."
-      system "make", "install"
+      system "ninja", "install"
     end
   end
 

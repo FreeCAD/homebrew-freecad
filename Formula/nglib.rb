@@ -13,10 +13,12 @@ class Nglib < Formula
   end
 
   depends_on "cmake" => :build
+  depends_on "ninja" => :build
   depends_on "opencascade"
 
   def install
     args = std_cmake_args + %W[
+      -GNinja
       -DUSE_PYTHON=OFF
       -DUSE_GUI=OFF
       -DUSE_OCC=ON
@@ -25,7 +27,7 @@ class Nglib < Formula
 
     mkdir "build" do
       system "cmake", *args, ".."
-      system "make", "install"
+      system "ninja", "install"
     end
 
     # The nglib installer doesn't include some important headers by default.
