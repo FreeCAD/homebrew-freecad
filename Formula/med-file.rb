@@ -1,8 +1,8 @@
 class MedFile < Formula
   desc "Modeling and Data Exchange standardized format library"
   homepage "http://www.salome-platform.org/"
-  url "http://files.salome-platform.org/Salome/other/med-4.0.0.tar.gz"
-  sha256 "a474e90b5882ce69c5e9f66f6359c53b8b73eb448c5f631fa96e8cd2c14df004"
+  url "https://files.salome-platform.org/Salome/other/med-4.1.0.tar.gz"
+  sha256 "847db5d6fbc9ce6924cb4aea86362812c9a5ef6b9684377e4dd6879627651fce"
 
   bottle do
     root_url "https://justyour.parts:8080/freecad"
