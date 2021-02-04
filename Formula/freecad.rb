@@ -134,9 +134,9 @@ class Freecad < Formula
 
     bin.install_symlink "../MacOS/FreeCAD" => "FreeCAD"
     bin.install_symlink "../MacOS/FreeCADCmd" => "FreeCADCmd"
-    unless File.exist?("/usr/local/Cellar/freecad/0.19/lib/python3.9/site-packages/homebrew-freecad-bundle.pth")
-      (lib/"python3.9/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
-    end
+
+    pth_file = site_packages/"homebrew-freecad-bundle.pth"
+    (pth_file).write "#{prefix}/MacOS/\n" unless File.exist?(pth_file)
 
     # FreeCAD won't pick up the libraries in its virtualenv unless we
     # make the installation directory itself into a virtual env by
