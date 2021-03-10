@@ -11,16 +11,16 @@ class VtkAT820 < Formula
   deprecate! date: "2020-05-14", because: :versioned_formula
 
   depends_on "cmake" => :build
-  depends_on "freecad/freecad/boost@1.75.0"
+  depends_on "#@tap/boost@1.75.0"
   depends_on "fontconfig"
   depends_on "hdf5"
   depends_on "jpeg"
   depends_on "libpng"
   depends_on "libtiff"
   depends_on "netcdf"
-  depends_on "freecad/freecad/pyqt@5.15.2"
-  depends_on "freecad/freecad/python3.9"
-  depends_on "freecad/freecad/qt5152"
+  depends_on "#@tap/pyqt@5.15.2"
+  depends_on "#@tap/python3.9"
+  depends_on "#@tap/qt5152"
 
   # Fix compile issues on Mojave and later
   patch do
@@ -71,12 +71,12 @@ class VtkAT820 < Formula
       -DVTK_USE_SYSTEM_ZLIB=ON
       -DVTK_WRAP_PYTHON=ON
       -DVTK_PYTHON_VERSION=3
-      -DPYTHON_EXECUTABLE=#{Formula["freecad/freecad/python3.9"].opt_bin}/python3
+      -DPYTHON_EXECUTABLE=#{Formula["#@tap/python3.9"].opt_bin}/python3
       -DVTK_INSTALL_PYTHON_MODULE_DIR=#{lib}/python#{pyver}/site-packages
       -DVTK_QT_VERSION:STRING=5
       -DVTK_Group_Qt=ON
       -DVTK_WRAP_PYTHON_SIP=ON
-      -DSIP_PYQT_DIR='#{Formula["freecad/freecad/pyqt@5.15.2"].opt_share}/sip'
+      -DSIP_PYQT_DIR='#{Formula["#@tap/pyqt@5.15.2"].opt_share}/sip'
     ]
 
     mkdir "build" do

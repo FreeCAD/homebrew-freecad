@@ -7,9 +7,9 @@ class Shiboken2 < Formula
 
   depends_on "cmake" => :build
   depends_on "llvm"
-  depends_on "freecad/freecad/numpy@1.19.4"
-  depends_on "freecad/freecad/qt5152"
-  depends_on "freecad/freecad/python3.9" => :build
+  depends_on "#@tap/numpy@1.19.4"
+  depends_on "#@tap/qt5152"
+  depends_on "#@tap/python3.9" => :build
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
@@ -19,12 +19,12 @@ class Shiboken2 < Formula
   end
 
   def install
-    qt = Formula["freecad/freecad/qt5152"]
+    qt = Formula["#@tap/qt5152"]
 
     ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
 
     mkdir "macbuild#{version}" do
-      pyhome = `#{Formula["freecad/freecad/python3.9"].opt_bin}/python3.9-config --prefix`.chomp
+      pyhome = `#{Formula["#@tap/python3.9"].opt_bin}/python3.9-config --prefix`.chomp
       py_library = "#{pyhome}/lib/libpython3.9.dylib"
       py_include = "#{pyhome}/include/python3.9"
       args = std_cmake_args

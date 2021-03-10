@@ -42,7 +42,7 @@ class Matplotlib < Formula
   option "with-cairo", "Build with cairo backend support"
   option "with-tex", "Build with tex support"
 
-  depends_on "freecad/freecad/python3.9" => :recommended
+  depends_on "#@tap/python3.9" => :recommended
 
   requires_py3 = []
   requires_py3 << "with-python3" 
@@ -54,7 +54,7 @@ class Matplotlib < Formula
 
   depends_on "freetype"
   depends_on "libpng"
-  depends_on "freecad/freecad/numpy@1.19.4" => requires_py3
+  depends_on "#@tap/numpy@1.19.4" => requires_py3
   depends_on "ghostscript" => :optional
   depends_on "tcl-tk" => :optional
 
@@ -110,8 +110,8 @@ class Matplotlib < Formula
   end
 
   def install
-      system "#{Formula["freecad/freecad/python3.9"].opt_bin}"+"/pip3", "install", "pytz"
-      system "#{Formula["freecad/freecad/python3.9"].opt_bin}"+"/python3", "-mpip", "install", "--prefix=#{prefix}", "."
+      system "#{Formula["#@tap/python3.9"].opt_bin}"+"/pip3", "install", "pytz"
+      system "#{Formula["#@tap/python3.9"].opt_bin}"+"/python3", "-mpip", "install", "--prefix=#{prefix}", "."
       version = "3.9"
       bundle_path = libexec/"lib/python#{version}/site-packages"
       bundle_path.mkpath
@@ -124,12 +124,12 @@ class Matplotlib < Formula
       p *Language::Python.setup_install_args(libexec)
       res.each do |r|
         resource(r).stage do
-          system "#{Formula["freecad/freecad/python3.9"].opt_bin}"+"/python3", *Language::Python.setup_install_args(libexec)
+          system "#{Formula["#@tap/python3.9"].opt_bin}"+"/python3", *Language::Python.setup_install_args(libexec)
         end
       end
       (lib/"python#{version}/site-packages/homebrew-matplotlib-bundle.pth").write "#{bundle_path}\n"
    
-      system "#{Formula["freecad/freecad/python3.9"].opt_bin}"+"/python3", *Language::Python.setup_install_args(prefix)
+      system "#{Formula["#@tap/python3.9"].opt_bin}"+"/python3", *Language::Python.setup_install_args(prefix)
   end
 
   def caveats

@@ -15,7 +15,7 @@ class CythonAT02921 < Formula
     Users are advised to use `pip` to install cython
   EOS
 
-  depends_on "freecad/freecad/python3.9"
+  depends_on "#@tap/python3.9"
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
     cellar :any_skip_relocation
@@ -23,16 +23,16 @@ class CythonAT02921 < Formula
     sha256 "780c1424d627c4f8a642f4c9323e09859e2fcece5c0f2c3b8868e77a907c692a" => :catalina
   end
   def install
-    xy = Language::Python.major_minor_version Formula["freecad/freecad/python3.9"].opt_bin/"python3"
+    xy = Language::Python.major_minor_version Formula["#@tap/python3.9"].opt_bin/"python3"
     ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python#{xy}/site-packages"
-    system Formula["freecad/freecad/python3.9"].opt_bin/"python3", *Language::Python.setup_install_args(libexec)
+    system Formula["#@tap/python3.9"].opt_bin/"python3", *Language::Python.setup_install_args(libexec)
 
     bin.install Dir[libexec/"bin/*"]
     bin.env_script_all_files(libexec/"bin", PYTHONPATH: ENV["PYTHONPATH"])
   end
 
   test do
-    xy = Language::Python.major_minor_version Formula["freecad/freecad/python3.9"].opt_bin/"python3"
+    xy = Language::Python.major_minor_version Formula["#@tap/python3.9"].opt_bin/"python3"
     ENV.prepend_path "PYTHONPATH", libexec/"lib/python#{xy}/site-packages"
 
     phrase = "You are using Homebrew"
@@ -45,7 +45,7 @@ class CythonAT02921 < Formula
         ext_modules = cythonize("package_manager.pyx")
       )
     EOS
-    system Formula["freecad/freecad/python3.9"].opt_bin/"python3", "setup.py", "build_ext", "--inplace"
-    assert_match phrase, shell_output("#{Formula["freecad/freecad/python3.9"].opt_bin}/python3 -c 'import package_manager'")
+    system Formula["#@tap/python3.9"].opt_bin/"python3", "setup.py", "build_ext", "--inplace"
+    assert_match phrase, shell_output("#{Formula["#@tap/python3.9"].opt_bin}/python3 -c 'import package_manager'")
   end
 end

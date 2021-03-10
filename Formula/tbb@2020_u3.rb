@@ -8,8 +8,8 @@ class TbbAT2020U3 < Formula
   revision 1
 
   depends_on "cmake" => :build
-  depends_on "freecad/freecad/swig@4.0.2" => :build
-  depends_on "freecad/freecad/python3.9"
+  depends_on "#@tap/swig@4.0.2" => :build
+  depends_on "#@tap/python3.9"
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
@@ -38,7 +38,7 @@ class TbbAT2020U3 < Formula
 
     cd "python" do
       ENV["TBBROOT"] = prefix
-      system Formula["freecad/freecad/python3.9"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
+      system Formula["#@tap/python3.9"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
     end
 
     system "cmake", *std_cmake_args,

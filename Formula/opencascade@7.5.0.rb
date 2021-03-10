@@ -15,7 +15,7 @@ class OpencascadeAT750 < Formula
   depends_on "rapidjson" => :build
   depends_on "freeimage"
   depends_on "freetype"
-  depends_on "freecad/freecad/tbb@2020_u3"
+  depends_on "#@tap/tbb@2020_u3"
 
   bottle do
     root_url "https://dl.bintray.com/vejmarie/freecad"
@@ -34,7 +34,7 @@ class OpencascadeAT750 < Formula
                     "-D3RDPARTY_FREETYPE_DIR=#{Formula["freetype"].opt_prefix}",
                     "-D3RDPARTY_RAPIDJSON_DIR=#{Formula["rapidjson"].opt_prefix}",
                     "-D3RDPARTY_RAPIDJSON_INCLUDE_DIR=#{Formula["rapidjson"].opt_include}",
-                    "-D3RDPARTY_TBB_DIR=#{Formula["freecad/freecad/tbb@2020_u3"].opt_prefix}",
+                    "-D3RDPARTY_TBB_DIR=#{Formula["#@tap/tbb@2020_u3"].opt_prefix}",
                     "-D3RDPARTY_TCL_DIR:PATH=#{MacOS.sdk_path_if_needed}/usr",
                     "-D3RDPARTY_TCL_INCLUDE_DIR=#{MacOS.sdk_path_if_needed}/usr/include",
                     "-D3RDPARTY_TK_INCLUDE_DIR=#{MacOS.sdk_path_if_needed}/usr/include",
