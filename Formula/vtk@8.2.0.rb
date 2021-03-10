@@ -25,7 +25,7 @@ class VtkAT820 < Formula
   # Fix compile issues on Mojave and later
   patch do
     url "https://gitlab.kitware.com/vtk/vtk/commit/ca3b5a50d945b6e65f0e764b3138cad17bd7eb8d.patch"
-    sha256 "4e59d1b8b2c672ae571966f3f7ce8d0c66dd3844d6eb3727012dd98c9e897a25"
+    sha256 "49574bb914e2564b21ab0fb23cadcccd7dd323ae7f0f26f64fd6346c3db14cd7"
   end
 
   # Python 3.8 compatibility
