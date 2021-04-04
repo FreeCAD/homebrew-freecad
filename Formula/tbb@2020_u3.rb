@@ -12,7 +12,7 @@ class TbbAT2020U3 < Formula
   depends_on "#@tap/python3.9"
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any
     sha256 "62f987215e72d992507d6b9e0f1fcef19afac7e939b508db35f76112bda94ab7" => :big_sur
     sha256 "0a2ea081cf8647fd270229d9da1b01909d77b4052e1b516b01e2998176567d9a" => :catalina

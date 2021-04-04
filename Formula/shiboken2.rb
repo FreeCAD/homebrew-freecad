@@ -12,7 +12,7 @@ class Shiboken2 < Formula
   depends_on "#@tap/python3.9" => :build
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any
     sha256 "9fcaf2c809c9d335bf6e7f3009ddfec63040051c8d9dff7f47d5430579319e5d" => :big_sur
     sha256 "94c2375a547b26b06128cd8705de6bd3f42f8a445dea5a2d9202040f9e61a033" => :catalina

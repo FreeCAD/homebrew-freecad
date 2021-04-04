@@ -16,7 +16,7 @@ class Pyside2 < Formula
   depends_on "#@tap/shiboken2" 
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any
     sha256 "87097214bd3ba561836bf7a0aa83c2433491b211ed1e550efb7630bf4f7dc87d" => :big_sur
     sha256 "17c919f37f96e588cd5256c3ee9cd1e0e0b9e1ea528d40cf74e2a3acb3ef1b67" => :catalina

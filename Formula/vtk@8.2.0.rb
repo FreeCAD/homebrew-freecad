@@ -41,7 +41,7 @@ class VtkAT820 < Formula
   end
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     sha256 "cc762d3f3a9a2c851ef3ca3447129ab93ddd9eb788024c962200e4158b04fef0" => :big_sur
     sha256 "da4cf1a9a932149b920c60290b4dc139a62f73abce12389fb25053a5fff42a4a" => :catalina
   end
