@@ -20,7 +20,7 @@ class BoostPython3AT1750 < Formula
   keg_only "provided by homebrew core"
 
   bottle do
-    root_url "https://justyour.parts/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any
     sha256 "3dd7c81b4cf643895a8c3c7a514a3edd9249387e9251bad646eb51ff77873f1c" => :big_sur
     sha256 "3b1bf01ad68f74b340a4a384347f25b7e6ca0d0180ded19fe28cbaa5330b77cd" => :catalina
