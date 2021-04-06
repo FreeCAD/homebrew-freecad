@@ -65,7 +65,8 @@ class Freecad < Formula
     args = std_cmake_args + %W[
       -DBUILD_QT5=ON
       -DUSE_PYTHON3=1
-      -DPYTHON_EXECUTABLE=/usr/local/opt/python3.9/bin/python3
+      -DPYTHON_EXECUTABLE=Formula["#@tap/python3.9"].opt_prefix + "/bin/python3"
+      -DPYTHON_INCLUDE_DIR=Formula["#@tap/python3.9"].opt_prefix + "/Frameworks/Python.framework/Headers"
       -DCMAKE_CXX_STANDARD=14
       -DBUILD_ENABLE_CXX_STD:STRING=C++14
       -DBUILD_FEM_NETGEN=1
