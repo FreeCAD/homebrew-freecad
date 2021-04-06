@@ -26,7 +26,7 @@ class BoostAT1750 < Formula
   end
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any
     sha256 "99aa624e3a19ba01458f9e0be8dcdcfb8df90feabc4728b188682d9174b05f09" => :big_sur
     sha256 "21fc3612d49249ff563dacedb633dbf8050a8e1ab3feb0100395a500fa610624" => :catalina

@@ -16,7 +16,7 @@ class SipAT41924 < Formula
   depends_on "#@tap/python3.9"
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any_skip_relocation
     sha256 "a3e1a54c30560552e7c4dc4bd0da95925be88c7eef2a9349b72e11b24f827616" => :big_sur
     sha256 "c3b3dafcf16f0e65bea4ba6daf62d8e15394ee7201073008a7c7aa22c9864e81" => :catalina

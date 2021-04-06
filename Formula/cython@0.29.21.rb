@@ -17,7 +17,7 @@ class CythonAT02921 < Formula
 
   depends_on "#@tap/python3.9"
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any_skip_relocation
     sha256 "d3d1198be33a79623df1da0236ce0ab35d194f817745819248a5d65e82f5067f" => :big_sur
     sha256 "780c1424d627c4f8a642f4c9323e09859e2fcece5c0f2c3b8868e77a907c692a" => :catalina

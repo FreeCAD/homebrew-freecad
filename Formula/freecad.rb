@@ -1,15 +1,15 @@
 class Freecad < Formula
   desc "Parametric 3D modeler"
   homepage "http://www.freecadweb.org"
-  version "0.19pre"
+  version "0.19"
   license "GPL-2.0-only"
   head "https://github.com/freecad/FreeCAD.git", branch: "master", shallow: false
 
   stable do
     # a tested commit that builds on macos high sierra 10.13, mojave 10.14, Catalina 10.15 & BigSur 11.0
     url "https://github.com/freecad/freecad.git",
-      revision: "f35d30bc58cc2000754d4f30cf29d063416cfb9e"
-    version "0.19pre-dev"
+      revision: "a88db11e0a908f6e38f92bfc5187b13ebe470438"
+    version "0.19"
   end
 
   option "with-debug", "Enable debug build"
@@ -20,7 +20,7 @@ class Freecad < Formula
 
   depends_on "ccache" => :build
   depends_on "cmake" => :build
-  depends_on "swig" => :build
+  depends_on "#@tap/swig@4.0.2" => :build
   depends_on "#@tap/boost@1.75.0"
   depends_on "#@tap/boost-python3@1.75.0"
   depends_on "#@tap/coin@4.0.0"
@@ -46,8 +46,8 @@ class Freecad < Formula
   depends_on "xerces-c"
 
   bottle do
-    root_url "https:/dl.bintray.com/vejmarie/freecad"
-    sha256 "f9bc13c49a0ab3d72437dd721aa362d77638b68ad05f2bdcaeadf91b6d5e537b" => :big_sur
+    root_url "https://justyour.parts:8080/freecad"
+    sha256 "ea3f380ce4998d4fcb82d2dd7139957c4865b35dfbbab18d8d0479676e91aa14" => :big_sur
     sha256 "8ef75eb7cea8ca34dc4037207fb213332b9ed27976106fd83c31de1433c2dd29" => :catalina
   end
 
@@ -65,8 +65,8 @@ class Freecad < Formula
     args = std_cmake_args + %W[
       -DBUILD_QT5=ON
       -DUSE_PYTHON3=1
-      -DPYTHON_EXECUTABLE=/usr/local/opt/python3.9/bin/python3
-      -std=c++14
+      -DPYTHON_EXECUTABLE=Formula["#@tap/python3.9"].opt_prefix + "/bin/python3"
+      -DPYTHON_INCLUDE_DIR=Formula["#@tap/python3.9"].opt_prefix + "/Frameworks/Python.framework/Headers"
       -DCMAKE_CXX_STANDARD=14
       -DBUILD_ENABLE_CXX_STD:STRING=C++14
       -DBUILD_FEM_NETGEN=1

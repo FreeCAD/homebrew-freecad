@@ -90,7 +90,7 @@ class Python39 < Formula
   keg_only "FreeCAD python version only"
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     sha256 "847f0924e04052940cb66733267e31d3338131822863d1ff73d4cc5d5c90005b" => :big_sur
     sha256 "5448b5eb25fde4859c568821e59bfb5d488eb1f00bce5ecd97a545585f411aca" => :catalina
   end

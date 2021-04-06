@@ -16,7 +16,7 @@ class Opencamlib < Formula
   depends_on "#@tap/boost-python3@1.75.0" => :build
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any
     sha256 "8e81823c6b42837caf46f39f7ffae2d217e8080bd5cc21ff9092918e173e8c59" => :big_sur
     sha256 "695a0c707cc565aaa181049a2958e80fcaf21a76c573983e9d1314a19e90c8bd" => :catalina

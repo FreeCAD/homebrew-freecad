@@ -18,7 +18,7 @@ class OpencascadeAT750 < Formula
   depends_on "#@tap/tbb@2020_u3"
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any
     sha256 "1f625aeaef44b9a78714fae89f5feaa79ce43ae1515b3cb6139cfce3d603e412" => :big_sur
     sha256 "721771a181d3d8b3c2863df9ebf91d6f50e858ef81ed9cf2440c60bc6569fcc8" => :catalina

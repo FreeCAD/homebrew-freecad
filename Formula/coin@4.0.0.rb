@@ -15,7 +15,7 @@ class CoinAT400 < Formula
   keg_only "Provided by homebrew"
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any
     sha256 "7ffc242e36407db7cd5195cd62e9b6998b6114e9a7fdf70adadecfef0507e316" => :big_sur
     sha256 "841ef05f4072eedc91a16845e3a8ed2e4c941faef5b338b7fd424649806de983" => :catalina

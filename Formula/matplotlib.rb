@@ -103,7 +103,7 @@ class Matplotlib < Formula
   end
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any
     sha256 "150759a0b8ea4e159e0a4ed1229340775e90ab6b47ab397fe1ec040250ceef94" => :big_sur
     sha256 "7f3d19de027ab6dd81e6b6021315682bcfe54f410bb29a1fb1cea0ba0a8515eb" => :catalina

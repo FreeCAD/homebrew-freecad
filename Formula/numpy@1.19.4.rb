@@ -11,7 +11,7 @@ class NumpyAT1194 < Formula
   end
 
   bottle do
-    root_url "https://dl.bintray.com/vejmarie/freecad"
+    root_url "https://justyour.parts:8080/freecad"
     cellar :any
     sha256 "525f5e733bf4677cb94d91549c88addfa59559cf9ccd6decb163ab906763cacf" => :big_sur
     sha256 "b634193a2e1c28438bc659622ef90c151bb8f5bbf2d5ae03f877df43c4f9d9a1" => :catalina
