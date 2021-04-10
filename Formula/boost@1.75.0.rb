@@ -13,7 +13,13 @@ class BoostAT1750 < Formula
     regex(/>Version v?(\d+(?:\.\d+)+)</i)
   end
 
-  depends_on "#@tap/icu4c@67.1"
+  bottle do
+    root_url "https://justyour.parts:8080/freecad"
+    sha256 cellar: :any, big_sur:  "99aa624e3a19ba01458f9e0be8dcdcfb8df90feabc4728b188682d9174b05f09"
+    sha256 cellar: :any, catalina: "21fc3612d49249ff563dacedb633dbf8050a8e1ab3feb0100395a500fa610624"
+  end
+
+  depends_on "#{@tap}/icu4c@67.1"
 
   uses_from_macos "bzip2"
   uses_from_macos "zlib"
@@ -24,13 +30,6 @@ class BoostAT1750 < Formula
     sha256 "e7a78145452fc145ea5d6e5f61e72df7dcab3a6eebb2cade6b4cfae815687f3a"
     directory "tools/build"
   end
-
-  bottle do
-    root_url "https://justyour.parts:8080/freecad"
-    cellar :any
-    sha256 "99aa624e3a19ba01458f9e0be8dcdcfb8df90feabc4728b188682d9174b05f09" => :big_sur
-    sha256 "21fc3612d49249ff563dacedb633dbf8050a8e1ab3feb0100395a500fa610624" => :catalina
-  end
   def install
     # Force boost to compile with the desired compiler
     open("user-config.jam", "a") do |file|
@@ -38,7 +37,7 @@ class BoostAT1750 < Formula
     end
 
     # libdir should be set by --prefix but isn't
-    icu4c_prefix = Formula["#@tap/icu4c@67.1"].opt_prefix
+    icu4c_prefix = Formula["#{@tap}/icu4c@67.1"].opt_prefix
     bootstrap_args = %W[
       --prefix=#{prefix}
       --libdir=#{lib}

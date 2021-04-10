@@ -2,9 +2,9 @@ class SipAT41924 < Formula
   desc "Tool to create Python bindings for C and C++ libraries"
   homepage "https://www.riverbankcomputing.com/software/sip/intro"
   url "https://www.riverbankcomputing.com/static/Downloads/sip/4.19.24/sip-4.19.24.tar.gz"
+  version "4.19.24"
   sha256 "edcd3790bb01938191eef0f6117de0bf56d1136626c0ddb678f3a558d62e41e5"
   license any_of: ["GPL-2.0-only", "GPL-3.0-only"]
-  version "4.19.24"
   revision 1
   head "https://www.riverbankcomputing.com/hg/sip", using: :hg
 
@@ -13,19 +13,18 @@ class SipAT41924 < Formula
     regex(/href=.*?sip[._-]v?(\d+(\.\d+)+)\.t/i)
   end
 
-  depends_on "#@tap/python3.9"
-
   bottle do
     root_url "https://justyour.parts:8080/freecad"
-    cellar :any_skip_relocation
-    sha256 "a3e1a54c30560552e7c4dc4bd0da95925be88c7eef2a9349b72e11b24f827616" => :big_sur
-    sha256 "c3b3dafcf16f0e65bea4ba6daf62d8e15394ee7201073008a7c7aa22c9864e81" => :catalina
+    sha256 cellar: :any_skip_relocation, big_sur:  "a3e1a54c30560552e7c4dc4bd0da95925be88c7eef2a9349b72e11b24f827616"
+    sha256 cellar: :any_skip_relocation, catalina: "c3b3dafcf16f0e65bea4ba6daf62d8e15394ee7201073008a7c7aa22c9864e81"
   end
-  
+
   keg_only "provided by homebrew core"
 
+  depends_on "#{@tap}/python3.9"
+
   def install
-    ENV.prepend_path "PATH", Formula["#@tap/python3.9"].opt_bin
+    ENV.prepend_path "PATH", Formula["#{@tap}/python3.9"].opt_bin
     ENV.delete("SDKROOT") # Avoid picking up /Application/Xcode.app paths
 
     if build.head?

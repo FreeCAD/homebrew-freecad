@@ -7,16 +7,15 @@ class TbbAT2020U3 < Formula
   license "Apache-2.0"
   revision 1
 
-  depends_on "cmake" => :build
-  depends_on "#@tap/swig@4.0.2" => :build
-  depends_on "#@tap/python3.9"
-
   bottle do
     root_url "https://justyour.parts:8080/freecad"
-    cellar :any
-    sha256 "62f987215e72d992507d6b9e0f1fcef19afac7e939b508db35f76112bda94ab7" => :big_sur
-    sha256 "0a2ea081cf8647fd270229d9da1b01909d77b4052e1b516b01e2998176567d9a" => :catalina
+    sha256 cellar: :any, big_sur:  "62f987215e72d992507d6b9e0f1fcef19afac7e939b508db35f76112bda94ab7"
+    sha256 cellar: :any, catalina: "0a2ea081cf8647fd270229d9da1b01909d77b4052e1b516b01e2998176567d9a"
   end
+
+  depends_on "cmake" => :build
+  depends_on "#{@tap}/swig@4.0.2" => :build
+  depends_on "#{@tap}/python3.9"
 
   # Remove when upstream fix is released
   # https://github.com/oneapi-src/oneTBB/pull/258
@@ -38,7 +37,7 @@ class TbbAT2020U3 < Formula
 
     cd "python" do
       ENV["TBBROOT"] = prefix
-      system Formula["#@tap/python3.9"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
+      system Formula["#{@tap}/python3.9"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
     end
 
     system "cmake", *std_cmake_args,
