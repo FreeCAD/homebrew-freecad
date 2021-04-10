@@ -65,8 +65,6 @@ class Freecad < Formula
     args = std_cmake_args + %W[
       -DBUILD_QT5=ON
       -DUSE_PYTHON3=1
-      -DPYTHON_EXECUTABLE=Formula["#@tap/python3.9"].opt_prefix + "/bin/python3"
-      -DPYTHON_INCLUDE_DIR=Formula["#@tap/python3.9"].opt_prefix + "/Frameworks/Python.framework/Headers"
       -DCMAKE_CXX_STANDARD=14
       -DBUILD_ENABLE_CXX_STD:STRING=C++14
       -DBUILD_FEM_NETGEN=1
@@ -75,7 +73,8 @@ class Freecad < Formula
       -DFREECAD_USE_EXTERNAL_KDL=ON
       -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
     ]
-
+    args << '-DPYTHON_EXECUTABLE=' + Formula["#@tap/python3.9"].opt_prefix + '/bin/python3'
+    args << '-DPYTHON_INCLUDE_DIR=' + Formula["#@tap/python3.9"].opt_prefix + '/Frameworks/Python.framework/Headers'
     args << '-DCMAKE_PREFIX_PATH="' + Formula["#@tap/qt5152"].opt_prefix + "/lib/cmake;" + Formula["#@tap/nglib"].opt_prefix + "/Contents/Resources;" + Formula["#@tap/vtk@8.2.0"].opt_prefix + "/lib/cmake;" + Formula["#@tap/opencascade@7.5.0"].opt_prefix + "/lib/cmake;"+ Formula["#@tap/med-file"].opt_prefix + "/share/cmake/;" + Formula["#@tap/shiboken2"].opt_prefix + "/lib/cmake;" + Formula["#@tap/pyside2"].opt_prefix+ "/lib/cmake;" + Formula["#@tap/coin@4.0.0"].opt_prefix+ "/lib/cmake;" + Formula["#@tap/boost@1.75.0"].opt_prefix+ "/lib/cmake;" + Formula["#@tap/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;"
 
     args << "-DFREECAD_CREATE_MAC_APP=1" if build.with? "macos-app"
