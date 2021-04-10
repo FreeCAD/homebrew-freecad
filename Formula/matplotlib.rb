@@ -20,7 +20,8 @@ class NoExternalPyCXXPackage < Requirement
     !quiet_system "python", "-c", "import CXX"
   end
 
-  def message; <<-EOS
+  def message
+    <<-EOS
     *** Warning, PyCXX detected! ***
     On your system, there is already a PyCXX version installed, that will
     probably make the build of Matplotlib fail. In python you can test if that
@@ -39,36 +40,34 @@ class Matplotlib < Formula
   sha256 "659f5e1aa0e0f01488c61eff47560c43b8be511c6a29293d7f3896ae17bd8b23"
   head "https://github.com/matplotlib/matplotlib.git"
 
+  bottle do
+    root_url "https://justyour.parts:8080/freecad"
+    sha256 cellar: :any, big_sur:  "150759a0b8ea4e159e0a4ed1229340775e90ab6b47ab397fe1ec040250ceef94"
+    sha256 cellar: :any, catalina: "7f3d19de027ab6dd81e6b6021315682bcfe54f410bb29a1fb1cea0ba0a8515eb"
+  end
+
   option "with-cairo", "Build with cairo backend support"
   option "with-tex", "Build with tex support"
-
-  depends_on "#@tap/python3.9" => :recommended
-
-  requires_py3 = []
-  requires_py3 << "with-python3" 
 
   deprecated_option "with-gtk3" => "with-gtk+3"
 
   depends_on NoExternalPyCXXPackage => :build
   depends_on "pkg-config" => :build
-
+  depends_on "#{@tap}/numpy@1.19.4" 
+  depends_on DvipngRequirement if build.with? "tex"
   depends_on "freetype"
   depends_on "libpng"
-  depends_on "#@tap/numpy@1.19.4" => requires_py3
+  depends_on "py3cairo" if build.with?("cairo") && (build.with? "python3")
+  depends_on "#{@tap}/python3.9" => :recommended
+
+  requires_py3 = []
+  requires_py3 << "with-python3"
   depends_on "ghostscript" => :optional
-  depends_on "tcl-tk" => :optional
-
-  if build.with? "cairo"
-    depends_on "py3cairo" if build.with? "python3"
-  end
-
   depends_on "gtk+3" => :optional
   depends_on "pygobject3" => requires_py3 if build.with? "gtk+3"
-
   depends_on "pygtk" => :optional
   depends_on "pygobject" if build.with? "pygtk"
-
-  depends_on DvipngRequirement if build.with? "tex"
+  depends_on "tcl-tk" => :optional
 
   cxxstdlib_check :skip
 
@@ -102,34 +101,27 @@ class Matplotlib < Formula
     sha256 "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
   end
 
-  bottle do
-    root_url "https://justyour.parts:8080/freecad"
-    cellar :any
-    sha256 "150759a0b8ea4e159e0a4ed1229340775e90ab6b47ab397fe1ec040250ceef94" => :big_sur
-    sha256 "7f3d19de027ab6dd81e6b6021315682bcfe54f410bb29a1fb1cea0ba0a8515eb" => :catalina
-  end
-
   def install
-      system "#{Formula["#@tap/python3.9"].opt_bin}"+"/pip3", "install", "pytz"
-      system "#{Formula["#@tap/python3.9"].opt_bin}"+"/python3", "-mpip", "install", "--prefix=#{prefix}", "."
-      version = "3.9"
-      bundle_path = libexec/"lib/python#{version}/site-packages"
-      bundle_path.mkpath
-      ENV.prepend_path "PYTHONPATH", bundle_path
-      res = if version.to_s.start_with? "2"
-        resources.map(&:name).to_set
-      else
-        resources.map(&:name).to_set - ["backports.functools_lru_cache", "subprocess32"]
+    system Formula["#{@tap}/python3.9"].opt_bin.to_s+"/pip3", "install", "pytz"
+    system Formula["#{@tap}/python3.9"].opt_bin.to_s+"/python3", "-mpip", "install", "--prefix=#{prefix}", "."
+    version = "3.9"
+    bundle_path = libexec/"lib/python#{version}/site-packages"
+    bundle_path.mkpath
+    ENV.prepend_path "PYTHONPATH", bundle_path
+    res = if version.to_s.start_with? "2"
+      resources.map(&:name).to_set
+    else
+      resources.map(&:name).to_set - ["backports.functools_lru_cache", "subprocess32"]
+    end
+    p(*Language::Python.setup_install_args(libexec))
+    res.each do |r|
+      resource(r).stage do
+        system Formula["#{@tap}/python3.9"].opt_bin.to_s+"/python3", *Language::Python.setup_install_args(libexec)
       end
-      p *Language::Python.setup_install_args(libexec)
-      res.each do |r|
-        resource(r).stage do
-          system "#{Formula["#@tap/python3.9"].opt_bin}"+"/python3", *Language::Python.setup_install_args(libexec)
-        end
-      end
-      (lib/"python#{version}/site-packages/homebrew-matplotlib-bundle.pth").write "#{bundle_path}\n"
-   
-      system "#{Formula["#@tap/python3.9"].opt_bin}"+"/python3", *Language::Python.setup_install_args(prefix)
+    end
+    (lib/"python#{version}/site-packages/homebrew-matplotlib-bundle.pth").write "#{bundle_path}\n"
+
+    system Formula["#{@tap}/python3.9"].opt_bin.to_s+"/python3", *Language::Python.setup_install_args(prefix)
   end
 
   def caveats

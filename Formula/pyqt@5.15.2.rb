@@ -10,42 +10,41 @@ class PyqtAT5152 < Formula
     url :stable
   end
 
-  depends_on "#@tap/python3.9"
-  depends_on "#@tap/qt5152"
-  depends_on "#@tap/sip@4.19.24"
+  bottle do
+    root_url "https://justyour.parts:8080/freecad"
+    sha256 cellar: :any, big_sur:  "7bb680628800decb3c84adc40081fa44f8151c5241ede9c5534af16fe41612e0"
+    sha256 cellar: :any, catalina: "25424bdc32b5a43929e637f2e6c0f1bc3b20bf03c13756ea7ba80bec819a9d43"
+  end
+
+  keg_only "also provided by core"
+
+  depends_on "#{@tap}/python3.9"
+  depends_on "#{@tap}/qt5152"
+  depends_on "#{@tap}/sip@4.19.24"
 
   resource "PyQt5-sip" do
     url "https://files.pythonhosted.org/packages/73/8c/c662b7ebc4b2407d8679da68e11c2a2eb275f5f2242a92610f6e5024c1f2/PyQt5_sip-12.8.1.tar.gz"
-    sha256 "30e944db9abee9cc757aea16906d4198129558533eb7fadbe48c5da2bd18e0bd" 
-  end
-
-  keg_only "Also provided by core..."
-
-  bottle do
-    root_url "https://justyour.parts:8080/freecad"
-    cellar :any
-    sha256 "7bb680628800decb3c84adc40081fa44f8151c5241ede9c5534af16fe41612e0" => :big_sur
-    sha256 "25424bdc32b5a43929e637f2e6c0f1bc3b20bf03c13756ea7ba80bec819a9d43" => :catalina
+    sha256 "30e944db9abee9cc757aea16906d4198129558533eb7fadbe48c5da2bd18e0bd"
   end
 
   def install
-    version = Language::Python.major_minor_version Formula["#@tap/python3.9"].opt_bin/"python3"
+    version = Language::Python.major_minor_version Formula["#{@tap}/python3.9"].opt_bin/"python3"
     args = ["--confirm-license",
             "--bindir=#{bin}",
             "--destdir=#{lib}/python#{version}/site-packages",
             "--stubsdir=#{lib}/python#{version}/site-packages/PyQt5",
             "--sipdir=#{share}/sip/Qt5",
             # sip.h could not be found automatically
-            "--sip-incdir=#{Formula["#@tap/sip@4.19.24"].opt_include}",
-            "--qmake=#{Formula["#@tap/qt5152"].bin}/qmake",
+            "--sip-incdir=#{Formula["#{@tap}/sip@4.19.24"].opt_include}",
+            "--qmake=#{Formula["#{@tap}/qt5152"].bin}/qmake",
             # Force deployment target to avoid libc++ issues
             "QMAKE_MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}",
             "--designer-plugindir=#{pkgshare}/plugins",
             "--qml-plugindir=#{pkgshare}/plugins",
-            "--pyuic5-interpreter=#{Formula["#@tap/python3.9"].opt_bin}/python3",
+            "--pyuic5-interpreter=#{Formula["#{@tap}/python3.9"].opt_bin}/python3",
             "--verbose"]
 
-    system Formula["#@tap/python3.9"].opt_bin/"python3", "configure.py", *args
+    system Formula["#{@tap}/python3.9"].opt_bin/"python3", "configure.py", *args
     system "make"
     ENV.deparallelize { system "make", "install" }
   end
@@ -54,7 +53,7 @@ class PyqtAT5152 < Formula
     system "#{bin}/pyuic5", "--version"
     system "#{bin}/pylupdate5", "-version"
 
-    system Formula["#@tap/python3.9"].opt_bin/"python3", "-c", "import PyQt5"
+    system Formula["#{@tap}/python3.9"].opt_bin/"python3", "-c", "import PyQt5"
     %w[
       Gui
       Location
@@ -64,6 +63,6 @@ class PyqtAT5152 < Formula
       Svg
       Widgets
       Xml
-    ].each { |mod| system Formula["#@tap/python3.9"].opt_bin/"python3", "-c", "import PyQt5.Qt#{mod}" }
+    ].each { |mod| system Formula["#{@tap}/python3.9"].opt_bin/"python3", "-c", "import PyQt5.Qt#{mod}" }
   end
 end

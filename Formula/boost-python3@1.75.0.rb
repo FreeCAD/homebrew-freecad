@@ -7,24 +7,22 @@ class BoostPython3AT1750 < Formula
   license "BSL-1.0"
   head "https://github.com/boostorg/boost.git"
 
-  depends_on "#@tap/numpy@1.19.4" => :build
-  depends_on "#@tap/boost@1.75.0"
-  depends_on "#@tap/python3.9"
+  bottle do
+    root_url "https://justyour.parts:8080/freecad"
+    sha256 cellar: :any, big_sur: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  end
 
   bottle do
     root_url "https://justyour.parts:8080/freecad"
-    cellar :any
-    sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" => :big_sur
+    sha256 big_sur: "3dd7c81b4cf643895a8c3c7a514a3edd9249387e9251bad646eb51ff77873f1c" 
+    sha256 catalina: "3b1bf01ad68f74b340a4a384347f25b7e6ca0d0180ded19fe28cbaa5330b77cd" 
   end
 
   keg_only "provided by homebrew core"
 
-  bottle do
-    root_url "https://justyour.parts:8080/freecad"
-    cellar :any
-    sha256 "3dd7c81b4cf643895a8c3c7a514a3edd9249387e9251bad646eb51ff77873f1c" => :big_sur
-    sha256 "3b1bf01ad68f74b340a4a384347f25b7e6ca0d0180ded19fe28cbaa5330b77cd" => :catalina
-  end
+  depends_on "#{@tap}/numpy@1.19.4" => :build
+  depends_on "#{@tap}/boost@1.75.0"
+  depends_on "#{@tap}/python3.9"
 
   def install
     # "layout" should be synchronized with boost
@@ -48,8 +46,8 @@ class BoostPython3AT1750 < Formula
     # user-config.jam below.
     inreplace "bootstrap.sh", "using python", "#using python"
 
-    pyver = Language::Python.major_minor_version Formula["#@tap/python3.9"].opt_bin/"python3"
-    py_prefix = Formula["#@tap/python3.9"].opt_frameworks/"Python.framework/Versions/#{pyver}"
+    pyver = Language::Python.major_minor_version Formula["#{@tap}/python3.9"].opt_bin/"python3"
+    py_prefix = Formula["#{@tap}/python3.9"].opt_frameworks/"Python.framework/Versions/#{pyver}"
 
     # Force boost to compile with the desired compiler
     (buildpath/"user-config.jam").write <<~EOS
@@ -70,9 +68,14 @@ class BoostPython3AT1750 < Formula
                    "--prefix=install-python3",
                    "python=#{pyver}",
                    *args
-    inreplace "install-python3/lib/cmake/boost_python-1.75.0/boost_python-config.cmake", "include(${CMAKE_CURRENT_LIST_DIR}/../BoostDetectToolset-1.75.0.cmake)", "include("+Formula["#@tap/boost@1.75.0"].opt_prefix+"/lib/cmake/BoostDetectToolset-1.75.0.cmake)"
-    inreplace "install-python3/lib/cmake/boost_python-1.75.0/boost_python-config.cmake", "get_filename_component(_BOOST_INCLUDEDIR \"${_BOOST_CMAKEDIR}/../../include/\" ABSOLUTE)", "# get_filename_component(_BOOST_INCLUDEDIR \"${_BOOST_CMAKEDIR}/../../include/\" ABSOLUTE) \nset(_BOOST_LIBDIR \"/usr/local/opt/boost-python3@1.75.0/lib\")"
-    inreplace "install-python3/lib/cmake/boost_python-1.75.0/boost_python-config.cmake", "get_filename_component(_BOOST_LIBDIR", "# get_filename_component(_BOOST_LIBDIR"
+    inreplace "install-python3/lib/cmake/boost_python-1.75.0/boost_python-config.cmake",
+"include(${CMAKE_CURRENT_LIST_DIR}/../BoostDetectToolset-1.75.0.cmake)",
+"include("+Formula["#{@tap}/boost@1.75.0"].opt_prefix+"/lib/cmake/BoostDetectToolset-1.75.0.cmake)"
+    inreplace "install-python3/lib/cmake/boost_python-1.75.0/boost_python-config.cmake",
+"get_filename_component(_BOOST_INCLUDEDIR \"${_BOOST_CMAKEDIR}/../../include/\" ABSOLUTE)",
+"# get_filename_component(_BOOST_INCLUDEDIR \"${_BOOST_CMAKEDIR}/../../include/\" ABSOLUTE) \nset(_BOOST_LIBDIR \"/usr/local/opt/boost-python3@1.75.0/lib\")"
+    inreplace "install-python3/lib/cmake/boost_python-1.75.0/boost_python-config.cmake",
+"get_filename_component(_BOOST_LIBDIR", "# get_filename_component(_BOOST_LIBDIR"
 
     lib.install Dir["install-python3/lib/*.*"]
     (lib/"cmake").install Dir["install-python3/lib/cmake/boost_python*/*.*"]
@@ -92,9 +95,9 @@ class BoostPython3AT1750 < Formula
       }
     EOS
 
-    pyincludes = shell_output("#{Formula["#@tap/python3.9"].opt_bin}/python3-config --includes").chomp.split
-    pylib = shell_output("#{Formula["#@tap/python3.9"].opt_bin}/python3-config --ldflags --embed").chomp.split
-    pyver = Language::Python.major_minor_version(Formula["#@tap/python3.9"].opt_bin/"python3").to_s.delete(".")
+    pyincludes = shell_output("#{Formula["#{@tap}/python3.9"].opt_bin}/python3-config --includes").chomp.split
+    pylib = shell_output("#{Formula["#{@tap}/python3.9"].opt_bin}/python3-config --ldflags --embed").chomp.split
+    pyver = Language::Python.major_minor_version(Formula["#{@tap}/python3.9"].opt_bin/"python3").to_s.delete(".")
 
     system ENV.cxx, "-shared", "hello.cpp", "-L#{lib}", "-lboost_python#{pyver}", "-o",
            "hello.so", *pyincludes, *pylib
@@ -103,6 +106,6 @@ class BoostPython3AT1750 < Formula
       import hello
       print(hello.greet())
     EOS
-    assert_match "Hello, world!", pipe_output(Formula["#@tap/python3.9"].opt_bin/"python3", output, 0)
+    assert_match "Hello, world!", pipe_output(Formula["#{@tap}/python3.9"].opt_bin/"python3", output, 0)
   end
 end

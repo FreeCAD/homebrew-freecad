@@ -6,8 +6,8 @@ class Qt5152 < Formula
   url "https://download.qt.io/official_releases/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.tar.xz"
   mirror "https://mirrors.dotsrc.org/qtproject/archive/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.tar.xz"
   mirror "https://mirrors.ocf.berkeley.edu/qt/archive/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.tar.xz"
-  sha256 "3a530d1b243b5dec00bc54937455471aaa3e56849d2593edb8ded07228202240"
   version "5.15.2"
+  sha256 "3a530d1b243b5dec00bc54937455471aaa3e56849d2593edb8ded07228202240"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
 
   head "https://code.qt.io/qt/qt5.git", branch: "dev", shallow: false
@@ -17,7 +17,13 @@ class Qt5152 < Formula
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
-  keg_only "Qt 5 has CMake issues when linked"
+  bottle do
+    root_url "https://justyour.parts:8080/freecad"
+    sha256 cellar: :any, big_sur:  "9b3268db7be55f3c215d4a3221f28bae3dbaf8ed506222cc1b4a78b7e44a5936"
+    sha256 cellar: :any, catalina: "e71e5f33519372f3f9776fc159b9bce93891a1b3c2a6778aa0b1663abcb2f8c3"
+  end
+
+  keg_only "qt 5 has CMake issues when linked"
 
   depends_on "pkg-config" => :build
   depends_on xcode: :build
@@ -32,13 +38,6 @@ class Qt5152 < Formula
   patch do
     url "https://raw.githubusercontent.com/Homebrew/formula-patches/92d4cf/qt/5.15.2.diff"
     sha256 "fa99c7ffb8a510d140c02694a11e6c321930f43797dbf2fe8f2476680db4c2b2"
-  end
-
-  bottle do
-    root_url "https://justyour.parts:8080/freecad"
-    cellar :any
-    sha256 "9b3268db7be55f3c215d4a3221f28bae3dbaf8ed506222cc1b4a78b7e44a5936" => :big_sur
-    sha256 "e71e5f33519372f3f9776fc159b9bce93891a1b3c2a6778aa0b1663abcb2f8c3" => :catalina
   end
 
   def install

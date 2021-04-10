@@ -13,6 +13,12 @@ class Python39 < Formula
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
+  bottle do
+    root_url "https://justyour.parts:8080/freecad"
+    sha256 big_sur:  "847f0924e04052940cb66733267e31d3338131822863d1ff73d4cc5d5c90005b"
+    sha256 catalina: "5448b5eb25fde4859c568821e59bfb5d488eb1f00bce5ecd97a545585f411aca"
+  end
+
   pour_bottle? do
     reason <<~EOS
       The bottle needs the Apple Command Line Tools to be installed.
@@ -22,13 +28,15 @@ class Python39 < Formula
     satisfy { MacOS::CLT.installed? }
   end
 
+  keg_only "freeCAD python version only"
+
   depends_on "pkg-config" => :build
   depends_on "gdbm"
+  depends_on "gettext"
   depends_on "openssl@1.1"
   depends_on "readline"
   depends_on "sqlite"
   depends_on "xz"
-  depends_on "gettext"
 
   uses_from_macos "bzip2"
   uses_from_macos "libffi"
@@ -85,14 +93,6 @@ class Python39 < Formula
       url "https://github.com/fxcoudert/cpython/commit/6511bf56.patch?full_index=1"
       sha256 "3a34fea8a133305bc337d67acfacc36dc8f9d47a808dd592f5b0cd8c9c9384d2"
     end
-  end
-
-  keg_only "FreeCAD python version only"
-
-  bottle do
-    root_url "https://justyour.parts:8080/freecad"
-    sha256 "847f0924e04052940cb66733267e31d3338131822863d1ff73d4cc5d5c90005b" => :big_sur
-    sha256 "5448b5eb25fde4859c568821e59bfb5d488eb1f00bce5ecd97a545585f411aca" => :catalina
   end
 
   def install

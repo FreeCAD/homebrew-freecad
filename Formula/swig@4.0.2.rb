@@ -9,6 +9,12 @@ class SwigAT402 < Formula
     url :stable
   end
 
+  bottle do
+    root_url "https://justyour.parts:8080/freecad"
+    sha256 big_sur:  "ed574acdb012636fb46ddbf0e4e362f26165aa530d34d26968dece33deb50f14"
+    sha256 catalina: "bc218307d7a855276c2d97ceb81c4cac4d48c60f3be41e231bd62cde3629ba61"
+  end
+
   head do
     url "https://github.com/swig/swig.git"
 
@@ -19,12 +25,6 @@ class SwigAT402 < Formula
   depends_on "pcre"
 
   uses_from_macos "ruby" => :test
-
-  bottle do
-    root_url "https://justyour.parts:8080/freecad"
-    sha256 "ed574acdb012636fb46ddbf0e4e362f26165aa530d34d26968dece33deb50f14" => :big_sur
-    sha256 "bc218307d7a855276c2d97ceb81c4cac4d48c60f3be41e231bd62cde3629ba61" => :catalina
-  end
 
   def install
     system "./autogen.sh" if build.head?
