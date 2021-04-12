@@ -38,6 +38,7 @@ class Freecad < Formula
   depends_on "#{@tap}/pyside2"
   depends_on "#{@tap}/pyside2-tools"
   depends_on "#{@tap}/shiboken2"
+  depends_on "#{@tap}/icu4c@67.1"
   depends_on "freetype"
   depends_on macos: :high_sierra # no access to sierra test box
   depends_on "open-mpi"
@@ -59,7 +60,7 @@ class Freecad < Formula
       ENV["CC"] = Formula["llvm"].opt_bin/"clang"
       ENV["CXX"] = Formula["llvm"].opt_bin/"clang++"
     end
-
+    ENV["PKG_CONFIG_PATH"] = Formula["icu4c@67.1"].opt_prefix + "/lib/pkgconfig"
     args = std_cmake_args + %W[
       -DBUILD_QT5=ON
       -DUSE_PYTHON3=1
