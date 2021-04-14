@@ -6,10 +6,8 @@ class Freecad < Formula
   head "https://github.com/freecad/FreeCAD.git", branch: "master", shallow: false
 
   stable do
-    # a tested commit that builds on macos high sierra 10.13, mojave 10.14, Catalina 10.15 & BigSur 11.0
-    url "https://github.com/freecad/freecad.git",
-      revision: "a88db11e0a908f6e38f92bfc5187b13ebe470438"
-    version "0.19"
+    url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.19.1.tar.gz"
+    sha256 "5ec0003c18df204f7b449d4ac0a82f945b41613a0264127de3ef16f6b2efa60f"
   end
 
   bottle do
