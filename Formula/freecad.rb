@@ -58,6 +58,21 @@ class Freecad < Formula
       ENV["CXX"] = Formula["llvm"].opt_bin/"clang++"
     end
 
+    python_exe = Formula["#{@tap}/python3.9"].opt_prefix/"bin/python3"
+    python_headers = Formula["#{@tap}/python3.9"].opt_prefix/"Frameworks/Python.framework/Headers"
+
+    prefix_paths = ""
+    prefix_paths << Formula["#{@tap}/qt5152"].opt_prefix/"lib/cmake;"
+    prefix_paths << Formula["#{@tap}/nglib"].opt_prefix/"Contents/Resources;"
+    prefix_paths << Formula["#{@tap}/vtk@8.2.0"].opt_prefix/"lib/cmake;"
+    prefix_paths << Formula["#{@tap}/opencascade@7.5.0"].opt_prefix + "/lib/cmake;"
+    prefix_paths << Formula["#{@tap}/med-file"].opt_prefix + "/share/cmake/;"
+    prefix_paths << Formula["#{@tap}/shiboken2"].opt_prefix + "/lib/cmake;"
+    prefix_paths << Formula["#{@tap}/pyside2"].opt_prefix+ "/lib/cmake;"
+    prefix_paths << Formula["#{@tap}/coin@4.0.0"].opt_prefix+ "/lib/cmake;"
+    prefix_paths << Formula["#{@tap}/boost@1.75.0"].opt_prefix+ "/lib/cmake;"
+    prefix_paths << Formula["#{@tap}/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;"
+
     args = std_cmake_args + %W[
       -DBUILD_QT5=ON
       -DUSE_PYTHON3=1
@@ -68,10 +83,10 @@ class Freecad < Formula
       -DBUILD_FEM_NETGEN:BOOL=ON
       -DFREECAD_USE_EXTERNAL_KDL=ON
       -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
+      -DPYTHON_EXECUTABLE=#{python_exe}
+      -DPYTHON_INCLUDE_DIR=#{python_headers}
+      -DCMAKE_PREFIX_PATH=#{prefix_paths}
     ]
-    args << "-DPYTHON_EXECUTABLE=" + Formula["#{@tap}/python3.9"].opt_prefix + "/bin/python3"
-    args << "-DPYTHON_INCLUDE_DIR=" + Formula["#{@tap}/python3.9"].opt_prefix + "/Frameworks/Python.framework/Headers"
-    args << '-DCMAKE_PREFIX_PATH="' + Formula["#{@tap}/qt5152"].opt_prefix + "/lib/cmake;" + Formula["#{@tap}/nglib"].opt_prefix + "/Contents/Resources;" + Formula["#{@tap}/vtk@8.2.0"].opt_prefix + "/lib/cmake;" + Formula["#{@tap}/opencascade@7.5.0"].opt_prefix + "/lib/cmake;"+ Formula["#{@tap}/med-file"].opt_prefix + "/share/cmake/;" + Formula["#{@tap}/shiboken2"].opt_prefix + "/lib/cmake;" + Formula["#{@tap}/pyside2"].opt_prefix+ "/lib/cmake;" + Formula["#{@tap}/coin@4.0.0"].opt_prefix+ "/lib/cmake;" + Formula["#{@tap}/boost@1.75.0"].opt_prefix+ "/lib/cmake;" + Formula["#{@tap}/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;"
 
     args << "-DFREECAD_CREATE_MAC_APP=1" if build.with? "macos-app"
     args << "-DBUILD_CLOUD=1" if build.with? "cloud"
