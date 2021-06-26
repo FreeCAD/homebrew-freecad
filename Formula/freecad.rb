@@ -125,9 +125,6 @@ class Freecad < Formula
       system "cmake", *args, ".."
       system "ninja", "install"
     end
-    bin.install_symlink "../MacOS/FreeCAD" => "FreeCAD"
-    bin.install_symlink "../MacOS/FreeCADCmd" => "FreeCADCmd"
-    (lib/"python3.9/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
   end
 
   def post_install
