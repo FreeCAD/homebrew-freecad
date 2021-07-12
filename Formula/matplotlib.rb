@@ -65,7 +65,7 @@ class Matplotlib < Formula
   depends_on "ghostscript" => :optional
   depends_on "gtk+3" => :optional
   depends_on "pygobject3" => requires_py3 if build.with? "gtk+3"
-  depends_on "pygtk" => :optional
+  # depends_on "pygtk" => :optional # OBSOLETE
   depends_on "pygobject" if build.with? "pygtk"
   depends_on "tcl-tk" => :optional
 
