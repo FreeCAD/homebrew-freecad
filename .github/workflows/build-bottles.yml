@@ -2,7 +2,7 @@ name: Build bottles
 
 # define a time when this workflow is triggered
 # TODO: what are the possible trigger times?, ie. `pull_request`
-on:
+on: push
 
 env:
   HOMEBREW_NO_ANALYTICS: 1
