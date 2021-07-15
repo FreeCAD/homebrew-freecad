@@ -23,10 +23,10 @@ jobs:
         run: |
           mkdir -p "$(dirname $(brew --repo ${{github.repository}}))"
           cp -a "$GITHUB_WORKSPACE" "$(brew --repo ${{github.repository}})"
-          mkdir ~/bottles
-          cd ~/bottles
+          mkdir bottles
+          cd bottles
           brew test-bot --cleanup --root-url=https://ghcr.io/v2/ipatch/homebrew-freecad
-          cp -a ~/bottles $RUNNER_TEMP/
+          cp -a bottles $RUNNER_TEMP/
       - name: Upload bottles
         uses: actions/upload-artifact@v1
         with:
