@@ -21,6 +21,11 @@ jobs:
         os: [self-hosted]
     runs-on: ${{ matrix.os }}
     if: "!contains(github.event.head_commit.message, 'ci skip')"
+    env:
+      PATH: '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
+      HOMEBREW_DEVELOPER: 1
+      GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED: 1
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
       - name: Set up Homebrew ci.yml
         id: set-up-homebrew
