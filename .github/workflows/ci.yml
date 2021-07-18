@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [self-hosted]
-    runs-on: ${{ maxtris.os }}
+    runs-on: ${{ matrix.os }}
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     steps:
       - name: Set up Homebrew
