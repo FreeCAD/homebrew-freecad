@@ -11,7 +11,6 @@ env:
   # HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   PULL_REQUEST: ${{ github.event.pull_request.number }}
   BRANCH: ${{ github.event.pull_request.head.ref }}
-  #
   HOMEBREW_NO_ANALYTICS: 1
   HOMEBREW_NO_AUTO_UPDATE: 1
   HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -21,19 +20,17 @@ jobs:
   bottles:
     if: contains(github.event.pull_request.labels.*.name, 'pr-pull')
     # runs-on: macos-latest
-    runs-on: self-hosted
-    steps:
-      - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+  runs-on: self-hosted
+  steps:
+    - name: Set up Homebrew
+      uses: Homebrew/actions/setup-homebrew@master
 
-      - name: Set up git
-        uses: Homebrew/actions/git-user-config@master
-        # run: |
-        #   git config --global user.name "ipatch"
-        #   git config --global user.email "chris.r.jones.1983@gmail.com"
-        #   git config --global user.password "${{ secrets.ipatch_pat }}"
-
-
+    - name: Set up git
+      uses: Homebrew/actions/git-user-config@master
+      # run: |
+      #   git config --global user.name "ipatch"
+      #   git config --global user.email "chris.r.jones.1983@gmail.com"
+      #   git config --global user.password "${{ secrets.ipatch_pat }}"
 
       # - name: Checkout
       #   uses: actions/checkout@v2
@@ -41,7 +38,6 @@ jobs:
       #     # token: "${{ secrets.OSX_CROSS_AVR_HOMEBREW_GITHUB_API_TOKEN }}"
       #     # repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      
       # - name: Cache Homebrew Bundler RubyGems
       #   id: cache
       #   uses: actions/cache@v1
@@ -54,19 +50,19 @@ jobs:
       #   if: steps.cache.outputs.cache-hit != 'true'
       #   run: brew install-bundler-gems
 
-      - name: Pull bottles
-        run: brew pr-pull --debug --tap=$GITHUB_REPOSITORY --workflows=ci.yaml ${{ github.event.pull_request.number }}
-        env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+    - name: Pull bottles
+      run: brew pr-pull --debug --tap=$GITHUB_REPOSITORY --workflows=ci.yaml ${{ github.event.pull_request.number }}
+      env:
+        HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
 
-      - name: Push commits
-        uses: Homebrew/actions/git-try-push@master
-        with:
-          # token: ${{ secrets.OSX_CROSS_AVR_HOMEBREW_GITHUB_API_TOKEN }}
-          # token: ${{ secrets.GITHUB_TOKEN }}
-          token: ${{ github.token }}
-          branch: master
+    - name: Push commits
+      uses: Homebrew/actions/git-try-push@master
+      with:
+        # token: ${{ secrets.OSX_CROSS_AVR_HOMEBREW_GITHUB_API_TOKEN }}
+        # token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ github.token }}
+        branch: master
 
-      - name: Delete branch
-        if: github.event.pull_request.head.repo.fork == false
-        run: git push --delete origin ${{ github.event.pull_request.head.ref }}
+    - name: Delete branch
+      if: github.event.pull_request.head.repo.fork == false
+      run: git push --delete origin ${{ github.event.pull_request.head.ref }}
