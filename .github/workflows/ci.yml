@@ -33,7 +33,7 @@ jobs:
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Configure Git user, `ci.yml`
-      - uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@master
 
       - name: Cache Homebrew Bundler RubyGems
         id: cache
