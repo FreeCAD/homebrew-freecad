@@ -9,6 +9,7 @@ env:
   HOMEBREW_DEVELOPER: 1
   HOMEBREW_GITHUB_ACTIONS: 1
   HOMEBREW_NO_AUTO_UPDATE: 1
+  GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED: 1
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -27,9 +28,12 @@ jobs:
       GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED: 1
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
-      - name: Set up Homebrew ci.yml
+      - name: Set up Homebrew `ci.yml`
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Configure Git user, `ci.yml`
+      - uses: Homebrew/actions/setup-homebrew@master
 
       - name: Cache Homebrew Bundler RubyGems
         id: cache
