@@ -46,6 +46,7 @@ jobs:
         run: |
           git config --global user.name "ipatch"
           git config --global user.email "chris.r.jones.1983@gmail.com"
+          git config --global user.password "${{ secrets.ipatch_pat }}"
 
       - name: Pull bottles
         run: brew pr-pull --debug --tap=$GITHUB_REPOSITORY $PULL_REQUEST
