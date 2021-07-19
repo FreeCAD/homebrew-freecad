@@ -45,9 +45,9 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
         with:
-          repository: ipatch/homebrew-freecad
-          ref: refs/heads/master
-          fetch-depth: 0
+          # repository: ipatch/homebrew-freecad
+          # ref: refs/heads/master
+          # fetch-depth: 0
           # token: "${{ secrets.IPATCH_PAT }} || github.token || ${{ secrets.GITHUB_TOKEN }}"
 
 
