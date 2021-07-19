@@ -5,6 +5,11 @@ on:
   push:
     branches: [master, ipatch.exp.with.github.actions]
 
+permissions:
+  contents: read
+  push: write
+  pull-requests: write
+
 env:
   HOMEBREW_DEVELOPER: 1
   HOMEBREW_GITHUB_ACTIONS: 1
@@ -48,7 +53,8 @@ jobs:
           # repository: ipatch/homebrew-freecad
           # ref: refs/heads/master
           # fetch-depth: 0
-          token: "${{ secrets.IPATCH_PAT }} || github.token || ${{ secrets.GITHUB_TOKEN }}"
+          # token: "${{ secrets.IPATCH_PAT }} || github.token || ${{ secrets.GITHUB_TOKEN }}"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
 
       - name: Cache Homebrew Bundler RubyGems
