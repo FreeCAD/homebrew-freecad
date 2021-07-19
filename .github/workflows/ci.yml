@@ -39,7 +39,7 @@ jobs:
           repository: ipatch/homebrew-freecad
           ref: refs/heads/master
           fetch-depth: 0
-          token: "${{ secrets.IPATCH_PAT }} || github.token "
+          token: "${{ secrets.IPATCH_PAT }} || github.token || ${{ secrets.GITHUB_TOKEN }}"
 
       - name: Set up Homebrew `ci.yml`
         id: set-up-homebrew
