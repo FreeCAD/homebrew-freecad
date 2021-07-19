@@ -54,16 +54,18 @@ jobs:
       - name: Set up Homebrew `ci.yml`
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           # repository: ipatch/homebrew-freecad
           # ref: refs/heads/master
           # fetch-depth: 0
-          token: "${{ secrets.IPATCH_PAT }} || github.token || ${{ secrets.GITHUB_TOKEN }}"
 
-
-          # NOTE: not valid
+          # NOTE: non valid inputs
           # repo-token: ${{ secrets.GITHUB_TOKEN }}
+          # token: "${{ secrets.IPATCH_PAT }} || github.token || ${{ secrets.GITHUB_TOKEN }}"
 
+          # NOTE: valid
           test-bot: true
           debug: true
 
