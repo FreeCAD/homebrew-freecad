@@ -58,7 +58,7 @@ jobs:
           # repository: ipatch/homebrew-freecad
           # ref: refs/heads/master
           # fetch-depth: 0
-          # token: "${{ secrets.IPATCH_PAT }} || github.token || ${{ secrets.GITHUB_TOKEN }}"
+          token: "${{ secrets.IPATCH_PAT }} || github.token || ${{ secrets.GITHUB_TOKEN }}"
 
 
           # NOTE: not valid
