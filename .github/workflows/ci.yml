@@ -30,11 +30,16 @@ jobs:
     steps:
 
       - name: Checks out ipatch/homebrew-freecad fork `ci.yml`
+        if: github.event.push.repo.full_name == github.repository
+        # if: github.event_name == 'push' && steps.setup.outputs.has_token == 'true'
         uses: actions/checkout@v2
+        # NOTE: workaround for missing secret in fork PRs - see https://github.com/actions/checkout/issues/298
+        # NOTE: see https://github.com/rectorphp/rector/commit/d395e1c28b8e6a56711dcc2e10490a82965850e4
         with:
           repository: ipatch/homebrew-freecad
           ref: refs/heads/master
-          token: "${{ secrets.IPATCH_PAT }}"
+          fetch-depth: 0
+          token: "${{ secrets.ACCESS_TOKEN }}"
 
       - name: Set up Homebrew `ci.yml`
         id: set-up-homebrew
