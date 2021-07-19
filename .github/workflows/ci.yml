@@ -34,24 +34,24 @@ jobs:
       # GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
 
-      - name: Checks out ipatch/homebrew-freecad fork `ci.yml`
-        if: github.event.push.repo.full_name == github.repository
-        # if: github.event_name == 'push' && steps.setup.outputs.has_token == 'true'
-        uses: actions/checkout@v2
-        # NOTE: workaround for missing secret in fork PRs - see https://github.com/actions/checkout/issues/298
-        # NOTE: see https://github.com/rectorphp/rector/commit/d395e1c28b8e6a56711dcc2e10490a82965850e4
-        env:
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED: 1
-        with:
-          repository: ipatch/homebrew-freecad
-          ref: refs/heads/master
-          fetch-depth: 0
-          # token: "${{ secrets.IPATCH_PAT }} || github.token || ${{ secrets.GITHUB_TOKEN }}"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          test-bot: true
-          debug: true
+      # - name: Checks out ipatch/homebrew-freecad fork `ci.yml`
+      #   if: github.event.push.repo.full_name == github.repository
+      #   # if: github.event_name == 'push' && steps.setup.outputs.has_token == 'true'
+      #   uses: actions/checkout@v2
+      #   # NOTE: workaround for missing secret in fork PRs - see https://github.com/actions/checkout/issues/298
+      #   # NOTE: see https://github.com/rectorphp/rector/commit/d395e1c28b8e6a56711dcc2e10490a82965850e4
+      #   env:
+      #     # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED: 1
+      #   with:
+      #     repository: ipatch/homebrew-freecad
+      #     ref: refs/heads/master
+      #     fetch-depth: 0
+      #     # token: "${{ secrets.IPATCH_PAT }} || github.token || ${{ secrets.GITHUB_TOKEN }}"
+      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
+      #     test-bot: true
+      #     debug: true
 
 
 
