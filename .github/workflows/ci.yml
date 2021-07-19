@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  pull_request:
+  pull_request_target:
   push:
     branches: [master, ipatch.exp.with.github.actions]
 
@@ -29,9 +29,11 @@ jobs:
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
 
-      - name: Checkout `ci.yml`
+      - name: Checks out ipatch/homebrew-freecad fork `ci.yml`
         uses: actions/checkout@v2
         with:
+          repository: ipatch/homebrew-freecad
+          ref: refs/heads/master
           token: "${{ secrets.IPATCH_PAT }}"
 
       - name: Set up Homebrew `ci.yml`
