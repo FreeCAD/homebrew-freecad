@@ -19,7 +19,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ macos-10.14 ]
+        os: [ macos-10.14, self-hosted ]
     runs-on: ${{ matrix.os }}
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     env:
@@ -28,11 +28,14 @@ jobs:
       GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED: 1
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
+
+      - name: Checkout `ci.yml`
+        uses: actions/checkout@v2
+        with:
+          token: "${{ secrets.IPATCH_PAT }}"
+
       - name: Set up Homebrew `ci.yml`
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
-
-      - name: Configure Git user, `ci.yml`
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Cache Homebrew Bundler RubyGems
@@ -42,7 +45,6 @@ jobs:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ runner.os }}-rubygems-
-
 
       - name: Install Homebrew Bundler RubyGems
         if: steps.cache.outputs.cache-hit != 'true'
