@@ -17,7 +17,7 @@ env:
   GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED: 1
 jobs:
   tap_syntax:
-    if: github.repository == 'Homebrew/linuxbrew-core' && contains(github.event.pull_request.labels.*.name, 'self-hosted-ci')
+    # if: github.repository == 'Homebrew/linuxbrew-core' && contains(github.event.pull_request.labels.*.name, 'self-hosted-ci')
     runs-on: ubuntu-latest
     env:
       HOMEBREW_FORCE_HOMEBREW_ON_LINUX: 1
