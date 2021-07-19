@@ -19,7 +19,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [self-hosted]
+        os: [ macos-10.14 ]
     runs-on: ${{ matrix.os }}
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     env:

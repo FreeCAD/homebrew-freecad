@@ -20,7 +20,8 @@ jobs:
   bottles:
     if: contains(github.event.pull_request.labels.*.name, 'pr-pull')
     # runs-on: macos-latest
-    runs-on: self-hosted
+    runs-on: macos-10.14
+    # runs-on: self-hosted
     steps:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
