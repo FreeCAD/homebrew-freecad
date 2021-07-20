@@ -1,9 +1,13 @@
 class CoinAT400 < Formula
   desc "Retained-mode toolkit for 3D graphics development"
   homepage "https://coin3d.github.io"
-  url "https://github.com/coin3d/coin", using: :git, tag: "Coin-4.0.0"
-  version "4.0.0"
-  head "https://github.com/coin3d/coin", using: :git
+  license all_of: ["BSD-3-Clause", "ISC"]
+  revision 1
+
+  stable do
+    url "https://github.com/coin3d/coin/archive/Coin-4.0.0.tar.gz"
+    sha256 "b00d2a8e9d962397cf9bf0d9baa81bcecfbd16eef675a98c792f5cf49eb6e805"
+  end
 
   bottle do
     root_url "https://justyour.parts:8080/freecad"
@@ -27,8 +31,8 @@ class CoinAT400 < Formula
     cmake_args << "-DCOIN_USE_CPACK:BOOL=OFF"
 
     mkdir "build-lib" do
-      system "mkdir", "../cpack.d"
-      system "touch", "../cpack.d/CMakeLists.txt"
+      mkdir "../cpack.d"
+      touch "../cpack.d/CMakeLists.txt"
       system "cmake", "..", *cmake_args
       system "make", "install"
     end

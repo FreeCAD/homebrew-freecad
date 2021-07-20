@@ -1,8 +1,11 @@
 class Nglib < Formula
   desc "C++ Library of NETGEN's tetrahedral mesh generator"
-  homepage "https://sourceforge.net/projects/netgen-mesher/"
-  url "https://github.com/NGSolve/netgen.git", using: :git, tag: "v6.2.2007"
-  version "v6.2.2007"
+  homepage "https://github.com/ngsolve/netgen"
+  url "https://github.com/ngsolve/netgen.git", 
+    tag: "v6.2.2007",
+    revision: "9d71c172f33b62c18afa32fd90b836a3a7a0fc26"
+  license "LGPL-2.1"
+  head "https://github.com/ngsolve/netgen.git"
 
   bottle do
     root_url "https://justyour.parts:8080/freecad"
@@ -12,7 +15,7 @@ class Nglib < Formula
 
   depends_on "cmake" => :build
 
-  depends_on "#{@tap}/opencascade@7.5.0" => :required
+  depends_on "#{@tap}/opencascade@7.5.0"
 
   def install
     inreplace "CMakeLists.txt", "find_package(OpenCasCade REQUIRED)",

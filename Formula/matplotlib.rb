@@ -53,7 +53,7 @@ class Matplotlib < Formula
 
   depends_on NoExternalPyCXXPackage => :build
   depends_on "pkg-config" => :build
-  depends_on "#{@tap}/numpy@1.19.4" 
+  depends_on "#{@tap}/numpy@1.19.4"
   depends_on DvipngRequirement if build.with? "tex"
   depends_on "freetype"
   depends_on "libpng"
@@ -65,8 +65,7 @@ class Matplotlib < Formula
   depends_on "ghostscript" => :optional
   depends_on "gtk+3" => :optional
   depends_on "pygobject3" => requires_py3 if build.with? "gtk+3"
-  # depends_on "pygtk" => :optional # OBSOLETE
-  depends_on "pygobject" if build.with? "pygtk"
+  depends_on "pygobject" => :optional
   depends_on "tcl-tk" => :optional
 
   cxxstdlib_check :skip
