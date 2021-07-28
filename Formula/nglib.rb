@@ -1,8 +1,8 @@
 class Nglib < Formula
   desc "C++ Library of NETGEN's tetrahedral mesh generator"
   homepage "https://sourceforge.net/projects/netgen-mesher/"
-  url "https://github.com/NGSolve/netgen.git", using: :git, tag: "v6.2.2007"
-  version "v6.2.2007"
+  url "https://github.com/NGSolve/netgen.git", using: :git, tag: "v6.2.2101"
+  version "v6.2.2101"
 
   bottle do
     root_url "https://justyour.parts:8080/freecad"
