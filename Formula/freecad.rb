@@ -21,6 +21,7 @@ class Freecad < Formula
   option "with-packaging-utils", "Optionally install packaging dependencies"
   option "with-cloud", "Build with CLOUD module"
   option "with-unsecured-cloud", "Build with self signed certificate support CLOUD module"
+  option "with-skip-web", "Disable web"
 
   depends_on "ccache" => :build
   depends_on "cmake" => :build
@@ -72,6 +73,10 @@ class Freecad < Formula
     prefix_paths << Formula["#{@tap}/coin@4.0.0"].opt_prefix+ "/lib/cmake;"
     prefix_paths << Formula["#{@tap}/boost@1.75.0"].opt_prefix+ "/lib/cmake;"
     prefix_paths << Formula["#{@tap}/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;"
+    
+    # Disable function which are not available for Apple Silicon
+    act = Hardware::CPU.arm? ? 'OFF' : 'ON'
+    web = build.with?("skip-web") ? 'OFF' : act
 
     args = std_cmake_args + %W[
       -DBUILD_QT5=ON
@@ -81,6 +86,7 @@ class Freecad < Formula
       -DBUILD_FEM_NETGEN=1
       -DBUILD_FEM=1
       -DBUILD_FEM_NETGEN:BOOL=ON
+      -DBUILD_WEB=#{web}
       -DFREECAD_USE_EXTERNAL_KDL=ON
       -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
       -DPYTHON_EXECUTABLE=#{python_exe}
