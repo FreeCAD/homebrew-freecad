@@ -1,9 +1,11 @@
 class Pivy < Formula
-  desc "Formula for freecad"
-  homepage "https://bitbucket.org/Coin3D/pivy/overview"
-  url "https://github.com/coin3d/pivy", using: :git, tag: "0.6.5"
-  version "0.6.5"
-  head "https://bitbucket.org/Coin3D/pivy", using: :git
+  desc "python bindings to coin3d"
+  homepage "https://github.com/coin3d/pivy"
+  url "https://github.com/coin3d/pivy.git", 
+    tag: "0.6.5",
+    revision: "5cf70be7b1d0e9ed5ab8060b34cf51c94b77511e"
+  license "ISC"
+  head "https://github.com/coin3d/pivy.git"
 
   bottle do
     root_url "https://justyour.parts:8080/freecad"

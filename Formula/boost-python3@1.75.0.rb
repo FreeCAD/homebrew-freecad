@@ -2,7 +2,6 @@ class BoostPython3AT1750 < Formula
   desc "C++ library for C++/Python3 interoperability"
   homepage "https://www.boost.org/"
   url "https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.tar.bz2"
-  mirror "https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.tar.bz2"
   sha256 "953db31e016db7bb207f11432bef7df100516eeb746843fa0486a222e3fd49cb"
   license "BSL-1.0"
   head "https://github.com/boostorg/boost.git"
@@ -14,8 +13,8 @@ class BoostPython3AT1750 < Formula
 
   bottle do
     root_url "https://justyour.parts:8080/freecad"
-    sha256 big_sur: "3dd7c81b4cf643895a8c3c7a514a3edd9249387e9251bad646eb51ff77873f1c" 
-    sha256 catalina: "3b1bf01ad68f74b340a4a384347f25b7e6ca0d0180ded19fe28cbaa5330b77cd" 
+    sha256 big_sur: "3dd7c81b4cf643895a8c3c7a514a3edd9249387e9251bad646eb51ff77873f1c"
+    sha256 catalina: "3b1bf01ad68f74b340a4a384347f25b7e6ca0d0180ded19fe28cbaa5330b77cd"
   end
 
   keg_only "provided by homebrew core"
@@ -73,7 +72,8 @@ class BoostPython3AT1750 < Formula
 "include("+Formula["#{@tap}/boost@1.75.0"].opt_prefix+"/lib/cmake/BoostDetectToolset-1.75.0.cmake)"
     inreplace "install-python3/lib/cmake/boost_python-1.75.0/boost_python-config.cmake",
 "get_filename_component(_BOOST_INCLUDEDIR \"${_BOOST_CMAKEDIR}/../../include/\" ABSOLUTE)",
-"# get_filename_component(_BOOST_INCLUDEDIR \"${_BOOST_CMAKEDIR}/../../include/\" ABSOLUTE) \nset(_BOOST_LIBDIR \"/usr/local/opt/boost-python3@1.75.0/lib\")"
+"# get_filename_component(_BOOST_INCLUDEDIR \"${_BOOST_CMAKEDIR}/../../include/\" ABSOLUTE) \n
+set(_BOOST_LIBDIR \"/usr/local/opt/boost-python3@1.75.0/lib\")"
     inreplace "install-python3/lib/cmake/boost_python-1.75.0/boost_python-config.cmake",
 "get_filename_component(_BOOST_LIBDIR", "# get_filename_component(_BOOST_LIBDIR"
 
