@@ -81,7 +81,7 @@ class BoostPython3AT1750 < Formula
     inreplace "install-python3/lib/cmake/boost_python-1.75.0/boost_python-config.cmake",
 "get_filename_component(_BOOST_INCLUDEDIR \"${_BOOST_CMAKEDIR}/../../include/\" ABSOLUTE)",
 "# get_filename_component(_BOOST_INCLUDEDIR \"${_BOOST_CMAKEDIR}/../../include/\" ABSOLUTE) \n
-set(_BOOST_LIBDIR \"/usr/local/opt/boost-python3@1.75.0/lib\")"
+set(_BOOST_LIBDIR \"#{lib}\")"
     inreplace "install-python3/lib/cmake/boost_python-1.75.0/boost_python-config.cmake",
 "get_filename_component(_BOOST_LIBDIR", "# get_filename_component(_BOOST_LIBDIR"
 
