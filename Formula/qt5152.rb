@@ -17,10 +17,13 @@ class Qt5152 < Formula
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
-  bottle do
-    root_url "https://justyour.parts:8080/freecad"
-    sha256 cellar: :any, big_sur:  "9b3268db7be55f3c215d4a3221f28bae3dbaf8ed506222cc1b4a78b7e44a5936"
-    sha256 cellar: :any, catalina: "e71e5f33519372f3f9776fc159b9bce93891a1b3c2a6778aa0b1663abcb2f8c3"
+  # Do not use bottles for ARM
+  if not Hardware::CPU.arm? 
+    bottle do
+      root_url "https://justyour.parts:8080/freecad"
+      sha256 cellar: :any, big_sur:  "9b3268db7be55f3c215d4a3221f28bae3dbaf8ed506222cc1b4a78b7e44a5936"
+      sha256 cellar: :any, catalina: "e71e5f33519372f3f9776fc159b9bce93891a1b3c2a6778aa0b1663abcb2f8c3"
+    end
   end
 
   keg_only "qt 5 has CMake issues when linked"
@@ -29,6 +32,7 @@ class Qt5152 < Formula
   depends_on xcode: :build
   depends_on macos: :sierra
 
+  uses_from_macos "gperf" => :build
   uses_from_macos "bison"
   uses_from_macos "flex"
   uses_from_macos "sqlite"
@@ -38,6 +42,16 @@ class Qt5152 < Formula
   patch do
     url "https://raw.githubusercontent.com/Homebrew/formula-patches/92d4cf/qt/5.15.2.diff"
     sha256 "fa99c7ffb8a510d140c02694a11e6c321930f43797dbf2fe8f2476680db4c2b2"
+  end
+  
+  # Patch for qmake on ARM
+  # https://codereview.qt-project.org/c/qt/qtbase/+/327649
+  if Hardware::CPU.arm?
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/9dc732/qt/qt-split-arch.patch"
+      sha256 "36915fde68093af9a147d76f88a4e205b789eec38c0c6f422c21ae1e576d45c0"
+      directory "qtbase"
+    end
   end
 
   def install
@@ -56,8 +70,15 @@ class Qt5152 < Formula
       -no-rpath
       -pkg-config
       -dbus-runtime
-      -proprietary-codecs
     ]
+    
+    if Hardware::CPU.arm?
+      # Temporarily fixes for Apple Silicon
+      args << "-skip" << "qtwebengine" << "-no-assimp"
+    else
+      # Should be reenabled unconditionnaly once it is fixed on Apple Silicon
+      args << "-proprietary-codecs"
+    end
 
     system "./configure", *args
 
@@ -88,10 +109,18 @@ class Qt5152 < Formula
   end
 
   def caveats
-    <<~EOS
+    s = <<~EOS
       We agreed to the Qt open source license for you.
       If this is unacceptable you should uninstall.
     EOS
+    
+    if Hardware::CPU.arm?
+      s += <<~EOS
+        This version of Qt on Apple Silicon does not include QtWebEngine
+      EOS
+    end
+
+    s
   end
 
   test do
