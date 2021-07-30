@@ -63,7 +63,7 @@ class Freecad < Formula
     python_headers = Formula["#{@tap}/python3.9"].opt_prefix/"Frameworks/Python.framework/Headers"
 
     prefix_paths = ''
-    prefix_paths << Formula["#{@tap}/qt5152"].lib/'lib/cmake;'
+    prefix_paths << Formula["#{@tap}/qt5152"].lib/'cmake;'
     prefix_paths << Formula["#{@tap}/nglib"].opt_prefix/'Contents/Resources;'
     prefix_paths << Formula["#{@tap}/vtk@8.2.0"].lib/'cmake;'
     prefix_paths << Formula["#{@tap}/opencascade@7.5.0"].lib/'cmake;'
