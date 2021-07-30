@@ -78,7 +78,11 @@ class Freecad < Formula
     act = Hardware::CPU.arm? ? 'OFF' : 'ON'
     web = build.with?("skip-web") ? 'OFF' : act
 
-    args = std_cmake_args + %W[
+    args = std_cmake_args
+    # Replace the standard build type
+    args[args.index('-DCMAKE_BUILD_TYPE=Release')] = "-DCMAKE_BUILD_TYPE=#{build.with?('debug') ? 'Debug' : 'Release'}"
+    
+    args = args + %W[
       -DBUILD_QT5=ON
       -DUSE_PYTHON3=1
       -DCMAKE_CXX_STANDARD=14
@@ -88,7 +92,6 @@ class Freecad < Formula
       -DBUILD_FEM_NETGEN:BOOL=ON
       -DBUILD_WEB=#{web}
       -DFREECAD_USE_EXTERNAL_KDL=ON
-      -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
       -DPYTHON_EXECUTABLE=#{python_exe}
       -DPYTHON_INCLUDE_DIR=#{python_headers}
       -DCMAKE_PREFIX_PATH=#{prefix_paths}
