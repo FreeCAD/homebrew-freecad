@@ -58,6 +58,20 @@ class Freecad < Formula
       ENV["CC"] = Formula["llvm"].opt_bin/"clang"
       ENV["CXX"] = Formula["llvm"].opt_bin/"clang++"
     end
+    
+    # NOTE: bundle fixes, should integrated in freecad source code
+    if build.with? 'macos-app'
+      cmakelist = 'src/MacAppBundle/CMakeLists.txt'
+      gccfra    = Formula['gcc']
+      gcctxt    = gccfra.lib.to_s + '/gcc/' + gccfra.version.to_s.split('.')[0]
+      inreplace cmakelist do |ln|
+        ln.gsub! '/usr/local', '${HOMEBREW_PREFIX}'  # similar HOMEBREW_PREFIX.to_s 
+        ln.gsub! 'Cellar/icu4c', 'Cellar/icu4c@67.1' # formula is renamed with version 
+        ln.gsub! '${WEBKIT_FRAMEWORK_DIR}', '' if Hardware::CPU.arm? # do not need for apple silicon, see below
+        ln.gsub! 'pkg_check_modules(ICU icu-uc)', "pkg_check_modules(ICU icu-uc)\n\nfind_package(OpenCasCade)\nfind_package(llvm)\n" # from other PR stolen
+        ln.gsub! '${MACPORTS_PREFIX}/lib', '/lib ${LLVM_LIBRARY_DIR} ${OCC_LIBRARY_DIR} ' + gcctxt # from other PR + gcc lib path
+      end
+    end
 
     python_exe = Formula["#{@tap}/python3.9"].opt_prefix/"bin/python3"
     python_headers = Formula["#{@tap}/python3.9"].opt_prefix/"Frameworks/Python.framework/Headers"
