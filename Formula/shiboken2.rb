@@ -11,8 +11,9 @@ class Shiboken2 < Formula
     sha256 cellar: :any, catalina: "94c2375a547b26b06128cd8705de6bd3f42f8a445dea5a2d9202040f9e61a033"
   end
 
+  @@llvm = Hardware::CPU.arm? ? 'llvm@11' : 'llvm'
   depends_on "cmake" => :build
-  depends_on "llvm"
+  depends_on @@llvm
   depends_on "#{@tap}/numpy@1.19.4"
   depends_on "#{@tap}/qt5152"
   depends_on "#{@tap}/python3.9" => :build
@@ -20,7 +21,7 @@ class Shiboken2 < Formula
   def install
     qt = Formula["#{@tap}/qt5152"]
 
-    ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
+    ENV["LLVM_INSTALL_DIR"] = Formula[llvm].opt_prefix
 
     mkdir "macbuild#{version}" do
       pyhome = `#{Formula["#{@tap}/python3.9"].opt_bin}/python3.9-config --prefix`.chomp

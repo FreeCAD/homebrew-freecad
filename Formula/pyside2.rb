@@ -39,7 +39,8 @@ class Pyside2 < Formula
     py_include = "#{pyhome}/include/python3.9"
 
     mkdir "macbuild3.8" do
-      ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
+      llvm = Hardware::CPU.arm? ? 'llvm@11' : 'llvm'
+      ENV["LLVM_INSTALL_DIR"] = Formula[llvm].opt_prefix
       ENV["CMAKE_PREFIX_PATH"] = Formula["#{@tap}/shiboken2"].opt_prefix + "/lib/cmake"
       args = std_cmake_args + %W[
         -DPYTHON_EXECUTABLE=#{pyhome}/bin/python3.9
