@@ -14,9 +14,10 @@ class BoostAT1750 < Formula
   end
 
   bottle do
-    root_url "https://justyour.parts:8080/freecad"
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 cellar: :any, big_sur:  "99aa624e3a19ba01458f9e0be8dcdcfb8df90feabc4728b188682d9174b05f09"
     sha256 cellar: :any, catalina: "21fc3612d49249ff563dacedb633dbf8050a8e1ab3feb0100395a500fa610624"
+    sha256 cellar: :any, mojave: "cb1e5edaae98dea622383949f8279fbd44ad2cbc9bc21645f4880e7d70d323a6"
   end
 
   depends_on "#{@tap}/icu4c@67.1"

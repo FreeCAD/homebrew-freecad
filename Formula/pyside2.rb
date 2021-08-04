@@ -8,9 +8,10 @@ class Pyside2 < Formula
   head "http://code.qt.io/cgit/pyside/pyside-setup.git", branch: "v5.15.2"   
 
   bottle do
-    root_url "https://justyour.parts:8080/freecad"
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 cellar: :any, big_sur:  "87097214bd3ba561836bf7a0aa83c2433491b211ed1e550efb7630bf4f7dc87d"
     sha256 cellar: :any, catalina: "17c919f37f96e588cd5256c3ee9cd1e0e0b9e1ea528d40cf74e2a3acb3ef1b67"
+    sha256 cellar: :any, mojave: "1dee7829afbff6024c64accf3a2f1260ac0aa6cc188b103ccee938a3b54c8641"
   end
 
   option "without-docs", "Skip building documentation"

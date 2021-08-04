@@ -41,9 +41,10 @@ class Matplotlib < Formula
   head "https://github.com/matplotlib/matplotlib.git"
 
   bottle do
-    root_url "https://justyour.parts:8080/freecad"
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 cellar: :any, big_sur:  "150759a0b8ea4e159e0a4ed1229340775e90ab6b47ab397fe1ec040250ceef94"
     sha256 cellar: :any, catalina: "7f3d19de027ab6dd81e6b6021315682bcfe54f410bb29a1fb1cea0ba0a8515eb"
+    sha256 cellar: :any, mojave: "5331f0dca64b5d8a583944c6d597937833943ebc02ab3da54762baccd6d38620"
   end
 
   option "with-cairo", "Build with cairo backend support"
