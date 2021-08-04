@@ -10,9 +10,10 @@ class CoinAT400 < Formula
   end
 
   bottle do
-    root_url "https://justyour.parts:8080/freecad"
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 cellar: :any, big_sur:  "7ffc242e36407db7cd5195cd62e9b6998b6114e9a7fdf70adadecfef0507e316"
     sha256 cellar: :any, catalina: "841ef05f4072eedc91a16845e3a8ed2e4c941faef5b338b7fd424649806de983"
+    sha256 cellar: :any, mojave: "ef71692415587052053339145060eb03b2e9e774df7e7f3a8c9d64d3588ff739"
   end
 
   keg_only "provided by homebrew"

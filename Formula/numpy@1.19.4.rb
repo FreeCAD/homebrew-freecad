@@ -11,9 +11,10 @@ class NumpyAT1194 < Formula
   end
 
   bottle do
-    root_url "https://justyour.parts:8080/freecad"
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 cellar: :any, big_sur:  "525f5e733bf4677cb94d91549c88addfa59559cf9ccd6decb163ab906763cacf"
     sha256 cellar: :any, catalina: "b634193a2e1c28438bc659622ef90c151bb8f5bbf2d5ae03f877df43c4f9d9a1"
+    sha256 cellar: :any, mojave: "1e3970703c7bbba46ef7f5399007a929e7b121d295443757f3d8bdfbcd9ec5fe"
   end
 
   depends_on "#{@tap}/cython@0.29.21" => :build

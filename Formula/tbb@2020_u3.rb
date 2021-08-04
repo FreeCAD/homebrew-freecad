@@ -8,9 +8,10 @@ class TbbAT2020U3 < Formula
   revision 1
 
   bottle do
-    root_url "https://justyour.parts:8080/freecad"
+    root_url ""
     sha256 cellar: :any, big_sur:  "62f987215e72d992507d6b9e0f1fcef19afac7e939b508db35f76112bda94ab7"
     sha256 cellar: :any, catalina: "0a2ea081cf8647fd270229d9da1b01909d77b4052e1b516b01e2998176567d9a"
+    sha256 cellar: :any, mojave: "40db7a05984c6a5519dc1277f25d3953aa46ff5679bc312a59d600792a68b632"
   end
 
   depends_on "cmake" => :build
