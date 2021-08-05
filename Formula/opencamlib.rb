@@ -7,9 +7,11 @@ class Opencamlib < Formula
                                                      revision: "c3f3555270024104c51b27c33ecc7a293aae5dff"
 
   bottle do
+    rebuild 1
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 cellar: :any, big_sur:  "8e81823c6b42837caf46f39f7ffae2d217e8080bd5cc21ff9092918e173e8c59"
     sha256 cellar: :any, catalina: "695a0c707cc565aaa181049a2958e80fcaf21a76c573983e9d1314a19e90c8bd"
+    sha256 cellar: :any, mojave: "16e6e2a6eaba9a3fdaffd4d740895875559d35aa0be547cc3497cd1ac6e2c9d1"
   end
 
   depends_on "#{@tap}/boost-python3@1.75.0" => :build
