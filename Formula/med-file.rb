@@ -5,9 +5,10 @@ class MedFile < Formula
   sha256 "a474e90b5882ce69c5e9f66f6359c53b8b73eb448c5f631fa96e8cd2c14df004"
 
   bottle do
-    root_url "https://justyour.parts:8080/freecad"
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 cellar: :any, big_sur:  "21dc7b948d4bf3e022690bd075ed9f6e623c7d08088178f60a4f9f9acc70367c"
     sha256 cellar: :any, catalina: "d66199bb1cbd71baf8f17bbef258fe64f02fe6f7cfc21427555f3c5b31297e1d"
+    sha256 cellar: :any, mojave: "112c796b6ae386478ee283bada3ce569d79638cd23abad655ca5f9c9d217b970"
   end
 
   depends_on "cmake" => :build

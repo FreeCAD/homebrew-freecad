@@ -11,9 +11,10 @@ class PyqtAT5152 < Formula
   end
 
   bottle do
-    root_url "https://justyour.parts:8080/freecad"
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 cellar: :any, big_sur:  "7bb680628800decb3c84adc40081fa44f8151c5241ede9c5534af16fe41612e0"
     sha256 cellar: :any, catalina: "25424bdc32b5a43929e637f2e6c0f1bc3b20bf03c13756ea7ba80bec819a9d43"
+    sha256 cellar: :any, mojave: "6b0a2fa3f3531cd22d41ca6d16b9a0383f7a8cfcf269ba3fbf96b01442754ea4"
   end
 
   keg_only "also provided by core"

@@ -8,9 +8,10 @@ class Nglib < Formula
   head "https://github.com/ngsolve/netgen.git"
 
   bottle do
-    root_url "https://justyour.parts:8080/freecad"
-    sha256 cellar: :any, big_sur:  "317c6c9432a0431a0dd5abb7c942d138160b6b84217aedf532c2d4a7fc7fe6ae"
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
+    sha256 cellar: :any, big_sur: "8f1e7974e4430e2c4bd2590c72ceecb1f02f186181fee836375d1492b64aa68e"
     sha256 cellar: :any, catalina: "9a86c95e0358b98b9d8dcd614167d8e1812407ac1d070c83f52249bce71da960"
+    sha256 cellar: :any, mojave: "9397fe237ff560ab6b2d8bf9003d876637c2eeba645d620f0ce2a2d36474ea78"
   end
 
   depends_on "cmake" => :build

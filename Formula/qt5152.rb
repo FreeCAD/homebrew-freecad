@@ -19,9 +19,10 @@ class Qt5152 < Formula
   # Do not use bottles for ARM
   if not Hardware::CPU.arm? 
     bottle do
-      root_url "https://justyour.parts:8080/freecad"
+      root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
       sha256 cellar: :any, big_sur:  "9b3268db7be55f3c215d4a3221f28bae3dbaf8ed506222cc1b4a78b7e44a5936"
       sha256 cellar: :any, catalina: "e71e5f33519372f3f9776fc159b9bce93891a1b3c2a6778aa0b1663abcb2f8c3"
+      sha256 cellar: :any, mojave: "90c50d7e849fd74a027a43cee39c98e613084f35cc46a8d7f96ab544f0f4e9e8"
     end
   end
 

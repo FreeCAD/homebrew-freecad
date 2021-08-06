@@ -7,14 +7,10 @@ class BoostPython3AT1750 < Formula
   head "https://github.com/boostorg/boost.git"
 
   bottle do
-    root_url "https://justyour.parts:8080/freecad"
-    sha256 cellar: :any, big_sur: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  end
-
-  bottle do
-    root_url "https://justyour.parts:8080/freecad"
+    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 big_sur: "3dd7c81b4cf643895a8c3c7a514a3edd9249387e9251bad646eb51ff77873f1c"
     sha256 catalina: "3b1bf01ad68f74b340a4a384347f25b7e6ca0d0180ded19fe28cbaa5330b77cd"
+    sha256 mojave: "127dec0257beeb7ca38db6e13897f14ed8397f0fac5df58e5b848d8fca57719a"
   end
 
   keg_only "provided by homebrew core"
