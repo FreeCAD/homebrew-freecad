@@ -10,7 +10,7 @@ class Nglib < Formula
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 cellar: :any, big_sur: "8f1e7974e4430e2c4bd2590c72ceecb1f02f186181fee836375d1492b64aa68e"
-    sha256 cellar: :any, catalina: "9a86c95e0358b98b9d8dcd614167d8e1812407ac1d070c83f52249bce71da960"
+    sha256 cellar: :any, catalina: "1bb52709a62c186f1e12913964fe1e8fae847150dbaa687f62b3fcf222df9299"
     sha256 cellar: :any, mojave: "9397fe237ff560ab6b2d8bf9003d876637c2eeba645d620f0ce2a2d36474ea78"
   end
 
