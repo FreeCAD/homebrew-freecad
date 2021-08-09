@@ -12,16 +12,16 @@ class PyqtAT5152 < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:  "7bb680628800decb3c84adc40081fa44f8151c5241ede9c5534af16fe41612e0"
-    sha256 cellar: :any, catalina: "25424bdc32b5a43929e637f2e6c0f1bc3b20bf03c13756ea7ba80bec819a9d43"
-    sha256 cellar: :any, mojave: "6b0a2fa3f3531cd22d41ca6d16b9a0383f7a8cfcf269ba3fbf96b01442754ea4"
+    sha256 cellar: :any, big_sur:   "7bb680628800decb3c84adc40081fa44f8151c5241ede9c5534af16fe41612e0"
+    sha256 cellar: :any, catalina:  "25424bdc32b5a43929e637f2e6c0f1bc3b20bf03c13756ea7ba80bec819a9d43"
+    sha256 cellar: :any, mojave:    "6b0a2fa3f3531cd22d41ca6d16b9a0383f7a8cfcf269ba3fbf96b01442754ea4"
   end
 
   keg_only "also provided by core"
 
-  depends_on "#{@tap}/python3.9"
-  depends_on "#{@tap}/qt5152"
-  depends_on "#{@tap}/sip@4.19.24"
+  depends_on "./python3.9"
+  depends_on "./qt5152"
+  depends_on "./sip@4.19.24"
 
   resource "PyQt5-sip" do
     url "https://files.pythonhosted.org/packages/73/8c/c662b7ebc4b2407d8679da68e11c2a2eb275f5f2242a92610f6e5024c1f2/PyQt5_sip-12.8.1.tar.gz"

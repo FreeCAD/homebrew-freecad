@@ -17,12 +17,12 @@ class Qt5152 < Formula
   end
 
   # Do not use bottles for ARM
-  if not Hardware::CPU.arm? 
+  unless Hardware::CPU.arm?
     bottle do
       root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-      sha256 cellar: :any, big_sur:  "9b3268db7be55f3c215d4a3221f28bae3dbaf8ed506222cc1b4a78b7e44a5936"
-      sha256 cellar: :any, catalina: "e71e5f33519372f3f9776fc159b9bce93891a1b3c2a6778aa0b1663abcb2f8c3"
-      sha256 cellar: :any, mojave: "90c50d7e849fd74a027a43cee39c98e613084f35cc46a8d7f96ab544f0f4e9e8"
+      sha256 cellar: :any, big_sur:   "9b3268db7be55f3c215d4a3221f28bae3dbaf8ed506222cc1b4a78b7e44a5936"
+      sha256 cellar: :any, catalina:  "e71e5f33519372f3f9776fc159b9bce93891a1b3c2a6778aa0b1663abcb2f8c3"
+      sha256 cellar: :any, mojave:    "90c50d7e849fd74a027a43cee39c98e613084f35cc46a8d7f96ab544f0f4e9e8"
     end
   end
 
@@ -43,7 +43,7 @@ class Qt5152 < Formula
     url "https://raw.githubusercontent.com/Homebrew/formula-patches/92d4cf/qt/5.15.2.diff"
     sha256 "fa99c7ffb8a510d140c02694a11e6c321930f43797dbf2fe8f2476680db4c2b2"
   end
-  
+
   # Patch for qmake on ARM
   # https://codereview.qt-project.org/c/qt/qtbase/+/327649
   if Hardware::CPU.arm?
@@ -71,7 +71,7 @@ class Qt5152 < Formula
       -pkg-config
       -dbus-runtime
     ]
-    
+
     if Hardware::CPU.arm?
       # Temporarily fixes for Apple Silicon
       args << "-skip" << "qtwebengine" << "-no-assimp"
@@ -113,7 +113,7 @@ class Qt5152 < Formula
       We agreed to the Qt open source license for you.
       If this is unacceptable you should uninstall.
     EOS
-    
+
     if Hardware::CPU.arm?
       s += <<~EOS
         This version of Qt on Apple Silicon does not include QtWebEngine

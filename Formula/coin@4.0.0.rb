@@ -3,6 +3,7 @@ class CoinAT400 < Formula
   homepage "https://coin3d.github.io"
   license all_of: ["BSD-3-Clause", "ISC"]
   revision 1
+  head "https://github.com/coin3d/coin"
 
   stable do
     url "https://github.com/coin3d/coin/archive/Coin-4.0.0.tar.gz"
@@ -11,9 +12,9 @@ class CoinAT400 < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:  "e34270b24601e67ca7b327dde71e543197e0aec36f2479ba04776e715bc151be"
-    sha256 cellar: :any, catalina: "8037f8df2be76c538df00748b3a561506d354bf3671151f9d6dd4c4c24e66d5e"
-    sha256 cellar: :any, mojave: "ef71692415587052053339145060eb03b2e9e774df7e7f3a8c9d64d3588ff739"
+    sha256 cellar: :any, big_sur:   "e34270b24601e67ca7b327dde71e543197e0aec36f2479ba04776e715bc151be"
+    sha256 cellar: :any, catalina:  "8037f8df2be76c538df00748b3a561506d354bf3671151f9d6dd4c4c24e66d5e"
+    sha256 cellar: :any, mojave:    "ef71692415587052053339145060eb03b2e9e774df7e7f3a8c9d64d3588ff739"
   end
 
   keg_only "provided by homebrew"
@@ -23,7 +24,7 @@ class CoinAT400 < Formula
 
   depends_on "cmake"   => :build
   depends_on "doxygen" => :build if build.with? "docs"
-  depends_on "#{@tap}/boost@1.75.0"
+  depends_on "./boost@1.75.0"
 
   def install
     cmake_args = std_cmake_args

@@ -6,16 +6,16 @@ class MedFile < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:  "21dc7b948d4bf3e022690bd075ed9f6e623c7d08088178f60a4f9f9acc70367c"
-    sha256 cellar: :any, catalina: "d66199bb1cbd71baf8f17bbef258fe64f02fe6f7cfc21427555f3c5b31297e1d"
-    sha256 cellar: :any, mojave: "112c796b6ae386478ee283bada3ce569d79638cd23abad655ca5f9c9d217b970"
+    sha256 cellar: :any, big_sur:   "21dc7b948d4bf3e022690bd075ed9f6e623c7d08088178f60a4f9f9acc70367c"
+    sha256 cellar: :any, catalina:  "d66199bb1cbd71baf8f17bbef258fe64f02fe6f7cfc21427555f3c5b31297e1d"
+    sha256 cellar: :any, mojave:    "112c796b6ae386478ee283bada3ce569d79638cd23abad655ca5f9c9d217b970"
   end
 
+  depends_on "./swig@4.0.2" => :build
   depends_on "cmake" => :build
   depends_on "gcc" => :build   # for gfortan
-  depends_on "#{@tap}/swig@4.0.2" => :build
+  depends_on "./python3.9"
   depends_on "hdf5@1.10"
-  depends_on "#{@tap}/python3.9"
 
   def install
     python_prefix=`#{Formula["#{@tap}/python3.9"].opt_bin}/python3-config --prefix`.chomp

@@ -8,17 +8,17 @@ class BoostPython3AT1750 < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 big_sur: "3dd7c81b4cf643895a8c3c7a514a3edd9249387e9251bad646eb51ff77873f1c"
-    sha256 catalina: "3b1bf01ad68f74b340a4a384347f25b7e6ca0d0180ded19fe28cbaa5330b77cd"
-    sha256 mojave: "127dec0257beeb7ca38db6e13897f14ed8397f0fac5df58e5b848d8fca57719a"
+    sha256 big_sur:   "3dd7c81b4cf643895a8c3c7a514a3edd9249387e9251bad646eb51ff77873f1c"
+    sha256 catalina:  "3b1bf01ad68f74b340a4a384347f25b7e6ca0d0180ded19fe28cbaa5330b77cd"
+    sha256 mojave:    "127dec0257beeb7ca38db6e13897f14ed8397f0fac5df58e5b848d8fca57719a"
   end
 
   keg_only "provided by homebrew core"
 
-  depends_on "#{@tap}/numpy@1.19.4" => :build
-  depends_on "#{@tap}/boost@1.75.0"
-  depends_on "#{@tap}/python3.9"
-  
+  depends_on "./numpy@1.19.4" => :build
+  depends_on "./boost@1.75.0"
+  depends_on "./python3.9"
+
   # Fix build system issues on Apple silicon. This change has aleady
   # been merged upstream, remove this patch once it lands in a release.
   patch do

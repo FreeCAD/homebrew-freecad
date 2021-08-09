@@ -6,7 +6,7 @@ class Qwtelmer < Formula
   license "LGPL-2.1-only" => { with: "Qwt-exception-1.0" }
   revision 1
 
-  depends_on "#{@tap}/qt5152"
+  depends_on "./qt5152"
 
   # Update designer plugin linking back to qwt framework/lib after install
   # See: https://sourceforge.net/p/qwt/patches/45/
