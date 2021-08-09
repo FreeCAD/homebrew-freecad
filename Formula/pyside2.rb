@@ -17,12 +17,13 @@ class Pyside2 < Formula
   option "without-docs", "Skip building documentation"
 
   depends_on "#{@tap}/python3.9" => :build
-
   depends_on "cmake" => :build
   depends_on "sphinx-doc" => :build if build.with? "docs"
   depends_on "#{@tap}/qt5152"
-
   depends_on "#{@tap}/shiboken2"
+
+  conflicts_with "pyside@2", because: "non app bundle of freecad could use wrong version"
+
 
   def install
     ENV.cxx11
