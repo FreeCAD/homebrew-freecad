@@ -8,9 +8,9 @@ class Opencamlib < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:  "8e81823c6b42837caf46f39f7ffae2d217e8080bd5cc21ff9092918e173e8c59"
-    sha256 cellar: :any, catalina: "695a0c707cc565aaa181049a2958e80fcaf21a76c573983e9d1314a19e90c8bd"
-    sha256 cellar: :any, mojave: "16e6e2a6eaba9a3fdaffd4d740895875559d35aa0be547cc3497cd1ac6e2c9d1"
+    sha256 cellar: :any, big_sur:   "8e81823c6b42837caf46f39f7ffae2d217e8080bd5cc21ff9092918e173e8c59"
+    sha256 cellar: :any, catalina:  "695a0c707cc565aaa181049a2958e80fcaf21a76c573983e9d1314a19e90c8bd"
+    sha256 cellar: :any, mojave:    "16e6e2a6eaba9a3fdaffd4d740895875559d35aa0be547cc3497cd1ac6e2c9d1"
   end
 
   depends_on "#{@tap}/boost-python3@1.75.0" => :build
@@ -20,8 +20,8 @@ class Opencamlib < Formula
   depends_on "cmake" => :build
 
   patch :p0 do
-    url "https://raw.githubusercontent.com/vejmarie/patches/master/OpenCAMlib/fix_mac.patch"
-    sha256 "e49a5a9ab1698019c53656f3ca6625db1b40012147998fd9b35f467917897295"
+    url "https://raw.githubusercontent.com/vejmarie/patches/fbecb644a38970e08874a4b357abe250b857a821/OpenCAMlib/fix_mac.patch"
+    sha256 "25218354e098796e9f043c4a01b25d1919b0bfdc0b9e42123c380359884e592d"
   end
 
   def install

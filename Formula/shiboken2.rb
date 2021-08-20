@@ -7,19 +7,19 @@ class Shiboken2 < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:  "9fcaf2c809c9d335bf6e7f3009ddfec63040051c8d9dff7f47d5430579319e5d"
-    sha256 cellar: :any, catalina: "94c2375a547b26b06128cd8705de6bd3f42f8a445dea5a2d9202040f9e61a033"
-    sha256 cellar: :any, mojave: "255d70b44f1c10afe32ee4aa996f1525be521f26a766384a61d3c252f45eeebf"
+    sha256 cellar: :any, big_sur:   "9fcaf2c809c9d335bf6e7f3009ddfec63040051c8d9dff7f47d5430579319e5d"
+    sha256 cellar: :any, catalina:  "94c2375a547b26b06128cd8705de6bd3f42f8a445dea5a2d9202040f9e61a033"
+    sha256 cellar: :any, mojave:    "255d70b44f1c10afe32ee4aa996f1525be521f26a766384a61d3c252f45eeebf"
   end
 
+  depends_on "./python3.9" => :build
   depends_on "cmake" => :build
+  depends_on "./numpy@1.19.4"
+  depends_on "./qt5152"
   depends_on "llvm"
-  depends_on "#{@tap}/numpy@1.19.4"
-  depends_on "#{@tap}/qt5152"
-  depends_on "#{@tap}/python3.9" => :build
 
   def install
-    qt = Formula["#{@tap}/qt5152"]
+    # qt = Formula["#{@tap}/qt5152"]
 
     ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
 

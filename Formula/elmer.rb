@@ -1,7 +1,7 @@
 class Elmer < Formula
   desc "CFD"
   homepage "https://www.csc.fi/web/elmer"
-  version "v10pre"
+  version "10pre"
   license "GPL-2.0-only"
   head "https://github.com/ElmerCSC/elmerfem.git", branch: "devel", shallow: false
 
@@ -14,7 +14,6 @@ class Elmer < Formula
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
   end
-
 
   depends_on "cmake" => :build
   depends_on "freecad/freecad/opencascade@7.5.0"

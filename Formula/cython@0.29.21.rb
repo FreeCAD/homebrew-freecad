@@ -12,9 +12,9 @@ class CythonAT02921 < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any_skip_relocation, big_sur:  "d3d1198be33a79623df1da0236ce0ab35d194f817745819248a5d65e82f5067f"
-    sha256 cellar: :any_skip_relocation, catalina: "780c1424d627c4f8a642f4c9323e09859e2fcece5c0f2c3b8868e77a907c692a"
-    sha256 cellar: :any_skip_relocation, mojave: "7cc93b079898a6e3cbd93618a860836f2b8e93aab44c418645e5f72d47f74935"
+    sha256 cellar: :any_skip_relocation, big_sur:   "d3d1198be33a79623df1da0236ce0ab35d194f817745819248a5d65e82f5067f"
+    sha256 cellar: :any_skip_relocation, catalina:  "780c1424d627c4f8a642f4c9323e09859e2fcece5c0f2c3b8868e77a907c692a"
+    sha256 cellar: :any_skip_relocation, mojave:    "7cc93b079898a6e3cbd93618a860836f2b8e93aab44c418645e5f72d47f74935"
   end
 
   keg_only <<~EOS
@@ -22,7 +22,7 @@ class CythonAT02921 < Formula
     Users are advised to use `pip` to install cython
   EOS
 
-  depends_on "#{@tap}/python3.9"
+  depends_on "./python3.9"
   def install
     xy = Language::Python.major_minor_version Formula["#{@tap}/python3.9"].opt_bin/"python3"
     ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python#{xy}/site-packages"
