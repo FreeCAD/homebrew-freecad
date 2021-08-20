@@ -13,10 +13,10 @@ class Opencamlib < Formula
     sha256 cellar: :any, mojave:    "16e6e2a6eaba9a3fdaffd4d740895875559d35aa0be547cc3497cd1ac6e2c9d1"
   end
 
-  depends_on "#{@tap}/boost-python3@1.75.0" => :build
-  depends_on "#{@tap}/boost@1.75.0" => :build
-  depends_on "#{@tap}/boost@1.75.0" => :build
-  depends_on "#{@tap}/python3.9" => :build
+  depends_on "./boost-python3@1.75.0" => :build
+  depends_on "./boost@1.75.0" => :build
+  depends_on "./boost@1.75.0" => :build
+  depends_on "./python3.9" => :build
   depends_on "cmake" => :build
 
   patch :p0 do
@@ -27,6 +27,6 @@ class Opencamlib < Formula
   def install
     args = std_cmake_args
     system "cmake", *args, "-DVERSION_STRING=#{version}", "-DBUILD_TYPE=Release", "-DUSE_OPENMP=0", "-DBUILD_PY_LIB=ON", "-DUSE_PY_3=TRUE", "-DPYTHON_VERSION_SUFFIX=3", "-DCMAKE_PREFIX_PATH=" + Formula["#{@tap}/boost@1.75.0"].opt_prefix+ "/lib/cmake;" + Formula["#{@tap}/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;", "."
-    system "make", "-j#{ENV.make_jobs}", "install"
+    system "make", "PYTHON_LIBS=-undefined dynamic_lookup", "-j#{ENV.make_jobs}", "install"
   end
 end
