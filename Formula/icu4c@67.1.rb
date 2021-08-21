@@ -19,7 +19,8 @@ class Icu4cAT671 < Formula
     sha256 cellar: :any, mojave:    "ef8f4a4e4266f0f82f367f0223028e13d092d8135ffa59c6635245f5a34f3b0f"
   end
 
-  keg_only :provided_by_macos, "macOS provides libicucore.dylib (but nothing else)"
+  # keg_only :provided_by_macos, "macOS provides libicucore.dylib (but nothing else)"
+  keg_only :versioned_formula # NOTE: not sure if this will work
 
   # fix C++14 compatibility of U_ASSERT macro.
   # Remove with next release (ICU 68).
