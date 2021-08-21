@@ -29,7 +29,8 @@ class Python39 < Formula
     satisfy { MacOS::CLT.installed? }
   end
 
-  keg_only "freeCAD python version only"
+  # NOTE: `keg_only` causes `brew audit` to fail
+  # keg_only "freeCAD python version only"
 
   depends_on "pkg-config" => :build
   depends_on "gdbm"
@@ -330,6 +331,13 @@ class Python39 < Formula
       version.to_s.slice(/(3\.\d)/) || "3.9"
     end
     <<~EOS
+
+      To use homebrew's provided python unlink this python and relink homebrew-core/python
+
+      ```
+      brew link python@3.9
+      ```
+
       Python has been installed as
         #{HOMEBREW_PREFIX}/bin/python3
 
