@@ -16,17 +16,19 @@ class Opencamlib < Formula
   depends_on "./boost-python3@1.75.0" => :build
   depends_on "./boost@1.75.0" => :build
   depends_on "./boost@1.75.0" => :build
-  depends_on "./python3.9" => :build
   depends_on "cmake" => :build
 
-  patch :p0 do
-    url "https://raw.githubusercontent.com/vejmarie/patches/fbecb644a38970e08874a4b357abe250b857a821/OpenCAMlib/fix_mac.patch"
-    sha256 "25218354e098796e9f043c4a01b25d1919b0bfdc0b9e42123c380359884e592d"
-  end
-
   def install
-    args = std_cmake_args
-    system "cmake", *args, "-DVERSION_STRING=#{version}", "-DBUILD_TYPE=Release", "-DUSE_OPENMP=0", "-DBUILD_PY_LIB=ON", "-DUSE_PY_3=TRUE", "-DPYTHON_VERSION_SUFFIX=3", "-DCMAKE_PREFIX_PATH=" + Formula["#{@tap}/boost@1.75.0"].opt_prefix+ "/lib/cmake;" + Formula["#{@tap}/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;", "."
-    system "make", "PYTHON_LIBS=-undefined dynamic_lookup", "-j#{ENV.make_jobs}", "install"
+    args = std_cmake_args + %W[
+      -DVERSION_STRING=#{version}
+      -DUSE_OPENMP=0
+      -DUSE_PY_3=TRUE
+      -DPYTHON_VERSION_SUFFIX=3
+    ]
+
+    mkdir "build" do
+      system "cmake", *args, ".."
+      system "make", "PYTHON_LIBS=-undefined dynamic_lookup", "install"
+    end
   end
 end
