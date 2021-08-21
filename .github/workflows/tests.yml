@@ -18,6 +18,7 @@ jobs:
         os: [ self-hosted-mojavevm, self-hosted-catalinavm, self-hosted-bigsurvm ]
         # os: [ self-hosted-mojavevm ]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 1200
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
