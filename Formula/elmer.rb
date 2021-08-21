@@ -29,16 +29,26 @@ class Elmer < Formula
   depends_on "xerces-c"
 
   def install
-    args = std_cmake_args + %w[
+    qwt_include_dir = Formula["#{@tap}/qwtelmer"].opt_prefix+"/lib/qwt.framework/Versions/Current/Headers/"
+    qwt_library = Formula["#{@tap}/qwtelmer"].opt_prefix+"/lib/qwt.framework/Versions/Current/qwt"
+
+    prefix_paths = ""
+    prefix_paths << Formula["#{@tap}/qt5152"].opt_prefix/"lib/cmake;"
+    prefix_paths << Formula["#{@tap}/vtk@8.2.0"].opt_prefix/"lib/cmake;"
+    prefix_paths << Formula["#{@tap}/opencascade@7.5.0"].opt_prefix/"lib/cmake;"
+
+    cmake_cflags = ""
+    cmake_cflags << '" -F' + Formula["#{@tap}/qwtelmer"].opt_prefix+"/lib/" + ' -framework qwt"'
+
+    args = std_cmake_args + %W[
+      -DQWT_INCLUDE_DIR=#{qwt_include_dir}
+      -DQWT_LIBRARY=#{qwt_library}
+      -DCMAKE_C_FLAGS=#{cmake_cflags}
       -DWITH_OpenMP:BOOLEAN=TRUE
       -DWITH_MPI:BOOLEAN=TRUE
       -DWITH_ELMERGUI:BOOLEAN=TRUE
       -DWITH_QT5:BOOLEAN=TRUE
     ]
-
-    args << "-DQWT_INCLUDE_DIR:STRING="+Formula["freecad/freecad/qwtelmer"].opt_prefix+"/lib/qwt.framework/Versions/Current/Headers/"
-    args << "-DQWT_LIBRARY:STRING="+Formula["freecad/freecad/qwtelmer"].opt_prefix+"/lib/qwt.framework/Versions/Current/qwt"
-    args << '-DCMAKE_PREFIX_PATH="' + Formula["freecad/freecad/qt5152"].opt_prefix + "/lib/cmake;" + Formula["freecad/freecad/vtk@8.2.0"].opt_prefix + "/lib/cmake;" + Formula["freecad/freecad/opencascade@7.5.0"].opt_prefix + "/lib/cmake;"+ '" -DCMAKE_C_FLAGS="-F' + Formula["freecad/freecad/qwtelmer"].opt_prefix+"/lib/" + ' -framework qwt"'
 
     mkdir "Build" do
       system "cmake", *args, ".."
