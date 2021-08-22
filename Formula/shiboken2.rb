@@ -15,7 +15,7 @@ class Shiboken2 < Formula
   end
 
   depends_on "cmake" => :build
-  depends_on "python@3.9" => :build
+  depends_on "./python3.9" => :build
   depends_on "./numpy@1.19.4"
   depends_on "./qt5152"
   depends_on "llvm"
