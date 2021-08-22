@@ -17,7 +17,7 @@ class NumpyAT1194 < Formula
     sha256 cellar: :any, mojave:    "1e3970703c7bbba46ef7f5399007a929e7b121d295443757f3d8bdfbcd9ec5fe"
   end
 
-  depends_on "./cython@0.29.21" => :build
+  depends_on "freecad/freecad/cython@0.29.21" => :build
   depends_on "gcc" => :build # for gfortran
   depends_on "freecad/freecad/python@3.9"
   depends_on "openblas"
@@ -43,17 +43,17 @@ class NumpyAT1194 < Formula
 
     Pathname("site.cfg").write config
 
-    version = Language::Python.major_minor_version Formula["#{@tap}/python3.9"].opt_bin/"python3"
+    version = Language::Python.major_minor_version Formula["#{@tap}/python@3.9"].opt_bin/"python3"
     ENV.prepend_create_path "PYTHONPATH", Formula["#{@tap}/cython@0.29.21"].opt_libexec/"lib/python#{version}/site-packages"
 
-    system Formula["#{@tap}/python3.9"].opt_bin/"python3", "setup.py",
+    system Formula["#{@tap}/python@3.9"].opt_bin/"python3", "setup.py",
       "build", "--fcompiler=gnu95", "--parallel=#{ENV.make_jobs}",
       "install", "--prefix=#{prefix}",
       "--single-version-externally-managed", "--record=installed.txt"
   end
 
   test do
-    system Formula["#{@tap}/python3.9"].opt_bin/"python3", "-c", <<~EOS
+    system Formula["#{@tap}/python@3.9"].opt_bin/"python3", "-c", <<~EOS
       import numpy as np
       t = np.ones((3,3), int)
       assert t.sum() == 9

@@ -54,8 +54,8 @@ class Matplotlib < Formula
 
   depends_on NoExternalPyCXXPackage => :build
   depends_on "pkg-config" => :build
-  depends_on "./numpy@1.19.4"
   depends_on DvipngRequirement if build.with? "tex"
+  depends_on "freecad/freecad/numpy@1.19.4"
   depends_on "freetype"
   depends_on "libpng"
   depends_on "py3cairo" if build.with?("cairo") && (build.with? "python3")
