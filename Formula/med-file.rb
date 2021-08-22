@@ -14,7 +14,7 @@ class MedFile < Formula
   depends_on "./swig@4.0.2" => :build
   depends_on "cmake" => :build
   depends_on "gcc" => :build   # for gfortan
-  depends_on "./python@3.9"
+  depends_on "freecad/freecad/python@3.9"
   depends_on "hdf5@1.10"
 
   def install

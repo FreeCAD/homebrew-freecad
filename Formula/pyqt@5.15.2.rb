@@ -18,9 +18,9 @@ class PyqtAT5152 < Formula
 
   keg_only "also provided by core"
 
-  depends_on "./python@3.9"
   depends_on "./qt5152"
   depends_on "./sip@4.19.24"
+  depends_on "freecad/freecad/python@3.9"
 
   resource "PyQt5-sip" do
     url "https://files.pythonhosted.org/packages/73/8c/c662b7ebc4b2407d8679da68e11c2a2eb275f5f2242a92610f6e5024c1f2/PyQt5_sip-12.8.1.tar.gz"
