@@ -17,7 +17,7 @@ class BoostPython3AT1750 < Formula
 
   depends_on "./numpy@1.19.4" => :build
   depends_on "./boost@1.75.0"
-  depends_on "./python3.9"
+  depends_on "freecad/freecad/python@3.9"
 
   # Fix build system issues on Apple silicon. This change has aleady
   # been merged upstream, remove this patch once it lands in a release.
