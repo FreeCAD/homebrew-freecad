@@ -1,9 +1,10 @@
 class Shiboken2 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
   homepage "https://doc.qt.io/qtforpython/shiboken2/"
-  url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=c7f4942dda0cf72032e7d8c601b1b32b22c4d8f0;sf=tgz"
-  version "5.15.2"
-  sha256 "be452e1479374b6cf59cf08e2604ef14405ffaaab82e54861978310ae08ac8ad"
+  url "http://code.qt.io/cgit/pyside/pyside-setup.git",
+    tag:      "v5.15.2",
+    revision: "ef19637b7eab165accb8c3b0686061b21745ab74"
+  license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
   head "https://code.qt.io/pyside/pyside-setup.git", branch: "5.15.2"
 
   bottle do
