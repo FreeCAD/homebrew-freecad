@@ -3,7 +3,7 @@ class Shiboken2 < Formula
   homepage "https://doc.qt.io/qtforpython/shiboken2/"
   url "https://codereview.qt-project.org/gitweb?p=pyside/pyside-setup.git;a=snapshot;h=c7f4942dda0cf72032e7d8c601b1b32b22c4d8f0;sf=tgz"
   version "5.15.2"
-  sha256 "61b7ffb05ef0c42a0ad6b48e9b5a926e9e016cabf0a6881396ebe53e3a505f61"
+  sha256 "be452e1479374b6cf59cf08e2604ef14405ffaaab82e54861978310ae08ac8ad"
   head "https://code.qt.io/pyside/pyside-setup.git", branch: "5.15.2"
 
   bottle do
