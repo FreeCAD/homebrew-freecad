@@ -20,7 +20,7 @@ class VtkAT820 < Formula
   depends_on "cmake" => :build
   depends_on "./boost@1.75.0"
   depends_on "./pyqt@5.15.2"
-  depends_on "./python3.9"
+  depends_on "./python@3.9"
   depends_on "./qt5152"
   depends_on "fontconfig"
   depends_on "hdf5"
@@ -72,7 +72,7 @@ class VtkAT820 < Formula
       -DVTK_USE_SYSTEM_ZLIB=ON
       -DVTK_WRAP_PYTHON=ON
       -DVTK_PYTHON_VERSION=3
-      -DPYTHON_EXECUTABLE=#{Formula["#{@tap}/python3.9"].opt_bin}/python3
+      -DPYTHON_EXECUTABLE=#{Formula["#{@tap}/python@3.9"].opt_bin}/python3
       -DVTK_INSTALL_PYTHON_MODULE_DIR=#{lib}/python#{pyver}/site-packages
       -DVTK_QT_VERSION:STRING=5
       -DVTK_Group_Qt=ON

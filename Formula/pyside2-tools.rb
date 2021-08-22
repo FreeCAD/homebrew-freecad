@@ -14,7 +14,7 @@ class Pyside2Tools < Formula
     sha256 cellar: :any, mojave:    "e922a0334ac11e4bf3948daf91f6d7e13f6df30fc70707e2c845dcc916b6b963"
   end
 
-  depends_on "./python3.9" => :build
+  depends_on "./python@3.9" => :build
   depends_on "cmake" => :build
   depends_on "./pyside2"
 

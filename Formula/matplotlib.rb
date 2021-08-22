@@ -59,7 +59,7 @@ class Matplotlib < Formula
   depends_on "freetype"
   depends_on "libpng"
   depends_on "py3cairo" if build.with?("cairo") && (build.with? "python3")
-  depends_on "./python3.9" => :recommended
+  depends_on "./python@3.9" => :recommended
 
   requires_py3 = []
   requires_py3 << "with-python3"
@@ -101,8 +101,8 @@ class Matplotlib < Formula
   end
 
   def install
-    system Formula["#{@tap}/python3.9"].opt_bin.to_s+"/pip3", "install", "pytz"
-    system Formula["#{@tap}/python3.9"].opt_bin.to_s+"/python3", "-mpip", "install", "--prefix=#{prefix}", "."
+    system Formula["#{@tap}/python@3.9"].opt_bin.to_s+"/pip3", "install", "pytz"
+    system Formula["#{@tap}/python@3.9"].opt_bin.to_s+"/python3", "-mpip", "install", "--prefix=#{prefix}", "."
     version = "3.9"
     bundle_path = libexec/"lib/python#{version}/site-packages"
     bundle_path.mkpath
@@ -115,12 +115,12 @@ class Matplotlib < Formula
     p(*Language::Python.setup_install_args(libexec))
     res.each do |r|
       resource(r).stage do
-        system Formula["#{@tap}/python3.9"].opt_bin.to_s+"/python3", *Language::Python.setup_install_args(libexec)
+        system Formula["#{@tap}/python@3.9"].opt_bin.to_s+"/python3", *Language::Python.setup_install_args(libexec)
       end
     end
     (lib/"python#{version}/site-packages/homebrew-matplotlib-bundle.pth").write "#{bundle_path}\n"
 
-    system Formula["#{@tap}/python3.9"].opt_bin.to_s+"/python3", *Language::Python.setup_install_args(prefix)
+    system Formula["#{@tap}/python@3.9"].opt_bin.to_s+"/python3", *Language::Python.setup_install_args(prefix)
   end
 
   def caveats

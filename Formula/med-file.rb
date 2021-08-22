@@ -14,11 +14,11 @@ class MedFile < Formula
   depends_on "./swig@4.0.2" => :build
   depends_on "cmake" => :build
   depends_on "gcc" => :build   # for gfortan
-  depends_on "./python3.9"
+  depends_on "./python@3.9"
   depends_on "hdf5@1.10"
 
   def install
-    python_prefix=`#{Formula["#{@tap}/python3.9"].opt_bin}/python3-config --prefix`.chomp
+    python_prefix=`#{Formula["#{@tap}/python@3.9"].opt_bin}/python3-config --prefix`.chomp
     python_include=Dir["#{python_prefix}/include/*"].first
 
     # ENV.cxx11

@@ -17,7 +17,7 @@ class Elmer < Formula
 
   depends_on "cmake" => :build
   depends_on "freecad/freecad/opencascade@7.5.0"
-  depends_on "freecad/freecad/python3.9"
+  depends_on "freecad/freecad/python@3.9"
   depends_on "freecad/freecad/qt5152"
   depends_on "freecad/freecad/qwtelmer"
   depends_on "freecad/freecad/vtk@8.2.0"

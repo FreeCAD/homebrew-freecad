@@ -21,10 +21,10 @@ class SipAT41924 < Formula
 
   keg_only "provided by homebrew core"
 
-  depends_on "./python3.9"
+  depends_on "./python@3.9"
 
   def install
-    ENV.prepend_path "PATH", Formula["#{@tap}/python3.9"].opt_bin
+    ENV.prepend_path "PATH", Formula["#{@tap}/python@3.9"].opt_bin
     ENV.delete("SDKROOT") # Avoid picking up /Application/Xcode.app paths
 
     if build.head?

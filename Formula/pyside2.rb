@@ -16,7 +16,7 @@ class Pyside2 < Formula
 
   option "without-docs", "Skip building documentation"
 
-  depends_on "./python3.9" => :build
+  depends_on "./python@3.9" => :build
   depends_on "cmake" => :build
   depends_on "sphinx-doc" => :build if build.with? "docs"
   depends_on "./qt5152"
@@ -35,7 +35,7 @@ class Pyside2 < Formula
 
     # Add out of tree build because one of its deps, shiboken, itself needs an
     # out of tree build in shiboken.rb.
-    pyhome = `#{Formula["#{@tap}/python3.9"].opt_bin}/python3.9-config --prefix`.chomp
+    pyhome = `#{Formula["#{@tap}/python@3.9"].opt_bin}/python3.9-config --prefix`.chomp
     py_library = "#{pyhome}/lib/libpython3.9.dylib"
     py_include = "#{pyhome}/include/python3.9"
 
