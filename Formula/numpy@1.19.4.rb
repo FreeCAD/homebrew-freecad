@@ -19,7 +19,7 @@ class NumpyAT1194 < Formula
 
   depends_on "freecad/freecad/cython@0.29.21" => :build
   depends_on "gcc" => :build # for gfortran
-  depends_on "freecad/freecad/python@3.9"
+  depends_on "python@3.9"
   depends_on "openblas"
 
   # Upstream fix for Apple Silicon, remove in next version
@@ -43,13 +43,20 @@ class NumpyAT1194 < Formula
 
     Pathname("site.cfg").write config
 
-    version = Language::Python.major_minor_version Formula["#{@tap}/python@3.9"].opt_bin/"python3"
-    ENV.prepend_create_path "PYTHONPATH", Formula["#{@tap}/cython@0.29.21"].opt_libexec/"lib/python#{version}/site-packages"
+    # version = Language::Python.major_minor_version Formula["#{@tap}/python@3.9"].opt_bin/"python3"
+    # ENV.prepend_create_path "PYTHONPATH", Formula["#{@tap}/cython@0.29.21"].opt_libexec/"lib/python#{version}/site-packages"
 
-    system Formula["#{@tap}/python@3.9"].opt_bin/"python3", "setup.py",
-      "build", "--fcompiler=gnu95", "--parallel=#{ENV.make_jobs}",
-      "install", "--prefix=#{prefix}",
-      "--single-version-externally-managed", "--record=installed.txt"
+    # system Formula["#{@tap}/python@3.9"].opt_bin/"python3", "setup.py",
+    #   "build", "--fcompiler=gnu95", "--parallel=#{ENV.make_jobs}",
+    #   "install", "--prefix=#{prefix}",
+    #   "--single-version-externally-managed", "--record=installed.txt"
+
+      xy = Language::Python.major_minor_version Formula["python@3.9"].opt_bin/"python3"
+      ENV.prepend_create_path "PYTHONPATH", Formula["cython"].opt_libexec/"lib/python#{xy}/site-packages"
+
+      system Formula["python@3.9"].opt_bin/"python3", "setup.py", "build",
+        "--fcompiler=gfortran", "--parallel=#{ENV.make_jobs}"
+      system Formula["python@3.9"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
   end
 
   test do
