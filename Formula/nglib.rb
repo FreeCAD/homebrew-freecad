@@ -1,29 +1,34 @@
 class Nglib < Formula
   desc "C++ Library of NETGEN's tetrahedral mesh generator"
   homepage "https://github.com/ngsolve/netgen"
-  url "https://github.com/ngsolve/netgen.git", 
-    tag: "v6.2.2101",
+  url "https://github.com/ngsolve/netgen.git",
+    tag:      "v6.2.2101",
     revision: "5e489319c60926daa836cecff39f0e92779032ba"
   license "LGPL-2.1"
   head "https://github.com/ngsolve/netgen.git"
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur: "8f1e7974e4430e2c4bd2590c72ceecb1f02f186181fee836375d1492b64aa68e"
-    sha256 cellar: :any, catalina: "1bb52709a62c186f1e12913964fe1e8fae847150dbaa687f62b3fcf222df9299"
-    sha256 cellar: :any, mojave: "9397fe237ff560ab6b2d8bf9003d876637c2eeba645d620f0ce2a2d36474ea78"
+    sha256 cellar: :any, big_sur:   "8f1e7974e4430e2c4bd2590c72ceecb1f02f186181fee836375d1492b64aa68e"
+    sha256 cellar: :any, catalina:  "1bb52709a62c186f1e12913964fe1e8fae847150dbaa687f62b3fcf222df9299"
+    sha256 cellar: :any, mojave:    "9397fe237ff560ab6b2d8bf9003d876637c2eeba645d620f0ce2a2d36474ea78"
   end
 
   depends_on "cmake" => :build
-
-  depends_on "#{@tap}/opencascade@7.5.0"
+  depends_on "./opencascade@7.5.0"
 
   def install
-    inreplace "CMakeLists.txt", "find_package(OpenCasCade REQUIRED)",
-"find_package(OpenCasCade REQUIRED HINTS \""+Formula["#{@tap}/opencascade@7.5.0"].opt_lib+"/cmake/opencascade\")\n   set(OCC_INCLUDE_DIR ${OpenCASCADE_INCLUDE_DIR})\n   message(${OpenCASCADE_INCLUDE_DIR})"
+    cmake_prefix_path = Formula["#{@tap}/opencascade@7.5.0"].opt_prefix + "/lib/cmake;"
+
+    args = std_cmake_args + %W[
+      -DUSE_PYTHON=OFF
+      -DUSE_GUI=OFF
+      -DUSE_OCC=ON
+      -DCMAKE_PREFIX_PATH=#{cmake_prefix_path}
+    ]
+
     mkdir "Build" do
-      system "cmake", "-DUSE_PYTHON=OFF", "-DUSE_GUI=OFF", "-DUSE_OCC=ON",
-   '-DCMAKE_PREFIX_PATH="' + Formula["#{@tap}/opencascade@7.5.0"].opt_prefix + "/lib/cmake;", *std_cmake_args, ".."
+      system "cmake", *args, ".."
       system "make", "-j#{ENV.make_jobs}", "install"
     end
 

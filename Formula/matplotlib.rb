@@ -42,9 +42,9 @@ class Matplotlib < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:  "150759a0b8ea4e159e0a4ed1229340775e90ab6b47ab397fe1ec040250ceef94"
-    sha256 cellar: :any, catalina: "7f3d19de027ab6dd81e6b6021315682bcfe54f410bb29a1fb1cea0ba0a8515eb"
-    sha256 cellar: :any, mojave: "5331f0dca64b5d8a583944c6d597937833943ebc02ab3da54762baccd6d38620"
+    sha256 cellar: :any, big_sur:   "150759a0b8ea4e159e0a4ed1229340775e90ab6b47ab397fe1ec040250ceef94"
+    sha256 cellar: :any, catalina:  "7f3d19de027ab6dd81e6b6021315682bcfe54f410bb29a1fb1cea0ba0a8515eb"
+    sha256 cellar: :any, mojave:    "5331f0dca64b5d8a583944c6d597937833943ebc02ab3da54762baccd6d38620"
   end
 
   option "with-cairo", "Build with cairo backend support"
@@ -54,26 +54,25 @@ class Matplotlib < Formula
 
   depends_on NoExternalPyCXXPackage => :build
   depends_on "pkg-config" => :build
-  depends_on "#{@tap}/numpy@1.19.4"
+  depends_on "./numpy@1.19.4"
   depends_on DvipngRequirement if build.with? "tex"
   depends_on "freetype"
   depends_on "libpng"
   depends_on "py3cairo" if build.with?("cairo") && (build.with? "python3")
-  depends_on "#{@tap}/python3.9" => :recommended
+  depends_on "./python3.9" => :recommended
 
   requires_py3 = []
   requires_py3 << "with-python3"
   depends_on "ghostscript" => :optional
   depends_on "gtk+3" => :optional
   depends_on "pygobject3" => requires_py3 if build.with? "gtk+3"
-  depends_on "pygobject" => :optional
   depends_on "tcl-tk" => :optional
 
   cxxstdlib_check :skip
 
   resource "setuptools" do
-    url "https://pypi.python.org/packages/e9/c3/5986db56819bd88e1a250cad2a97249211686b1b7b5d95f9ab64d403a2cb/setuptools-38.2.5.zip"
-    sha256 "b080f276cc868670540b2c03cee06cc14d2faf9da7bec0f15058d1b402c94507"
+    url "https://files.pythonhosted.org/packages/db/e2/c0ced9ccffb61432305665c22842ea120c0f649eec47ecf2a45c596707c4/setuptools-57.4.0.tar.gz"
+    sha256 "6bac238ffdf24e8806c61440e755192470352850f3419a52f26ffe0a1a64f465"
   end
 
   resource "Cycler" do

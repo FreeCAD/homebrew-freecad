@@ -1,6 +1,6 @@
 class Freecad < Formula
   desc "Parametric 3D modeler"
-  homepage "http://www.freecadweb.org"
+  homepage "https://www.freecadweb.org"
   version "0.19"
   license "GPL-2.0-only"
   head "https://github.com/freecad/FreeCAD.git", branch: "master", shallow: false
@@ -12,7 +12,7 @@ class Freecad < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 big_sur:  "ea3f380ce4998d4fcb82d2dd7139957c4865b35dfbbab18d8d0479676e91aa14"
+    sha256 big_sur: "ea3f380ce4998d4fcb82d2dd7139957c4865b35dfbbab18d8d0479676e91aa14"
     # sha256 catalina: "8ef75eb7cea8ca34dc4037207fb213332b9ed27976106fd83c31de1433c2dd29"
   end
 
@@ -23,30 +23,30 @@ class Freecad < Formula
   option "with-unsecured-cloud", "Build with self signed certificate support CLOUD module"
   option "with-skip-web", "Disable web"
 
+  depends_on "./swig@4.0.2" => :build
   depends_on "ccache" => :build
   depends_on "cmake" => :build
-  depends_on "#{@tap}/swig@4.0.2" => :build
-  depends_on "#{@tap}/boost@1.75.0"
-  depends_on "#{@tap}/boost-python3@1.75.0"
-  depends_on "#{@tap}/coin@4.0.0"
-  depends_on "#{@tap}/matplotlib"
-  depends_on "#{@tap}/med-file"
-  depends_on "#{@tap}/nglib"
-  depends_on "#{@tap}/opencamlib"
-  depends_on "#{@tap}/pivy"
-  depends_on "#{@tap}/pyside2"
-  depends_on "#{@tap}/pyside2-tools"
-  depends_on "#{@tap}/shiboken2"
+  depends_on "./boost-python3@1.75.0"
+  depends_on "./boost@1.75.0"
+  depends_on "./coin@4.0.0"
+  depends_on "./matplotlib"
+  depends_on "./med-file"
+  depends_on "./nglib"
+  depends_on "./opencamlib"
+  depends_on "./opencascade@7.5.0"
+  depends_on "./pivy"
+  depends_on "./pyside2"
+  depends_on "./pyside2-tools"
+  depends_on "./python3.9"
+  depends_on "./qt5152"
+  depends_on "./shiboken2"
+  depends_on "./vtk@8.2.0"
   depends_on "freetype"
   depends_on macos: :high_sierra # no access to sierra test box
   depends_on "open-mpi"
   depends_on "openblas"
-  depends_on "#{@tap}/opencascade@7.5.0"
   depends_on "orocos-kdl"
   depends_on "pkg-config"
-  depends_on "#{@tap}/python3.9"
-  depends_on "#{@tap}/qt5152"
-  depends_on "#{@tap}/vtk@8.2.0"
   depends_on "webp"
   depends_on "xerces-c"
 
@@ -73,10 +73,10 @@ class Freecad < Formula
     prefix_paths << Formula["#{@tap}/coin@4.0.0"].opt_prefix+ "/lib/cmake;"
     prefix_paths << Formula["#{@tap}/boost@1.75.0"].opt_prefix+ "/lib/cmake;"
     prefix_paths << Formula["#{@tap}/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;"
-    
+
     # Disable function which are not available for Apple Silicon
-    act = Hardware::CPU.arm? ? 'OFF' : 'ON'
-    web = build.with?("skip-web") ? 'OFF' : act
+    act = Hardware::CPU.arm? ? "OFF" : "ON"
+    web = build.with?("skip-web") ? "OFF" : act
 
     args = std_cmake_args + %W[
       -DBUILD_QT5=ON

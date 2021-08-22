@@ -14,12 +14,13 @@ class Icu4cAT671 < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:  "550f2586ae316232721903c627a53932a9a2f2032cade00ed31ec5dab3e2727e"
-    sha256 cellar: :any, catalina: "02832f36ac5c5e7e3003c40b7b0abdc76026010f9be5b9a50d3c092d27aacc14"
-    sha256 cellar: :any, mojave: "ef8f4a4e4266f0f82f367f0223028e13d092d8135ffa59c6635245f5a34f3b0f"
+    sha256 cellar: :any, big_sur:   "550f2586ae316232721903c627a53932a9a2f2032cade00ed31ec5dab3e2727e"
+    sha256 cellar: :any, catalina:  "02832f36ac5c5e7e3003c40b7b0abdc76026010f9be5b9a50d3c092d27aacc14"
+    sha256 cellar: :any, mojave:    "ef8f4a4e4266f0f82f367f0223028e13d092d8135ffa59c6635245f5a34f3b0f"
   end
 
-  keg_only :provided_by_macos, "macOS provides libicucore.dylib (but nothing else)"
+  # keg_only :provided_by_macos, "macOS provides libicucore.dylib (but nothing else)"
+  keg_only :versioned_formula # NOTE: not sure if this will work
 
   # fix C++14 compatibility of U_ASSERT macro.
   # Remove with next release (ICU 68).

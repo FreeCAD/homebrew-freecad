@@ -15,9 +15,9 @@ class Python39 < Formula
   # build packages later. Xcode-only systems need different flags.
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 big_sur:  "847f0924e04052940cb66733267e31d3338131822863d1ff73d4cc5d5c90005b"
-    sha256 catalina: "5448b5eb25fde4859c568821e59bfb5d488eb1f00bce5ecd97a545585f411aca"
-    sha256 mojave: "61de7dda67b35e2e5584b7d491a04912f5b25c15a5049cd1bff90e027810a4cd"
+    sha256 big_sur:   "847f0924e04052940cb66733267e31d3338131822863d1ff73d4cc5d5c90005b"
+    sha256 catalina:  "5448b5eb25fde4859c568821e59bfb5d488eb1f00bce5ecd97a545585f411aca"
+    sha256 mojave:    "61de7dda67b35e2e5584b7d491a04912f5b25c15a5049cd1bff90e027810a4cd"
   end
 
   pour_bottle? do
@@ -29,7 +29,8 @@ class Python39 < Formula
     satisfy { MacOS::CLT.installed? }
   end
 
-  keg_only "freeCAD python version only"
+  # NOTE: `keg_only` causes `brew audit` to fail
+  # keg_only "freeCAD python version only"
 
   depends_on "pkg-config" => :build
   depends_on "gdbm"
@@ -330,6 +331,13 @@ class Python39 < Formula
       version.to_s.slice(/(3\.\d)/) || "3.9"
     end
     <<~EOS
+
+      To use homebrew's provided python unlink this python and relink homebrew-core/python
+
+      ```
+      brew link python@3.9
+      ```
+
       Python has been installed as
         #{HOMEBREW_PREFIX}/bin/python3
 

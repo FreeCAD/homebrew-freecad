@@ -14,14 +14,14 @@ class SipAT41924 < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any_skip_relocation, big_sur:  "a3e1a54c30560552e7c4dc4bd0da95925be88c7eef2a9349b72e11b24f827616"
-    sha256 cellar: :any_skip_relocation, catalina: "c3b3dafcf16f0e65bea4ba6daf62d8e15394ee7201073008a7c7aa22c9864e81"
-    sha256 cellar: :any_skip_relocation, mojave: "b40db60f080738c764b35d9ebffac8455455ceda258da914b7b2cbbc89939e9e"
+    sha256 cellar: :any_skip_relocation, big_sur:   "a3e1a54c30560552e7c4dc4bd0da95925be88c7eef2a9349b72e11b24f827616"
+    sha256 cellar: :any_skip_relocation, catalina:  "c3b3dafcf16f0e65bea4ba6daf62d8e15394ee7201073008a7c7aa22c9864e81"
+    sha256 cellar: :any_skip_relocation, mojave:    "b40db60f080738c764b35d9ebffac8455455ceda258da914b7b2cbbc89939e9e"
   end
 
   keg_only "provided by homebrew core"
 
-  depends_on "#{@tap}/python3.9"
+  depends_on "./python3.9"
 
   def install
     ENV.prepend_path "PATH", Formula["#{@tap}/python3.9"].opt_bin

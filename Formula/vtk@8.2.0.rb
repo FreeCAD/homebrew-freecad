@@ -8,9 +8,9 @@ class VtkAT820 < Formula
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 big_sur:  "cc762d3f3a9a2c851ef3ca3447129ab93ddd9eb788024c962200e4158b04fef0"
-    sha256 catalina: "da4cf1a9a932149b920c60290b4dc139a62f73abce12389fb25053a5fff42a4a"
-    sha256 mojave: "c6a75251b49509fc50a4d2381f78c74c775af3cd14690d94692cd73ef1bcd8f3"
+    sha256 big_sur:   "cc762d3f3a9a2c851ef3ca3447129ab93ddd9eb788024c962200e4158b04fef0"
+    sha256 catalina:  "da4cf1a9a932149b920c60290b4dc139a62f73abce12389fb25053a5fff42a4a"
+    sha256 mojave:    "c6a75251b49509fc50a4d2381f78c74c775af3cd14690d94692cd73ef1bcd8f3"
   end
 
   keg_only :versioned_formula
@@ -18,16 +18,16 @@ class VtkAT820 < Formula
   deprecate! date: "2020-05-14", because: :versioned_formula
 
   depends_on "cmake" => :build
-  depends_on "#{@tap}/boost@1.75.0"
+  depends_on "./boost@1.75.0"
+  depends_on "./pyqt@5.15.2"
+  depends_on "./python3.9"
+  depends_on "./qt5152"
   depends_on "fontconfig"
   depends_on "hdf5"
   depends_on "jpeg"
   depends_on "libpng"
   depends_on "libtiff"
   depends_on "netcdf"
-  depends_on "#{@tap}/pyqt@5.15.2"
-  depends_on "#{@tap}/python3.9"
-  depends_on "#{@tap}/qt5152"
 
   # Fix compile issues on Mojave and later
   patch do
