@@ -1,7 +1,7 @@
 class MedFile < Formula
   desc "Modeling and Data Exchange standardized format library"
   homepage "https://www.salome-platform.org/"
-  url "http://files.salome-platform.org/Salome/other/med-4.0.0.tar.gz"
+  url "https://files.salome-platform.org/Salome/other/med-4.0.0.tar.gz"
   sha256 "a474e90b5882ce69c5e9f66f6359c53b8b73eb448c5f631fa96e8cd2c14df004"
 
   bottle do
