@@ -59,7 +59,7 @@ class Matplotlib < Formula
   depends_on "freetype"
   depends_on "libpng"
   depends_on "py3cairo" if build.with?("cairo") && (build.with? "python3")
-  depends_on "./python@3.9" => :recommended
+  depends_on "freecad/freecad/python@3.9" => :recommended
 
   requires_py3 = []
   requires_py3 << "with-python3"
