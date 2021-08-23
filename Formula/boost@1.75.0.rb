@@ -5,8 +5,8 @@ class BoostAT1750 < Formula
   mirror "https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.tar.gz"
   sha256 "953db31e016db7bb207f11432bef7df100516eeb746843fa0486a222e3fd49cb"
   license "BSL-1.0"
-  revision 1
   head "https://github.com/boostorg/boost.git"
+  revision 1
 
   livecheck do
     url "https://www.boost.org/feed/downloads.rss"
