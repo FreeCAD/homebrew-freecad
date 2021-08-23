@@ -5,6 +5,7 @@ class Icu4cAT671 < Formula
   version "67.1"
   sha256 "94a80cd6f251a53bd2a997f6f1b5ac6653fe791dfab66e1eb0227740fb86d5dc"
   license "ICU"
+  revision 1
 
   livecheck do
     url :stable
