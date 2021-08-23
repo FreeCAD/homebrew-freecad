@@ -1,6 +1,7 @@
 class SwigAT402 < Formula
   desc "Generate scripting interfaces to C/C++ code"
   homepage "http://www.swig.org/"
+  # NOTE: see github issue, https://github.com/swig/swig/issues/2069
   url "https://downloads.sourceforge.net/project/swig/swig/swig-4.0.2/swig-4.0.2.tar.gz"
   sha256 "d53be9730d8d58a16bf0cbd1f8ac0c0c3e1090573168bfa151b01eb47fa906fc"
   license "GPL-3.0"
