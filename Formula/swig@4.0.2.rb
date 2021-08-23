@@ -11,10 +11,11 @@ class SwigAT402 < Formula
   end
 
   bottle do
-    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 big_sur:   "ed574acdb012636fb46ddbf0e4e362f26165aa530d34d26968dece33deb50f14"
-    sha256 catalina:  "bc218307d7a855276c2d97ceb81c4cac4d48c60f3be41e231bd62cde3629ba61"
-    sha256 mojave:    "c578d445d46d8571ccdb04aaf10cfcfb9c4fd8c7d3b1feed33b7beebb944d6ad"
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/swig@4.0.2-4.0.2"
+    rebuild 1
+    sha256 big_sur:  "6d1109b1894ae784f4aa9e03ab0e0dbc48f4de339841f47240811121119e11ed"
+    sha256 catalina: "3e7f3b3d88495cc04cff92584727eaff1687521537dfff88d468d5f1a6dde0fd"
+    sha256 mojave:   "1ff0f1b7c3e4e93b58ab42e3ecdcae8526c9c7e563cffea5fbb71f196943788e"
   end
 
   head do
