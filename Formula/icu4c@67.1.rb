@@ -14,10 +14,10 @@ class Icu4cAT671 < Formula
   end
 
   bottle do
-    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:   "550f2586ae316232721903c627a53932a9a2f2032cade00ed31ec5dab3e2727e"
-    sha256 cellar: :any, catalina:  "02832f36ac5c5e7e3003c40b7b0abdc76026010f9be5b9a50d3c092d27aacc14"
-    sha256 cellar: :any, mojave:    "ef8f4a4e4266f0f82f367f0223028e13d092d8135ffa59c6635245f5a34f3b0f"
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/icu4c@67.1-67.1_1"
+    sha256 cellar: :any, big_sur:  "03252e22613daa49b305e81d7b672c1a97fbbe2027a3caeb49145d5f978fa8e9"
+    sha256 cellar: :any, catalina: "943048d1baea58ad6ac306cf8920bca5aceebbd4515cf7a9eeeed6977a338f3a"
+    sha256 cellar: :any, mojave:   "46ad19d62a48c4728fec035321a5943044ce5d2a81e251f046512ed53f6edfa3"
   end
 
   # keg_only :provided_by_macos, "macOS provides libicucore.dylib (but nothing else)"
