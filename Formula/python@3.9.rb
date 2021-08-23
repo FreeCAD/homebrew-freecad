@@ -11,6 +11,13 @@ class PythonAT39 < Formula
     regex(%r{href=.*?v?(3\.9(?:\.\d+)*)/?["' >]}i)
   end
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/python@3.9-3.9.6"
+    sha256 big_sur:  "a182b6388e1c4c29ad6a67bc0ee1428d58c9d8b7cd9ac01cee3836406caa5e92"
+    sha256 catalina: "054aa3760d27e296148b11537e913bbf06a3391316913493d5b70ad474cae96a"
+    sha256 mojave:   "0b83067de8e077c6d1a1a28b4a25afc4ad018834153a6c8405bcec4cca305b0f"
+  end
+
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
   pour_bottle? only_if: :clt_installed
