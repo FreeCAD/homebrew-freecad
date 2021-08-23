@@ -14,10 +14,10 @@ class BoostAT1750 < Formula
   end
 
   bottle do
-    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:   "99aa624e3a19ba01458f9e0be8dcdcfb8df90feabc4728b188682d9174b05f09"
-    sha256 cellar: :any, catalina:  "21fc3612d49249ff563dacedb633dbf8050a8e1ab3feb0100395a500fa610624"
-    sha256 cellar: :any, mojave:    "cb1e5edaae98dea622383949f8279fbd44ad2cbc9bc21645f4880e7d70d323a6"
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/boost@1.75.0-1.75.0_1"
+    sha256 cellar: :any, big_sur:  "c06a2fa701e76bd328f8ddd4d5d2bc9eb82ac6491e400b3f2c345bf8c4a2be5d"
+    sha256 cellar: :any, catalina: "e11f4b4f6f06c130862533f3755a88fdf7cebce921c0bff0e1b0a0d48a6d8bb5"
+    sha256 cellar: :any, mojave:   "e05374614574f4f3a3bcc9734eebce31e965a70dc2d41df60376898115c79a86"
   end
 
   depends_on "freecad/freecad/icu4c@67.1"
