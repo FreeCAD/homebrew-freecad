@@ -10,7 +10,7 @@ class PythonAT39 < Formula
     regex(%r{href=.*?v?(3\.8(?:\.\d+)*)/?["' >]}i)
   end
 
-  # setuptools remembers the build flags python is built with and uses them to
+  # setuptools remembers the build flags python is built with and, uses them to
   # build packages later. Xcode-only systems need different flags.
   pour_bottle? only_if: :clt_installed
 
