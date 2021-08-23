@@ -6,6 +6,7 @@ class BoostAT1750 < Formula
   sha256 "953db31e016db7bb207f11432bef7df100516eeb746843fa0486a222e3fd49cb"
   license "BSL-1.0"
   head "https://github.com/boostorg/boost.git"
+  revision 1
 
   livecheck do
     url "https://www.boost.org/feed/downloads.rss"
@@ -19,7 +20,7 @@ class BoostAT1750 < Formula
     sha256 cellar: :any, mojave:    "cb1e5edaae98dea622383949f8279fbd44ad2cbc9bc21645f4880e7d70d323a6"
   end
 
-  depends_on "./icu4c@67.1"
+  depends_on "freecad/freecad/icu4c@67.1"
 
   uses_from_macos "bzip2"
   uses_from_macos "zlib"
