@@ -43,17 +43,20 @@ class NumpyAT1194 < Formula
 
     Pathname("site.cfg").write config
 
-    version = Language::Python.major_minor_version Formula["#{@tap}/python@3.9"].opt_bin/"python3"
-    ENV.prepend_create_path "PYTHONPATH", Formula["#{@tap}/cython@0.29.21"].opt_libexec/"lib/python#{version}/site-packages"
+    # tap_py = "freecad/freecad/python@3.9"
+    # tap_cython = "freecad/freecad/cython@0.29.21"
 
-    system Formula["#{@tap}/python@3.9"].opt_bin/"python3", "setup.py",
+    version = Language::Python.major_minor_version Formula["./python@3.9"].opt_bin/"python3"
+    ENV.prepend_create_path "PYTHONPATH", Formula["./cython@0.29.21"].opt_libexec/"lib/python#{version}/site-packages"
+
+    system Formula["./python@3.9"].opt_bin/"python3", "setup.py",
       "build", "--fcompiler=gnu95", "--parallel=#{ENV.make_jobs}",
       "install", "--prefix=#{prefix}",
       "--single-version-externally-managed", "--record=installed.txt"
   end
 
   test do
-    system Formula["#{@tap}/python@3.9"].opt_bin/"python3", "-c", <<~EOS
+    system Formula["./python@3.9"].opt_bin/"python3", "-c", <<~EOS
       import numpy as np
       t = np.ones((3,3), int)
       assert t.sum() == 9
