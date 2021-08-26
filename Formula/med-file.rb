@@ -39,8 +39,7 @@ class MedFile < Formula
         return 0;
       }
     EOS
-    system ENV.cc, "-I#{include}", "-I#{Formula["hdf5"].opt_include}",
-      "-L#{lib}", "-lmedC", "test.c"
+    system ENV.cc, "-I#{include}", "-L#{lib}", "-lmedC", "test.c"
     assert_equal version.to_s, shell_output("./a.out").chomp
   end
 end
