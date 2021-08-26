@@ -19,7 +19,7 @@ class NumpyAT1194 < Formula
 
   depends_on "./cython@0.29.21" => :build
   depends_on "gcc" => :build # for gfortran
-  depends_on "./python3.9"
+  depends_on "freecad/freecad/python@3.9.6"
   depends_on "openblas"
 
   # Upstream fix for Apple Silicon, remove in next version

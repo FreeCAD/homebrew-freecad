@@ -16,7 +16,7 @@ class Pyside2 < Formula
 
   option "without-docs", "Skip building documentation"
 
-  depends_on "./python3.9" => :build
+  depends_on "freecad/freecad/python@3.9.6" => :build
   depends_on "cmake" => :build
   depends_on "sphinx-doc" => :build if build.with? "docs"
   depends_on "./qt5152"
