@@ -18,7 +18,7 @@ class MedFile < Formula
   depends_on "hdf5@1.10"
 
   def install
-    python_prefix=`#{Formula["#{@tap}/python3.9"].opt_bin}/python3-config --prefix`.chomp
+    python_prefix=`#{Formula["#{@tap}/python3.9.6"].opt_bin}/python3-config --prefix`.chomp
     python_include=Dir["#{python_prefix}/include/*"].first
 
     # ENV.cxx11
