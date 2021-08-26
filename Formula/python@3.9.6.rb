@@ -1,4 +1,4 @@
-class PythonAT39 < Formula
+class PythonAT396 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
   # Keep in sync with python-tk@3.9.
