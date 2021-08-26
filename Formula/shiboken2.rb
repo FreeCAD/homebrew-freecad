@@ -13,7 +13,7 @@ class Shiboken2 < Formula
     sha256 cellar: :any, mojave:    "255d70b44f1c10afe32ee4aa996f1525be521f26a766384a61d3c252f45eeebf"
   end
 
-  depends_on "./python3.9" => :build
+  depends_on "freecad/freecad/python@3.9.6" => :build
   depends_on "cmake" => :build
   depends_on "./numpy@1.19.4"
   depends_on "./qt5152"

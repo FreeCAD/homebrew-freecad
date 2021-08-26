@@ -16,7 +16,7 @@ class TbbAT2020U3 < Formula
 
   depends_on "./swig@4.0.2" => :build
   depends_on "cmake" => :build
-  depends_on "./python3.9"
+  depends_on "freecad/freecad/python@3.9.6"
 
   # Remove when upstream fix is released
   # https://github.com/oneapi-src/oneTBB/pull/258

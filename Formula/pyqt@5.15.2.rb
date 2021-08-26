@@ -18,7 +18,7 @@ class PyqtAT5152 < Formula
 
   keg_only "also provided by core"
 
-  depends_on "./python3.9"
+  depends_on "freecad/freecad/python@3.9.6"
   depends_on "./qt5152"
   depends_on "./sip@4.19.24"
 
