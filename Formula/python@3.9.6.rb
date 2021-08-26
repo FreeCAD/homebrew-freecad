@@ -5,7 +5,7 @@ class PythonAT396 < Formula
   url "https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tar.xz"
   sha256 "397920af33efc5b97f2e0b57e91923512ef89fc5b3c1d21dbfc8c4828ce0108a"
   license "Python-2.0"
-  revision 1
+  revision 2
 
   livecheck do
     url "https://www.python.org/ftp/python/"
