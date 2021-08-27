@@ -25,7 +25,7 @@ class Shiboken2 < Formula
     ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
 
     mkdir "macbuild#{version}" do
-      pyhome = `#{Formula["#{@tap}/python3.9"].opt_bin}/python3.9-config --prefix`.chomp
+      pyhome = `#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3.9-config --prefix`.chomp
       py_library = "#{pyhome}/lib/libpython3.9.dylib"
       py_include = "#{pyhome}/include/python3.9"
       args = std_cmake_args
