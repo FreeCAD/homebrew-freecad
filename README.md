@@ -29,7 +29,7 @@ brew install --only-dependencies freecad [--with-qt4] [--with-packaging-utils]
 
 #### Install flags
 
-`--with-qt4 option` use this option to install Qt4 and associated dependencies (defaults to Qt 5.x)
+`--with-qt4 option` use this option to install Qt4 and associated dependencies (defaults to Qt 5.x)<br />
 `--with-packaging-utils` use this option to install the packaging utilities
 
 ## Building The Current Release Version of FreeCAD
