@@ -15,7 +15,6 @@ class Opencamlib < Formula
 
   depends_on "./boost-python3@1.75.0" => :build
   depends_on "./boost@1.75.0" => :build
-  depends_on "./boost@1.75.0" => :build
   depends_on "cmake" => :build
 
   def install
@@ -30,5 +29,10 @@ class Opencamlib < Formula
       system "cmake", *args, ".."
       system "make", "PYTHON_LIBS=-undefined dynamic_lookup", "install"
     end
+  end
+
+  test do
+    # TODO: implement a more thorough test block
+    system "false"
   end
 end
