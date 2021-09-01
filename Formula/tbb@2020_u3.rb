@@ -14,8 +14,8 @@ class TbbAT2020U3 < Formula
     sha256 cellar: :any, mojave:    "4e1a592b5170c454f78e4363a0023ed17a16566de6c270a4586ea501723b6594"
   end
 
-  depends_on "./swig@4.0.2" => :build
   depends_on "cmake" => :build
+  depends_on "freecad/freecad/swig@4.0.2" => :build
   depends_on "freecad/freecad/python@3.9.6"
 
   # Remove when upstream fix is released
@@ -38,11 +38,13 @@ class TbbAT2020U3 < Formula
 
     cd "python" do
       ENV["TBBROOT"] = prefix
-      system Formula["#{@tap}/python3.9"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
+      # system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
+      system "/usr/local/bin/python3", *Language::Python.setup_install_args(prefix)
     end
 
     system "cmake", *std_cmake_args,
                     "-DINSTALL_DIR=lib/cmake/TBB",
+                    "-DCMAKE_CXX_STANDARD=14",
                     "-DSYSTEM_NAME=Darwin",
                     "-DTBB_VERSION_FILE=#{include}/tbb/tbb_stddef.h",
                     "-P", "cmake/tbb_config_installer.cmake"
@@ -51,17 +53,35 @@ class TbbAT2020U3 < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<~EOS
-      #include <tbb/task_scheduler_init.h>
+    (testpath/"sum1-100.cpp").write <<~EOS
       #include <iostream>
+      #include <tbb/blocked_range.h>
+      #include <tbb/parallel_reduce.h>
 
       int main()
       {
-        std::cout << tbb::task_scheduler_init::default_num_threads();
+        auto total = tbb::parallel_reduce(
+          tbb::blocked_range<int>(0, 100),
+          0.0,
+          [&](tbb::blocked_range<int> r, int running_total)
+          {
+            for (int i=r.begin(); i < r.end(); ++i) {
+              running_total += i + 1;
+            }
+
+            return running_total;
+          }, std::plus<int>()
+        );
+
+        std::cout << total << std::endl;
         return 0;
       }
     EOS
-    system ENV.cxx, "test.cpp", "-L#{lib}", "-ltbb", "-o", "test"
-    system "./test"
+
+    system ENV.cxx, "sum1-100.cpp", "--std=c++14", "-L#{lib}", "-ltbb", "-o", "sum1-100"
+    assert_equal "5050", shell_output("./sum1-100").chomp
+
+    # system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", "-c", "import tbb"
+    system "#{bin}/python3", "-c", "import tbb"
   end
 end
