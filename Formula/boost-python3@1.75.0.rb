@@ -15,8 +15,8 @@ class BoostPython3AT1750 < Formula
 
   keg_only "provided by homebrew core"
 
-  depends_on "./numpy@1.19.4" => :build
-  depends_on "./boost@1.75.0"
+  depends_on "freecad/freecad/numpy@1.19.4" => :build
+  depends_on "freecad/freecad/boost@1.75.0"
   depends_on "freecad/freecad/python@3.9.6"
 
   # Fix build system issues on Apple silicon. This change has aleady
@@ -49,8 +49,8 @@ class BoostPython3AT1750 < Formula
     # user-config.jam below.
     inreplace "bootstrap.sh", "using python", "#using python"
 
-    pyver = Language::Python.major_minor_version Formula["#{@tap}/python3.9"].opt_bin/"python3"
-    py_prefix = Formula["#{@tap}/python3.9"].opt_frameworks/"Python.framework/Versions/#{pyver}"
+    pyver = Language::Python.major_minor_version Formula["#{@tap}/python@3.9.6"].opt_bin/"python3"
+    py_prefix = Formula["#{@tap}/python@3.9.6"].opt_frameworks/"Python.framework/Versions/#{pyver}"
 
     # Force boost to compile with the desired compiler
     (buildpath/"user-config.jam").write <<~EOS
@@ -99,9 +99,9 @@ set(_BOOST_LIBDIR \"/usr/local/opt/boost-python3@1.75.0/lib\")"
       }
     EOS
 
-    pyincludes = shell_output("#{Formula["#{@tap}/python3.9"].opt_bin}/python3-config --includes").chomp.split
-    pylib = shell_output("#{Formula["#{@tap}/python3.9"].opt_bin}/python3-config --ldflags --embed").chomp.split
-    pyver = Language::Python.major_minor_version(Formula["#{@tap}/python3.9"].opt_bin/"python3").to_s.delete(".")
+    pyincludes = shell_output("#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3-config --includes").chomp.split
+    pylib = shell_output("#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3-config --ldflags --embed").chomp.split
+    pyver = Language::Python.major_minor_version(Formula["#{@tap}/python@3.9.6"].opt_bin/"python3").to_s.delete(".")
 
     system ENV.cxx, "-shared", "hello.cpp", "-L#{lib}", "-lboost_python#{pyver}", "-o",
            "hello.so", *pyincludes, *pylib
@@ -110,6 +110,6 @@ set(_BOOST_LIBDIR \"/usr/local/opt/boost-python3@1.75.0/lib\")"
       import hello
       print(hello.greet())
     EOS
-    assert_match "Hello, world!", pipe_output(Formula["#{@tap}/python3.9"].opt_bin/"python3", output, 0)
+    assert_match "Hello, world!", pipe_output(Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", output, 0)
   end
 end
