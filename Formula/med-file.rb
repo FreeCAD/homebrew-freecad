@@ -18,7 +18,7 @@ class MedFile < Formula
   depends_on "hdf5@1.10"
 
   def install
-    python_prefix=`#{Formula["#{@tap}/python3.9"].opt_bin}/python3-config --prefix`.chomp
+    python_prefix=`#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3-config --prefix`.chomp
     python_include=Dir["#{python_prefix}/include/*"].first
 
     # ENV.cxx11
@@ -31,17 +31,15 @@ class MedFile < Formula
   end
 
   test do
-    output = shell_output("#{bin}/medimport 2>&1", 255).chomp
-    assert_match output, "Nombre de parametre incorrect : medimport filein [fileout]"
     (testpath/"test.c").write <<~EOS
       #include <med.h>
+      #include <stdio.h>
       int main() {
-        med_int major, minor, release;
-        return MEDlibraryNumVersion(&major, &minor, &release);
+        printf("%d.%d.%d",MED_MAJOR_NUM,MED_MINOR_NUM,MED_RELEASE_NUM);
+        return 0;
       }
     EOS
-    system ENV.cc, "test.c", "-I#{include}", "-I#{Formula["hdf5"].opt_include}",
-                   "-L#{lib}", "-lmedC", "-o", "test"
-    system "./test"
+    system ENV.cc, "-I#{include}", "-I#{Formula["hdf5@1.10"].opt_include}", "-L#{lib}", "-lmedC", "test.c"
+    assert_equal version.to_s, shell_output("./a.out").chomp
   end
 end
