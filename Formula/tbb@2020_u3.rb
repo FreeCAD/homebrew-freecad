@@ -38,7 +38,7 @@ class TbbAT2020U3 < Formula
 
     cd "python" do
       ENV["TBBROOT"] = prefix
-      system Formula["#{@tap}/python3.9"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
+      system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
     end
 
     system "cmake", *std_cmake_args,
@@ -52,17 +52,34 @@ class TbbAT2020U3 < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<~EOS
-      #include <tbb/task_scheduler_init.h>
+    (testpath/"sum1-100.cpp").write <<~EOS
       #include <iostream>
+      #include <tbb/blocked_range.h>
+      #include <tbb/parallel_reduce.h>
 
       int main()
       {
-        std::cout << tbb::task_scheduler_init::default_num_threads();
+        auto total = tbb::parallel_reduce(
+          tbb::blocked_range<int>(0, 100),
+          0.0,
+          [&](tbb::blocked_range<int> r, int running_total)
+          {
+            for (int i=r.begin(); i < r.end(); ++i) {
+              running_total += i + 1;
+            }
+
+            return running_total;
+          }, std::plus<int>()
+        );
+
+        std::cout << total << std::endl;
         return 0;
       }
     EOS
-    system ENV.cxx, "test.cpp", "-L#{lib}", "-ltbb", "-o", "test"
-    system "./test"
+
+    system ENV.cxx, "sum1-100.cpp", "--std=c++14", "-L#{lib}", "-ltbb", "-o", "sum1-100"
+    assert_equal "5050", shell_output("./sum1-100").chomp
+
+    system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", "-c", "import tbb"
   end
 end
