@@ -43,6 +43,7 @@ class TbbAT2020U3 < Formula
 
     system "cmake", *std_cmake_args,
                     "-DINSTALL_DIR=lib/cmake/TBB",
+                    "-DCMAKE_CXX_STANDARD=14",
                     "-DSYSTEM_NAME=Darwin",
                     "-DTBB_VERSION_FILE=#{include}/tbb/tbb_stddef.h",
                     "-P", "cmake/tbb_config_installer.cmake"
