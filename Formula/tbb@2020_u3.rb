@@ -82,6 +82,6 @@ class TbbAT2020U3 < Formula
     assert_equal "5050", shell_output("./sum1-100").chomp
 
     # system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", "-c", "import tbb"
-    system "#{bin}/python3", "-c", "import tbb"
+    system "#{HOMEBREW_PREFIX}/bin/python3", "-c", "import tbb"
   end
 end
