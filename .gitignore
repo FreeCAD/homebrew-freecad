@@ -1,2 +1,4 @@
 # homebrew test-bot artifaces
 **/steps_output.txt
+# ignore vim/neovim swap files throughout repo
+**/.swp
