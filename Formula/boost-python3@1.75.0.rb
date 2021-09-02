@@ -99,12 +99,17 @@ set(_BOOST_LIBDIR \"/usr/local/opt/boost-python3@1.75.0/lib\")"
       }
     EOS
 
-    pyincludes = shell_output("#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3-config --includes").chomp.split
-    pylib = shell_output("#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3-config --ldflags --embed").chomp.split
+    # NOTE: hardcode paths tmp, see https://github.com/Homebrew/discussions/discussions/2072
+    # pyincludes = shell_output("#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3-config --includes").chomp.split
+    # pylib = shell_output("#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3-config --ldflags --embed").chomp.split
+    pylib = "/usr/local/opt/python@3.9.6/Frameworks/Python.framework/Versions/Current/lib/python3.9/config-3.9-darwin"
     pyver = Language::Python.major_minor_version(Formula["#{@tap}/python@3.9.6"].opt_bin/"python3").to_s.delete(".")
 
-    system ENV.cxx, "-shared", "hello.cpp", "-L#{lib}", "-lboost_python#{pyver}", "-o",
-           "hello.so", *pyincludes, *pylib
+    system ENV.cxx, "-shared", "hello.cpp",
+      "-L/usr/local/opt/boost-python3@1.75.0/lib", "-lboost_python#{pyver}",
+      "-o", "hello.so",
+      "-I/usr/local/opt/python@3.9.6/Frameworks/Python.framework/Versions/3.9/include/python3.9",
+    "-L#{pylib}", "-lpython3.9"
 
     output = <<~EOS
       import hello
