@@ -19,12 +19,42 @@ class SipAT41924 < Formula
     sha256 cellar: :any_skip_relocation, mojave:    "b40db60f080738c764b35d9ebffac8455455ceda258da914b7b2cbbc89939e9e"
   end
 
-  keg_only "provided by homebrew core"
+  keg_only :versioned_formula
 
   depends_on "freecad/freecad/python@3.9.6"
+  # keg_only "provided by homebrew core"
+
+  # resource "packaging" do
+  #   url "https://files.pythonhosted.org/packages/86/3c/bcd09ec5df7123abcf695009221a52f90438d877a2f1499453c6938f5728/packaging-20.9.tar.gz"
+  #   sha256 "5b327ac1320dc863dca72f4514ecc086f31186744b84a230374cc1fd776feae5"
+  # end
+
+  # resource "pyparsing" do
+  #   url "https://files.pythonhosted.org/packages/c1/47/dfc9c342c9842bbe0036c7f763d2d6686bcf5eb1808ba3e170afdb282210/pyparsing-2.4.7.tar.gz"
+  #   sha256 "c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"
+  # end
+
+  # resource "toml" do
+  #   url "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz"
+  #   sha256 "b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"
+  # end
+
+  # def install
+  #   python = Formula["python@3.9.6"]
+  #   venv = virtualenv_create(libexec, "/usr/local/bin/python3")
+  #   resources.each do |r|
+  #     venv.pip_install r
+  #   end
+
+  #   system "/usr/local/bin/python3", *Language::Python.setup_install_args(prefix)
+
+  #   site_packages = Language::Python.site_packages(python)
+  #   pth_contents = "import site; site.addsitedir('#{libexec/site_packages}')\n"
+  #   (prefix/site_packages/"homebrew-sip.pth").write pth_contents
+  # end
 
   def install
-    ENV.prepend_path "PATH", Formula["#{@tap}/python3.9"].opt_bin
+    ENV.prepend_path "PATH", Formula["#{@tap}/python@3.9.6"].opt_bin
     ENV.delete("SDKROOT") # Avoid picking up /Application/Xcode.app paths
 
     if build.head?
