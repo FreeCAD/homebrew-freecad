@@ -19,8 +19,8 @@ class PyqtAT5152 < Formula
   keg_only "also provided by core"
 
   depends_on "freecad/freecad/python@3.9.6"
-  depends_on "./qt5152"
-  depends_on "./sip@4.19.24"
+  depends_on "freecad/freecad/qt5152"
+  depends_on "sip@4.19.24"
 
   resource "PyQt5-sip" do
     url "https://files.pythonhosted.org/packages/73/8c/c662b7ebc4b2407d8679da68e11c2a2eb275f5f2242a92610f6e5024c1f2/PyQt5_sip-12.8.1.tar.gz"
@@ -28,7 +28,7 @@ class PyqtAT5152 < Formula
   end
 
   def install
-    version = Language::Python.major_minor_version Formula["#{@tap}/python3.9"].opt_bin/"python3"
+    version = Language::Python.major_minor_version Formula["#{@tap}/python@3.9.6"].opt_bin/"python3"
     args = ["--confirm-license",
             "--bindir=#{bin}",
             "--destdir=#{lib}/python#{version}/site-packages",
@@ -41,10 +41,10 @@ class PyqtAT5152 < Formula
             "QMAKE_MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}",
             "--designer-plugindir=#{pkgshare}/plugins",
             "--qml-plugindir=#{pkgshare}/plugins",
-            "--pyuic5-interpreter=#{Formula["#{@tap}/python3.9"].opt_bin}/python3",
+            "--pyuic5-interpreter=#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3",
             "--verbose"]
 
-    system Formula["#{@tap}/python3.9"].opt_bin/"python3", "configure.py", *args
+    system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", "configure.py", *args
     system "make"
     ENV.deparallelize { system "make", "install" }
   end
@@ -53,7 +53,7 @@ class PyqtAT5152 < Formula
     system "#{bin}/pyuic5", "--version"
     system "#{bin}/pylupdate5", "-version"
 
-    system Formula["#{@tap}/python3.9"].opt_bin/"python3", "-c", "import PyQt5"
+    system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", "-c", "import PyQt5"
     %w[
       Gui
       Location
@@ -63,6 +63,6 @@ class PyqtAT5152 < Formula
       Svg
       Widgets
       Xml
-    ].each { |mod| system Formula["#{@tap}/python3.9"].opt_bin/"python3", "-c", "import PyQt5.Qt#{mod}" }
+    ].each { |mod| system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", "-c", "import PyQt5.Qt#{mod}" }
   end
 end
