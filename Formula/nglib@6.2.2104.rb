@@ -5,6 +5,7 @@ class NglibAT622104 < Formula
     tag:      "v6.2.2104",
     revision: "a89cf0089ad2615a1256e4e938c1e5600a2c97d9"
   license "LGPL-2.1"
+  revision 1
   head "https://github.com/ngsolve/netgen.git"
 
   depends_on "cmake" => :build
