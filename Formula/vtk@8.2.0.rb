@@ -20,9 +20,9 @@ class VtkAT820 < Formula
   depends_on "cmake" => :build
   depends_on "./boost@1.75.0"
   depends_on "./pyqt@5.15.2"
-  depends_on "freecad/freecad/python@3.9.6"
   depends_on "./qt5152"
   depends_on "fontconfig"
+  depends_on "freecad/freecad/python@3.9.6"
   depends_on "hdf5"
   depends_on "jpeg"
   depends_on "libpng"

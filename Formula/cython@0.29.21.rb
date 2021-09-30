@@ -49,6 +49,7 @@ class CythonAT02921 < Formula
       )
     EOS
     system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", "setup.py", "build_ext", "--inplace"
-    assert_match phrase, shell_output("#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3 -c 'import package_manager'")
+    assert_match phrase,
+shell_output("#{Formula["#{@tap}/python@3.9.6"].opt_bin}/python3 -c 'import package_manager'")
   end
 end
