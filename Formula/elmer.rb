@@ -33,12 +33,12 @@ class Elmer < Formula
     qwt_library = Formula["#{@tap}/qwtelmer"].opt_prefix+"/lib/qwt.framework/Versions/Current/qwt"
 
     prefix_paths = ""
-    prefix_paths << Formula["#{@tap}/qt5152"].opt_prefix/"lib/cmake;"
-    prefix_paths << Formula["#{@tap}/vtk@8.2.0"].opt_prefix/"lib/cmake;"
-    prefix_paths << Formula["#{@tap}/opencascade@7.5.0"].opt_prefix/"lib/cmake;"
+    prefix_paths << (Formula["#{@tap}/qt5152"].opt_prefix/"lib/cmake;")
+    prefix_paths << (Formula["#{@tap}/vtk@8.2.0"].opt_prefix/"lib/cmake;")
+    prefix_paths << (Formula["#{@tap}/opencascade@7.5.0"].opt_prefix/"lib/cmake;")
 
     cmake_cflags = ""
-    cmake_cflags << '" -F' + Formula["#{@tap}/qwtelmer"].opt_prefix+"/lib/" + ' -framework qwt"'
+    cmake_cflags << ('" -F' + Formula["#{@tap}/qwtelmer"].opt_prefix+"/lib/" + ' -framework qwt"')
 
     args = std_cmake_args + %W[
       -DQWT_INCLUDE_DIR=#{qwt_include_dir}
