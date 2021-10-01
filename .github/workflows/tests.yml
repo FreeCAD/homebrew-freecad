@@ -7,7 +7,8 @@ on:
       - master
 
   pull_request:
-  # workflow_dispatch:  # NOTE: not supported homebrew gha 
+  # workflow_dispatch:  # NOTE: nova with homebrew gha 
+
 jobs:
   test-bot:
     strategy:
@@ -17,14 +18,44 @@ jobs:
         # NOTE: `macOS-latest` default runner provided by github
         os: [ self-hosted-mojavevm, self-hosted-catalinavm, self-hosted-bigsurvm ]
         # os: [ self-hosted-mojavevm ]
+
     runs-on: ${{ matrix.os }}
+
     timeout-minutes: 1200
+
     steps:
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
+
+      - name: Log date
+        run: echo "${{ steps.date.outputs.date }}"
+
+      - name: Set default run status
+        run: echo "::set-output name=last_run_status::default" > last_run_status
+
+      - name: Restore last run status
+        id: last_run
+        uses: actions/cache@v2
+        with:
+          path: |
+            last_run_status
+          key: |
+            ${{ github.run_id }}-${{ matrix.os }}-${{ steps.date.outputs.date }}
+          restore-keys: |
+            ${{ github.run_id }}-${{ matrix.os }}-
+
+      - name: Set last run status
+        id: last_run_status
+        run: cat last_run_status
+
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Cache Homebrew Bundler RubyGems
+        if: steps.last_run_status.outputs.last_run_status != 'success'
         id: cache
         uses: actions/cache@v2.1.6
         with:
@@ -33,7 +64,7 @@ jobs:
           restore-keys: ${{ runner.os }}-rubygems-
 
       - name: Install Homebrew Bundler RubyGems
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true' && steps.last_run_status.outputs.last_run_status != 'success'
         run: brew install-bundler-gems
 
       - run: brew test-bot --only-cleanup-before
@@ -51,3 +82,7 @@ jobs:
         with:
           name: bottles
           path: '*.bottle.*'
+
+      - name: Save run status
+        if: steps.last_run_status.outputs.last_run_status != 'success'
+        run: echo "::set-output name=last_run_status::${{ steps.test_run.outcome }}" > last_run_status
