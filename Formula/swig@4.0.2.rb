@@ -18,14 +18,14 @@ class SwigAT402 < Formula
     sha256 mojave:   "1ff0f1b7c3e4e93b58ab42e3ecdcae8526c9c7e563cffea5fbb71f196943788e"
   end
 
-  keg_only :versioned_formula
-
   head do
     url "https://github.com/swig/swig.git"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
   end
+
+  keg_only :versioned_formula
 
   depends_on "pcre"
 
