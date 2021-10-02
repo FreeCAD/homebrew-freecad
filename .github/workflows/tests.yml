@@ -44,7 +44,7 @@ jobs:
           key: |
             ${{ github.run_id }}-${{ matrix.os }}-${{ steps.date.outputs.date }}
           restore-keys: |
-            ${{ github.run_id }}-${{ matrix.os }}-
+            ${{ github.run_id }}-${{ matrix.os }}-${{ steps.date.outputs.date }}
 
       - name: Set last run status
         id: last_run_status
