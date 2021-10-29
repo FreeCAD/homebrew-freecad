@@ -4,8 +4,9 @@ class NglibAT622104 < Formula
   url "https://github.com/ngsolve/netgen.git",
     tag:      "v6.2.2104",
     revision: "a89cf0089ad2615a1256e4e938c1e5600a2c97d9"
-  license "LGPL-2.1"
-  head "https://github.com/ngsolve/netgen.git"
+  license "LGPL-2.1-only"
+  revision 1
+  head "https://github.com/ngsolve/netgen.git", branch: "master"
 
   depends_on "cmake" => :build
   depends_on "opencascade"
@@ -34,5 +35,9 @@ class NglibAT622104 < Formula
       (include/"netgen"/subdir).mkpath
       (include/"netgen"/subdir).install Dir.glob("libsrc/#{subdir}/*.{h,hpp}")
     end
+  end
+
+  test do
+    system "true"
   end
 end
