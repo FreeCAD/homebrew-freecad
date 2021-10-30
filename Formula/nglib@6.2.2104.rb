@@ -8,6 +8,12 @@ class NglibAT622104 < Formula
   revision 1
   head "https://github.com/ngsolve/netgen.git", branch: "master"
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/nglib@6.2.2104-6.2.2104_1"
+    sha256 cellar: :any, big_sur:  "4d4b306d3f99751aebef21632f7aa19cd1a40faa83f8262d044cea4909684fcf"
+    sha256 cellar: :any, catalina: "828b5467e75eeacbc05bbeafbb70e03e6142403f67df0b0a77fc7806f4e9fdfd"
+  end
+
   depends_on "cmake" => :build
   depends_on "opencascade"
 
