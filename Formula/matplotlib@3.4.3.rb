@@ -41,6 +41,12 @@ class MatplotlibAT343 < Formula
   head "https://github.com/matplotlib/matplotlib.git",
     branch: "main"
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/matplotlib@3.4.3-3.4.3"
+    sha256 cellar: :any, big_sur:  "9ad359b2e48e6fd1f32f898f8c9e47c02d307498bf3e4eceb9a7283e297b0193"
+    sha256 cellar: :any, catalina: "d73d65d0654d66e0a5710a28d374634a970c3ea843181e00bebd4e51fe375f93"
+  end
+
   option "with-cairo", "Build with cairo backend support"
   option "with-tex", "Build with tex support"
 
