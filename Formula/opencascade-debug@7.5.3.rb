@@ -19,6 +19,12 @@ class OpencascadeDebugAT753 < Formula
     end
   end
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/opencascade-debug@7.5.3-7.5.3"
+    sha256 big_sur:  "2e71ea5c3554f9e75adca22548fc3e5f31ba0d73f80b5d3549d8b8ca68422333"
+    sha256 catalina: "fcbc34a216bd53ba6799cada861497df0933dc807b5b245baf9306df7bf06477"
+  end
+
   keg_only :versioned_formula # NOTE: used for debugging purposes
 
   depends_on "cmake" => :build
