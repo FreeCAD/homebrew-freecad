@@ -8,6 +8,12 @@ class OpencascadeAT760 < Formula
   license "LGPL-2.1-only"
   # head "https://github.com/Open-Cascade-SAS/OCCT", branch: "master" # NOTE: not valid
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/opencascade@7.6.0-7.6.0"
+    sha256 big_sur:  "11a0b951ce898f83274e0e7196b6c3240760a99dd15f007cf76f0d3b39fbe714"
+    sha256 catalina: "132a7bbd05e74ae7bb32fc1d978307af381c732b81336110ce5c05a31f9c3325"
+  end
+
   # The first-party download page (https://dev.opencascade.org/release)
   # references version 7.5.0 and hasn't been updated for later maintenance
   # releases (e.g., 7.5.3, 7.5.2), so we check the Git tags instead. Release
