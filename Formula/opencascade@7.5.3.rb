@@ -39,6 +39,10 @@ class OpencascadeAT753 < Formula
   depends_on "tbb@2020"
   depends_on "tcl-tk"
 
+  # NOTE: https://tracker.dev.opencascade.org/view.php?id=32328
+  # NOTE: https://forum.freecadweb.org/viewtopic.php?f=4&t=58090
+  patch :DATA
+
   def install
     tcltk = Formula["tcl-tk"]
     system "cmake", ".",
@@ -78,3 +82,17 @@ class OpencascadeAT753 < Formula
     system "true"
   end
 end
+
+__END__
+diff --git a/src/ShapeUpgrade/ShapeUpgrade_UnifySameDomain.hxx b/src/ShapeUpgrade/ShapeUpgrade_UnifySameDomain.hxx
+index b1558d111f..8cbf516289 100644
+--- a/src/ShapeUpgrade/ShapeUpgrade_UnifySameDomain.hxx
++++ b/src/ShapeUpgrade/ShapeUpgrade_UnifySameDomain.hxx
+@@ -17,6 +17,7 @@
+ #ifndef _ShapeUpgrade_UnifySameDomain_HeaderFile
+ #define _ShapeUpgrade_UnifySameDomain_HeaderFile
+ 
++#include <TopoDS_Edge.hxx>
+ #include <BRepTools_History.hxx>
+ #include <Standard.hxx>
+ #include <Standard_Type.hxx>
