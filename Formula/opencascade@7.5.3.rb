@@ -1,11 +1,10 @@
 class OpencascadeAT753 < Formula
   desc "3D modeling and numerical simulation software for CAD/CAM/CAE"
   homepage "https://github.com/Open-Cascade-SAS"
-  # url "https://git.dev.opencascade.org/gitweb/?p=occt.git;a=snapshot;h=refs/tags/V7_5_3;sf=tgz"
-  url "https://github.com/Open-Cascade-SAS/OCCT/archive/1b5eb2be231815cf76d379f441ada467ac6e44f7.tar.gz"
+  url "https://git.dev.opencascade.org/gitweb/?p=occt.git;a=snapshot;h=refs/tags/V7_5_3;sf=tgz"
 
   version "7.5.3"
-  sha256 "0d9b91189da8cd9377a9924cccf7582a8ff20fc1eff6c97a21a5d6360aca8d7f"
+  sha256 "cc3d3fd9f76526502c3d9025b651f45b034187430f231414c97dda756572410b"
   license "LGPL-2.1-only"
   # head "https://github.com/Open-Cascade-SAS/OCCT", branch: "master" # NOTE: not valid
 
@@ -14,19 +13,19 @@ class OpencascadeAT753 < Formula
   # releases (e.g., 7.5.3, 7.5.2), so we check the Git tags instead. Release
   # information is posted at https://dev.opencascade.org/forums/occt-releases
   # but the text varies enough that we can't reliably match versions from it.
-  # livecheck do
-  #   url "https://git.dev.opencascade.org/repos/occt.git"
-  #   regex(/^v?(\d+(?:[._]\d+)+(?:p\d+)?)$/i)
-  #   strategy :git do |tags, regex|
-  #     tags.map { |tag| tag[regex, 1]&.gsub("_", ".") }.compact
-  #   end
-  # end
+  livecheck do
+    url "https://git.dev.opencascade.org/repos/occt.git"
+    regex(/^v?(\d+(?:[._]\d+)+(?:p\d+)?)$/i)
+    strategy :git do |tags, regex|
+      tags.map { |tag| tag[regex, 1]&.gsub("_", ".") }.compact
+    end
+  end
 
   bottle do
     root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/opencascade@7.5.3-7.5.3"
-    rebuild 1
-    sha256 big_sur:  "46d475bb03963fbd49b11b49d46e1459be8d1630ebef31e5be150ce0dbca81d9"
-    sha256 catalina: "e4dfca466e70efd05b79790807529f8e34ac3797c3805af567c49d1054d3ab27"
+    sha256 big_sur:  "7d04c5269652c41bf972584179c33382b50f2cdfb7c84e74eae52c54afad61ad"
+    sha256 catalina: "287173a6f8a4fe98910f730c7489ea8f6a7f03f5184c9ef6fc672160a6a8fa6a"
+    sha256 mojave:   "7de6643cf198c30506e38cce15a8692496cfea3c72df4a7aef8bfcfdf3e99def"
   end
 
   keg_only :versioned_formula # NOTE: homebrewcore provides opencascade too
