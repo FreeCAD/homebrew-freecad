@@ -16,7 +16,7 @@ class Pyside2Tools < Formula
 
   depends_on "cmake" => :build
   depends_on "freecad/freecad/python@3.9.6" => :build
-  depends_on "./pyside2"
+  depends_on "freecad/freecad/pyside2"
 
   def install
     mkdir "macbuild3.9" do

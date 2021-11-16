@@ -15,7 +15,7 @@ class Nglib < Formula
   end
 
   depends_on "cmake" => :build
-  depends_on "./opencascade@7.5.0"
+  depends_on "freecad/freecad/opencascade@7.5.3"
 
   def install
     cmake_prefix_path = Formula["#{@tap}/opencascade@7.5.0"].opt_prefix + "/lib/cmake;"

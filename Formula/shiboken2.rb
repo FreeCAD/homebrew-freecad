@@ -15,8 +15,8 @@ class Shiboken2 < Formula
 
   depends_on "cmake" => :build
   depends_on "freecad/freecad/python@3.9.6" => :build
-  depends_on "./numpy@1.19.4"
-  depends_on "./qt5152"
+  depends_on "freecad/freecad/numpy@1.19.4"
+  depends_on "freecad/freecad/qt5152"
   depends_on "llvm"
 
   def install
