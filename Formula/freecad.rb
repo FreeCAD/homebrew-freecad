@@ -37,10 +37,10 @@ class Freecad < Formula
   depends_on "freecad/freecad/pivy"
   depends_on "freecad/freecad/pyside2"
   depends_on "freecad/freecad/pyside2-tools"
+  depends_on "freecad/freecad/python@3.9.6"
   depends_on "freecad/freecad/qt5152"
   depends_on "freecad/freecad/shiboken2"
   depends_on "freecad/freecad/vtk@8.2.0"
-  depends_on "freecad/freecad/python@3.9.6"
   depends_on "freetype"
   depends_on macos: :high_sierra # no access to sierra test box
   depends_on "open-mpi"
