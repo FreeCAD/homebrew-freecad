@@ -15,16 +15,17 @@ class NglibAT622104 < Formula
   end
 
   depends_on "cmake" => :build
-  depends_on "opencascade"
+  depends_on "freecad/freecad/opencascade@7.5.3"
 
   def install
-    cmake_prefix_path = Formula["opencascade"].opt_prefix + "/lib/cmake;"
+    # NOTE: occ@7.5.3 does not require being linked but still contains a dir in the HOMEBREW_PREFIX/opt
+    occ_path = (Formula["#{@tap}/opencascade@7.5.3"].opt_include/"opencascade").to_s
 
     args = std_cmake_args + %W[
       -DUSE_PYTHON=OFF
       -DUSE_GUI=OFF
       -DUSE_OCC=ON
-      -DCMAKE_PREFIX_PATH=#{cmake_prefix_path}
+      -DCMAKE_PREFIX_PATH=#{occ_path}
     ]
 
     mkdir "Build" do
