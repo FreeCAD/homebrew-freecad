@@ -7,7 +7,7 @@ class MedFileAT410 < Formula
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.0.2" => :build
   depends_on "gcc" => :build   # for gfortan
-  depends_on "hdf5@1.10"
+  depends_on "hdf5@1.10" => [:build, :test]
   depends_on "python@3.9"
 
   def install
@@ -21,7 +21,7 @@ class MedFileAT410 < Formula
     args = std_cmake_args + %W[
       -DMEDFILE_BUILD_PYTHON=ON
       -DMEDFILE_BUILD_TESTS=OFF
-      -DMEDFILE_INSTALL_DOC=OFF
+      -DMEDFILE_INSTALL_DOC=ON
       -DPYTHON_EXECUTABLE=#{python_executable}
       -DPYTHON_INCLUDE_DIR=#{python_include}
     ]
