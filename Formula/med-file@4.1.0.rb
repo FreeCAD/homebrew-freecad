@@ -4,6 +4,13 @@ class MedFileAT410 < Formula
   url "https://files.salome-platform.org/Salome/other/med-4.1.0.tar.gz"
   sha256 "847db5d6fbc9ce6924cb4aea86362812c9a5ef6b9684377e4dd6879627651fce"
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/med-file@4.1.0-4.1.0"
+    rebuild 1
+    sha256 cellar: :any, big_sur:  "1725022a1e5c4fe339fdeada6da9987ebcffe28e96f1e00ae7ecf30b3b13be4e"
+    sha256 cellar: :any, catalina: "c64d99f32acdcb1d6646bf06bdd6e8b760c1ab4bd3659976dd9eecc50e70b87b"
+  end
+
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.0.2" => :build
   depends_on "gcc" => :build   # for gfortan
