@@ -6,10 +6,9 @@ class Pyside2AT5152 < Formula
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
 
   bottle do
-    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/pyside2-5.15.2"
-    rebuild 1
-    sha256 big_sur:  "601d85682f44db6544b080492f5cb2fa9a184a32d231b04ed30558d1d342bdbb"
-    sha256 catalina: "4fc94bc33e858a5aac96073126cfe058bb8067c7a8654be0852ee63c38e47370"
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/pyside2@5.15.2-5.15.2"
+    sha256 big_sur:  "7c9646b35796765335a0282fd61cd16484ea541343d2b7f6404c5acc0b1092da"
+    sha256 catalina: "5a313da31c7c842d58bd9f257a80380ac413932602d636ab27998da6fbdc9045"
   end
 
   keg_only :versioned_formula
