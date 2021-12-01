@@ -14,10 +14,10 @@ class Pivy < Formula
     sha256 cellar: :any, mojave:    "5671c1a87fd30a08c510b88a51bb1e210a65860f17f499f176ba04f63fae00b1"
   end
 
-  depends_on "./swig@4.0.2" => :build
+  depends_on "freecad/freecad/swig@4.0.2" => :build
   depends_on "cmake" => :build
   depends_on "freecad/freecad/python@3.9.6" => :build
-  depends_on "./coin@4.0.0"
+  depends_on "freecad/freecad/coin@4.0.0"
 
   def install
     system "python3", "setup.py", "install", "--prefix=#{prefix}"
