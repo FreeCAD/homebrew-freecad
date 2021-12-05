@@ -1,0 +1,18 @@
+[
+  "adios2",
+  "arpack",
+  "bind",
+  "blast",
+  "coq",
+  "hdf5-mpi",
+  "libvirt",
+  "mpich",
+  "omniorb",
+  "open-mpi",
+  "pypy",
+  "pypy3",
+  "scalapack",
+  "soapysdr",
+  "tcl-tk",
+  "xvid"
+]
