@@ -5,115 +5,131 @@ class Freecad < Formula
   license "GPL-2.0-only"
   head "https://github.com/freecad/FreeCAD.git", branch: "master", shallow: false
 
+  # NOTE: may require pointing to a specific tag / commit ???
   stable do
-    url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.19.1.tar.gz"
-    sha256 "5ec0003c18df204f7b449d4ac0a82f945b41613a0264127de3ef16f6b2efa60f"
+    url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.19.2.tar.gz"
+    sha256 "47e39e3d6fcafe6e0c68923fb1b86acda16986268e5e6011694057b940139fba"
+  end
+
+  # NOTE: freecad src has issues building macos app bundle, the gist patch...
+  # ...aims to address those issues.
+  # NOTE: in the future the gist patch should remove hard coded paths
+  stable do
+    patch do
+      url "https://gist.githubusercontent.com/ipatch/b32ceefc45fb84341cd5565caaed7e71/raw/cbef7ab55d9dd4d6d4d677f7269e0b70b05698b2/patch"
+      sha256 "00e406b2b6603735195f4114f968890e45447e5146c38c5a1906af38a5606fde"
+    end
+
+    patch do
+      url "https://gist.githubusercontent.com/ipatch/b32ceefc45fb84341cd5565caaed7e71/raw/5699d9cdbdb127ef19aec26e63070f59ac128261/backport%2520of%2520PR%2520%25234960"
+      sha256 "97a5be2d0a69f96ba880236f6d052b744323edf63c9ace573c85c0682ebabe7f"
+    end
   end
 
   bottle do
     root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
     sha256 big_sur: "ea3f380ce4998d4fcb82d2dd7139957c4865b35dfbbab18d8d0479676e91aa14"
-    # sha256 catalina: "8ef75eb7cea8ca34dc4037207fb213332b9ed27976106fd83c31de1433c2dd29"
   end
 
-  option "with-debug", "Enable debug build"
-  option "with-macos-app", "Build MacOS App bundle"
-  option "with-packaging-utils", "Optionally install packaging dependencies"
+  option "with-no-macos-app", "launch FreeCAD from CLI"
   option "with-cloud", "Build with CLOUD module"
   option "with-unsecured-cloud", "Build with self signed certificate support CLOUD module"
   option "with-skip-web", "Disable web"
 
-  depends_on "./swig@4.0.2" => :build
-  depends_on "ccache" => :build
   depends_on "cmake" => :build
-  depends_on "./boost-python3@1.75.0"
-  depends_on "./boost@1.75.0"
-  depends_on "./coin@4.0.0"
-  depends_on "./matplotlib"
-  depends_on "./med-file"
-  depends_on "./nglib"
-  depends_on "./opencamlib"
-  depends_on "./opencascade@7.5.0"
-  depends_on "./pivy"
-  depends_on "./pyside2"
-  depends_on "./pyside2-tools"
-  depends_on "./qt5152"
-  depends_on "./shiboken2"
-  depends_on "./vtk@8.2.0"
-  depends_on "freecad/freecad/python@3.9.6"
+  depends_on "hdf5@1.10" => :build
+  depends_on "pkg-config" => :build
+  depends_on "swig" => :build
+  depends_on "tbb@2020" => :build
+  depends_on "boost"
+  depends_on "boost-python3"
+  depends_on "coin3d"
+  depends_on "cython"
+  depends_on "doxygen"
+  depends_on "freecad/freecad/matplotlib@3.4.3"
+  depends_on "freecad/freecad/med-file@4.1.0"
+  depends_on "freecad/freecad/nglib@6.2.2104"
+  depends_on "freecad/freecad/opencascade@7.5.3"
+  depends_on "freecad/freecad/pyside2@5.15.2"
+  depends_on "freecad/freecad/shiboken2@5.15.2"
   depends_on "freetype"
+  depends_on "icu4c"
+  depends_on "llvm@11"
   depends_on macos: :high_sierra # no access to sierra test box
-  depends_on "open-mpi"
   depends_on "openblas"
   depends_on "orocos-kdl"
   depends_on "pkg-config"
+  depends_on "python@3.9"
+  depends_on "qt@5"
+  depends_on "svn" if MacOS.version >= :catalina
+  depends_on "vtk@8.2"
   depends_on "webp"
   depends_on "xerces-c"
 
   def install
-    system "pip3", "install", "six" unless File.exist?("/usr/local/lib/python3.9/site-packages/six.py")
-
-    # NOTE: brew clang compilers req, Xcode nowork on macOS 10.13 or 10.14
-    if MacOS.version <= :mojave
-      ENV["CC"] = Formula["llvm"].opt_bin/"clang"
-      ENV["CXX"] = Formula["llvm"].opt_bin/"clang++"
+    unless File.exist?("#{HOMEBREW_PREFIX}/lib/python3.9/site-packages/PySide2/__init__.py")
+      system "pip3", "install", "PySide2"
     end
-
-    python_exe = Formula["#{@tap}/python3.9"].opt_prefix/"bin/python3"
-    python_headers = Formula["#{@tap}/python3.9"].opt_prefix/"Frameworks/Python.framework/Headers"
-
-    prefix_paths = ""
-    prefix_paths << (Formula["#{@tap}/qt5152"].opt_prefix/"lib/cmake;")
-    prefix_paths << (Formula["#{@tap}/nglib"].opt_prefix/"Contents/Resources;")
-    prefix_paths << (Formula["#{@tap}/vtk@8.2.0"].opt_prefix/"lib/cmake;")
-    prefix_paths << (Formula["#{@tap}/opencascade@7.5.0"].opt_prefix + "/lib/cmake;")
-    prefix_paths << (Formula["#{@tap}/med-file"].opt_prefix + "/share/cmake/;")
-    prefix_paths << (Formula["#{@tap}/shiboken2"].opt_prefix + "/lib/cmake;")
-    prefix_paths << (Formula["#{@tap}/pyside2"].opt_prefix+ "/lib/cmake;")
-    prefix_paths << (Formula["#{@tap}/coin@4.0.0"].opt_prefix+ "/lib/cmake;")
-    prefix_paths << (Formula["#{@tap}/boost@1.75.0"].opt_prefix+ "/lib/cmake;")
-    prefix_paths << (Formula["#{@tap}/boost-python3@1.75.0"].opt_prefix+ "/lib/cmake;")
 
     # Disable function which are not available for Apple Silicon
     act = Hardware::CPU.arm? ? "OFF" : "ON"
     web = build.with?("skip-web") ? "OFF" : act
 
+    # NOTE: adding pyside2 the cmake_prefix_path does not help cmake in finding pyside2
+    pth_pyside2 = Formula["pyside2@5.15.2"].opt_prefix
+
+    # NOTE: order determined based on cmake checks
+    hbp = HOMEBREW_PREFIX
+    pth_xercesc = Formula["xerces-c"].opt_prefix
+    pth_occ = Formula["opencascade@7.5.3"].opt_prefix
+    pth_hdf5 = Formula["hdf5@1.10"].opt_prefix
+    pth_coin = Formula["coin3d"].opt_prefix
+    pth_qt5 = Formula["qt@5"].opt_prefix
+    pth_vtk = Formula["vtk@8.2"].opt_prefix
+
+    cmake_prefix_paths = "\""
+    cmake_prefix_paths << "#{pth_xercesc};"
+    cmake_prefix_paths << "#{pth_occ};"
+    cmake_prefix_paths << "#{pth_hdf5};"
+    cmake_prefix_paths << "#{pth_coin};"
+    cmake_prefix_paths << "#{pth_qt5};"
+    cmake_prefix_paths << "#{pth_vtk};"
+    cmake_prefix_paths << "#{pth_pyside2};"
+    cmake_prefix_paths << "\""
+
     args = std_cmake_args + %W[
-      -DBUILD_QT5=ON
+      -DHOMEBREW_PREFIX=#{hbp}
       -DUSE_PYTHON3=1
-      -DCMAKE_CXX_STANDARD=14
-      -DBUILD_ENABLE_CXX_STD:STRING=C++14
-      -DBUILD_FEM_NETGEN=1
-      -DBUILD_FEM=1
-      -DBUILD_FEM_NETGEN:BOOL=ON
+      -DPYTHON_EXECUTABLE=#{hbp}/bin/python3
+      -DPYTHON_INCLUDE_DIR=#{hbp}/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/include/python3.9
+      -DPYTHON_LIBRARY=#{hbp}/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/lib/libpython3.9.dylib
+      -DBUILD_SMESH=1
       -DBUILD_WEB=#{web}
-      -DFREECAD_USE_EXTERNAL_KDL=ON
-      -DCMAKE_BUILD_TYPE=#{build.with?("debug") ? "Debug" : "Release"}
-      -DPYTHON_EXECUTABLE=#{python_exe}
-      -DPYTHON_INCLUDE_DIR=#{python_headers}
-      -DCMAKE_PREFIX_PATH=#{prefix_paths}
+      -DBUILD_QT5=1
+      -DFREECAD_USE_EXTERNAL_KDL=1
+      -DBUILD_FEM=1
+      -DBUILD_FEM_NETGEN=0
+      -DBUILD_ENABLE_CXX_STD=C++17
+      -DCMAKE_PREFIX_PATH=#{cmake_prefix_paths}
     ]
 
-    args << "-DFREECAD_CREATE_MAC_APP=1" if build.with? "macos-app"
+    args << if build.with? "no-macos-app"
+      "-DFREECAD_CREATE_MAC_APP=0"
+    else
+      "-DFREECAD_CREATE_MAC_APP=1"
+    end
+
     args << "-DBUILD_CLOUD=1" if build.with? "cloud"
     args << "-DALLOW_SELF_SIGNED_CERTIFICATE=1" if build.with? "unsecured-cloud"
 
-    system "node", "install", "-g", "app_dmg" if build.with? "packaging-utils"
-
     mkdir "Build" do
       system "cmake", *args, ".."
-      system "make", "-j#{ENV.make_jobs}", "install"
+      system "make", "install"
     end
-    bin.install_symlink "../MacOS/FreeCAD" => "FreeCAD"
-    bin.install_symlink "../MacOS/FreeCADCmd" => "FreeCADCmd"
-    (lib/"python3.9/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
-  end
 
-  def post_install
-    system "pip3", "install", "six" unless File.exist?("/usr/local/lib/python3.9/site-packages/six.py")
-    bin.install_symlink "../MacOS/FreeCAD" => "FreeCAD"
-    bin.install_symlink "../MacOS/FreeCADCmd" => "FreeCADCmd"
-    unless File.exist?("/usr/local/Cellar/freecad/0.19/lib/python3.9/site-packages/homebrew-freecad-bundle.pth")
+    args << if build.with? "no-macos-app"
+      bin.install_symlink "../MacOS/FreeCAD" => "FreeCAD"
+      bin.install_symlink "../MacOS/FreeCADCmd" => "FreeCADCmd"
       (lib/"python3.9/site-packages/homebrew-freecad-bundle.pth").write "#{prefix}/MacOS/\n"
     end
   end
@@ -125,6 +141,21 @@ class Freecad < Formula
     1. Amend your PYTHONPATH environmental variable to point to
        the FreeCAD directory
          export PYTHONPATH=#{bin}:$PYTHONPATH
+
+    2. Due to the inordinate amount of dependencies in this formula
+       FreeCAD is built into a self contained Apple .app bundle.
+       After the installation has completed please drag n drop
+       the FreeCAD.app bundle to the /Applications/ directory.
+
+    3. Due to the large amount of dependenices and rapid updates
+       of such dependenices I chose to make this formula a self
+       contained .app bundle to hopefully prevent constant
+       breakage of the app.
     EOS
+  end
+
+  test do
+    # NOTE: make test more robust and accurate
+    system "true"
   end
 end
