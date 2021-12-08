@@ -13,9 +13,9 @@ class Opencamlib < Formula
     sha256 cellar: :any, mojave:    "16e6e2a6eaba9a3fdaffd4d740895875559d35aa0be547cc3497cd1ac6e2c9d1"
   end
 
+  depends_on "boost" => :build
+  depends_on "boost-python3" => :build
   depends_on "cmake" => :build
-  depends_on "freecad/freecad/boost-python3@1.75.0" => :build
-  depends_on "freecad/freecad/boost@1.75.0" => :build
 
   def install
     args = std_cmake_args + %W[
@@ -29,5 +29,10 @@ class Opencamlib < Formula
       system "cmake", *args, ".."
       system "make", "install"
     end
+  end
+
+  test do
+    # NOTE: flesh out an actual test
+    system "true"
   end
 end
