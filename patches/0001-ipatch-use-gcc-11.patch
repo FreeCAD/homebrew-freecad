@@ -1,0 +1,29 @@
+From 05161eefacbc53956a5db7f0fa33527050d79a2f Mon Sep 17 00:00:00 2001
+From: chris <chris.r.jones.1983@gmail.com>
+Date: Wed, 8 Dec 2021 10:55:14 -0600
+Subject: [PATCH] ipatch, use gcc-11
+
+---
+ CMakeLists.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aa25bc2c..f970455c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,9 +14,9 @@ if(APPLE)
+   # message("you need to have gcc-gfrotran installed using HomeBrew")
+   # set(CMAKE_C_COMPILER "/usr/bin/gcc")
+   # set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+-  set(CMAKE_C_COMPILER "/usr/local/bin/gcc-10")
+-  set(CMAKE_CXX_COMPILER "/usr/local/bin/g++-10")
+-  set(CMAKE_Fortran_COMPILER "/usr/local/bin/gfortran")
++  set(CMAKE_C_COMPILER "/usr/local/bin/gcc-11")
++  set(CMAKE_CXX_COMPILER "/usr/local/bin/g++-11")
++  set(CMAKE_Fortran_COMPILER "/usr/local/bin/gfortran-11")
+   # set(BLA_VENDOR "OpenBLAS")
+   # option(HUNTER_ENABLED "Enable Hunter package manager support" OFF)
+   # set (CMAKE_GENERATOR "Unix Makefiles" CACHE INTERNAL "" FORCE)
+-- 
+2.34.1
+
