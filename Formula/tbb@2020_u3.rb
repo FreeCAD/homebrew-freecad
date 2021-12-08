@@ -14,9 +14,11 @@ class TbbAT2020U3 < Formula
     sha256 cellar: :any, mojave:    "4e1a592b5170c454f78e4363a0023ed17a16566de6c270a4586ea501723b6594"
   end
 
+  keg_only :versioned_formula
+
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.0.2" => :build
-  depends_on "freecad/freecad/python@3.9.6"
+  depends_on "python@3.9"
 
   # Remove when upstream fix is released
   # https://github.com/oneapi-src/oneTBB/pull/258
@@ -38,7 +40,6 @@ class TbbAT2020U3 < Formula
 
     cd "python" do
       ENV["TBBROOT"] = prefix
-      # system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
       system "/usr/local/bin/python3", *Language::Python.setup_install_args(prefix)
     end
 
@@ -78,10 +79,9 @@ class TbbAT2020U3 < Formula
       }
     EOS
 
-    system ENV.cxx, "sum1-100.cpp", "--std=c++14", "-L#{lib}", "-ltbb", "-o", "sum1-100"
+    system ENV.cxx, "sum1-100.cpp", "--std=c++14", "-L#{lib}", "-I#{include}", "-ltbb", "-o", "sum1-100"
     assert_equal "5050", shell_output("./sum1-100").chomp
 
-    # system Formula["#{@tap}/python@3.9.6"].opt_bin/"python3", "-c", "import tbb"
-    system "#{HOMEBREW_PREFIX}/bin/python3", "-c", "import tbb"
+    # system "#{HOMEBREW_PREFIX}/bin/python3", "-c", "import tbb"
   end
 end
