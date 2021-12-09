@@ -19,7 +19,9 @@ class Elmer < Formula
   end
 
   bottle do
-    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/elmer-10pre"
+    rebuild 1
+    sha256 catalina: "85e52e9fbd8078af2fdd846cbc3e7057e626703ee29cc6ab159efbe8d671e801"
   end
 
   depends_on "cmake" => :build
