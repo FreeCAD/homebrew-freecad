@@ -8,10 +8,10 @@ class TbbAT2020U3 < Formula
   revision 1
 
   bottle do
-    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:   "62f987215e72d992507d6b9e0f1fcef19afac7e939b508db35f76112bda94ab7"
-    sha256 cellar: :any, catalina:  "0a2ea081cf8647fd270229d9da1b01909d77b4052e1b516b01e2998176567d9a"
-    sha256 cellar: :any, mojave:    "4e1a592b5170c454f78e4363a0023ed17a16566de6c270a4586ea501723b6594"
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/tbb@2020_u3-2020_U3_1"
+    rebuild 1
+    sha256 cellar: :any, big_sur:  "864d3f62902eeaa997bd313270a88258a1e1085a3e65960a85687a3f468a3e91"
+    sha256 cellar: :any, catalina: "4dac910d761c0034629da7e712ce5b63353d74222830c0c3f2adcdd09768e5a4"
   end
 
   keg_only :versioned_formula
