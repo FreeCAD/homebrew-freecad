@@ -6,6 +6,13 @@ class Qwtelmer < Formula
   license "LGPL-2.1-only" => { with: "Qwt-exception-1.0" }
   revision 1
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/qwtelmer-6.1.6_1"
+    rebuild 1
+    sha256 big_sur:  "0cd96db7502718b30c6a66ac1c4fab0daac0fab75488ea3f13ec5db9d484b20e"
+    sha256 catalina: "e7dd5ff1a9f0bdd97fc14f00435b9e0ee8e958b1121f160709dc2fce491a58b2"
+  end
+
   depends_on "qt@5"
 
   # Update designer plugin linking back to qwt framework/lib after install
