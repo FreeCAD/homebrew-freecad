@@ -63,7 +63,6 @@ class Freecad < Formula
   depends_on "pkg-config"
   depends_on "python@3.9"
   depends_on "qt@5"
-  depends_on "svn" if MacOS.version >= :catalina
   depends_on "vtk@8.2"
   depends_on "webp"
   depends_on "xerces-c"
