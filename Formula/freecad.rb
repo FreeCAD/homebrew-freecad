@@ -28,9 +28,9 @@ class Freecad < Formula
 
   bottle do
     root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/freecad-0.19"
-    rebuild 1
-    sha256 big_sur:  "4c9d4871b60ff183080d340f778c316f71923afd92848f2cc9431c513dc42aae"
-    sha256 catalina: "cb80602b5de4c39487179b8721de9d43f2992e7f0002fc13f8222449af0ce50a"
+    rebuild 2
+    sha256 big_sur:  "3071449f359e31ba91eac3bb0982b3f20e9850bf2ab61e14248c69bea70b2797"
+    sha256 catalina: "3630072675b1a26b7578880c3311de153dc6a0faf85df86358f8d7598101b5c9"
   end
 
   option "with-no-macos-app", "launch FreeCAD from CLI"
