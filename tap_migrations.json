@@ -1,4 +1,4 @@
 {
-"python3.9": "python@3.9",
-"python3.9.6": "python@3.9"
+"python3.9": "homebrew/core/python@3.9",
+"python3.9.6": "homebrew/core/python@3.9"
 }
