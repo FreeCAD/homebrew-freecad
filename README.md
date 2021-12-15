@@ -1,8 +1,19 @@
-# homebrew-freecad
+<!-- use html tags to center content --> 
 
-![img_0039][img1]![img_0040][img2]
+<h2 align="center">homebrew-freecad</h2>
 
-**FreeCAD** is a Free (as in Libre) multiplatform Open Source Parametric 3D CAD software.
+<div align="center">
+<!-- homebrew logo -->
+<img src="https://cloud.githubusercontent.com/assets/4140247/26723866/91e6a282-4764-11e7-9e3b-b8eb4fdc03f1.PNG">
+
+<!-- freecad logo -->
+<img src="https://cloud.githubusercontent.com/assets/4140247/26723951/f96fd95a-4764-11e7-96eb-4889cab6d246.PNG">
+</div>
+
+<!-- add a little spacing -->
+<br />
+
+**FreeCAD** is a Free (as in Libre) multiplatform Open Source Parametric 3D CAD software.<br />
 **Homebrew** is a MacOSX Package Manager.
 
 [img1]: <https://cloud.githubusercontent.com/assets/4140247/26723866/91e6a282-4764-11e7-9e3b-b8eb4fdc03f1.PNG>
@@ -22,33 +33,26 @@ Install [homebrew](http://brew.sh)
 
 Developers may find it convenient to simply install the pre-requisites prior to cloning the FreeCAD repo for development builds.
 
-```
-brew tap FreeCAD/freecad
-brew install --only-dependencies freecad [--with-qt4] [--with-packaging-utils]
+```sh
+brew tap freecad/freecad
+brew install --only-dependencies freecad
 ```
 
 #### Install flags
 
-`--with-qt4 option` use this option to install Qt4 and associated dependencies (defaults to Qt 5.x)<br />
-`--with-packaging-utils` use this option to install the packaging utilities
+`--with-no-macos-app` brew will install freecad as binary to be launched from a CLI
 
 ## Building The Current Release Version of FreeCAD
 
-```
-brew tap FreeCAD/freecad
-brew install freecad
+```sh
+brew tap freecad/freecad
+brew install freecad -v
 ```
 
 ## Building HEAD Version of FreeCAD
 
-```
+```sh
 brew install --HEAD freecad
-```
-
-## Building macOS App
-
-```
-brew install freecad --with-macos-app
 ```
 
 ## Continuous Integration Support
@@ -59,10 +63,13 @@ tested itself.
 
 ## TODOs
 
-- [ ] presently the `python@3.9.6` tap formula installs `pip3` and `wheel3` which will not work if formula is set to `keg_only`
+- [x] ~~presently the `python@3.9.6` tap formula installs `pip3` and `wheel3` which will not work if formula is set to `keg_only`~~
     - look at the [formula cookbook / install section][1] for finding a way to possibly make the tap version of python `keg_only` while not raising an audit error in the process.
+    - the above issue is now adverted by using the upstream (homebrew-core) version of `python@3.9`
+- [ ] publish bottles for older versions of macos ie. mojave & high sierra, there is an active discussion about the topic [here][lnk1]
 
 [1]: <https://docs.brew.sh/Formula-Cookbook#bininstall-foo>
+[lnk1]: <https://github.com/Homebrew/discussions/discussions/2340>
 
 ## Open Issues
 
