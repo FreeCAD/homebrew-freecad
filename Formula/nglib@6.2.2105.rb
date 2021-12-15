@@ -9,10 +9,9 @@ class NglibAT622105 < Formula
   head "https://github.com/ngsolve/netgen.git", branch: "master"
 
   bottle do
-    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/nglib@6.2.2104-6.2.2104_1"
-    rebuild 1
-    sha256 cellar: :any, big_sur:  "c80e26f81b357f2886702f11975a2d89db4bcf727f18282a03ecaca506412c41"
-    sha256 cellar: :any, catalina: "4fef49f495530d869633e40c8d1ae1aede099a4a42a661615ad37d3c67293f35"
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/nglib@6.2.2105-6.2.2105_1"
+    sha256 cellar: :any, big_sur:  "0d18959fecb6930af08d22d9d6f38b7fac43c160a5e1bf024c83f9bf9b536e82"
+    sha256 cellar: :any, catalina: "1a37c920bc73229031752b0eaba90bd73963f41ae563591fd46d45a1dbf85e1e"
   end
 
   depends_on "cmake" => :build
