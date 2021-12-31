@@ -1,0 +1,18 @@
+--- ./sources/shiboken2/libshiboken/sbkstring.cpp.old	2020-11-30 11:17:34.217081554 +0100
++++ ./sources/shiboken2/libshiboken/sbkstring.cpp	2020-11-30 11:24:47.908077166 +0100
+@@ -247,8 +247,15 @@
+ {
+     auto &set = staticStrings();
+     for (PyObject *ob : set) {
++        // Since Python 3.10, interned strings at deleted at Python exit.
++#if PY_VERSION_HEX >= 0x030a0000
++        Py_DECREF(ob);
++        // createStaticString() calls Py_INCREF()
++        Py_DECREF(ob);
++#else
+         Py_REFCNT(ob) = 1;
+         Py_DECREF(ob);
++#endif
+     }
+     set.clear();
+ }
