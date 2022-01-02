@@ -20,6 +20,12 @@ class Shiboken2Python310AT5152 < Formula
     end
   end
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/shiboken2-python3_10@5.15.2-5.15.2"
+    sha256 cellar: :any, big_sur:  "e95e5974c4f97bed8b31e281dcfff1b341e5bc68b4edc0f2c93ff289d5b83538"
+    sha256 cellar: :any, catalina: "4c040f55f8fba0ea551a1af413645d55d3b7de6ff95877b9b17626388067b14d"
+  end
+
   keg_only :versioned_formula # NOTE: will conflict with other shiboken2 installs
 
   depends_on "cmake" => :build
