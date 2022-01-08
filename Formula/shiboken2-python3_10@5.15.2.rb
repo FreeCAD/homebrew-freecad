@@ -47,6 +47,7 @@ class Shiboken2Python310AT5152 < Formula
       args << "-DPYTHON_EXECUTABLE=#{pyhome}/bin/python3.10"
       args << "-DPYTHON_LIBRARY=#{py_library}"
       args << "-DPYTHON_INCLUDE_DIR=#{py_include}"
+      args << "-DFORCE_LIMITED_API=1"
       args << "../sources/shiboken2"
 
       system "cmake", *args
