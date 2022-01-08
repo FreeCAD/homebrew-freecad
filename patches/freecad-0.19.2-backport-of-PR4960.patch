@@ -1,0 +1,36 @@
+diff -ruN FreeCAD-0.19.2/src/Mod/Cam/App/CMakeLists.txt FreeCAD-0.19.2.pr4960/src/Mod/Cam/App/CMakeLists.txt
+--- FreeCAD-0.19.2/src/Mod/Cam/App/CMakeLists.txt	2021-04-15 04:17:08.000000000 -0500
++++ FreeCAD-0.19.2.pr4960/src/Mod/Cam/App/CMakeLists.txt	2021-12-04 12:25:58.000000000 -0600
+@@ -14,7 +14,7 @@
+     ${OCC_INCLUDE_DIR}
+     ${ZLIB_INCLUDE_DIR}
+     ${PYTHON_INCLUDE_PATH}
+-    ${XERCESC_INCLUDE_DIR}
++    ${XercesC_INCLUDE_DIR}
+     ${UMFPACK_INCLUDE_DIR}
+     ${SMSH_INCLUDE_DIR}
+     ${SMESH_INCLUDE_DIR}
+diff -ruN FreeCAD-0.19.2/src/Mod/Cam/Gui/CMakeLists.txt FreeCAD-0.19.2.pr4960/src/Mod/Cam/Gui/CMakeLists.txt
+--- FreeCAD-0.19.2/src/Mod/Cam/Gui/CMakeLists.txt	2021-04-15 04:17:08.000000000 -0500
++++ FreeCAD-0.19.2.pr4960/src/Mod/Cam/Gui/CMakeLists.txt	2021-12-04 12:26:33.000000000 -0600
+@@ -13,7 +13,7 @@
+     ${PYTHON_INCLUDE_PATH}
+     ${QT_INCLUDE_DIR}
+     ${ZLIB_INCLUDE_DIR}
+-    ${XERCESC_INCLUDE_DIR}
++    ${XercesC_INCLUDE_DIR}
+     ${SMSH_INCLUDE_DIR}
+     ${SMESH_INCLUDE_DIR}
+ )
+diff -ruN FreeCAD-0.19.2/src/Mod/Measure/App/CMakeLists.txt FreeCAD-0.19.2.pr4960/src/Mod/Measure/App/CMakeLists.txt
+--- FreeCAD-0.19.2/src/Mod/Measure/App/CMakeLists.txt	2021-04-15 04:17:08.000000000 -0500
++++ FreeCAD-0.19.2.pr4960/src/Mod/Measure/App/CMakeLists.txt	2021-12-04 12:28:16.000000000 -0600
+@@ -13,7 +13,7 @@
+     ${OCC_INCLUDE_DIR}
+     ${ZLIB_INCLUDE_DIR}
+     ${PYTHON_INCLUDE_PATH}
+-    ${XERCESC_INCLUDE_DIR}
++    ${XercesC_INCLUDE_DIR}
+ )
+ link_directories(${OCC_LIBRARY_DIR})
+ 
