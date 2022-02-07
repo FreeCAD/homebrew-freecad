@@ -7,8 +7,8 @@ class Freecad < Formula
 
   # NOTE: may require pointing to a specific tag / commit ???
   stable do
-    url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.19.2.tar.gz"
-    sha256 "47e39e3d6fcafe6e0c68923fb1b86acda16986268e5e6011694057b940139fba"
+    url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.19.3.tar.gz"
+    sha256 "568fa32a9601693ff9273f3a5a2e825915f58b2455ffa173bc23f981edecd07d"
   end
 
   # NOTE: freecad src has issues building macos app bundle, the gist patch...
