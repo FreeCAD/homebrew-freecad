@@ -7,15 +7,15 @@ on:
       - master
 
   pull_request:
-  # workflow_dispatch:  # NOTE: nova with homebrew gha 
+  # workflow_dispatch:  # NOTE: nova with homebrew gha
 
 jobs:
   test-bot:
     strategy:
       matrix:
         # os: [ubuntu-latest, macos-latest] # NOTE: default
-        # NOTE: homebrew-core uses private self hosted runner
-        # NOTE: `macOS-latest` default runner provided by github
+        # NOTE: homebrew-core uses private self hosted runners
+        # NOTE: `macOS-latest` is the default runner provided by github
         # os: [ self-hosted-catalinavm, self-hosted-bigsurvm ]
         os: [ self-hosted-catalinavm, self-hosted-bigsurvm, self-hosted-mojavevm ]
         # os: [ self-hosted-mojavevm ]
@@ -63,6 +63,15 @@ jobs:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ runner.os }}-rubygems-
+
+      # NOTE: exp with using a condition to add env var for mojave runner
+      # SEE: https://docs.github.com/en/actions/learn-github-actions/environment-variables
+      #
+      # NOTE: may require using `RUNNER_NAME` instead of `runner.os`
+      - name: condition 1
+        if: runner.os == 'self-hosted-mojavevm'
+        run: echo "The operating system on the runner is, $RUNNER_OS."
+        run: export HOMEBREW_DEVELOPER=1
 
       - name: Install Homebrew Bundler RubyGems
         if: steps.cache.outputs.cache-hit != 'true' && steps.last_run_status.outputs.last_run_status != 'success'
