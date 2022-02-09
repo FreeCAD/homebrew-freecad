@@ -7,8 +7,8 @@ class Freecad < Formula
 
   # NOTE: may require pointing to a specific tag / commit ???
   stable do
-    url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.19.2.tar.gz"
-    sha256 "47e39e3d6fcafe6e0c68923fb1b86acda16986268e5e6011694057b940139fba"
+    url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.19.3.tar.gz"
+    sha256 "568fa32a9601693ff9273f3a5a2e825915f58b2455ffa173bc23f981edecd07d"
   end
 
   # NOTE: freecad src has issues building macos app bundle, the gist patch...
@@ -28,9 +28,9 @@ class Freecad < Formula
 
   bottle do
     root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/freecad-0.19"
-    rebuild 2
-    sha256 big_sur:  "3071449f359e31ba91eac3bb0982b3f20e9850bf2ab61e14248c69bea70b2797"
-    sha256 catalina: "3630072675b1a26b7578880c3311de153dc6a0faf85df86358f8d7598101b5c9"
+    rebuild 3
+    sha256 big_sur:  "413f29de4ffabb64bb5c90d9ec7b338c98b7b7a20689c3040336bf6627bd906f"
+    sha256 catalina: "d8a4caa617ba25a86a363142e4db8a6e07c496c0453034aac5918fb0444c1fb1"
   end
 
   option "with-no-macos-app", "launch FreeCAD from CLI"
