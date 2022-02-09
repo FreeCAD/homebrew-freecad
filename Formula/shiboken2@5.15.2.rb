@@ -7,9 +7,9 @@ class Shiboken2AT5152 < Formula
 
   bottle do
     root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/shiboken2@5.15.2-5.15.2"
-    sha256 cellar: :any, big_sur:  "b8d2ad961130d7e8f6a838bc95b55c12d529befe6a0cd03aebef7792abd060e6"
-    sha256 cellar: :any, catalina: "43d87877ce4168d1d6c5574cf4dc26683845ed8fa74d5ca23aa9174dc167db8d"
-    sha256 cellar: :any, mojave:   "3ee35e362c5b373328c53f9a85927b1282e32ccf542343de359c3d96405ceef3"
+    rebuild 1
+    sha256 cellar: :any, big_sur:  "8252b87c5e787a3a56c4e84ede41c8cb03d6b7463be958895f5e17c98d569670"
+    sha256 cellar: :any, catalina: "6dc52aece8ea86a5fe2ff770fa3f45ae2e57b7fa7ccd5600c61950e18e6bef0e"
   end
 
   keg_only :versioned_formula # NOTE: will conflict with other shiboken2 installs
