@@ -4,7 +4,8 @@ class SwigAT402 < Formula
   # NOTE: see github issue, https://github.com/swig/swig/issues/2069
   url "https://downloads.sourceforge.net/project/swig/swig/swig-4.0.2/swig-4.0.2.tar.gz"
   sha256 "d53be9730d8d58a16bf0cbd1f8ac0c0c3e1090573168bfa151b01eb47fa906fc"
-  license "GPL-3.0"
+  license "GPL-3.0-only"
+  revision 1
 
   livecheck do
     url :stable
@@ -19,7 +20,7 @@ class SwigAT402 < Formula
   end
 
   head do
-    url "https://github.com/swig/swig.git"
+    url "https://github.com/swig/swig.git", branch: "master"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
