@@ -25,6 +25,8 @@ The primary and frequent use case for this formula is for developers to convenie
 
 #### NOTE: If you are looking for the current macOS builds, please download the latest build from [GitHub](https://github.com/FreeCAD/FreeCAD/releases)
 
+> Alternatively there are versions of FreeCAD & friends built using conda, there are a weekly releases published [**here**](https://github.com/FreeCAD/FreeCAD-Bundle/releases/tag/weekly-builds)
+
 ## Prerequisites
 
 Install [homebrew](http://brew.sh)
