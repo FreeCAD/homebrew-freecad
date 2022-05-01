@@ -74,6 +74,10 @@ jobs:
         # NOTE: not possible to have two `run:` blocks within a `name`
         # run: export HOMEBREW_DEVELOPER=1
 
+      - name: condition 2
+        if: runner.os == 'self-hosted-mojavevm'
+        run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/gromgit/homebrew-core-mojave
+
       - name: Install Homebrew Bundler RubyGems
         if: steps.cache.outputs.cache-hit != 'true' && steps.last_run_status.outputs.last_run_status != 'success'
         run: brew install-bundler-gems
