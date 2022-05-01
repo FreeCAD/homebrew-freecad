@@ -69,13 +69,13 @@ jobs:
       #
       # NOTE: may require using `RUNNER_NAME` instead of `runner.os`
       - name: condition 1
-        if: runner.os == 'self-hosted-mojavevm'
+        if: runner.name == 'self-hosted-mojavevm'
         run: echo "The operating system on the runner is, $RUNNER_OS."; echo HOMEBREW_DEVELOPER=1 >> $GITHUB_ENV
         # NOTE: not possible to have two `run:` blocks within a `name`
         # run: export HOMEBREW_DEVELOPER=1
 
       - name: condition 2
-        if: runner.os == 'self-hosted-mojavevm'
+        if: runner.name == 'self-hosted-mojavevm'
         run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/gromgit/homebrew-core-mojave
 
       - name: Install Homebrew Bundler RubyGems
