@@ -79,7 +79,7 @@ jobs:
 
       - name: condition 2
         if: runner.name == 'vmmojave'
-        run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/gromgit/homebrew-core-mojave
+        run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/gromgit/homebrew-core-mojave >> $GITHUB_ENV
 
       - name: Install Homebrew Bundler RubyGems
         if: steps.cache.outputs.cache-hit != 'true' && steps.last_run_status.outputs.last_run_status != 'success'
