@@ -16,6 +16,13 @@ class Shiboken2AT5153 < Formula
     end
   end
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/shiboken2@5.15.3-5.15.3"
+    sha256 cellar: :any, big_sur:  "87a735f56ca1979e0595e5cd7fc8706bf59a8d606fa8035760ec55d137ed1fbc"
+    sha256 cellar: :any, catalina: "f3be30328b639ebb7bc859e2891cbc53ca454ae78a733d58acb8734fc251cebc"
+    sha256 cellar: :any, mojave:   "3491bdc5e78a96f21e8c47e059abc3f1e23b0d016702454c4d89d78a54fcb3c1"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
