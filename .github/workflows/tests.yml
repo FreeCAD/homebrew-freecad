@@ -12,12 +12,16 @@ on:
 jobs:
   test-bot:
     strategy:
+      # NOTE: ipatch, all three self hosted runners (vms) are hosted on same computer
+      #   ...so limit job to one runner at a time.
+      # REF: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#defining-the-maximum-number-of-concurrent-jobs
+      max-parallel: 1
       matrix:
         # os: [ubuntu-latest, macos-latest] # NOTE: default
-        # NOTE: homebrew-core uses private self hosted runners
+        # NOTE: homebrew/homebrew-core uses private self hosted runners
         # NOTE: `macOS-latest` is the default runner provided by github
-        # os: [ self-hosted-catalinavm, self-hosted-bigsurvm ]
         os: [ self-hosted-catalinavm, self-hosted-bigsurvm, self-hosted-mojavevm ]
+        # os: [ self-hosted-catalinavm, self-hosted-bigsurvm ]
         # os: [ self-hosted-mojavevm ]
 
     runs-on: ${{ matrix.os }}
@@ -68,14 +72,11 @@ jobs:
         run: env
 
       # NOTE: exp with using a condition to add env var for mojave runner
-      # SEE: https://docs.github.com/en/actions/learn-github-actions/environment-variables
-      #
-      # NOTE: may require using `RUNNER_NAME` instead of `runner.os`
+      # REF: https://docs.github.com/en/actions/learn-github-actions/environment-variables
       - name: condition 1
         if: runner.name == 'vmmojave'
         run: echo "The operating system on the runner is, $RUNNER_OS."; echo HOMEBREW_DEVELOPER=1 >> $GITHUB_ENV
         # NOTE: not possible to have two `run:` blocks within a `name`
-        # run: export HOMEBREW_DEVELOPER=1
 
       - name: condition 2
         if: runner.name == 'vmmojave'
