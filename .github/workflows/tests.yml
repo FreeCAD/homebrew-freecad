@@ -15,7 +15,7 @@ jobs:
       # NOTE: ipatch, all three self hosted runners (vms) are hosted on same computer
       #   ...so limit job to one runner at a time.
       # REF: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#defining-the-maximum-number-of-concurrent-jobs
-      max-parallel: 1
+      # max-parallel: 1
       matrix:
         # os: [ubuntu-latest, macos-latest] # NOTE: default
         # NOTE: homebrew/homebrew-core uses private self hosted runners
