@@ -96,6 +96,7 @@ jobs:
         if: runner.name == 'vmmojave'
         run: sed -i '' -e '/go@1.9/d' -e '/go@1.10/d' -e '/go@1.11/d' -e '/go@1.12/d' $(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json
 
+      # NOTE: below step fails on vmmojave due to alt hombrew_core_git_remote
       - run: brew test-bot --only-formulae
         if: github.event_name == 'pull_request'
 
