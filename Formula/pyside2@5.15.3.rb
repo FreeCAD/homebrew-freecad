@@ -5,6 +5,13 @@ class Pyside2AT5153 < Formula
   sha256 "7ff5f1cc4291fffb6d5a3098b3090abe4d415da2adec740b4e901893d95d7137"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/pyside2@5.15.3-5.15.3"
+    sha256 cellar: :any, big_sur:  "a87441aa8c3d459dfb9e4d62380b02cdc0eb6184c5749b5cb4208d0a563d6e9d"
+    sha256 cellar: :any, catalina: "ccd9c96feb0e7d39c0cb58c7f269d44b9746030a387465ad177f5ab76105f76f"
+    sha256 cellar: :any, mojave:   "2c9e75f76c3eebe1386f8bf94cd37667669f19aa49f522833b1c20f4a6b1b108"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
