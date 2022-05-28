@@ -9,21 +9,7 @@ jobs:
   pr-pull:
     if: contains(github.event.pull_request.labels.*.name, 'pr-pull')
     # runs-on: ubuntu-latest
-    # runs-on: [ self-hosted-mojavevm ]
     runs-on: [ macos-latest ]
-    # os: [ self-hosted-mojavevm ]
-    # strategy:
-    # matrix:
-      # os: [ubuntu-latest, macos-latest] # NOTE: default setup
-      # os: [ macOS-latest ] # NOTE: good configuration, known to work
-      # NOTE: homebrew-core uses a self hosted runner to generate bottles for the last 3 versions of macos
-      # NOTE: exp with `self-hosted` runner
-      # NOTE: `macOS-latest` is the default runner provided by github
-      # os: [macOS-latest, self-hosted]
-      # os: [ self-hosted-bigsur, self-hosted-catalina, self-hosted-mojave ]
-      # os: [ self-hosted-mojavevm ]
-    # runs-on: macos-latest
-    # runs-on: ${{ matrix.os }}
 
     steps:
       - name: Set up Homebrew
@@ -35,6 +21,8 @@ jobs:
       - name: Pull bottles
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+          HOMEBREW_GITHUB_PACKAGES_TOKEN: ${{ github.token }}
+          HOMEBREW_GITHUB_PACKAGES_USER: ${{ github.actor }}
           PULL_REQUEST: ${{ github.event.pull_request.number }}
         run: brew pr-pull --debug --tap=$GITHUB_REPOSITORY $PULL_REQUEST
 
