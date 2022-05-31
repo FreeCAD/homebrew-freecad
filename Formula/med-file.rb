@@ -12,6 +12,13 @@ class MedFile < Formula
     # regex(/^med-4.\d.\d.tar.gz$/i)
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, big_sur:  "cd0008921ee53cf925ba36101059428359ba2dceb29a796b1dd79648b2c99bd5"
+    sha256 cellar: :any, catalina: "2ca2b09c25f320c19f85d7d76e4f6061bb4010614d849223304c9bf6b80af298"
+    sha256 cellar: :any, mojave:   "24ec9a8534fa4088ef465ee960c72936c6db60d30adaa1332d91306a3902a26f"
+  end
+
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.0.2" => :build
   depends_on "gcc"
