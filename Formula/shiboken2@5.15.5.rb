@@ -9,6 +9,13 @@ class Shiboken2AT5155 < Formula
     sha256 "d1c61308c53636823c1d0662f410966e4a57c2681b551003e458b2cc65902c41"
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, big_sur:  "19f9073149562716feb006bf0dbfe3f6852e1fcdd2f13b1d97f59dd9b397ad40"
+    sha256 cellar: :any, catalina: "728a3e5c4bfbee37b2ab564ddce6cf484f99b7f4f5f3b1264a22797737dcae1a"
+    sha256 cellar: :any, mojave:   "e228c9469da1a7ee75407f64ec9d6225ceafbf6e9207eb755822f0ee245c5c14"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
