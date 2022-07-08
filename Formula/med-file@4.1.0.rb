@@ -11,6 +11,8 @@ class MedFileAT410 < Formula
     sha256 cellar: :any, catalina: "c64d99f32acdcb1d6646bf06bdd6e8b760c1ab4bd3659976dd9eecc50e70b87b"
   end
 
+  deprecate! date: "2022-07-31", because: :versioned_formula
+
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.0.2" => :build
   depends_on "gcc" => :build   # for gfortan
