@@ -52,6 +52,9 @@ class MatplotlibAT343 < Formula
 
   deprecated_option "with-gtk3" => "with-gtk+3"
 
+  # NOTE: will add matplotlib as a python resource in the freecad formula
+  deprecate! date: "2022-07-31", because: :unsupported
+
   depends_on NoExternalPyCXXPackage => :build
   depends_on "pkg-config" => :build
   depends_on DvipngRequirement if build.with? "tex"
