@@ -5,6 +5,12 @@ class Pyside2AT5155 < Formula
   sha256 "d1c61308c53636823c1d0662f410966e4a57c2681b551003e458b2cc65902c41"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, big_sur:  "609b5396a299fe1a3a9a0b98d5edb8596cba10619b2794d937bfee3d4c735ee5"
+    sha256 cellar: :any, catalina: "cb9c38024167a60647177545570a09beb3033a178367fb17a1e0e63fd9186fc7"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
