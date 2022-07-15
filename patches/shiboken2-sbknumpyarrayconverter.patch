@@ -1,8 +1,7 @@
-From 5dbcdc8ef4a20b4715cef65b253a003f2f3dc445 Mon Sep 17 00:00:00 2001
+From 0edaa3f9fa74aa99dd25aa9df805be0291995f40 Mon Sep 17 00:00:00 2001
 From: chris <chris.r.jones.1983@gmail.com>
-Date: Wed, 6 Jul 2022 20:05:01 -0500
-Subject: [PATCH] patch sbknumpyarrayconverter.cpp for shiboken2 with numpy
- v1.23
+Date: Fri, 15 Jul 2022 14:20:53 -0500
+Subject: [PATCH] sbknumpyarrayconverter patch for shiboken2
 
 ---
  sources/shiboken2/libshiboken/sbknumpyarrayconverter.cpp | 5 +++++
@@ -14,18 +13,18 @@ index 996968f..cc25b34 100644
 +++ b/sources/shiboken2/libshiboken/sbknumpyarrayconverter.cpp
 @@ -116,8 +116,13 @@ std::ostream &operator<<(std::ostream &str, PyArrayObject *o)
              str << " NPY_ARRAY_NOTSWAPPED";
--         if ((flags & NPY_ARRAY_WRITEABLE) != 0)
--             str << " NPY_ARRAY_WRITEABLE";
+         if ((flags & NPY_ARRAY_WRITEABLE) != 0)
+             str << " NPY_ARRAY_WRITEABLE";
 +#if NPY_VERSION >= 0x00000010 // NPY_1_23_API_VERSION
 +        if ((flags & NPY_ARRAY_WRITEBACKIFCOPY) != 0)
 +            str << " NPY_ARRAY_WRITEBACKIFCOPY";
 +#else
-+        if ((flags & NPY_ARRAY_UPDATEIFCOPY) != 0)
-+            str << " NPY_ARRAY_UPDATEIFCOPY";
+         if ((flags & NPY_ARRAY_UPDATEIFCOPY) != 0)
+             str << " NPY_ARRAY_UPDATEIFCOPY";
 +#endif
      } else {
          str << '0';
      }
 -- 
-2.37.0
+2.37.1
 
