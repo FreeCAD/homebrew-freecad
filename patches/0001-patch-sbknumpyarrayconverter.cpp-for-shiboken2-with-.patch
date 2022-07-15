@@ -20,8 +20,8 @@ index 996968f..cc25b34 100644
 +        if ((flags & NPY_ARRAY_WRITEBACKIFCOPY) != 0)
 +            str << " NPY_ARRAY_WRITEBACKIFCOPY";
 +#else
-         if ((flags & NPY_ARRAY_UPDATEIFCOPY) != 0)
-             str << " NPY_ARRAY_UPDATEIFCOPY";
++        if ((flags & NPY_ARRAY_UPDATEIFCOPY) != 0)
++            str << " NPY_ARRAY_UPDATEIFCOPY";
 +#endif
      } else {
          str << '0';
