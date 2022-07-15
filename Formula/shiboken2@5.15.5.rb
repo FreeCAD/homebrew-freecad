@@ -9,13 +9,6 @@ class Shiboken2AT5155 < Formula
     sha256 "d1c61308c53636823c1d0662f410966e4a57c2681b551003e458b2cc65902c41"
   end
 
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 1
-    sha256 cellar: :any, big_sur:  "fda234af106f30464b8b2a322dad9cf22d33c72e9f455f34d7be3fc7d44cb21b"
-    sha256 cellar: :any, catalina: "51b20e72fe203718845c594e22aafca65e848a11beab1922bbf1d633df1db5d3"
-  end
-
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
@@ -31,6 +24,12 @@ class Shiboken2AT5155 < Formula
   patch do
     url "https://github.com/FreeCAD/homebrew-freecad/commit/f5e8c39e762c104e84c802a6f4c583eb9c2d670c.patch"
     sha256 "2c1cd17698c1d1350f04223fab1bbcd92075f22721c3ef3665eeb24e8cd75040"
+  end
+
+  # fix for numpy v1.23
+  patch do
+    url "https://github.com/FreeCAD/homebrew-freecad/commit/76343cd43169b5b6c317ec9e2046735ac501fc5c.patch"
+    sha256 "cf80b15bf2df6808ad3283133a31bc18108c1e467708bdff789cd56033d5dbd4"
   end
 
   def install
