@@ -20,17 +20,7 @@ class Shiboken2AT5155 < Formula
   uses_from_macos "libxml2"
   uses_from_macos "libxslt"
 
-  # fix for python v3.10
-  patch do
-    url "https://github.com/FreeCAD/homebrew-freecad/commit/f5e8c39e762c104e84c802a6f4c583eb9c2d670c.patch"
-    sha256 "2c1cd17698c1d1350f04223fab1bbcd92075f22721c3ef3665eeb24e8cd75040"
-  end
-
-  # fix for numpy v1.23
-  patch do
-    url "https://github.com/FreeCAD/homebrew-freecad/commit/76343cd43169b5b6c317ec9e2046735ac501fc5c.patch"
-    sha256 "cf80b15bf2df6808ad3283133a31bc18108c1e467708bdff789cd56033d5dbd4"
-  end
+  patch :p0, :DATA
 
   def install
     ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
@@ -59,3 +49,100 @@ class Shiboken2AT5155 < Formula
     system "#{bin}/shiboken2", "--version"
   end
 end
+
+__END__
+--- sources/shiboken2/libshiboken/pep384impl.cpp.orig	2022-07-17 22:14:14.000000000 +0300
++++ sources/shiboken2/libshiboken/pep384impl.cpp	2022-07-17 22:20:39.000000000 +0300
+@@ -707,6 +707,76 @@
+  *
+  */
+ 
++#if PY_VERSION_HEX >= 0x03000000
++PyObject *
++_Py_Mangle(PyObject *privateobj, PyObject *ident)
++{
++    /* Name mangling: __private becomes _classname__private.
++       This is independent from how the name is used. */
++    PyObject *result;
++    size_t nlen, plen, ipriv;
++    Py_UCS4 maxchar;
++    if (privateobj == NULL || !PyUnicode_Check(privateobj) ||
++        PyUnicode_READ_CHAR(ident, 0) != '_' ||
++        PyUnicode_READ_CHAR(ident, 1) != '_') {
++        Py_INCREF(ident);
++        return ident;
++    }
++    nlen = PyUnicode_GET_LENGTH(ident);
++    plen = PyUnicode_GET_LENGTH(privateobj);
++    /* Don't mangle __id__ or names with dots.
++
++       The only time a name with a dot can occur is when
++       we are compiling an import statement that has a
++       package name.
++
++       TODO(jhylton): Decide whether we want to support
++       mangling of the module name, e.g. __M.X.
++    */
++    if ((PyUnicode_READ_CHAR(ident, nlen-1) == '_' &&
++         PyUnicode_READ_CHAR(ident, nlen-2) == '_') ||
++        PyUnicode_FindChar(ident, '.', 0, nlen, 1) != -1) {
++        Py_INCREF(ident);
++        return ident; /* Don't mangle __whatever__ */
++    }
++    /* Strip leading underscores from class name */
++    ipriv = 0;
++    while (PyUnicode_READ_CHAR(privateobj, ipriv) == '_')
++        ipriv++;
++    if (ipriv == plen) {
++        Py_INCREF(ident);
++        return ident; /* Don't mangle if class is just underscores */
++    }
++    plen -= ipriv;
++
++    if (plen + nlen >= PY_SSIZE_T_MAX - 1) {
++        PyErr_SetString(PyExc_OverflowError,
++                        "private identifier too large to be mangled");
++        return NULL;
++    }
++
++    maxchar = PyUnicode_MAX_CHAR_VALUE(ident);
++    if (PyUnicode_MAX_CHAR_VALUE(privateobj) > maxchar)
++        maxchar = PyUnicode_MAX_CHAR_VALUE(privateobj);
++
++    result = PyUnicode_New(1 + nlen + plen, maxchar);
++    if (!result)
++        return 0;
++    /* ident = "_" + priv[ipriv:] + ident # i.e. 1+plen+nlen bytes */
++    PyUnicode_WRITE(PyUnicode_KIND(result), PyUnicode_DATA(result), 0, '_');
++    if (PyUnicode_CopyCharacters(result, 1, privateobj, ipriv, plen) < 0) {
++        Py_DECREF(result);
++        return NULL;
++    }
++    if (PyUnicode_CopyCharacters(result, plen+1, ident, 0, nlen) < 0) {
++        Py_DECREF(result);
++        return NULL;
++    }
++    assert(_PyUnicode_CheckConsistency(result, 1));
++    return result;
++}
++#endif
++
+ #ifdef Py_LIMITED_API
+ // We keep these definitions local, because they don't work in Python 2.
+ # define PyUnicode_GET_LENGTH(op)    PyUnicode_GetLength((PyObject *)(op))
+--- sources/shiboken2/libshiboken/sbknumpyarrayconverter.cpp	2022-07-17 21:07:58.000000000 +0300
++++ sources/shiboken2/libshiboken/sbknumpyarrayconverter.cpp	2022-07-17 21:08:50.000000000 +0300
+@@ -116,8 +116,13 @@
+             str << " NPY_ARRAY_NOTSWAPPED";
+         if ((flags & NPY_ARRAY_WRITEABLE) != 0)
+             str << " NPY_ARRAY_WRITEABLE";
++#if NPY_VERSION >= 0x00000010 // NPY_1_23_API_VERSION
++        if ((flags & NPY_ARRAY_WRITEBACKIFCOPY) != 0)
++            str << " NPY_ARRAY_WRITEBACKIFCOPY";
++#else
+         if ((flags & NPY_ARRAY_UPDATEIFCOPY) != 0)
+             str << " NPY_ARRAY_UPDATEIFCOPY";
++#endif
+     } else {
+         str << '0';
+     }
