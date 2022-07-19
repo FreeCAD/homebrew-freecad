@@ -2,6 +2,7 @@ class Shiboken2AT5155 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
   homepage "https://code.qt.io/cgit/pyside/pyside-setup.git/tree/README.shiboken2-generator.md?h=5.15.2"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
+  revision 1
   head "https://github.com/qt/qt5.git", branch: "dev", shallow: false
 
   stable do
@@ -20,7 +21,17 @@ class Shiboken2AT5155 < Formula
   uses_from_macos "libxml2"
   uses_from_macos "libxslt"
 
-  patch :p0, :DATA
+  # fix for numpy v1.23 API
+  patch :p0 do
+    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/8944b8b362c7fd87c515efb07eb0fb022e946610/patches/libshiboken-numpy-1.23.compat.patch"
+    sha256 "e5a503eb5beb0f3e438559920081c28a7f663d79a34a9efb0a1459fa1ffb6f6a"
+  end
+
+  # fix for python v3.10
+  patch :p0 do
+    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/8944b8b362c7fd87c515efb07eb0fb022e946610/patches/libshiboken2-python10-compat.patch"
+    sha256 "bb234f9a37fd9af1d20ca4a90829580be1c0df2cb55061e350619fd3fb0c1e36"
+  end
 
   def install
     ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
@@ -49,100 +60,3 @@ class Shiboken2AT5155 < Formula
     system "#{bin}/shiboken2", "--version"
   end
 end
-
-__END__
---- sources/shiboken2/libshiboken/pep384impl.cpp.orig	2022-07-17 22:14:14.000000000 +0300
-+++ sources/shiboken2/libshiboken/pep384impl.cpp	2022-07-17 22:20:39.000000000 +0300
-@@ -707,6 +707,76 @@
-  *
-  */
- 
-+#if PY_VERSION_HEX >= 0x03000000
-+PyObject *
-+_Py_Mangle(PyObject *privateobj, PyObject *ident)
-+{
-+    /* Name mangling: __private becomes _classname__private.
-+       This is independent from how the name is used. */
-+    PyObject *result;
-+    size_t nlen, plen, ipriv;
-+    Py_UCS4 maxchar;
-+    if (privateobj == NULL || !PyUnicode_Check(privateobj) ||
-+        PyUnicode_READ_CHAR(ident, 0) != '_' ||
-+        PyUnicode_READ_CHAR(ident, 1) != '_') {
-+        Py_INCREF(ident);
-+        return ident;
-+    }
-+    nlen = PyUnicode_GET_LENGTH(ident);
-+    plen = PyUnicode_GET_LENGTH(privateobj);
-+    /* Don't mangle __id__ or names with dots.
-+
-+       The only time a name with a dot can occur is when
-+       we are compiling an import statement that has a
-+       package name.
-+
-+       TODO(jhylton): Decide whether we want to support
-+       mangling of the module name, e.g. __M.X.
-+    */
-+    if ((PyUnicode_READ_CHAR(ident, nlen-1) == '_' &&
-+         PyUnicode_READ_CHAR(ident, nlen-2) == '_') ||
-+        PyUnicode_FindChar(ident, '.', 0, nlen, 1) != -1) {
-+        Py_INCREF(ident);
-+        return ident; /* Don't mangle __whatever__ */
-+    }
-+    /* Strip leading underscores from class name */
-+    ipriv = 0;
-+    while (PyUnicode_READ_CHAR(privateobj, ipriv) == '_')
-+        ipriv++;
-+    if (ipriv == plen) {
-+        Py_INCREF(ident);
-+        return ident; /* Don't mangle if class is just underscores */
-+    }
-+    plen -= ipriv;
-+
-+    if (plen + nlen >= PY_SSIZE_T_MAX - 1) {
-+        PyErr_SetString(PyExc_OverflowError,
-+                        "private identifier too large to be mangled");
-+        return NULL;
-+    }
-+
-+    maxchar = PyUnicode_MAX_CHAR_VALUE(ident);
-+    if (PyUnicode_MAX_CHAR_VALUE(privateobj) > maxchar)
-+        maxchar = PyUnicode_MAX_CHAR_VALUE(privateobj);
-+
-+    result = PyUnicode_New(1 + nlen + plen, maxchar);
-+    if (!result)
-+        return 0;
-+    /* ident = "_" + priv[ipriv:] + ident # i.e. 1+plen+nlen bytes */
-+    PyUnicode_WRITE(PyUnicode_KIND(result), PyUnicode_DATA(result), 0, '_');
-+    if (PyUnicode_CopyCharacters(result, 1, privateobj, ipriv, plen) < 0) {
-+        Py_DECREF(result);
-+        return NULL;
-+    }
-+    if (PyUnicode_CopyCharacters(result, plen+1, ident, 0, nlen) < 0) {
-+        Py_DECREF(result);
-+        return NULL;
-+    }
-+    assert(_PyUnicode_CheckConsistency(result, 1));
-+    return result;
-+}
-+#endif
-+
- #ifdef Py_LIMITED_API
- // We keep these definitions local, because they don't work in Python 2.
- # define PyUnicode_GET_LENGTH(op)    PyUnicode_GetLength((PyObject *)(op))
---- sources/shiboken2/libshiboken/sbknumpyarrayconverter.cpp	2022-07-17 21:07:58.000000000 +0300
-+++ sources/shiboken2/libshiboken/sbknumpyarrayconverter.cpp	2022-07-17 21:08:50.000000000 +0300
-@@ -116,8 +116,13 @@
-             str << " NPY_ARRAY_NOTSWAPPED";
-         if ((flags & NPY_ARRAY_WRITEABLE) != 0)
-             str << " NPY_ARRAY_WRITEABLE";
-+#if NPY_VERSION >= 0x00000010 // NPY_1_23_API_VERSION
-+        if ((flags & NPY_ARRAY_WRITEBACKIFCOPY) != 0)
-+            str << " NPY_ARRAY_WRITEBACKIFCOPY";
-+#else
-         if ((flags & NPY_ARRAY_UPDATEIFCOPY) != 0)
-             str << " NPY_ARRAY_UPDATEIFCOPY";
-+#endif
-     } else {
-         str << '0';
-     }
