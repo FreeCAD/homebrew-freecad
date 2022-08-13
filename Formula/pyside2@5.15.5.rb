@@ -4,6 +4,7 @@ class Pyside2AT5155 < Formula
   url "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.5-src/pyside-setup-opensource-src-5.15.5.zip"
   sha256 "d1c61308c53636823c1d0662f410966e4a57c2681b551003e458b2cc65902c41"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
+  revision 1
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -62,7 +63,8 @@ class Pyside2AT5155 < Formula
   def caveats
     <<-EOS
     if qt6, qt@6 is linked then this formula will fail to build from source
-    this formula requires manually linking after install
+    this formula requires manually linking after install or appending the
+    PYTHONPATH for cmake and friends to work with this installation.
     EOS
   end
 
