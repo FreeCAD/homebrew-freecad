@@ -12,6 +12,7 @@ class Freecad < Formula
   option "with-macos-app", "Create FreeCAD.app bundle"
   option "with-cloud", "Build with CLOUD module"
   option "with-unsecured-cloud", "Build with self signed certificate support CLOUD module"
+  # option "with-skip-web", "Disable web"
 
   depends_on "cmake" => :build
   depends_on "hdf5" => :build
