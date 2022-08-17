@@ -77,6 +77,7 @@ class Elmer < Formula
 
   def caveats
     <<-EOS
+    complete at a later date
     EOS
   end
 
