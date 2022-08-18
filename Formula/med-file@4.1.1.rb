@@ -1,4 +1,4 @@
-class MedFile < Formula
+class MedFileAT411 < Formula
   desc "Modeling and Data Exchange standardized format library"
   homepage "https://www.salome-platform.org/"
   url "https://files.salome-platform.org/Salome/other/med-4.1.1.tar.gz"

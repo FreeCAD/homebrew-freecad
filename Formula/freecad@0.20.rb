@@ -1,4 +1,4 @@
-class Freecad < Formula
+class FreecadAT020 < Formula
   desc "Parametric 3D modeler"
   homepage "https://www.freecadweb.org"
   license "GPL-2.0-only"
