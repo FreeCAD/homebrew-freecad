@@ -5,12 +5,13 @@ class MedFileAT411 < Formula
   sha256 "dc2b5d54ebf0666e3ff2e974041d2ab0da906061323537023ab165d573389dd0"
   license "GPL-3.0-only"
 
-  livecheck do
-    url :stable
-    # url "https://files.salome-platform.org/Salome/other/"
-    # regex(/^v?(\d+(?:\.\d+)+)$/i)
-    # regex(/^med-4.\d.\d.tar.gz$/i)
-  end
+  # TODO: a valid regex is required for livecheck
+  # livecheck do
+  #   url :stable
+  #   # url "https://files.salome-platform.org/Salome/other/"
+  #   # regex(/^v?(\d+(?:\.\d+)+)$/i)
+  #   # regex(/^med-4.\d.\d.tar.gz$/i)
+  # end
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
