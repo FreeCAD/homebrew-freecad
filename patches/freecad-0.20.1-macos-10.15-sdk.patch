@@ -1,0 +1,39 @@
+From 98f47e022d672c1fe75a25089acc3e5faa936360 Mon Sep 17 00:00:00 2001
+From: chris <chris.r.jones.1983@gmail.com>
+Date: Mon, 22 Aug 2022 13:35:15 -0500
+Subject: [PATCH] macos add preprocessor macro for sdk/macos version check
+
+---
+ src/Base/UnitsSchemaInternal.h | 3 +++
+ src/Base/UnitsSchemaMKS.h      | 4 ++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/src/Base/UnitsSchemaInternal.h b/src/Base/UnitsSchemaInternal.h
+index c555e58b8e81..4ebba4c7103a 100644
+--- a/src/Base/UnitsSchemaInternal.h
++++ b/src/Base/UnitsSchemaInternal.h
+@@ -27,6 +27,9 @@
+ #include <QString>
+ #include "UnitsSchema.h"
+ 
++#if !defined(MAC_OS_X_VERSION_10_16) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_16
++#include <cmath>
++#endif
+ 
+ namespace Base {
+ 
+diff --git a/src/Base/UnitsSchemaMKS.h b/src/Base/UnitsSchemaMKS.h
+index e36036de81e0..0f97380b0891 100644
+--- a/src/Base/UnitsSchemaMKS.h
++++ b/src/Base/UnitsSchemaMKS.h
+@@ -27,6 +27,10 @@
+ #include <QString>
+ #include "UnitsSchema.h"
+ 
++#if !defined(MAC_OS_X_VERSION_10_16) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_16
++#include <cmath>
++#endif
++
+ 
+ namespace Base {
+ 
