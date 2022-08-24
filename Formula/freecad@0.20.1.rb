@@ -9,6 +9,13 @@ class FreecadAT0201 < Formula
     sha256 "70c15f7c1c676e3376cdc2a66c136030c5502f9802935e5b626ca8ce3f8812ed"
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, big_sur:  "f9acad91cfea615b4ee9119dc5e0a65636da8107c046385a3b3e84ec835fdf1b"
+    sha256 cellar: :any, catalina: "4198bb4969d856b0de0ce5f90ecdec12673ac8beb1fd2c7d99259c7ca047699a"
+    sha256 cellar: :any, mojave:   "053e80d82ee77e8e607ec347d6ded3791afe2628a68b039185c7146a902a27f3"
+  end
+
   option "with-macos-app", "Create FreeCAD.app bundle"
   option "with-cloud", "Build with CLOUD module"
   option "with-unsecured-cloud", "Build with self signed certificate support CLOUD module"
