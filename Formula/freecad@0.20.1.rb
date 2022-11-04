@@ -10,7 +10,7 @@ class FreecadAT0201 < Formula
 
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/a4b71def99b5fe907550729038752aaf6fa1b9bf/patches/freecad-0.20.1-macos-app-bundling.patch"
-      sha256sum "4be359518fcdebb8eedfa5417bf20d3f935ad1b89eb291a26bf16096795fb21b"
+      sha256 "4be359518fcdebb8eedfa5417bf20d3f935ad1b89eb291a26bf16096795fb21b"
     end
   end
 
