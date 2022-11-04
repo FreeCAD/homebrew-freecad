@@ -168,8 +168,14 @@ class FreecadAT0201 < Formula
     3. if freecad launches with runtime errors a common fix
        i have run into is to force link pyside2@5.15.5 and
        shiboken2@5.15.5 so workbenches such Draft and Arch
-       have the necessary runtime deps see brew documenation
+       have the necessary runtime deps, see brew documenation
        about force linking the above packages
+
+    4. upstream homebrew/core has begun to introduce python 3.11
+       with that said, testing the formula manually on my local
+       catalina box i ran into issues with regard to boost.
+       the quick fix, unlink python 3.11 and cmake is able to
+       finish its checks and the build process can begin
     EOS
   end
 
