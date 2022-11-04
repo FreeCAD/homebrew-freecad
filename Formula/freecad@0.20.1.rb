@@ -7,6 +7,11 @@ class FreecadAT0201 < Formula
   stable do
     url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.20.1.tar.gz"
     sha256 "70c15f7c1c676e3376cdc2a66c136030c5502f9802935e5b626ca8ce3f8812ed"
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/a4b71def99b5fe907550729038752aaf6fa1b9bf/patches/freecad-0.20.1-macos-app-bundling.patch"
+      sha256sum "4be359518fcdebb8eedfa5417bf20d3f935ad1b89eb291a26bf16096795fb21b"
+    end
   end
 
   option "with-macos-app", "Create FreeCAD.app bundle"
@@ -59,10 +64,12 @@ class FreecadAT0201 < Formula
     sha256 "ce9f4b2afb2c621274e74208a563616eeeee54369f295b6c5f6f4f3112923135"
   end
 
-  # fix for mac app bundling
-  patch :p1 do
-    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/6896331439c74cf8c9136a53240ed30e1ce0f5ba/patches/0001-fix-mac-app-bundling-for-brew-install.patch"
-    sha256 "42df346e69e072fa84fe5834d470ccc7540daf792d8d8f4d8b87344d3fd382df"
+  # fix for mac app bundling when using git head
+  if build.head?
+    patch :p1 do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/6896331439c74cf8c9136a53240ed30e1ce0f5ba/patches/0001-fix-mac-app-bundling-for-brew-install.patch"
+      sha256 "42df346e69e072fa84fe5834d470ccc7540daf792d8d8f4d8b87344d3fd382df"
+    end
   end
 
   def python3
