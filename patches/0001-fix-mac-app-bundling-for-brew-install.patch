@@ -1,0 +1,36 @@
+From 0dac00e582449214e35813067f584db2987fbea5 Mon Sep 17 00:00:00 2001
+From: chris <chris.r.jones.1983@gmail.com>
+Date: Fri, 4 Nov 2022 12:49:56 -0500
+Subject: [PATCH] fix mac app bundling for brew install
+
+---
+ src/MacAppBundle/CMakeLists.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/MacAppBundle/CMakeLists.txt b/src/MacAppBundle/CMakeLists.txt
+index 708821cf79..222b0e022d 100644
+--- a/src/MacAppBundle/CMakeLists.txt
++++ b/src/MacAppBundle/CMakeLists.txt
+@@ -119,8 +119,10 @@ file(GLOB CONFIG_LLVM "${HOMEBREW_PREFIX}/opt/llvm/lib/c++")
+ 
+ file(GLOB CONFIG_GCC "${HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current")
+ 
++file(GLOB CONFIG_MED "${HOMEBREW_PREFIX}/opt/med-file@4.1.1/lib")
++
+ execute_process(
+-    COMMAND find -L /usr/local/Cellar/nglib -name MacOS
++    COMMAND find -L ${HOMEBREW_PREFIX}/Cellar/nglib -name MacOS
+     OUTPUT_VARIABLE CONFIG_NGLIB)
+ 
+ install(CODE 
+@@ -130,6 +132,6 @@ install(CODE
+     execute_process(
+         COMMAND python3
+         ${CMAKE_SOURCE_DIR}/src/Tools/MakeMacBundleRelocatable.py
+-        ${APP_PATH} ${HOMEBREW_PREFIX}${MACPORTS_PREFIX}/lib ${CONFIG_ICU} ${CONFIG_LLVM} ${CONFIG_GCC} /usr/local/opt ${CONFIG_NGLIB} ${Qt5Core_DIR}/../../.. ${XCTEST_PATH} ${WEBKIT_FRAMEWORK_DIR}
++        ${APP_PATH} ${HOMEBREW_PREFIX}${MACPORTS_PREFIX}/lib ${CONFIG_ICU} ${CONFIG_MED} ${CONFIG_LLVM} ${CONFIG_GCC} /usr/local/opt ${CONFIG_NGLIB} ${Qt5Core_DIR}/../../.. ${XCTEST_PATH} ${WEBKIT_FRAMEWORK_DIR}
+     )"
+ )
+-- 
+2.38.0
+
