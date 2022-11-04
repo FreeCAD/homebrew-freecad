@@ -9,13 +9,6 @@ class FreecadAT0201 < Formula
     sha256 "70c15f7c1c676e3376cdc2a66c136030c5502f9802935e5b626ca8ce3f8812ed"
   end
 
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, big_sur:  "f9acad91cfea615b4ee9119dc5e0a65636da8107c046385a3b3e84ec835fdf1b"
-    sha256 cellar: :any, catalina: "4198bb4969d856b0de0ce5f90ecdec12673ac8beb1fd2c7d99259c7ca047699a"
-    sha256 cellar: :any, mojave:   "053e80d82ee77e8e607ec347d6ded3791afe2628a68b039185c7146a902a27f3"
-  end
-
   option "with-macos-app", "Create FreeCAD.app bundle"
   option "with-cloud", "Build with CLOUD module"
   option "with-unsecured-cloud", "Build with self signed certificate support CLOUD module"
@@ -68,8 +61,8 @@ class FreecadAT0201 < Formula
 
   # fix for mac app bundling
   patch :p1 do
-    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/a4b71def99b5fe907550729038752aaf6fa1b9bf/patches/freecad-0.20.1-macos-app-bundling.patch"
-    sha256 "4be359518fcdebb8eedfa5417bf20d3f935ad1b89eb291a26bf16096795fb21b"
+    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/6896331439c74cf8c9136a53240ed30e1ce0f5ba/patches/0001-fix-mac-app-bundling-for-brew-install.patch"
+    sha256 "42df346e69e072fa84fe5834d470ccc7540daf792d8d8f4d8b87344d3fd382df"
   end
 
   def python3
@@ -164,6 +157,12 @@ class FreecadAT0201 < Formula
        copied executables and libraries into a FreeCAD.app
        bundle. Until a fix or work around is made freecad
        is built for CLI by default now.
+
+    3. if freecad launches with runtime errors a common fix
+       i have run into is to force link pyside2@5.15.5 and
+       shiboken2@5.15.5 so workbenches such Draft and Arch
+       have the necessary runtime deps see brew documenation
+       about force linking the above packages
     EOS
   end
 
