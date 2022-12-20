@@ -13,38 +13,43 @@ class MedFileAT411 < Formula
   #   # regex(/^med-4.\d.\d.tar.gz$/i)
   # end
 
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 1
-    sha256 cellar: :any, big_sur:  "5708dbd866ba02d4758b1eef14545e698625cda7a7563b5f816a2e3e17d60e4b"
-    sha256 cellar: :any, catalina: "4122cb55b46840cf1cc8a30908711a6404467403fa043d91d840fb5dc38f6e1c"
-    sha256 cellar: :any, mojave:   "569cc5f266cec34f4b2441ab483e5c7556baf77004cfc5fd93b6a379a6a011ec"
-  end
-
   depends_on "cmake" => :build
-  depends_on "freecad/freecad/swig@4.0.2" => :build
+  depends_on "freecad/freecad/swig@4.1.1" => :build
+  depends_on "python@3.11" => :build
   depends_on "gcc"
   depends_on "hdf5"
   depends_on "libaec"
-  depends_on "python@3.10"
 
   patch do
-    url "https://raw.githubusercontent.com/archlinux/svntogit-community/458b52e0d43ebbcf67f9025aad66c76454573a06/trunk/hdf5-1.12.patch"
-    sha256 "617f281629dd88635f777896d52aae358c06e66a535fbb3d6c805a44430dd94b"
+    url "https://gitweb.gentoo.org/repo/gentoo.git/plain/sci-libs/med/files/med-4.1.0-0003-build-against-hdf5-1.14.patch"
+    sha256 "d4551df69f4dcb3c8a649cdeb0a6c9d27a03aebc0c6dcdba74cac39a8732f8d1"
   end
+
+  # def pythons
+  #   deps.map(&:to_formula)
+  #       .select { |f| f.name.match?(/^python@3\.\d+$/) }
+  # end
 
   def pythons
     deps.map(&:to_formula)
-        .select { |f| f.name.match?(/^python@3\.\d+$/) }
+        .select { |f| f.name.match?(/^python@\d\.\d+$/) }
+        .map { |f| f.opt_libexec/"bin/python" }
+  end
+
+  def python3
+    "python3.11"
   end
 
   def install
     # ENV.cxx11
+    hbp = HOMEBREW_PREFIX
     args = std_cmake_args + %W[
       -DMEDFILE_BUILD_PYTHON=ON
       -DMEDFILE_BUILD_TESTS=OFF
       -DMEDFILE_INSTALL_DOC=OFF
-      -DCMAKE_PREFIX_PATH=#{Formula["hdf5"].opt_lib};#{Formula["gcc"].opt_lib}
+      -DPYTHON_EXECUTABLE=#{which(python3)}"
+      -DPYTHON_LIBRARY=#{hbp}/opt/python@3.11/Frameworks/Python.framework/Versions/Current/lib/libpython3.11.dylib
+      -DCMAKE_PREFIX_PATH=#{Formula["hdf5"].opt_lib};#{Formula["gcc"].opt_lib};
       -DCMAKE_INSTALL_RPATH=#{rpath}
     ]
 
