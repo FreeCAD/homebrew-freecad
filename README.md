@@ -42,7 +42,7 @@ brew install --only-dependencies freecad
 
 #### Install flags
 
-`--with-no-macos-app` brew will install freecad as binary to be launched from a CLI
+By default, freecad is installed as a binary to be launched from a CLI. To also create a .app bundle use `--with-macos-app`.
 
 ## Building The Current Release Version of FreeCAD
 
