@@ -79,7 +79,7 @@ jobs:
         # NOTE: not possible to have two `run:` blocks within a `name`
 
       # attempt reset env var that appears to be not resetting
-      - name: condition 1.1
+      - name: condition 1_1
         if: runner.name = 'vmmojave'
         run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/homebrew/homebrew-core >> $GITHUB_ENV
 
