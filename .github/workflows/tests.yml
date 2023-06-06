@@ -80,7 +80,7 @@ jobs:
 
       # attempt reset env var that appears to be not resetting
       - name: condition attempt to reset HOMEBREW_CORE_GIT_REMOTE env var
-        if: runner.name = 'vmmojave'
+        if: runner.name == 'vmmojave'
         run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/homebrew/homebrew-core >> $GITHUB_ENV
 
       - name: Install Homebrew Bundler RubyGems
