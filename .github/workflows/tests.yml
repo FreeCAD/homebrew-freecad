@@ -91,6 +91,10 @@ jobs:
         run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/ipatch/homebrew-core-mojave >> $GITHUB_ENV
 
       - run: brew test-bot --only-tap-syntax
+
+      - name: condition 2
+        if: runner.name == 'vmmojave'
+        run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/ipatch/homebrew-core-mojave >> $GITHUB_ENV
         
       - name: condition 3 
         if: runner.name == 'vmmojave'
