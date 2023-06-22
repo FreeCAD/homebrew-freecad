@@ -5,7 +5,7 @@ cask "freecad" do
   sha256 "3a393e807331ed3c9303037095423a6036a23ab00af7c7836e5c19c5a5321b73"
 
   url "https://github.com/freecad/homebrew-freecad/releases/download/#{version.major_minor_patch}.release/FreeCAD-#{version.major_minor}-release.dmg",
-      verified: "github.com/freecad/homebrew-freecad"
+      verified: "github.com/freecad/homebrew-freecad/"
   name "FreeCAD"
   desc "3D parametric modler"
   homepage "https://www.freecad.org/"
