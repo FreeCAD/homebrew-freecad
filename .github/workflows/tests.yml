@@ -79,9 +79,9 @@ jobs:
         # NOTE: not possible to have two `run:` blocks within a `name`
 
       # attempt reset env var that appears to be not resetting
-      - name: condition attempt to reset HOMEBREW_CORE_GIT_REMOTE env var
-        if: runner.name == 'vmmojave'
-        run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/homebrew/homebrew-core >> $GITHUB_ENV
+      # - name: condition attempt to reset HOMEBREW_CORE_GIT_REMOTE env var
+      #   if: runner.name == 'vmmojave'
+      #   run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/homebrew/homebrew-core >> $GITHUB_ENV
 
       - name: Install Homebrew Bundler RubyGems
         if: steps.cache.outputs.cache-hit != 'true' && steps.last_run_status.outputs.last_run_status != 'success'
@@ -93,9 +93,9 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
 
-      - name: condition 2
-        if: runner.name == 'vmmojave'
-        run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/ipatch/homebrew-core-mojave >> $GITHUB_ENV
+      # - name: condition 2
+      #   if: runner.name == 'vmmojave'
+      #   run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/ipatch/homebrew-core-mojave >> $GITHUB_ENV
         
       - name: condition 3 
         if: runner.name == 'vmmojave'
