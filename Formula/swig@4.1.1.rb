@@ -10,6 +10,12 @@ class SwigAT411 < Formula
     url :stable
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 big_sur: "268482d8e66c75b08f99380f17d83f613e7a92ddab1912171fdd9fc2385b6c2f"
+    sha256 mojave:  "29d6d2472f32f91fef5686de1082c18407c47e3625c5dca71e48d757a7aba93e"
+  end
+
   head do
     url "https://github.com/swig/swig.git", branch: "master"
 
