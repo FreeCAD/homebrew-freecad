@@ -37,6 +37,13 @@ class SwigAT411 < Formula
     system "make", "install"
   end
 
+  def caveats
+    <<-EOS
+    this formula is keg only due to same formula
+    being in the homebrew-core main repo
+    EOS
+  end
+
   test do
     (testpath/"test.c").write <<~EOS
       int add(int x, int y)
