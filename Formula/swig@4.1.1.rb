@@ -17,6 +17,12 @@ class SwigAT411 < Formula
     sha256 mojave:  "e4da9a064193b63669b38d876619fae88b4f4eed8e592040da657e7e4d45150c"
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    rebuild 2 if MacOS.version == :catalina
+    sha256 catalina: "2d4c1fd6521af80b4867cf0e24f83fee67b7dd5cc4a8e8e61888a7e6a1be4eb1"
+  end
+
   head do
     url "https://github.com/swig/swig.git", branch: "master"
 
