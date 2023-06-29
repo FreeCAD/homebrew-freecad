@@ -1,3 +1,4 @@
+---
 name: brew test-bot
 
 on:
@@ -8,6 +9,11 @@ on:
 
   pull_request:
   # workflow_dispatch:  # NOTE: nova with homebrew gha
+
+env:
+  HOMEBREW_NO_ANALYTICS: 1
+  HOMEBREW_NO_AUTO_UPDATE: 1
+  HOMEBREW_NO_INSTALL_CLEANUP: 1
 
 jobs:
   test-bot:
@@ -32,14 +38,12 @@ jobs:
 
       - name: Get current date
         id: date
-        # run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
         run: echo "date=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
       - name: Log date
         run: echo "${{ steps.date.outputs.date }}"
 
       - name: Set default run status
-        # run: echo "::set-output name=last_run_status::default" > last_run_status
         run: echo "last_run_status=default" >> $GITHUB_ENV
 
       - name: Restore last run status
@@ -55,11 +59,7 @@ jobs:
 
       - name: Set last run status
         id: last_run_status
-        # NOTE: ipatch, below line will error
-        # run: cat last_run_status
-        #--
         run: echo "The last run status is ${{ env.last_run_status }}"
-
 
       - name: Set up Homebrew
         id: set-up-homebrew
@@ -102,13 +102,29 @@ jobs:
       # - name: condition 2
       #   if: runner.name == 'vmmojave'
       #   run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/ipatch/homebrew-core-mojave >> $GITHUB_ENV
-        
+
+        # NOTE: ipatch, attempt to set homebrew-core repo to specific commit for catalina bottling
+      - name: check for catalina vm and set homebrew-core repo to specific commit
+        if: runner.name == 'vmcatalina'
+        run: |
+          cd $(brew --repo homebrew/core); \
+          git checkout 2cafb3915f5e4e34b8b6c043c3965d48b94a1835
+
       - name: condition 3 
         if: runner.name == 'vmmojave'
-        run: sed -i '' -e '/go@1.9/d' -e '/go@1.10/d' -e '/go@1.11/d' -e '/go@1.12/d' $(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json
+        run: |
+          sed -i '' \
+            -e '/go@1.9/d' \
+            -e '/go@1.10/d' \
+            -e '/go@1.11/d' \
+            -e '/go@1.12/d' \
+            $(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json
 
-      # NOTE: below step fails on vmmojave due to alt hombrew_core_git_remote
-      - run: brew test-bot --only-formulae --only-json-tab --skip-recursive-dependents --root-url=https://ghcr.io/v2/freecad/homebrew-freecad
+      - run: brew test-bot \
+          --only-formulae \
+          --only-json-tab \
+          --skip-recursive-dependents \
+          --root-url=https://ghcr.io/v2/freecad/homebrew-freecad
         if: github.event_name == 'pull_request'
 
       - name: Uplod bottles as artifact
@@ -120,7 +136,5 @@ jobs:
 
       - name: Save run status
         if: steps.last_run_status.outputs.last_run_status != 'success'
-        # run: echo "::set-output name=last_run_status::${{ steps.test_run.outcome }}" > last_run_status
         run: echo "last_run_status=${{ steps.test_run.outcome }}" >> $GITHUB_ENV
-
 
