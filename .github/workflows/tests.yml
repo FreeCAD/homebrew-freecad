@@ -120,7 +120,8 @@ jobs:
             -e '/go@1.12/d' \
             $(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json
 
-      - run: brew test-bot \
+      - run: |
+          brew test-bot \
           --only-formulae \
           --only-json-tab \
           --skip-recursive-dependents \
