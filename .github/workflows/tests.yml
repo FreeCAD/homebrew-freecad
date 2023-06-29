@@ -108,7 +108,7 @@ jobs:
         if: runner.name == 'vmcatalina'
         run: |
           cd $(brew --repo homebrew/core); \
-          git checkout 2cafb3915f5e4e34b8b6c043c3965d48b94a1835
+          git checkout ipatch-1015-cmake-bottle
 
       - name: condition 3 
         if: runner.name == 'vmmojave'
