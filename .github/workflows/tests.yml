@@ -55,7 +55,11 @@ jobs:
 
       - name: Set last run status
         id: last_run_status
-        run: cat last_run_status
+        # NOTE: ipatch, below line will error
+        # run: cat last_run_status
+        #--
+        run: echo "The last run status is ${{ env.last_run_status }}"
+
 
       - name: Set up Homebrew
         id: set-up-homebrew
