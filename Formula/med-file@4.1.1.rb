@@ -5,6 +5,14 @@ class MedFileAT411 < Formula
   sha256 "dc2b5d54ebf0666e3ff2e974041d2ab0da906061323537023ab165d573389dd0"
   license "GPL-3.0-only"
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    rebuild 2
+    sha256 cellar: :any, big_sur:  "569c1929172c929af3e956af91db9286ac05e88b86b6ea2b8aca94376895b1e4"
+    sha256 cellar: :any, catalina: "31e571ad63410dec24b4199b9886e163ceeaf4f8cee68a80b6ac661d3ea87f98"
+    sha256 cellar: :any, mojave:   "769d3e4dcb6b7a8cce83f65310db7c641c96f427f9b90b41b27e377f9b3e261b"
+  end
+
   # TODO: a valid regex is required for livecheck
   # livecheck do
   #   url :stable
