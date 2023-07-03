@@ -7,10 +7,10 @@ class MedFileAT411 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 2
-    sha256 cellar: :any, big_sur:  "569c1929172c929af3e956af91db9286ac05e88b86b6ea2b8aca94376895b1e4"
-    sha256 cellar: :any, catalina: "31e571ad63410dec24b4199b9886e163ceeaf4f8cee68a80b6ac661d3ea87f98"
-    sha256 cellar: :any, mojave:   "769d3e4dcb6b7a8cce83f65310db7c641c96f427f9b90b41b27e377f9b3e261b"
+    rebuild 3
+    sha256 cellar: :any, big_sur:  "33031a963d5ee3436958613597671ce98ae82cd5c7e8675b92fc88f7cc04f291"
+    sha256 cellar: :any, catalina: "cb34ffe6cdd50e58c1678fcf694f22c096d91b2fe7001cd4ad5036bfd5c22b28"
+    sha256 cellar: :any, mojave:   "8cc4a5616642cdaf3a67359bff4335e72bb0214343bf4c8a1aa09ebf3fbdb09e"
   end
 
   # TODO: a valid regex is required for livecheck
