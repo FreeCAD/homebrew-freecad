@@ -56,10 +56,15 @@ class MedFileAT411 < Formula
       -DMEDFILE_BUILD_TESTS=OFF
       -DMEDFILE_INSTALL_DOC=OFF
       -DPYTHON_EXECUTABLE=#{which(python3)}"
-      -DPYTHON_LIBRARY=#{hbp}/opt/python@3.11/Frameworks/Python.framework/Versions/Current/lib/libpython3.11.dylib
       -DCMAKE_PREFIX_PATH=#{Formula["hdf5"].opt_lib};#{Formula["gcc"].opt_lib};
       -DCMAKE_INSTALL_RPATH=#{rpath}
     ]
+
+    args << if OS.mac?
+      "-DPYTHON_LIBRARY=#{hbp}/opt/python@3.11/Frameworks/Python.framework/Versions/Current/lib/libpython3.11.dylib"
+    else
+      "-DPYTHON_LIBRARY=#{hbp}/opt/python@3.11/lib/libpython3.11.so"
+    end
 
     mkdir "build" do
       system "cmake", "..", *args
