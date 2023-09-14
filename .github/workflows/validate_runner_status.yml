@@ -1,0 +1,60 @@
+---
+
+# TODO: ipatch, the problem self-hosted runner will remove from github if it doesn't connect to
+# github with 14 days.
+# 1. need a way to verify remote box is online ie. archbox aka mbp
+# 2. once remote box is online, check to see if vm serice ie. vmmojave is up and running.
+#   a. status the systemd service for the vm
+#   b. ping the vm by its static ip address and see if i get a response
+#   c. 
+# 3. check if the runner is online, the runner should be started as a service
+#   a. this can be done by querying api.github.com/[OWNER/REPO]...
+#
+# 1. so there needs to be a way check the status of the runner and record that timestamp so when that
+# time expires we need to run through our check to make sure our runner is online.
+# 2. if one of our checks fails we need to send an email followed by an action / step to try
+# and bring the service online, and then move to the next step.
+
+
+# the way of thinking of this is to,
+# 1 .first check if the runner is online
+# a. query the api endpoint
+#   a1. if getting a successful online respone from api take note, and begin timer,
+#   ...and then set a timer for 12 days to query runner again.
+#   a1a. next, need to hash steps if the runner is not online.
+
+name: validate self-hosted runner status
+
+on:
+  # NOTE: run this action on request from github web UI
+  workflow_dispatch:
+  schedule:
+    # min hour day month day-of-week,0-6 contrab.guru
+    - cron: '0 4 */12 * *' # run task every 12 days
+
+jobs:
+  validate-self-hosted-runner:
+    # TODO: what is the quickest github-hosted runner that can boot up?
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: proof of concept, run simple echo command from cli
+        run: |
+          echo "hello world"
+
+      - name: check the status of the vmmojave self-hosted runner for freecad/homebrew-freecad
+
+        run: |
+          # NOTE: HOMEBREW_GITHUB_API_TOKEN requires being added to the repo, use web UI
+          STATUS_SELFHOSTED_VMMOJAVE=$(curl -s -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
+            https://api.github.com/repos/freecad/homebrew-freecad/actions/runners \
+            | jq -r '.runners | map(select(.labels | contains(["self-hosted-mojavevm"]))) | .[].status'
+          )
+
+          if [[ "$STATUS_SELFHOSTED_VMMOJAVE" == "offline" ]]; then
+            echo "Runner is offline, taking action..."
+            # TODO: peform additional actions
+          else
+            echo "Runner is online ✅"
+          fi
+
