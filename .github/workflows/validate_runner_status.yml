@@ -29,8 +29,8 @@ on:
   # NOTE: run this action on request from github web UI
   workflow_dispatch:
   schedule:
-    # min hour day month day-of-week,0-6 contrab.guru
-    - cron: '0 4 */12 * *' # run task every 12 days
+    # min hour day month day-of-week,1-6 contrab.guru
+    - cron: '1 4 */12 * *' # run task every 12 days
 
 jobs:
   validate-self-hosted-runner:
@@ -38,23 +38,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: proof of concept, run simple echo command from cli
+      - name: Configure SSH for github hosted runner
         run: |
-          echo "hello world"
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/shrunserver.key
+          chmod 600 ~/.ssh/shrunserver.key
+          cat >>~/.ssh/config <<END
+          Host shrunserver
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/shrunserver.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.ARCHBOX_SERVER_USER }}
+          SSH_KEY: ${{ secrets.ACTIONS_SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.ARCHBOX_SERVER_IP }}
 
+      # NOTE: HOMEBREW_GITHUB_API_TOKEN needed in repo secrets, use web UI
       - name: check the status of the vmmojave self-hosted runner for freecad/homebrew-freecad
-
         run: |
-          # NOTE: HOMEBREW_GITHUB_API_TOKEN requires being added to the repo, use web UI
-          STATUS_SELFHOSTED_VMMOJAVE=$(curl -s -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
-            https://api.github.com/repos/freecad/homebrew-freecad/actions/runners \
-            | jq -r '.runners | map(select(.labels | contains(["self-hosted-mojavevm"]))) | .[].status'
-          )
-
-          if [[ "$STATUS_SELFHOSTED_VMMOJAVE" == "offline" ]]; then
-            echo "Runner is offline, taking action..."
+          status_selfhosted_vmmojave=\
+          $(curl -s -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
+          https://api.github.com/repos/freecad/homebrew-freecad/actions/runners \
+          | jq -r '.runners[] | select(.name == "vmmojave") | .status')
+          if [[ "$status_selfhosted_vmmojave" == "online" ]]; then
+            echo "Runner is online ✅"
             # TODO: peform additional actions
           else
-            echo "Runner is online ✅"
+            # Check if the machine is reachable
+            if nc -v -z -w 5 "${{ secrets.ARCHBOX_SERVER_IP }}" 22; then
+              echo "Machine hosting the runner is online ✅"
+              # NOTE: ipatch, attempt to run command on remote computer via ssh
+              ssh shrunserver 'date'
+              if ssh shrunserver 'nc -v -z -w 5 192.168.1.114 22'; then
+                # nc -v -z -w 5 192.168.1.114 22
+                echo "vmmojave appears to be online"
+                # TODO: need to figure out how to nest ssh ie. login to linux server then login to vmmojave
+                # TODO: attempt to start github runner
+              else
+                echo "could not reach vmmojave self-hosted runner"
+              fi
+            else
+              echo "Machine hosting the runner is NOT online!"
+            fi
           fi
 
