@@ -1,27 +1,19 @@
 ---
 
-# TODO: ipatch, the problem self-hosted runner will remove from github if it doesn't connect to
-# github with 14 days.
-# 1. need a way to verify remote box is online ie. archbox aka mbp
-# 2. once remote box is online, check to see if vm serice ie. vmmojave is up and running.
+# NOTE: ipatch, self-hosted runners are removed from runner registry if they don't connect to github in 14 days
+# 1. check if remote machine hosting the virtual machine running the self-hosted runner is online
+# 2. if remote box is online, check to see if vm serice ie. vmmojave is up and running.
 #   a. status the systemd service for the vm
-#   b. ping the vm by its static ip address and see if i get a response
-#   c. 
-# 3. check if the runner is online, the runner should be started as a service
-#   a. this can be done by querying api.github.com/[OWNER/REPO]...
-#
-# 1. so there needs to be a way check the status of the runner and record that timestamp so when that
-# time expires we need to run through our check to make sure our runner is online.
-# 2. if one of our checks fails we need to send an email followed by an action / step to try
+#   b. use `nc` to verify the online status of the vm using its static ip (ping is NOT an option)
+#   c. if the vm for the self-hosted runner is online, verify online status of the self-hosted runner service/process
+# 3. if one of our checks fails we need to send an email followed by an action / step to try
 # and bring the service online, and then move to the next step.
-
+# 4. etup a specific group on remote box and virtual-machine allowing an isolated $USER to run specific tasks for statusing and controlling runner related services.
 
 # the way of thinking of this is to,
-# 1 .first check if the runner is online
-# a. query the api endpoint
-#   a1. if getting a successful online respone from api take note, and begin timer,
-#   ...and then set a timer for 12 days to query runner again.
-#   a1a. next, need to hash steps if the runner is not online.
+# 1 .first check if the runner is online, by querying the github api endpoint
+#   a1. if getting a successful online respone from api take note
+#   b1. if runner is offline, run through the below steps/checks
 
 name: validate self-hosted runner status
 
@@ -33,12 +25,21 @@ on:
     - cron: '1 4 */12 * *' # run task every 12 days
 
 jobs:
-  validate-self-hosted-runner:
-    # TODO: what is the quickest github-hosted runner that can boot up?
+  validate-self-hosted-runners:
+
+    # a fast booting github-hosted runner
     runs-on: ubuntu-latest
 
+    env:
+      vmmojave:   192.168.1.114
+      vmcatalina: 192.168.1.115
+      vmbigsur:   191.168.1.116
+      maintainer_emai: chris.r.jones.1983@gmail.com
+
     steps:
+
       - name: Configure SSH for github hosted runner
+        id: configure_ssh
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/shrunserver.key
@@ -54,33 +55,102 @@ jobs:
           SSH_USER: ${{ secrets.ARCHBOX_SERVER_USER }}
           SSH_KEY: ${{ secrets.ACTIONS_SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.ARCHBOX_SERVER_IP }}
-
-      # NOTE: HOMEBREW_GITHUB_API_TOKEN needed in repo secrets, use web UI
-      - name: check the status of the vmmojave self-hosted runner for freecad/homebrew-freecad
+    
+      - name: Debug runner IPs
+        id: debug_runner_ips
         run: |
-          status_selfhosted_vmmojave=\
-          $(curl -s -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
-          https://api.github.com/repos/freecad/homebrew-freecad/actions/runners \
-          | jq -r '.runners[] | select(.name == "vmmojave") | .status')
-          if [[ "$status_selfhosted_vmmojave" == "online" ]]; then
-            echo "Runner is online ✅"
-            # TODO: peform additional actions
-          else
-            # Check if the machine is reachable
-            if nc -v -z -w 5 "${{ secrets.ARCHBOX_SERVER_IP }}" 22; then
-              echo "Machine hosting the runner is online ✅"
-              # NOTE: ipatch, attempt to run command on remote computer via ssh
-              ssh shrunserver 'date'
-              if ssh shrunserver 'nc -v -z -w 5 192.168.1.114 22'; then
-                # nc -v -z -w 5 192.168.1.114 22
-                echo "vmmojave appears to be online"
-                # TODO: need to figure out how to nest ssh ie. login to linux server then login to vmmojave
-                # TODO: attempt to start github runner
-              else
-                echo "could not reach vmmojave self-hosted runner"
-              fi
+          echo "vmmojave: $vmmojave"
+          echo "vmcatalina: $vmcatalina"
+          echo "vmbigsur: $vmbigsur"
+
+      - name: test_runner_status
+        id: test_runner_status
+        run: |
+          for runner in "vmmojave" "vmcatalina" "vmbigsur"; do
+
+            # Access the IP address using indirect expansion
+            runner_ip="${!runner}"
+
+            echo "$runner_ip"
+
+            status_selfhosted_runner=$(curl -s -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
+            https://api.github.com/repos/freecad/homebrew-freecad/actions/runners \
+            | jq -r ".runners[] | select(.name == \"$runner\") | .status // \"not found\"")
+
+            echo "$runner is $status_selfhosted_runner"
+
+          done
+
+      # NOTE: HOMEBREW_GITHUB_API_TOKEN needed in repo secrets, use web UI to add token
+      - name: check self-hosted runners status for freecad/homebrew-freecad
+        id: status_runners
+        run: |
+          for runner in "vmmojave" "vmcatalina" "vmbigsur"; do
+            # Access the IP address using indirect expansion
+            runner_ip="${!runner}"
+            status_selfhosted_runner=$(curl -s -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
+            https://api.github.com/repos/freecad/homebrew-freecad/actions/runners \
+            | jq -r ".runners[] | select(.name == \"$runner\") | .status // \"not found\"")
+
+            echo $"status_selfhosted_runner"
+
+            if [[ "$status_selfhosted_runner" == "online" ]]; then
+              echo "$runner is online ✅"
+              echo "${runner}_status=online" >> $GITHUB_ENV
             else
-              echo "Machine hosting the runner is NOT online!"
+              echo "the github runner service for $runner is OFFLINE 🚫"
+              # Check reachability of host machine
+              if nc -v -z -w 5 "${{ secrets.ARCHBOX_SERVER_IP }}" 22; then
+                echo "Machine hosting the vm services for $runner is online ✅"
+                # NOTE: ipatch, run command on remote computer via ssh from github hosted runner
+                ssh shrunserver "date"
+                # ssh shrunserver "/usr/bin/sudo ls" # DEBUG
+                # echo "DEBUG $runner_ip" # DEBUG
+                if ssh shrunserver "nc -v -z -w 5 $runner_ip 22 < /dev/null"; then
+                  echo "virtual machine $runner appears to be online"
+                else
+                  echo "could not reach the virtual machine $runner"
+                  # NOTE: status the vm systemd service, if offline attempt to start the service
+                  # ssh shrunserver "echo \"/usr/bin/sudo systemctl restart $runner\";" # DEBUG
+                  ssh shrunserver "/usr/bin/sudo systemctl restart $runner" || echo "failed to restart service"
+                  sleep 45
+                  if ssh shrunserver "nc -v -z -w 5 $runner_ip 22 < /dev/null"; then
+                    echo "$runner appears to have come back online ✅"
+                  else
+                    echo "$runner is still NOT online 🚫"
+                    echo "${runner}_status=down" >> $GITHUB_ENV
+                  fi
+                fi
+              else
+                echo "can not connect to host machine running $runner virtual machine"
+              fi
             fi
-          fi
+          done
+
+      - name: Print vm_status variable
+        id: print_vm_status
+        run: |
+          echo "vmmojave status is ${{ env.vmmojave_status }}"
+          echo "vmcatalina status is ${{ env.vmcatalina_status }}"
+          echo "vmbigsur status is ${{ env.vmbigsur_status }}"
+
+      - name: Send email on failure to reach runner service
+        id: send_alert_email
+        if: ${{ 
+          env.vmmojave_status == 'down' || 
+          env.vmcatalina_status == 'down' || 
+          env.vmbigsur_status == 'down' 
+          }}        
+        uses: dawidd6/action-send-mail@v2
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: 'homebrew-freecad self-hosted runner is offline 🚫'
+          from: ${{ secrets.SMTP_USERNAME }}
+          to: ${{ env.maintainer_emai }}
+          body: >
+            One of the components related to the homebrew-freecad self-hosted runners is offline, 
+            and can not be reached. Please follow up before runner expires from github registry.
 
