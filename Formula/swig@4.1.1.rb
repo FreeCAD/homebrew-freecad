@@ -51,6 +51,8 @@ class SwigAT411 < Formula
     EOS
   end
 
+  # NOTE: add upstream python test this formula
+
   test do
     (testpath/"test.c").write <<~EOS
       int add(int x, int y)
