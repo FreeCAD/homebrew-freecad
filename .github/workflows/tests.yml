@@ -118,6 +118,8 @@ jobs:
 
       - name: build bottle using test-bot for current formula
         id: build_bottle
+        env:
+          HOMEBREW_NO_INSTALL_FROM_API: 1
         run: |
           # Check if the runner name is vmmojave or vmcatalina and add the flag if true
           if [[ runner.name == 'vmmojave' || runner.name == 'vmcatalina' ]]; then
