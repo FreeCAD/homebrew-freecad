@@ -13,9 +13,9 @@ class SwigAT411 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 1
-    sha256 big_sur: "8062b4c720d8f81c745df7c86817684b2cf15fc2982364a6799c220abe1f486b"
-    sha256 mojave:  "e4da9a064193b63669b38d876619fae88b4f4eed8e592040da657e7e4d45150c"
+    sha256 big_sur:  "7108c8a418f37a37288b4a219f5c67b2417783200e7de2618d8d01f0f94262da"
+    sha256 catalina: "8022e9c09fcedc62574f8963a8794f848720d2148344dd6649b49a64041b0103"
+    sha256 mojave:   "bb3ebba5810a08e0148a12b09359da2cd6868a69126a3d059e4bc4dc3e37cd0f"
   end
 
   bottle do
