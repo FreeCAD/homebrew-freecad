@@ -39,17 +39,19 @@ jobs:
     steps:
 
       - name: Get current date
-        id: date
+        id: get_current_date
         run: echo "date=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
       - name: Log date
-        run: echo "${{ steps.date.outputs.date }}"
+        id: log_date
+        run: echo "${{ steps.get_current_date.outputs.date }}"
 
       - name: Set default run status
+        id: set_default_run_status
         run: echo "last_run_status=default" >> $GITHUB_ENV
 
       - name: Restore last run status
-        id: last_run
+        id: resetore_last_run_status
         uses: actions/cache@v2
         with:
           path: |
@@ -60,7 +62,7 @@ jobs:
             ${{ github.run_id }}-${{ matrix.os }}-
 
       - name: Set last run status
-        id: last_run_status
+        id: set_last_run_status
         run: echo "The last run status is ${{ env.last_run_status }}"
 
       - name: Set up Homebrew
@@ -77,19 +79,15 @@ jobs:
           restore-keys: ${{ runner.os }}-rubygems-
 
       - name: print env
+        id: print_env
         run: env
 
       # NOTE: exp with using a condition to add env var for mojave runner
       # REF: https://docs.github.com/en/actions/learn-github-actions/environment-variables
-      - name: condition 1
+      - name: condition, check runner name 
         if: runner.name == 'vmmojave'
         run: echo "The operating system on the runner is, $RUNNER_OS."; echo HOMEBREW_DEVELOPER=1 >> $GITHUB_ENV
         # NOTE: not possible to have two `run:` blocks within a `name`
-
-      # attempt reset env var that appears to be not resetting
-      # - name: condition attempt to reset HOMEBREW_CORE_GIT_REMOTE env var
-      #   if: runner.name == 'vmmojave'
-      #   run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/homebrew/homebrew-core >> $GITHUB_ENV
 
       - name: Install Homebrew Bundler RubyGems
         if: steps.cache.outputs.cache-hit != 'true' && steps.last_run_status.outputs.last_run_status != 'success'
@@ -101,18 +99,14 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
 
-      # - name: condition 2
-      #   if: runner.name == 'vmmojave'
-      #   run: echo HOMEBREW_CORE_GIT_REMOTE=https://github.com/ipatch/homebrew-core-mojave >> $GITHUB_ENV
-
-        # NOTE: ipatch, attempt to set homebrew-core repo to specific commit for catalina bottling
+      # NOTE: ipatch, attempt to set homebrew-core repo to specific commit for catalina bottling
       - name: check for catalina vm and set homebrew-core repo to specific commit
         if: runner.name == 'vmcatalina'
         run: |
           cd $(brew --repo homebrew/core); \
           git checkout ipatch-1015-cmake-bottle
 
-      - name: condition 3 
+      - name: condition, update style exceptions for vmmojave  
         if: runner.name == 'vmmojave'
         run: |
           sed -i '' \
@@ -122,15 +116,28 @@ jobs:
             -e '/go@1.12/d' \
             $(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json
 
-      - run: |
-          brew test-bot \
-          --only-formulae \
-          --only-json-tab \
-          --skip-recursive-dependents \
-          --root-url=https://ghcr.io/v2/freecad/homebrew-freecad
+      - name: build bottle using test-bot for current formula
+        id: build_bottle
+        run: |
+          # Check if the runner name is vmmojave or vmcatalina and add the flag if true
+          if [[ "${{ runner.name }}" == 'vmmojave' || "${{ runner.name }}" == 'vmcatalina' ]]; then
+            brew test-bot \
+              --only-formulae \
+              --only-json-tab \
+              --skip-recursive-dependents \
+              --build-dependents-from-source \
+              --root-url=https://ghcr.io/v2/freecad/homebrew-freecad
+          else
+            brew test-bot \
+            --only-formulae \
+            --only-json-tab \
+            --skip-recursive-dependents \
+            --root-url=https://ghcr.io/v2/freecad/homebrew-freecad
+          fi
         if: github.event_name == 'pull_request'
 
-      - name: Uplod bottles as artifact
+      - name: Upload bottles as artifact
+        id: upload_bottle_artifacts
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v2.2.4
         with:
@@ -138,6 +145,7 @@ jobs:
           path: '*.bottle.*'
 
       - name: Save run status
+        id: save_run_status
         if: steps.last_run_status.outputs.last_run_status != 'success'
         run: echo "last_run_status=${{ steps.test_run.outcome }}" >> $GITHUB_ENV
 
