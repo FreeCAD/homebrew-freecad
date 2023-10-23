@@ -118,6 +118,7 @@ jobs:
 
       - name: build bottle using test-bot for current formula
         id: build_bottle
+        # NOTE: ipatch, below env var required, see, https://github.com/orgs/Homebrew/discussions/4856
         env:
           HOMEBREW_NO_INSTALL_FROM_API: 1
         run: |
