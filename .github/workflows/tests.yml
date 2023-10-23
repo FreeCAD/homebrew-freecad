@@ -120,7 +120,7 @@ jobs:
         id: build_bottle
         run: |
           # Check if the runner name is vmmojave or vmcatalina and add the flag if true
-          if [[ "${{ runner.name }}" == 'vmmojave' || "${{ runner.name }}" == 'vmcatalina' ]]; then
+          if [[ runner.name == 'vmmojave' || runner.name == 'vmcatalina' ]]; then
             brew test-bot \
               --only-formulae \
               --only-json-tab \
