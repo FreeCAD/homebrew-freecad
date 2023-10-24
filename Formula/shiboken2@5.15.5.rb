@@ -43,12 +43,18 @@ class Shiboken2AT5155 < Formula
   def install
     ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
 
+    pyhome = `#{Formula["python@3.10"].opt_bin}/python3.10-config --prefix`.chomp
+    py_library = "#{pyhome}/lib/libpython3.10.dylib"
+    py_include = "#{pyhome}/include/python3.10"
+
     mkdir "macbuild.#{version}" do
       args = std_cmake_args
       args << "-DCMAKE_PREFIX_PATH=#{Formula["qt@5"].opt_lib}"
-      pyhome = `#{Formula["python@3.10"].opt_bin}/python3.10-config --prefix`.chomp
       # Building the tests, is effectively a test of Shiboken
-      args << "-DPYTHON_EXECUTABLE=#{pyhome}/bin/python3"
+      args << "-DPYTHON_EXECUTABLE=#{pyhome}/bin/python3.10"
+      args << "-DPYTHON_INCLUDE_DIR=#{py_include}"
+      args << "-DPYTHON_LIBRARY=#{py_library}"
+
       args << "-DCMAKE_INSTALL_RPATH=#{lib}"
 
       system "cmake", *args, "../sources/shiboken2"
