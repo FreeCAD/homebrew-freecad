@@ -29,10 +29,13 @@ jobs:
         # NOTE: homebrew/homebrew-core uses private self hosted runners
         # NOTE: `macOS-latest` is the default runner provided by github
         os: 
+          - macos-13-large
+          - macos-13
+          - macos-12-large
+          - macos-12
           - self-hosted-catalinavm
           - self-hosted-bigsurvm
           - self-hosted-mojavevm
-          - macos-12
           # os: [ self-hosted-catalinavm, self-hosted-bigsurvm ]
           # os: [ self-hosted-mojavevm ]
 
