@@ -28,9 +28,13 @@ jobs:
         # os: [ubuntu-latest, macos-latest] # NOTE: default
         # NOTE: homebrew/homebrew-core uses private self hosted runners
         # NOTE: `macOS-latest` is the default runner provided by github
-        os: [ self-hosted-catalinavm, self-hosted-bigsurvm, self-hosted-mojavevm ]
-        # os: [ self-hosted-catalinavm, self-hosted-bigsurvm ]
-        # os: [ self-hosted-mojavevm ]
+        os: 
+          - self-hosted-catalinavm
+          - self-hosted-bigsurvm
+          - self-hosted-mojavevm
+          - macos-12
+          # os: [ self-hosted-catalinavm, self-hosted-bigsurvm ]
+          # os: [ self-hosted-mojavevm ]
 
     runs-on: ${{ matrix.os }}
 
