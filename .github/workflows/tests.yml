@@ -60,7 +60,7 @@ jobs:
 
       - name: Restore last run status
         id: resetore_last_run_status
-        uses: actions/cache@latest
+        uses: actions/cache@v3
         with:
           path: |
             last_run_status
