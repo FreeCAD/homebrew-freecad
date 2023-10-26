@@ -22,12 +22,12 @@ jobs:
     strategy:
       # NOTE: ipatch, all three self hosted runners (vms) are hosted on same computer
       #   ...so limit job to one runner at a time.
-      # REF: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#defining-the-maximum-number-of-concurrent-jobs
+      # REF: 
+      # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#defining-the-maximum-number
       max-parallel: 1
       matrix:
         # os: [ubuntu-latest, macos-latest] # NOTE: default
         # NOTE: homebrew/homebrew-core uses private self hosted runners
-        # NOTE: `macOS-latest` is the default runner provided by github
         os: 
           # NOTE: macos-*-large runner requires additional spending limits
           # - macos-13-large
@@ -37,8 +37,6 @@ jobs:
           - self-hosted-catalinavm
           - self-hosted-bigsurvm
           - self-hosted-mojavevm
-          # os: [ self-hosted-catalinavm, self-hosted-bigsurvm ]
-          # os: [ self-hosted-mojavevm ]
 
     runs-on: ${{ matrix.os }}
 
@@ -60,7 +58,7 @@ jobs:
 
       - name: Restore last run status
         id: resetore_last_run_status
-        uses: actions/cache@v3
+        uses: actions/cache@v3.2.2
         with:
           path: |
             last_run_status
@@ -80,7 +78,7 @@ jobs:
       - name: Cache Homebrew Bundler RubyGems
         if: steps.last_run_status.outputs.last_run_status != 'success'
         id: cache
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3.2.2
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
@@ -150,7 +148,7 @@ jobs:
       - name: Upload bottles as artifact
         id: upload_bottle_artifacts
         if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: bottles
           path: '*.bottle.*'
