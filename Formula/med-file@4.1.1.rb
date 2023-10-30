@@ -1,8 +1,8 @@
 class MedFileAT411 < Formula
   desc "Modeling and Data Exchange standardized format library"
   homepage "https://www.salome-platform.org/"
-  url "https://files.salome-platform.org/Salome/other/med-4.1.1.tar.gz"
-  sha256 "dc2b5d54ebf0666e3ff2e974041d2ab0da906061323537023ab165d573389dd0"
+  url "https://github.com/chennes/med/archive/refs/tags/v4.1.1.tar.gz"
+  sha256 "ee8b3b6d46bfee25c1d289308b16c7f248d1339161fd5448339382125e6119ad"
   license "GPL-3.0-only"
 
   bottle do
