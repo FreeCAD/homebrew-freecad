@@ -9,12 +9,7 @@ class Pyside2AT5155 < Formula
     root_url "https://ghcr.io/v2/freecad/freecad"
     sha256 cellar: :any, big_sur:  "609b5396a299fe1a3a9a0b98d5edb8596cba10619b2794d937bfee3d4c735ee5"
     sha256 cellar: :any, catalina: "cb9c38024167a60647177545570a09beb3033a178367fb17a1e0e63fd9186fc7"
-  end
-
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 1 if MacOS.version == :mojave
-    sha256 cellar: :any, mojave: "9443f171ff4cb7a48b9ca5280babd1af7abd23e69c418bacae3e236128edd37c"
+    sha256 cellar: :any, mojave:   "9443f171ff4cb7a48b9ca5280babd1af7abd23e69c418bacae3e236128edd37c"
   end
 
   keg_only :versioned_formula
