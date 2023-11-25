@@ -12,9 +12,11 @@ class Pyside2AT5155 < Formula
   end
 
   bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 1 if MacOS.version == :mojave
-    sha256 cellar: :any, mojave: "9443f171ff4cb7a48b9ca5280babd1af7abd23e69c418bacae3e236128edd37c"
+    on_mojave do
+      root_url "https://ghcr.io/v2/freecad/freecad"
+      rebuild 1
+      sha256 cellar: :any, mojave: "9443f171ff4cb7a48b9ca5280babd1af7abd23e69c418bacae3e236128edd37c"
+    end
   end
 
   keg_only :versioned_formula
