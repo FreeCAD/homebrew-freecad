@@ -2,7 +2,7 @@ class Shiboken2AT51511 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
   homepage "https://code.qt.io/cgit/pyside/pyside-setup.git/tree/README.shiboken2-generator.md?h=5.15.2"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
-  revision 1
+  revision 2
   head "https://github.com/qt/qt5.git", branch: "dev", shallow: false
 
   stable do
@@ -27,21 +27,22 @@ class Shiboken2AT51511 < Formula
   uses_from_macos "libxml2"
   uses_from_macos "libxslt"
 
+  def python3
+    "python3.10"
+  end
+
   def install
     ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
 
-    mkdir "build" do
-      args = std_cmake_args
-      args << "-DCMAKE_PREFIX_PATH=#{Formula["qt@5"].opt_lib}"
-      pyhome = `#{Formula["python@3.10"].opt_bin}/python3.10-config --prefix`.chomp
-      # Building the tests, is effectively a test of Shiboken
-      args << "-DPYTHON_EXECUTABLE=#{pyhome}/bin/python3"
-      args << "-DFORCE_LIMITED_API=yes"
-      args << "-DCMAKE_INSTALL_RPATH=#{lib}"
+    ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
 
-      system "cmake", *args, "../sources/shiboken2"
-      system "make", "-j#{ENV.make_jobs}", "install"
-    end
+    # "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
+    system "cmake", "-S", "./sources/shiboken2", "-B", "build",
+      "-DPYTHON_EXECUTABLE=#{which(python3)}",
+      "-DFORCE_LIMITED_API=yes",
+      *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   def caveats
