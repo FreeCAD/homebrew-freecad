@@ -20,6 +20,8 @@ env:
 jobs:
   test-bot:
     strategy:
+      # NOTE: ipatch, `fail-fast` disabled or subsequent runners / OSes can not run job if previous OS failed
+      fail-fast: false
       # NOTE: ipatch, all three self hosted runners (vms) are hosted on same computer
       #   ...so limit job to one runner at a time.
       # REF: 
