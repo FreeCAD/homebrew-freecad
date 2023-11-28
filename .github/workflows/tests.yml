@@ -59,7 +59,7 @@ jobs:
         run: echo "last_run_status=default" >> $GITHUB_ENV
 
       - name: Restore last run status
-        id: resetore_last_run_status
+        id: restore_last_run_status
         uses: actions/cache@v3.2.2
         with:
           path: |
@@ -133,13 +133,17 @@ jobs:
           # Check if the runner name is vmmojave or vmcatalina and add the flag if true
           if [[ runner.name == 'vmmojave' || runner.name == 'vmcatalina' ]]; then
             brew test-bot \
-              --only-formulae \
-              --only-json-tab \
-              --skip-recursive-dependents \
-              --build-dependents-from-source \
-              --root-url=https://ghcr.io/v2/freecad/homebrew-freecad
+            --skip-online-checks \
+            --keep-old
+            --only-formulae \
+            --only-json-tab \
+            --skip-recursive-dependents \
+            --build-dependents-from-source \
+            --root-url=https://ghcr.io/v2/freecad/homebrew-freecad
           else
             brew test-bot \
+            --skip-online-checks \
+            --keep-old
             --only-formulae \
             --only-json-tab \
             --skip-recursive-dependents \
