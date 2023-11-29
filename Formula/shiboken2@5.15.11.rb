@@ -2,7 +2,7 @@ class Shiboken2AT51511 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
   homepage "https://code.qt.io/cgit/pyside/pyside-setup.git/tree/README.shiboken2-generator.md?h=5.15.2"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
-  revision 2
+  revision 3
   head "https://github.com/qt/qt5.git", branch: "dev", shallow: false
 
   stable do
@@ -22,7 +22,7 @@ class Shiboken2AT51511 < Formula
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
-  depends_on "python@3.10" => :build
+  depends_on "python@3.11" => :build
   depends_on "llvm"
   depends_on "numpy"
   depends_on "qt@5"
@@ -31,10 +31,15 @@ class Shiboken2AT51511 < Formula
   uses_from_macos "libxslt"
 
   def python3
-    "python3.10"
+    "python3.11"
   end
 
   def install
+    rpaths = if OS.mac?
+      shiboken2_module = prefix/Language::Python.site_packages(python3)/"shiboken2"
+      [rpath, rpath(source: shiboken2_module)]
+    end
+
     ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
 
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
@@ -42,7 +47,8 @@ class Shiboken2AT51511 < Formula
     # "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
     system "cmake", "-S", "./sources/shiboken2", "-B", "build",
       "-DPYTHON_EXECUTABLE=#{which(python3)}",
-      "-DFORCE_LIMITED_API=yes",
+      "-DFORCE_LIMITED_API=no",
+      "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
       *std_cmake_args
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
@@ -50,9 +56,7 @@ class Shiboken2AT51511 < Formula
 
   def caveats
     <<-EOS
-    this formula is keg-only, and is tied to the version of python
-    that is used to build qt@5, ie. if qt@5 uses python@3.10 then
-    this formula must use python@3.10
+    this formula is keg-only
     EOS
   end
 
