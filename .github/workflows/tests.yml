@@ -134,7 +134,7 @@ jobs:
           if [[ runner.name == 'vmmojave' || runner.name == 'vmcatalina' ]]; then
             brew test-bot \
             --skip-online-checks \
-            --keep-old
+            --keep-old \
             --only-formulae \
             --only-json-tab \
             --skip-recursive-dependents \
@@ -143,7 +143,7 @@ jobs:
           else
             brew test-bot \
             --skip-online-checks \
-            --keep-old
+            --keep-old \
             --only-formulae \
             --only-json-tab \
             --skip-recursive-dependents \
