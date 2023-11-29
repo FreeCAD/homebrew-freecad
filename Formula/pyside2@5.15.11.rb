@@ -10,6 +10,12 @@ class Pyside2AT51511 < Formula
     regex(%r{href=.*?PySide2[._-]v?(\d+(?:\.\d+)+)-src/}i)
   end
 
+  bottle do
+    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/pyside2@5.15.11-5.15.11"
+    sha256 cellar: :any, catalina: "9e77c1271a03c0ba03c7c7f92b55a94182d4633ab7db2adcdb3d485730d43dd7"
+    sha256 cellar: :any, mojave:   "160908555664681c54b1fc9889463da702154279482122f482b5bfb8c4d67fc3"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
