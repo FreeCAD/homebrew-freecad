@@ -4,6 +4,7 @@ class Pyside2AT51511 < Formula
   url "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.11-src/pyside-setup-opensource-src-5.15.11.tar.xz"
   sha256 "da567cd3b7854d27a0b4afe3e89de8b2f98b7a6d57393be56f1fc13f770faf29"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
+  revision 1
 
   livecheck do
     url "https://download.qt.io/official_releases/QtForPython/pyside2/"
@@ -15,7 +16,7 @@ class Pyside2AT51511 < Formula
   depends_on "cmake" => :build
   depends_on "freecad/freecad/shiboken2@5.15.11"
   depends_on "llvm@15" # Upstream issue ref: https://bugreports.qt.io/browse/PYSIDE-2268
-  depends_on "python@3.10"
+  depends_on "python@3.11"
   depends_on "qt@5"
   depends_on "sphinx-doc"
 
@@ -36,7 +37,7 @@ class Pyside2AT51511 < Formula
   end
 
   def python3
-    "python3.10"
+    "python3.11"
   end
 
   # NOTE: ipatch >= qt@5.15.3 tarballs require a c++17 compiler
@@ -62,11 +63,16 @@ class Pyside2AT51511 < Formula
     # This is a workaround for current problems with Shiboken2
     # ENV["HOMEBREW_INCLUDE_PATHS"] = ENV["HOMEBREW_INCLUDE_PATHS"].sub(Formula["qt@5"].include, "")
 
+    ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm@15"].opt_lib
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
+
     system "cmake", "-S", ".", "-B", "build",
       "-DPYTHON_EXECUTABLE=#{which(python3)}",
       "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
-      "-DFORCE_LIMITED_API=yes",
+      "-DFORCE_LIMITED_API=NO",
+      "-DLLVM_CONFIG=#{Formula["llvm@15"].opt_bin}/llvm-config",
+      "-DCMAKE_LIBRARY_PATH=#{Formula["llvm@15"].opt_lib}",
+      "-L",
       *std_cmake_args
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
@@ -74,7 +80,6 @@ class Pyside2AT51511 < Formula
 
   def caveats
     <<-EOS
-    if qt6, qt@6 is linked then this formula will fail to build from source
     this formula requires manually linking after install
     EOS
   end
