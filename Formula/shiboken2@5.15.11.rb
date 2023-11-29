@@ -12,11 +12,11 @@ class Shiboken2AT51511 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, ventura:  "73461fb88af969d9a6e6cfc06930c0831d6c336386fea732244e884c0f20ee25"
-    sha256 cellar: :any, monterey: "cb41756b2ce28a46781e4dd076adc58111f255e18051c54fb2f00e7f0a86c60b"
-    sha256 cellar: :any, big_sur:  "b0e714c05ef88124e9cfeed91d295157085124be25f154bb55e009a19060ebee"
-    sha256 cellar: :any, catalina: "8053277504fbfd0523072a155d7adecf5430c6b154ad35c42b742b7bb9fecf7a"
-    sha256 cellar: :any, mojave:   "b53ebaac225d811340d892d2b99e7c1c0194713d25e6870d0e5648856d91a42f"
+    sha256 cellar: :any, ventura:  "4728392703c160ad41eb97ae10a7d3664776f669b90a13b53749fe140f17112c"
+    sha256 cellar: :any, monterey: "a6035db1b37a7f98f3df972197604488bfdd569f0bbb6f10e94b756ca1f70268"
+    sha256 cellar: :any, big_sur:  "e21e6abf474d0c9f7733264c83aeffcb81d193ee92424c421f854b7e34b688c0"
+    sha256 cellar: :any, catalina: "ad9562f4772ebd6ce52e80fd8bfb5903d1d2d323bb735dddce4fe4e48745ccf5"
+    sha256 cellar: :any, mojave:   "3e07117c706fe0966c35766d5c9a75ed039a29758b51281988f9a211a013406b"
   end
 
   keg_only :versioned_formula
