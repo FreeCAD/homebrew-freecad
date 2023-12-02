@@ -10,6 +10,14 @@ class BoostPython311 < Formula
     formula "boost"
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, ventura:  "0e4a5eeaf5b6eba5236a153814ed5054a71856718ded3feedcb05583e6329d9a"
+    sha256 cellar: :any, monterey: "144c9d6817e9e826545bedad1dc8690e6440514050a44e4d327f4976a370cc05"
+    sha256 cellar: :any, big_sur:  "4d27729fd3492fc63ce7d813b57df0404b959fc558cdca66229425c8c3d73f65"
+    sha256 cellar: :any, catalina: "69cbfde86f1691c3722d89b56da12c3c3f8f1462e98d9f36b1e389fc6dbe7370"
+  end
+
   keg_only :versioned_formula
 
   depends_on "numpy" => :build
