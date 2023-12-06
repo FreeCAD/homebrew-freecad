@@ -2,7 +2,7 @@ class Shiboken2AT51511 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
   homepage "https://code.qt.io/cgit/pyside/pyside-setup.git/tree/README.shiboken2-generator.md?h=5.15.2"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
-  revision 3
+  revision 4
   head "https://github.com/qt/qt5.git", branch: "dev", shallow: false
 
   stable do
@@ -26,12 +26,18 @@ class Shiboken2AT51511 < Formula
   depends_on "llvm"
   depends_on "numpy"
   depends_on "qt@5"
+  depends_on "sphinx-doc"
 
   uses_from_macos "libxml2"
   uses_from_macos "libxslt"
 
   def python3
-    "python3.11"
+    Formula["python@3.11"].opt_bin/"python3"
+  end
+
+  def pythons
+    deps.map(&:to_formula)
+        .select { |f| f.name.match?(/^python@3\.\d+$/) }
   end
 
   def install
@@ -44,19 +50,42 @@ class Shiboken2AT51511 < Formula
 
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
 
-    # "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
+    cmake_args = std_cmake_args
+
+    if MacOS.version > :catalina
+      python_executable = Formula["python@3.11"].opt_bin/"python3"
+      cmake_args << "-DPYTHON_EXECUTABLE=#{python_executable}"
+    end
+
     system "cmake", "-S", "./sources/shiboken2", "-B", "build",
-      "-DPYTHON_EXECUTABLE=#{which(python3)}",
       "-DFORCE_LIMITED_API=no",
       "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
-      *std_cmake_args
+      *cmake_args
+
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
   end
 
+  def post_install
+    # explicitly set python version
+    python_version = "3.11"
+
+    # Unlink the existing .pth file to avoid reinstall issues
+    pth_file = lib/"python#{python_version}/site-packages/shiboken2.pth"
+    pth_file.unlink if pth_file.exist?
+
+    ohai "Creating .pth file for shiboken2 module"
+    # write the .pth file to the site-packages directory
+    (lib/"python#{python_version}/site-packages/shiboken2.pth").write <<~EOS
+      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
+    EOS
+  end
+
   def caveats
     <<-EOS
-    this formula is keg-only
+      this formula is keg-only
+      got a build failure on macos catalina,
+      see: https://github.com/FreeCAD/homebrew-freecad/pull/449#issuecomment-1846177315
     EOS
   end
 
