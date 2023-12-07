@@ -131,12 +131,12 @@ jobs:
           HOMEBREW_NO_INSTALL_FROM_API: 1
         run: |
           # Check if the runner name is vmmojave or vmcatalina and add the flag if true
+          # NOTE: ipatch, keep-old is not the droid you're looking for,
+          # see: https://github.com/orgs/Homebrew/discussions/4935
+          # --keep-old \
           if [[ runner.name == 'vmmojave' || runner.name == 'vmcatalina' ]]; then
             brew test-bot \
             --skip-online-checks \
-            # NOTE: ipatch, keep-old is not the droid you're looking for,
-            # see: https://github.com/orgs/Homebrew/discussions/4935
-            # --keep-old \
             --only-formulae \
             --only-json-tab \
             --skip-recursive-dependents \
@@ -145,7 +145,6 @@ jobs:
           else
             brew test-bot \
             --skip-online-checks \
-            # --keep-old \
             --only-formulae \
             --only-json-tab \
             --skip-recursive-dependents \
