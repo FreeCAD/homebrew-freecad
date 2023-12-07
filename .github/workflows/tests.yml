@@ -134,7 +134,9 @@ jobs:
           if [[ runner.name == 'vmmojave' || runner.name == 'vmcatalina' ]]; then
             brew test-bot \
             --skip-online-checks \
-            --keep-old \
+            # NOTE: ipatch, keep-old is not the droid you're looking for,
+            # see: https://github.com/orgs/Homebrew/discussions/4935
+            # --keep-old \
             --only-formulae \
             --only-json-tab \
             --skip-recursive-dependents \
@@ -143,7 +145,7 @@ jobs:
           else
             brew test-bot \
             --skip-online-checks \
-            --keep-old \
+            # --keep-old \
             --only-formulae \
             --only-json-tab \
             --skip-recursive-dependents \
