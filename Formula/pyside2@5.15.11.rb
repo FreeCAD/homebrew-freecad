@@ -69,27 +69,46 @@ class Pyside2AT51511 < Formula
     # Avoid shim reference.
     inreplace "sources/shiboken2/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
-    # This is a workaround for current problems with Shiboken2
-    # ENV["HOMEBREW_INCLUDE_PATHS"] = ENV["HOMEBREW_INCLUDE_PATHS"].sub(Formula["qt@5"].include, "")
+    cmake_args = std_cmake_args
+
+    if MacOS.version > :catalina
+      python_executable = Formula["python@3.11"].opt_bin/"python3"
+      cmake_args << "-DPYTHON_EXECUTABLE=#{python_executable}"
+    end
 
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm@15"].opt_lib
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
 
     system "cmake", "-S", ".", "-B", "build",
-      "-DPYTHON_EXECUTABLE=#{which(python3)}",
       "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
       "-DFORCE_LIMITED_API=NO",
       "-DLLVM_CONFIG=#{Formula["llvm@15"].opt_bin}/llvm-config",
       "-DCMAKE_LIBRARY_PATH=#{Formula["llvm@15"].opt_lib}",
       "-L",
-      *std_cmake_args
+      *cmake_args
+
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
   end
 
+  def post_install
+    # explicitly set python version
+    python_version = "3.11"
+
+    # Unlink the existing .pth file to avoid reinstall issues
+    pth_file = lib/"python#{python_version}/site-packages/pyside2.pth"
+    pth_file.unlink if pth_file.exist?
+
+    ohai "Creating .pth file for pyside2 module"
+    # write the .pth file to the site-packages directory
+    (lib/"python#{python_version}/site-packages/pyside2.pth").write <<~EOS
+      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
+    EOS
+  end
+
   def caveats
     <<-EOS
-    this formula requires manually linking after install
+      this formula may require manual linking after install
     EOS
   end
 
