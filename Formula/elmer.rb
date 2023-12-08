@@ -18,12 +18,6 @@ class Elmer < Formula
     end
   end
 
-  bottle do
-    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/elmer-10pre"
-    rebuild 1
-    sha256 catalina: "85e52e9fbd8078af2fdd846cbc3e7057e626703ee29cc6ab159efbe8d671e801"
-  end
-
   depends_on "cmake" => :build
   depends_on "gcc" => :build
   depends_on "freecad/freecad/opencascade@7.5.3"
@@ -32,7 +26,7 @@ class Elmer < Formula
   depends_on "openblas"
   depends_on "python@3.9"
   depends_on "qt@5"
-  depends_on "vtk@8.2" # no access to sierra test box
+  depends_on "vtk" # no access to sierra test box
   depends_on "webp"
   depends_on "xerces-c"
 
