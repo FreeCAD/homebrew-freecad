@@ -13,11 +13,12 @@ class Pyside2AT51511 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, ventura:  "bf5ce8e1c0e23c5acdf02aa52c2ff3609315601edd229b251d07cce2be22ec60"
-    sha256 cellar: :any, monterey: "1793fbcaac97b944155dbbe6c86dc1f8903edaca1a1a0b79e2417ad388bc8eaa"
-    sha256 cellar: :any, big_sur:  "f0be16651ca611485cff494206410809710d729eb410b8dc95e2082a26655b96"
-    sha256 cellar: :any, catalina: "69537ee2023027809673cddc3429b3e535131bac18a91d3d9fe091f532e59cdb"
-    sha256 cellar: :any, mojave:   "af5f7413b08d7af7d0f08d167bc1f6a62fb050923fe517200bcce1b47cca82fb"
+    rebuild 1
+    sha256 cellar: :any, ventura:  "8db99aefd79c070c93dca18796a7d7d7e17b5dfea1d5bb95cf5af8e90174cffc"
+    sha256 cellar: :any, monterey: "8cc815bfcf416579ea6e8da8f3acdb82736a69e45f9fd37f960e96b46a5ee4a2"
+    sha256 cellar: :any, big_sur:  "685b2f30a9c3a41a56570268f29f17df314f4798670f7c018da5f7092d856b50"
+    sha256 cellar: :any, catalina: "325ee20a3b90f269c3a0b0c89518df2fdb298ce8ad3b4f91c04aea448d15dcb4"
+    sha256 cellar: :any, mojave:   "f2c2bd891c0b87b3a00eab2731f31db8e32dc0f4cdb5c5ac86656a84a2769355"
   end
 
   keg_only :versioned_formula
