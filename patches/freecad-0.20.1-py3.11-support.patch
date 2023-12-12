@@ -1,0 +1,207 @@
+commit 639546574e2d4b468f125e0c17d67af73156c9da
+Author: wmayer <wmayer@users.sourceforge.net>
+Date:   Tue Aug 30 15:26:12 2022 +0200
+
+    Py: make FreeCAD 0.v20 to compile with Py3.11
+    As requested in this thread: https://forum.freecadweb.org/viewtopic.php?p=622230#p622230
+
+diff --git a/src/Base/ConsoleObserver.cpp b/src/Base/ConsoleObserver.cpp
+index c6428a7f18..ab3b3e9157 100644
+--- a/src/Base/ConsoleObserver.cpp
++++ b/src/Base/ConsoleObserver.cpp
+@@ -266,7 +266,13 @@ std::stringstream &LogLevel::prefix(std::stringstream &str, const char *src, int
+         PyFrameObject* frame = PyEval_GetFrame();
+         if (frame) {
+             line = PyFrame_GetLineNumber(frame);
++#if PY_VERSION_HEX < 0x030b0000
+             src = PyUnicode_AsUTF8(frame->f_code->co_filename);
++#else
++            PyCodeObject* code = PyFrame_GetCode(frame);
++            src = PyUnicode_AsUTF8(code->co_filename);
++            Py_DECREF(code);
++#endif
+         }
+     }
+     if (print_src && src && src[0]) {
+diff --git a/src/Base/Interpreter.cpp b/src/Base/Interpreter.cpp
+index 97be921287..8a6b577665 100644
+--- a/src/Base/Interpreter.cpp
++++ b/src/Base/Interpreter.cpp
+@@ -524,6 +524,7 @@ void InterpreterSingleton::addPythonPath(const char* Path)
+     list.append(Py::String(Path));
+ }
+ 
++#if PY_VERSION_HEX < 0x030b0000
+ const char* InterpreterSingleton::init(int argc,char *argv[])
+ {
+     if (!Py_IsInitialized()) {
+@@ -566,6 +567,61 @@ const char* InterpreterSingleton::init(int argc,char *argv[])
+     PyGILStateLocker lock;
+     return Py_EncodeLocale(Py_GetPath(),nullptr);
+ }
++#else
++namespace {
++void initInterpreter(int argc,char *argv[])
++{
++    PyStatus status;
++    PyConfig config;
++    PyConfig_InitPythonConfig(&config);
++
++    status = PyConfig_SetBytesArgv(&config, argc, argv);
++    if (PyStatus_Exception(status)) {
++        throw Base::RuntimeError("Failed to set config");
++    }
++
++    status = Py_InitializeFromConfig(&config);
++    if (PyStatus_Exception(status)) {
++        throw Base::RuntimeError("Failed to init from config");
++    }
++
++    PyConfig_Clear(&config);
++
++    Py_Initialize();
++    const char* virtualenv = getenv("VIRTUAL_ENV");
++    if (virtualenv) {
++        PyRun_SimpleString(
++            "# Check for virtualenv, and activate if present.\n"
++            "# See https://virtualenv.pypa.io/en/latest/userguide/#using-virtualenv-without-bin-python\n"
++            "import os\n"
++            "import sys\n"
++            "base_path = os.getenv(\"VIRTUAL_ENV\")\n"
++            "if not base_path is None:\n"
++            "    activate_this = os.path.join(base_path, \"bin\", \"activate_this.py\")\n"
++            "    exec(open(activate_this).read(), {'__file__':activate_this})\n"
++        );
++    }
++}
++}
++const char* InterpreterSingleton::init(int argc,char *argv[])
++{
++    try {
++        if (!Py_IsInitialized()) {
++            initInterpreter(argc, argv);
++
++            PythonStdOutput::init_type();
++            this->_global = PyEval_SaveThread();
++        }
++
++        PyGILStateLocker lock;
++        return Py_EncodeLocale(Py_GetPath(),nullptr);
++    }
++    catch (const Base::Exception& e) {
++        e.ReportException();
++        throw;
++    }
++}
++#endif
+ 
+ void InterpreterSingleton::replaceStdOutput()
+ {
+diff --git a/src/Base/PyObjectBase.cpp b/src/Base/PyObjectBase.cpp
+index 0fae3336ea..ca10b95232 100644
+--- a/src/Base/PyObjectBase.cpp
++++ b/src/Base/PyObjectBase.cpp
+@@ -60,7 +60,11 @@ PyObjectBase::PyObjectBase(void* p,PyTypeObject *T)
+   , baseProxy(nullptr)
+   , attrDict(nullptr)
+ {
++#if PY_VERSION_HEX < 0x030b0000
+     Py_TYPE(this) = T;
++#else
++    this->ob_type = T;
++#endif
+     _Py_NewReference(this);
+ #ifdef FC_LOGPYOBJECTS
+     Base::Console().Log("PyO+: %s (%p)\n",T->tp_name, this);
+diff --git a/src/Base/PyTools.c b/src/Base/PyTools.c
+index 71569e26a2..492d0c8563 100644
+--- a/src/Base/PyTools.c
++++ b/src/Base/PyTools.c
+@@ -15,8 +15,10 @@ is provided on an as is basis, without warranties of any kind.
+ #include <string.h>
+ #include <assert.h>
+ #include <compile.h>
+-#include <eval.h>
+ #include <frameobject.h>
++#if PY_VERSION_HEX < 0x030b0000
++#include <eval.h>
++#endif
+ 
+ 
+ /*****************************************************************************
+@@ -310,7 +312,13 @@ void PP_Fetch_Error_Text()
+         if(!frame) 
+             return;
+         int line = PyFrame_GetLineNumber(frame);
++#if PY_VERSION_HEX < 0x030b0000
+         const char *file = PyUnicode_AsUTF8(frame->f_code->co_filename);
++#else
++        PyCodeObject* code = PyFrame_GetCode(frame);
++        const char *file = PyUnicode_AsUTF8(code->co_filename);
++        Py_DECREF(code);
++#endif
+ #ifdef FC_OS_WIN32
+         const char *_f = strstr(file, "\\src\\");
+ #else
+diff --git a/src/Gui/Command.cpp b/src/Gui/Command.cpp
+index 1234659fed..b857757410 100644
+--- a/src/Gui/Command.cpp
++++ b/src/Gui/Command.cpp
+@@ -657,8 +657,15 @@ void Command::printPyCaller() {
+     if(!frame)
+         return;
+     int line = PyFrame_GetLineNumber(frame);
++#if PY_VERSION_HEX < 0x030b0000
+     const char *file = PyUnicode_AsUTF8(frame->f_code->co_filename);
+     printCaller(file?file:"<no file>",line);
++#else
++    PyCodeObject* code = PyFrame_GetCode(frame);
++    const char* file = PyUnicode_AsUTF8(code->co_filename);
++    printCaller(file?file:"<no file>",line);
++    Py_DECREF(code);
++#endif
+ }
+ 
+ void Command::printCaller(const char *file, int line) {
+diff --git a/src/Gui/PythonDebugger.cpp b/src/Gui/PythonDebugger.cpp
+index d1d145951d..b31e773942 100644
+--- a/src/Gui/PythonDebugger.cpp
++++ b/src/Gui/PythonDebugger.cpp
+@@ -563,6 +563,14 @@ void PythonDebugger::hideDebugMarker(const QString& fn)
+     }
+ }
+ 
++#if PY_VERSION_HEX < 0x030900B1
++static PyCodeObject* PyFrame_GetCode(PyFrameObject *frame)
++{
++    Py_INCREF(frame->f_code);
++    return frame->f_code;
++}
++#endif
++
+ // http://www.koders.com/cpp/fidBA6CD8A0FE5F41F1464D74733D9A711DA257D20B.aspx?s=PyEval_SetTrace
+ // http://code.google.com/p/idapython/source/browse/trunk/python.cpp
+ // http://www.koders.com/cpp/fid191F7B13CF73133935A7A2E18B7BF43ACC6D1784.aspx?s=PyEval_SetTrace
+@@ -578,7 +586,9 @@ int PythonDebugger::tracer_callback(PyObject *obj, PyFrameObject *frame, int wha
+ 
+     //no = frame->f_tstate->recursion_depth;
+     //std::string funcname = PyString_AsString(frame->f_code->co_name);
+-    QString file = QString::fromUtf8(PyUnicode_AsUTF8(frame->f_code->co_filename));
++    PyCodeObject* code = PyFrame_GetCode(frame);
++    QString file = QString::fromUtf8(PyUnicode_AsUTF8(code->co_filename));
++    Py_DECREF(code);
+     switch (what) {
+     case PyTrace_CALL:
+         self->depth++;
+@@ -592,7 +602,10 @@ int PythonDebugger::tracer_callback(PyObject *obj, PyFrameObject *frame, int wha
+             //PyObject *str;
+             //str = PyObject_Str(frame->f_code->co_filename);
+             //no = frame->f_lineno;
+-            int line = PyCode_Addr2Line(frame->f_code, frame->f_lasti);
++            PyCodeObject* f_code = PyFrame_GetCode(frame);
++            int f_lasti = PyFrame_GetLineNumber(frame);
++            int line = PyCode_Addr2Line(f_code, f_lasti);
++            Py_DECREF(f_code);
+             //if (str) {
+             //    Base::Console().Message("PROFILING: %s:%d\n", PyString_AsString(str), frame->f_lineno);
+             //    Py_DECREF(str);
