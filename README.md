@@ -1,4 +1,4 @@
-<!-- use html tags to center content --> 
+<!-- use html tags to center content -->
 
 <h2 align="center">homebrew-freecad</h2>
 
@@ -91,8 +91,8 @@ the repo without running CI checks.
 <a id="maintenance"></a>
 
 For maintainers of this repo, [I][lnk1] have setup this repo using self-hosted runners
-for macOS _Mojave_, _Catalina_, and _Big Sur_ (Intel only) versions of macOS. 
-These self-hosted runners all run on a late macbook pro 2013 model that runs archlinux 
+for macOS _Mojave_, _Catalina_, and _Big Sur_ (Intel only) versions of macOS.
+These self-hosted runners all run on a late macbook pro 2013 model that runs archlinux
 allowing the virtual machines to be started and stopped thanks to qemu+kvm.
 
 Self-hosted runners will [**disappear**][lnk2] from a repo on GitHub if they are not used
@@ -105,21 +105,39 @@ from the _actions_ tab at the top of the repo.
 > the self-hosted runner picks up where it left off. More information about this nuance
 > can be provided upon request.
 
+Recently a [CI action][lnk5] has been created to check the online status of the self-hosted runners. An
+email will be sent to the maintainer designated in the github action.
+
 [lnk1]: <https://github.com/ipatch>
 [lnk2]: <https://docs.github.com/en/actions/hosting-your-own-runners/removing-self-hosted-runners#removing-a-runner-from-a-repository>
 [lnk3]: <https://github.com/Homebrew/discussions/discussions/3318>
+[lnk5]: <https://github.com/FreeCAD/homebrew-freecad/blob/ebbc77b7fbf7ff1230ebc5597efe99fbea9c5cf4/.github/workflows/validate_runner_status.yml>
+
+### Maintenance / creating patch files for formula
+
+<a id="maintenance-patch-file"></a>
+
+Creating patch files for formula contained within this repo can be a difficult task, so the below steps aim to aid
+in the creation of patch files.
+
+#### .. / .. / example
+
+When freecad 0.20.1 was released it did not have support for python 3.11 however a [consolidated commit][lnk6] has been made
+that should allow the 0.20.1 release to build and run against python 3.11
+
+[lnk6]: <https://github.com/FreeCAD/FreeCAD/commit/639546574e2d4b468f125e0c17d67af73156c9da>
 
 ## TODOs
 
-- [x] ~~presently the `python@3.9.6` tap formula installs `pip3` and `wheel3` which will not work if formula is set to `keg_only`~~
-    - look at the [formula cookbook / install section][1] for finding a way to possibly make the tap version of python `keg_only` while not raising an audit error in the process.
-    - the above issue is now adverted by using the upstream (homebrew-core) version of `python@3.9`
-- [ ] publish bottles for older versions of macos ie. mojave & high sierra, there is an active discussion about the topic [here][lnk4]
+<a id="todos"></a>
 
-[1]: <https://docs.brew.sh/Formula-Cookbook#bininstall-foo>
+- [ ] publish bottles for older versions of macos ie. ~~mojave~~ & high sierra, there is an active discussion about the topic [here][lnk4]
+
 [lnk4]: <https://github.com/Homebrew/discussions/discussions/2340>
 
 ## Open Issues
+
+<a id="open-issues"></a>
 
 See [GitHub Issues][ghi]
 
@@ -127,5 +145,7 @@ See [GitHub Issues][ghi]
 
 ## Recognition
 
-[Sam Nelson](https://github.com/sanelson) originally developed the freecad homebrew recipe repo circa April 2014 
+<a id="recognition"></a>
+
+[Sam Nelson](https://github.com/sanelson) originally developed the freecad homebrew recipe repo circa April 2014
 and [transferred it to the FreeCAD organization](https://github.com/FreeCAD/homebrew-freecad/issues/20) in October 2016.
