@@ -1,0 +1,30 @@
+diff --git a/src/Mod/Path/libarea/CMakeLists.txt b/src/Mod/Path/libarea/CMakeLists.txt
+index c3a73e48be..0a65af6d28 100644
+--- a/src/Mod/Path/libarea/CMakeLists.txt
++++ b/src/Mod/Path/libarea/CMakeLists.txt
+@@ -17,14 +17,21 @@ if(NOT FREECAD_USE_PYBIND11)
+         # boost-python >= 1.67 on some platforms has suffix
+         set(BOOST_PY_SUFFIX ${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR})
+ 
+-        find_package( Boost COMPONENTS python${BOOST_PY_SUFFIX} )
+-        if (NOT Boost_PYTHON${BOOST_PY_SUFFIX}_FOUND)
++        if(DEFINED HOMEBREW_PREFIX)
++          # Specify the Boost library path
++          set(BOOST_ROOT "${HOMEBREW_PREFIX}/opt/boost-python3.11")
++          set(BOOST_INCLUDEDIR "${HOMEBREW_PREFIX}/opt/boost-python3.11/include")
++          set(BOOST_LIBRARYDIR "${HOMEBREW_PREFIX}/opt/boost-python3.11/lib")
++        elseif()
++          find_package( Boost COMPONENTS python${BOOST_PY_SUFFIX} )
++          if (NOT Boost_PYTHON${BOOST_PY_SUFFIX}_FOUND)
+             # try just the major version
+             find_package( Boost COMPONENTS python${PYTHON_VERSION_MAJOR} )
+             if (NOT Boost_PYTHON${PYTHON_VERSION_MAJOR}_FOUND)
+-                # unversioned
+-                find_package( Boost COMPONENTS python REQUIRED)
++              # unversioned
++              find_package( Boost COMPONENTS python REQUIRED)
+             endif()
++          endif()
+         endif()
+ 
+         if(Boost_FOUND)
