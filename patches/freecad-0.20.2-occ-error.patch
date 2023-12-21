@@ -1,0 +1,19 @@
+commit 64c63bbe4c5a1ce2dcadbef78e377ac2c2d3cd82
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Mon Jan 8 12:26:25 2024 -0600
+
+    patch occ build err for homebrew-freecad
+
+diff --git a/src/Mod/Part/App/OCCError.h b/src/Mod/Part/App/OCCError.h
+index 19e8208179..308d700299 100644
+--- a/src/Mod/Part/App/OCCError.h
++++ b/src/Mod/Part/App/OCCError.h
+@@ -50,7 +50,7 @@
+ # include <Standard_Overflow.hxx>
+ # include <Standard_ProgramError.hxx>
+ # include <Standard_RangeError.hxx>
+-# include <Standard_TooManyUsers.hxx>
++// # include <Standard_TooManyUsers.hxx>
+ # include <Standard_TypeMismatch.hxx>
+ # include <Standard_Underflow.hxx>
+ 
