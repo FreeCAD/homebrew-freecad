@@ -21,13 +21,6 @@ class OpencascadeAT753 < Formula
     end
   end
 
-  bottle do
-    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/opencascade@7.5.3-7.5.3"
-    rebuild 2
-    sha256 big_sur:  "008f4a792815f2018950616336114fb1ac56776d375fe1c3e92c275d6fcd9255"
-    sha256 catalina: "bcc8f8a36598732c2ab7f60eabc04cc7873bf8611fe8c3d2ee703514cc22aec4"
-  end
-
   keg_only :versioned_formula # NOTE: homebrewcore provides opencascade too
 
   depends_on "cmake" => :build
