@@ -27,7 +27,7 @@ class FcBundle < Formula
     # Read the contents of the .pth file into a variable
     # shiboken2_pth_contents = \
     # File.read("#{Formula["shiboken2@5.15.11"].opt_prefix}/lib/python#{pyver}/site-packages/shiboken2.pth").strip
-    pyside2_pth_contents = \
+    pyside2_pth_contents =
       File.read("#{Formula["pyside2@5.15.11"].opt_prefix}/lib/python#{pyver}/site-packages/pyside2.pth").strip
 
     site_packages = Language::Python.site_packages("python3.11")
