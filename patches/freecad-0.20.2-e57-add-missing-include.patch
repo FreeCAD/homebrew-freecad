@@ -1,0 +1,18 @@
+commit 280a54ef21f33e9357dd2e284829edb26b039b73
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Tue Mar 5 16:34:10 2024 -0600
+
+    e57 fix missing include
+
+diff --git a/src/3rdParty/libE57Format/include/E57Format.h b/src/3rdParty/libE57Format/include/E57Format.h
+index 89032b14f3..1c700669d9 100644
+--- a/src/3rdParty/libE57Format/include/E57Format.h
++++ b/src/3rdParty/libE57Format/include/E57Format.h
+@@ -34,6 +34,7 @@
+ #include <cfloat>
+ #include <memory>
+ #include <vector>
++#include <cstdint>
+ 
+ #include "E57Exception.h"
+ 
