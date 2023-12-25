@@ -10,6 +10,15 @@ class Pyside2AT51511Py310 < Formula
     regex(%r{href=.*?PySide2[._-]v?(\d+(?:\.\d+)+)-src/}i)
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, ventura:  "a531487ffcf57a3686a71c68783af7ab80589c174f84da31423f9d7c73082d64"
+    sha256 cellar: :any, monterey: "bf028e0cf0fab425ca4e5b56d29e25d79f6a2977c7b987e26367f8aedd32d3d6"
+    sha256 cellar: :any, big_sur:  "49d1d2a179078b5476d428412b5c456d0b38eb5c3f9d408d46f56433e1388368"
+    sha256 cellar: :any, catalina: "d0c4134e4f4ae4b8e7c45181565387382a1e3047b901f248f5f1eb60b18f042e"
+    sha256 cellar: :any, mojave:   "10520ff4d7a8282fa63f6a29c72e26c4668b00ea88fddea7a1faba14d23eafea"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
