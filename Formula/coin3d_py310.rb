@@ -14,6 +14,12 @@ class Coin3dPy310 < Formula
     end
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, ventura:  "c6077560fd70dba25686a8c6be14a2a9b9403fac37968c4259b36831e94eb5ad"
+    sha256 cellar: :any, monterey: "6ee5775f47dd69836beda70e5ccab74f749a9a8cbfbeb070e408a0af2c86defc"
+  end
+
   head do
     url "https://github.com/coin3d/coin.git", branch: "master"
 
