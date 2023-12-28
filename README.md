@@ -131,8 +131,10 @@ that should allow the 0.20.1 release to build and run against python 3.11
 
 > the below video demonstrates how I created a patch file for python 3.11 support
 
+<!-- could not figure out how to host the mp4 file in the repo resorted to using a gist -->
+
 <div align="center">
-<video src="https://github.com/ipatch/homebrew-freecad/assets/613805/29d0db2d-87dd-4b2c-bac2-b01134e1ca8f"/>
+<video src="https://private-user-images.githubusercontent.com/613805/293290218-65e5e959-d3a8-4cc0-98be-45a77eaac632.mp4" />
 </div>
 
 [lnk7]: <https://github.com/FreeCAD/FreeCAD/commit/639546574e2d4b468f125e0c17d67af73156c9da>
