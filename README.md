@@ -126,12 +126,16 @@ in the creation of patch files.
 
 #### .. / .. / example
 
-When freecad 0.20.1 was released it did not have support for python 3.11 however a [consolidated commit][lnk6] has been made
+When freecad 0.20.1 was released it did not have support for python 3.11 however a [consolidated commit][lnk7] has been made
 that should allow the 0.20.1 release to build and run against python 3.11
 
 > the below video demonstrates how I created a patch file for python 3.11 support
 
-[lnk6]: <https://github.com/FreeCAD/FreeCAD/commit/639546574e2d4b468f125e0c17d67af73156c9da>
+<div align="center">
+<video src="https://github.com/ipatch/homebrew-freecad/assets/613805/29d0db2d-87dd-4b2c-bac2-b01134e1ca8f"/>
+</div>
+
+[lnk7]: <https://github.com/FreeCAD/FreeCAD/commit/639546574e2d4b468f125e0c17d67af73156c9da>
 
 ## TODOs
 
