@@ -97,12 +97,12 @@ class Pyside2AT51511Py310 < Formula
     python_version = "3.10"
 
     # Unlink the existing .pth file to avoid reinstall issues
-    pth_file = lib/"python#{python_version}/site-packages/pyside2.pth"
+    pth_file = lib/"python#{python_version}/pyside2.pth"
     pth_file.unlink if pth_file.exist?
 
     ohai "Creating .pth file for pyside2 module"
-    # write the .pth file to the site-packages directory
-    (lib/"python#{python_version}/site-packages/pyside2.pth").write <<~EOS
+    # write the .pth file to the parent dir of site-packages
+    (lib/"python#{python_version}/pyside2.pth").write <<~EOS
       import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
     EOS
   end
