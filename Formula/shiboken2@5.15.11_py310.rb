@@ -2,7 +2,7 @@ class Shiboken2AT51511Py310 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
   homepage "https://code.qt.io/cgit/pyside/pyside-setup.git/tree/README.shiboken2-generator.md?h=5.15.2"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
-  revision 4
+  revision 5
   head "https://github.com/qt/qt5.git", branch: "dev", shallow: false
 
   stable do
@@ -70,12 +70,12 @@ class Shiboken2AT51511Py310 < Formula
     python_version = "3.10"
 
     # Unlink the existing .pth file to avoid reinstall issues
-    pth_file = lib/"python#{python_version}/site-packages/shiboken2.pth"
+    pth_file = lib/"python#{python_version}/shiboken2.pth"
     pth_file.unlink if pth_file.exist?
 
     ohai "Creating .pth file for shiboken2 module"
     # write the .pth file to the site-packages directory
-    (lib/"python#{python_version}/site-packages/shiboken2.pth").write <<~EOS
+    (lib/"python#{python_version}/shiboken2.pth").write <<~EOS
       import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
     EOS
   end
