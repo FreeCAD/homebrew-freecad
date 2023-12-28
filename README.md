@@ -108,10 +108,14 @@ from the _actions_ tab at the top of the repo.
 Recently a [CI action][lnk5] has been created to check the online status of the self-hosted runners. An
 email will be sent to the maintainer designated in the github action.
 
+A great resource for learning how other Operating Systems (GNU+Linux distros) assemble the dependencies for freecad
+can be seen at [repology.org][lnk6]
+
 [lnk1]: <https://github.com/ipatch>
 [lnk2]: <https://docs.github.com/en/actions/hosting-your-own-runners/removing-self-hosted-runners#removing-a-runner-from-a-repository>
 [lnk3]: <https://github.com/Homebrew/discussions/discussions/3318>
 [lnk5]: <https://github.com/FreeCAD/homebrew-freecad/blob/ebbc77b7fbf7ff1230ebc5597efe99fbea9c5cf4/.github/workflows/validate_runner_status.yml>
+[lnk6]: <https://repology.org>
 
 ### Maintenance / creating patch files for formula
 
@@ -124,6 +128,8 @@ in the creation of patch files.
 
 When freecad 0.20.1 was released it did not have support for python 3.11 however a [consolidated commit][lnk6] has been made
 that should allow the 0.20.1 release to build and run against python 3.11
+
+> the below video demonstrates how I created a patch file for python 3.11 support
 
 [lnk6]: <https://github.com/FreeCAD/FreeCAD/commit/639546574e2d4b468f125e0c17d67af73156c9da>
 
