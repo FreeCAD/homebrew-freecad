@@ -7,13 +7,6 @@ class TbbAT2020U3 < Formula
   license "Apache-2.0"
   revision 1
 
-  bottle do
-    root_url "https://github.com/FreeCAD/homebrew-freecad/releases/download/tbb@2020_u3-2020_U3_1"
-    rebuild 1
-    sha256 cellar: :any, big_sur:  "864d3f62902eeaa997bd313270a88258a1e1085a3e65960a85687a3f468a3e91"
-    sha256 cellar: :any, catalina: "4dac910d761c0034629da7e712ce5b63353d74222830c0c3f2adcdd09768e5a4"
-  end
-
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
