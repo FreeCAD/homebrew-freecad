@@ -20,7 +20,7 @@ class OpencascadeAT750 < Formula
   depends_on "cmake" => :build
   depends_on "doxygen" => :build
   depends_on "rapidjson" => :build
-  depends_on "./tbb@2020_u3"
+  depends_on "freecad/freecad/tbb@2020_u3"
   depends_on "freeimage"
   depends_on "freetype"
 

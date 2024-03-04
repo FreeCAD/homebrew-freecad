@@ -2,7 +2,6 @@ class OpencascadeAT760 < Formula
   desc "3D modeling and numerical simulation software for CAD/CAM/CAE"
   homepage "https://github.com/Open-Cascade-SAS"
   url "https://git.dev.opencascade.org/gitweb/?p=occt.git;a=snapshot;h=refs/tags/V7_6_0;sf=tgz"
-
   version "7.6.0"
   sha256 "e7f989d52348c3b3acb7eb4ee001bb5c2eed5250cdcceaa6ae97edc294f2cabd"
   license "LGPL-2.1-only"
@@ -28,7 +27,7 @@ class OpencascadeAT760 < Formula
   depends_on "rapidjson" => :build
   depends_on "freeimage"
   depends_on "freetype"
-  depends_on "tbb@2020"
+  depends_on "freecad/freecad/tbb@2020_u3"
   depends_on "tcl-tk"
 
   def install
