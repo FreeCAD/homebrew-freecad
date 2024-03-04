@@ -20,7 +20,7 @@ env:
 jobs:
   test-bot:
     strategy:
-      # NOTE: ipatch, `fail-fast` disabled or subsequent runners / OSes can not run job if previous OS failed
+      # NOTE: ipatch, `fail-fast` disabled because subsequent runners can not run job if previous job failed
       fail-fast: false
       # NOTE: ipatch, all three self hosted runners (vms) are hosted on same computer
       #   ...so limit job to one runner at a time.
@@ -32,13 +32,15 @@ jobs:
         # NOTE: homebrew/homebrew-core uses private self hosted runners
         os: 
           # NOTE: macos-*-large runner requires additional spending limits
-          # - macos-13-large
+          - macos-14-large
+          - macos-14
+          - macos-13-large
           - macos-13
-          # - macos-12-large
+          - macos-12-large
           - macos-12
-          - self-hosted-catalinavm
-          - self-hosted-bigsurvm
-          - self-hosted-mojavevm
+          # - self-hosted-catalinavm
+          # - self-hosted-bigsurvm
+          # - self-hosted-mojavevm
 
     runs-on: ${{ matrix.os }}
 
@@ -50,8 +52,8 @@ jobs:
         id: get_current_date
         run: echo "date=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
-      - name: Log date
-        id: log_date
+      - name: Print value of date from previous step
+        id: print_date
         run: echo "${{ steps.get_current_date.outputs.date }}"
 
       - name: Set default run status
@@ -90,7 +92,7 @@ jobs:
         id: print_env
         run: env
 
-      # NOTE: exp with using a condition to add env var for mojave runner
+      # NOTE: use a condition to add env var for mojave runner
       # REF: https://docs.github.com/en/actions/learn-github-actions/environment-variables
       - name: condition, check runner name 
         if: runner.name == 'vmmojave'
