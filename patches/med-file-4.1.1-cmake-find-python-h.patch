@@ -1,0 +1,25 @@
+commit e25559e46432769b34d8f7ccba466612658e9ef3
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Mon Mar 4 12:37:39 2024 -0600
+
+    fix for homebrew find python.h regardless of linked python in cellar
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9eceab7..583d929 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -113,8 +113,12 @@ MED_FIND_MPI()
+ IF(MEDFILE_BUILD_PYTHON)
+   FIND_PACKAGE(SWIG REQUIRED)
+   INCLUDE(${SWIG_USE_FILE})
+-  FIND_PACKAGE(PythonLibs REQUIRED)
+-  FIND_PACKAGE(PythonInterp REQUIRED)  # to get version string ...
++  IF(HOMEBREW_PREFIX)
++    find_program(PYTHON_EXECUTABLE python HINTS ${Python_ROOT_DIR} PATH_SUFFIXES bin NO_CMAKE_SYSTEM_PATH)
++  ELSE()
++    FIND_PACKAGE(PythonLibs REQUIRED)
++    FIND_PACKAGE(PythonInterp REQUIRED)  # to get version string ...
++  ENDIF()
+ ENDIF()
+ 
+ ## Creation of files med_config.h.cmake
