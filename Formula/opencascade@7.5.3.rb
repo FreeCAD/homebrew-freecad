@@ -25,9 +25,9 @@ class OpencascadeAT753 < Formula
   depends_on "cmake" => :build
   depends_on "doxygen" => :build
   depends_on "rapidjson" => :build
+  depends_on "freecad/freecad/tbb@2020_u3"
   depends_on "freeimage"
   depends_on "freetype"
-  depends_on "freecad/freecad/tbb@2020_u3"
   depends_on "tcl-tk"
 
   # NOTE: https://tracker.dev.opencascade.org/view.php?id=32328
