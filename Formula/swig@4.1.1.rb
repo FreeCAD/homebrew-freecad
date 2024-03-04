@@ -43,8 +43,8 @@ class SwigAT411 < Formula
 
   def caveats
     <<-EOS
-    this formula is keg only due to same formula
-    being in the homebrew-core main repo
+    this formula is keg only due to upstream
+    counterpart in homebrew-core
     EOS
   end
 
