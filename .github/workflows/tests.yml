@@ -32,11 +32,11 @@ jobs:
         # NOTE: homebrew/homebrew-core uses private self hosted runners
         os: 
           # NOTE: macos-*-large runner requires additional spending limits
-          - macos-14-large
+          # - macos-14-large
           - macos-14
-          - macos-13-large
+          # - macos-13-large
           - macos-13
-          - macos-12-large
+          # - macos-12-large
           - macos-12
           # - self-hosted-catalinavm
           # - self-hosted-bigsurvm

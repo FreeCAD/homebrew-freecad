@@ -1,17 +1,13 @@
 class Elmer < Formula
   desc "CFD"
   homepage "https://www.csc.fi/web/elmer"
-  version "10pre"
   license "GPL-2.0-only" # needs updating
   head "https://github.com/ElmerCSC/elmerfem.git", branch: "devel", shallow: false
 
   stable do
-    url "https://github.com/ElmerCSC/elmerfem.git",
-      revision: "d45484c8fb649ae8fe88bc9752b7e1be1e223f7a"
-    version "v10pre"
-  end
+    url "https://github.com/ElmerCSC/elmerfem.git", revision: "d45484c8fb649ae8fe88bc9752b7e1be1e223f7a", using: :git
+    version "10pre"
 
-  stable do
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/75d30bdf481c1e5d52f004b710600eafda3fab44/patches/0001-ipatch-use-gcc-11.patch"
       sha256 "9da090c9a25815bbfea3841087f2b7fff8f7fe015e5e2e10bab6b9a2711b4fd3"

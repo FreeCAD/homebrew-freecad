@@ -1,14 +1,11 @@
 class Shiboken2AT5155 < Formula
   desc "GeneratorRunner plugin that outputs C++ code for CPython extensions"
   homepage "https://code.qt.io/cgit/pyside/pyside-setup.git/tree/README.shiboken2-generator.md?h=5.15.2"
+  url "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.5-src/pyside-setup-opensource-src-5.15.5.zip"
+  sha256 "d1c61308c53636823c1d0662f410966e4a57c2681b551003e458b2cc65902c41"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
   revision 1
   head "https://github.com/qt/qt5.git", branch: "dev", shallow: false
-
-  stable do
-    url "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.5-src/pyside-setup-opensource-src-5.15.5.zip"
-    sha256 "d1c61308c53636823c1d0662f410966e4a57c2681b551003e458b2cc65902c41"
-  end
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
