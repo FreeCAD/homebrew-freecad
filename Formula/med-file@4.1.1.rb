@@ -15,14 +15,6 @@ class MedFileAT411 < Formula
     sha256 cellar: :any, mojave:   "ccdbcb2c39a985b2a4538fc96e39354312635b84f50761c5ebbf1f2206d02faf"
   end
 
-  # TODO: a valid regex is required for livecheck
-  # livecheck do
-  #   url :stable
-  #   # url "https://files.salome-platform.org/Salome/other/"
-  #   # regex(/^v?(\d+(?:\.\d+)+)$/i)
-  #   # regex(/^med-4.\d.\d.tar.gz$/i)
-  # end
-
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.1.1" => :build
   depends_on "python@3.11" => :build
@@ -31,42 +23,56 @@ class MedFileAT411 < Formula
   depends_on "libaec"
 
   patch do
+    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/8efd96c520e35c36cbd55460669a643b53b27c29/patches/med-file-4.1.1-cmake-find-python-h.patch"
+    sha256 "8fe32c1217704c5c963f35adbf1a05f3e7e3f1b3db686066c5bdd34bf45e409a"
+  end
+
+  patch do
     url "https://gitweb.gentoo.org/repo/gentoo.git/plain/sci-libs/med/files/med-4.1.0-0003-build-against-hdf5-1.14.patch"
     sha256 "d4551df69f4dcb3c8a649cdeb0a6c9d27a03aebc0c6dcdba74cac39a8732f8d1"
   end
 
-  # def pythons
-  #   deps.map(&:to_formula)
-  #       .select { |f| f.name.match?(/^python@3\.\d+$/) }
+  # TODO: a valid regex is required for livecheck
+  # livecheck do
+  #   url :stable
+  #   # url "https://files.salome-platform.org/Salome/other/"
+  #   # regex(/^v?(\d+(?:\.\d+)+)$/i)
+  #   # regex(/^med-4.\d.\d.tar.gz$/i)
   # end
-
-  def pythons
-    deps.map(&:to_formula)
-        .select { |f| f.name.match?(/^python@\d\.\d+$/) }
-        .map { |f| f.opt_libexec/"bin/python" }
-  end
-
-  def python3
-    "python3.11"
-  end
 
   def install
     # ENV.cxx11
     hbp = HOMEBREW_PREFIX
+
+    # hb default values not used
+    rm_std_cmake_args = [
+      "-DBUILD_TESTING=OFF",
+      "-DCMAKE_INSTALL_LIBDIR",
+    ]
+
     args = std_cmake_args + %W[
+      -DHOMEBREW_PREFIX=#{hbp}
       -DMEDFILE_BUILD_PYTHON=ON
       -DMEDFILE_BUILD_TESTS=OFF
       -DMEDFILE_INSTALL_DOC=OFF
-      -DPYTHON_EXECUTABLE=#{which(python3)}"
-      -DCMAKE_PREFIX_PATH=#{Formula["hdf5"].opt_lib};#{Formula["gcc"].opt_lib};
+      -DPYTHON_EXECUTABLE=#{Formula["python@3.11"].opt_bin}/python3.11
+      -DCMAKE_PREFIX_PATH=#{Formula["hdf5"].opt_prefix};#{Formula["gcc"].opt_prefix};
       -DCMAKE_INSTALL_RPATH=#{rpath}
     ]
 
-    args << if OS.mac?
-      "-DPYTHON_LIBRARY=#{hbp}/opt/python@3.11/Frameworks/Python.framework/Versions/Current/lib/libpython3.11.dylib"
+    if OS.mac?
+      args << "-DPYTHON_LIBRARY=#{hbp}/opt/python@3.11/Frameworks/Python.framework/Versions/Current/lib" \
+              "/libpython3.11.dylib"
+      args << "-DPYTHON_INCLUDE_DIRS=#{Formula["python@3.11"].opt_prefix}/Frameworks/Python.framework/Versions/" \
+              "3.11/Headers"
     else
-      "-DPYTHON_LIBRARY=#{hbp}/opt/python@3.11/lib/libpython3.11.so"
+      # NOTE: specifying the below cmake var still did not help in finding `Python.h`
+      args << "-DPYTHON_INCLUDE_DIRS=#{hbp}/opt/python@3.11/include/python3.11"
+      args << "-DPYTHON_LIBRARY=#{hbp}/opt/python@3.11/lib/libpython3.11.so"
     end
+
+    # Remove unwanted values from args
+    args.reject! { |arg| rm_std_cmake_args.any? { |value| arg.include?(value) } }
 
     mkdir "build" do
       system "cmake", "..", *args
