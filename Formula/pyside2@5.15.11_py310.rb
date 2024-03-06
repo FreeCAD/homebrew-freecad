@@ -72,10 +72,10 @@ class Pyside2AT51511Py310 < Formula
     cmake_args = std_cmake_args
 
     # NOTE: ipatch build will fail if using `python3` cmake requires major+minor ie. `python3.10`
-    python_executable = Formula["python@3.10"].opt_bin/"python3.10"
+    python_exe = Formula["python@3.10"].opt_bin/"python3.10"
     python_lib = Formula["python@3.10"].opt_lib/"libpython3.10.dylib"
 
-    cmake_args << "-DPYTHON_EXECUTABLE=#{python_executable}"
+    cmake_args << "-DPYTHON_EXECUTABLE=#{python_exe}"
     cmake_args << "-DPYTHON_LIBRARY=#{python_lib}"
 
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm@15"].opt_lib
