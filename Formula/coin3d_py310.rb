@@ -52,6 +52,8 @@ class Coin3dPy310 < Formula
                     "-DCOIN_BUILD_MAC_FRAMEWORK=OFF",
                     "-DCOIN_BUILD_DOCUMENTATION=ON",
                     "-DCOIN_BUILD_TESTS=OFF",
+                    "-DCMAKE_CXX_STANDARD=11",
+                    "-L",
                     *std_cmake_args
     system "cmake", "--build", "_build"
     system "cmake", "--install", "_build"
