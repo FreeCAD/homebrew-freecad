@@ -43,7 +43,7 @@ class Shiboken2AT51511Py310 < Formula
 
     cmake_args = std_cmake_args
 
-    # NOTE: ipatch build will fail if using `python3` cmake requires major+minor ie. `python3.10`
+    # NOTE: ipatch, build will fail if using `python3` cmake requires major+minor ie. `python3.10`
     python_executable = Formula["python@3.10"].opt_bin/"python3.10"
     python_lib = Formula["python@3.10"].opt_lib/"libpython3.10.dylib"
 
