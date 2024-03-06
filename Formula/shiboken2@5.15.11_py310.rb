@@ -9,11 +9,10 @@ class Shiboken2AT51511Py310 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, ventura:  "19f086deb7f1ab49ea657943ef30a95edcb3f4d0c426ed95afca231e99914992"
-    sha256 cellar: :any, monterey: "2182c9f63dd556907d4cd79a3d968cdf28b4fecbda23fd2632bad56e4d4d0401"
-    sha256 cellar: :any, big_sur:  "0a70a9aec3157d31af18fb0d9bd415e37ac01f02949ebbf24d2a699112912819"
-    sha256 cellar: :any, catalina: "bd743a412f2e26f21aa7ba846222b779b851a04009fe81f7de406c512d82d1d3"
-    sha256 cellar: :any, mojave:   "f6fdf58761cfb8b272510244a437ae97a52dd9e973bbf9b67e8f2faaa2b0fb6a"
+    rebuild 1
+    sha256 cellar: :any, arm64_sonoma: "3dede0a79e430bbf6da41bafa6b5a92a1ea1f1a3c549f7c600418a1597b612b9"
+    sha256 cellar: :any, ventura:      "1994c7ee6fbc4eaf372e6ade1a3230c1acc54077f7b1fd15b7e39d256acfdccb"
+    sha256 cellar: :any, monterey:     "d6c8514f0ca27ae51c9301359bff36d27dfadafaac5c797944b19d92b10bfb99"
   end
 
   keg_only :versioned_formula
