@@ -16,8 +16,10 @@ class Coin3dPy310 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, ventura:  "c6077560fd70dba25686a8c6be14a2a9b9403fac37968c4259b36831e94eb5ad"
-    sha256 cellar: :any, monterey: "6ee5775f47dd69836beda70e5ccab74f749a9a8cbfbeb070e408a0af2c86defc"
+    rebuild 1
+    sha256 cellar: :any, arm64_sonoma: "c259f9863f29aac062ce8ec5f98b2a3d14be03eafa37f427fb33dce0e14811f6"
+    sha256 cellar: :any, ventura:      "93dd7f4dfc40164a41fb62bc0165021dab316e074194dab77a64bcf277c4873c"
+    sha256 cellar: :any, monterey:     "f12c73902348dac82a88c5d736cd6a9751dab0d65f720f713d234448a0680b3a"
   end
 
   head do
