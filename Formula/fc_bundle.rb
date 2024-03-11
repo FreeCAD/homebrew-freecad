@@ -16,6 +16,7 @@ class FcBundle < Formula
   end
 
   depends_on "freecad/freecad/coin3d_py310"
+  depends_on "freecad/freecad/numpy@1.26.4_py310"
   depends_on "freecad/freecad/pyside2@5.15.11_py310"
   depends_on "freecad/freecad/shiboken2@5.15.11_py310"
 
@@ -32,11 +33,15 @@ class FcBundle < Formula
     coin3d_pivy_pth_contents =
       File.read("#{Formula["coin3d_py310"].opt_prefix}/lib/python#{pyver}/coin3d_py310-pivy.pth").strip
 
+    numpy_pth_contents =
+      File.read("#{Formula["numpy@1.26.4_py310"].opt_prefix}/lib/python#{pyver}/numpy.pth").strip
+
     site_packages = Language::Python.site_packages("python3.10")
     # {shiboken2_pth_contents}
     pth_contents = <<~EOS
       #{pyside2_pth_contents}
       #{coin3d_pivy_pth_contents}
+      #{numpy_pth_contents}
     EOS
     (prefix/site_packages/"freecad-py-modules.pth").write pth_contents
   end
