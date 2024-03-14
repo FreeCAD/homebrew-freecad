@@ -1,0 +1,51 @@
+commit e5d70fad1bec294f963d58f74cffd28f0aa17d68
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Thu Mar 14 14:04:30 2024 -0500
+
+    freecad 0.20.2 hdf5 patch
+
+diff --git a/cMake/FreeCAD_Helpers/SetupSalomeSMESH.cmake b/cMake/FreeCAD_Helpers/SetupSalomeSMESH.cmake
+index 8fafdea35a..2029bec8ab 100644
+--- a/cMake/FreeCAD_Helpers/SetupSalomeSMESH.cmake
++++ b/cMake/FreeCAD_Helpers/SetupSalomeSMESH.cmake
+@@ -90,20 +90,27 @@ macro(SetupSalomeSMESH)
+                     set(HDF5_PREFER_PARALLEL TRUE) # if pkg-config fails, find_package(HDF5) needs this
+                 endif()
+                 pkg_search_module(HDF5 ${HDF5_VARIANT})
+-                if(NOT HDF5_FOUND)
+-                    find_package(HDF5 REQUIRED)
++                if(HOMEBREW_PREFIX)
++                  set(HDF5_ROOT ${HOMEBREW_PREFIX}/opt/hdf5)
++                  message("--------------------------------------------")
++                  message("ipatch, manually set hdf5_root, cmake build of hdf5 breaks h5cc")
++                  message("--------------------------------------------")
+                 else()
+-                    add_compile_options(${HDF5_CFLAGS})
+-                    link_directories(${HDF5_LIBRARY_DIRS})
+-                    link_libraries(${HDF5_LIBRARIES})
+-                    find_file(Hdf5dotH hdf5.h PATHS ${HDF5_INCLUDE_DIRS} NO_DEFAULT_PATH)
+-                    if(NOT Hdf5dotH)
+-                        message( FATAL_ERROR "${HDF5_VARIANT} development header not found.")
+-                    endif()
+-                endif()
+-                check_include_file_cxx(hdf5.h HDF5_FOUND)
+-                if(NOT HDF5_FOUND)
+-                    message( FATAL_ERROR "hdf5.h was not found.")
++                  if(NOT HDF5_FOUND)
++                      find_package(HDF5 REQUIRED CONFIG)
++                  else()
++                      add_compile_options(${HDF5_CFLAGS})
++                      link_directories(${HDF5_LIBRARY_DIRS})
++                      link_libraries(${HDF5_LIBRARIES})
++                      find_file(Hdf5dotH hdf5.h PATHS ${HDF5_INCLUDE_DIRS} NO_DEFAULT_PATH)
++                      if(NOT Hdf5dotH)
++                          message( FATAL_ERROR "${HDF5_VARIANT} development header not found.")
++                      endif()
++                  endif()
++                  check_include_file_cxx(hdf5.h HDF5_FOUND)
++                  if(NOT HDF5_FOUND)
++                      message( FATAL_ERROR "hdf5.h was not found.")
++                  endif()
+                 endif()
+ 
+                 # Med Fichier can require MPI

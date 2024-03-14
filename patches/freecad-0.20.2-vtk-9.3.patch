@@ -1,0 +1,23 @@
+commit ee31a9b3ca488b94ed425bbe340dbad9b960a4e0
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Thu Mar 14 14:33:26 2024 -0500
+
+    pull in upstream fix for vtk v9.3
+
+diff --git a/src/3rdParty/salomesmesh/src/SMDS/SMDS_UnstructuredGrid.cpp b/src/3rdParty/salomesmesh/src/SMDS/SMDS_UnstructuredGrid.cpp
+index 7e3de0070a..e9895d6157 100644
+--- a/src/3rdParty/salomesmesh/src/SMDS/SMDS_UnstructuredGrid.cpp
++++ b/src/3rdParty/salomesmesh/src/SMDS/SMDS_UnstructuredGrid.cpp
+@@ -1026,7 +1026,12 @@ void SMDS_UnstructuredGrid::BuildLinks()
+   GetLinks()->Allocate(this->GetNumberOfPoints());
+   GetLinks()->Register(this);
+ //FIXME: vtk9
++  #if VTK_VERSION_NUMBER < VTK_VERSION_CHECK(9,3,0)
+   GetLinks()->BuildLinks(this);
++  #else
++  GetLinks()->SetDataSet(this);
++  GetLinks()->BuildLinks();
++  #endif
+   GetLinks()->Delete();
+ #else
+   this->Links = SMDS_CellLinks::New();
