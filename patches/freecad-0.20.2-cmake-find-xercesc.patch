@@ -1,0 +1,42 @@
+commit 6cbfaeb872929f54e408fb38207756b46a5c0fc8
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Sun Mar 17 22:30:38 2024 -0500
+
+    ipatch attempt to fix xerces-c include dirs
+
+diff --git a/cMake/FreeCAD_Helpers/SetupXercesC.cmake b/cMake/FreeCAD_Helpers/SetupXercesC.cmake
+index a39ebefe59..7b4aea7399 100644
+--- a/cMake/FreeCAD_Helpers/SetupXercesC.cmake
++++ b/cMake/FreeCAD_Helpers/SetupXercesC.cmake
+@@ -1,11 +1,23 @@
+ macro(SetupXercesC)
+-# -------------------------------- XercesC --------------------------------
+-
+-    find_package(XercesC REQUIRED)
+-    if(NOT XercesC_FOUND)
+-        message(FATAL_ERROR "==================\n"
+-                            "XercesC not found.\n"
+-                            "==================\n")
+-    endif(NOT XercesC_FOUND)
++  # -------------------------------- XercesC --------------------------------
++
++  find_package(XercesC REQUIRED)
++
++  if(HOMEBREW_PREFIX)
++    # NOTE: ipatch, possible bug / feature fix related to cmake
++    # https://issues.apache.org/jira/browse/XERCESC-2246?jql=project%20%3D%20XERCESC
++    # set xcercesc include directory manually
++    set(XercesC_INCLUDE_DIR ${HOMEBREW_PREFIX}/opt/xerces-c/include)
++    include_directories(${XercesC_INCLUDE_DIR})
++
++    # Display information about Xerces-C++ found by CMake
++    message(STATUS "Xerces-C++ include directory: ${XercesC_INCLUDE_DIR}")
++    message(STATUS "Xerces-C++ library: ${XercesC_LIBRARY}")
++  endif()
++  if(NOT XercesC_FOUND)
++    message(FATAL_ERROR "==================\n"
++      "XercesC not found.\n"
++      "==================\n")
++  endif(NOT XercesC_FOUND)
+ 
+ endmacro(SetupXercesC)
