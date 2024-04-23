@@ -21,8 +21,8 @@ class NumpyAT1264Py310 < Formula
 
   keg_only :versioned_formula
 
+  depends_on "cython" => :build
   depends_on "gcc" => :build # for gfortran
-  depends_on "libcython" => :build
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "python@3.10" => [:build, :test]
