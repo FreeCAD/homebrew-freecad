@@ -1,0 +1,22 @@
+commit 2f146b6a73952b2d59458a99b1e7a882aa7e5c6d
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Thu Apr 25 11:16:09 2024 -0500
+
+    homebrew-freecad attempt to resolve build error, importocaf2.cpp
+
+diff --git a/src/Mod/Import/App/ImportOCAF2.cpp b/src/Mod/Import/App/ImportOCAF2.cpp
+index 8247f080e5..316a88bdba 100644
+--- a/src/Mod/Import/App/ImportOCAF2.cpp
++++ b/src/Mod/Import/App/ImportOCAF2.cpp
+@@ -72,6 +72,11 @@
+ #include <App/DocumentObject.h>
+ #include <App/DocumentObjectGroup.h>
+ 
++// NOTE: ipatch, attempt to resolve the below build err on macos 12.x, aka. monetery
++// err: https://github.com/FreeCAD/homebrew-freecad/actions/runs/8821163910/job/24216438883#step:17:14295
++// ref: https://stackoverflow.com/a/42846010/708807
++#include <array>
++
+ #if OCC_VERSION_HEX >= 0x070500
+ // See https://dev.opencascade.org/content/occt-3d-viewer-becomes-srgb-aware
+ #   define OCC_COLOR_SPACE Quantity_TOC_sRGB
