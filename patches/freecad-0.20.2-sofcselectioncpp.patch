@@ -1,0 +1,20 @@
+commit b2b84c02c10ab3ea2db1d540f5ea55ca5857d4b7
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Sat Apr 27 13:29:07 2024 -0500
+
+    homebrew-freecad attempt to resolve build error, SoFCSelection.cpp
+
+diff --git a/src/Gui/SoFCSelection.cpp b/src/Gui/SoFCSelection.cpp
+index a6c819a688..651425cbae 100644
+--- a/src/Gui/SoFCSelection.cpp
++++ b/src/Gui/SoFCSelection.cpp
+@@ -46,6 +46,9 @@
+ #include "SoFCUnifiedSelection.h"
+ #include "ViewParams.h"
+ 
++/// NOTE: ipatch, attempt to resolve the below build err on macos 12.x, aka. monetery
++// ref: https://stackoverflow.com/a/42846010/708807
++#include <array>
+ 
+ // For 64-bit system the method using the front buffer doesn't work at all for lines.
+ // Thus, use the method which forces a redraw every time. This is a bit slower but at
