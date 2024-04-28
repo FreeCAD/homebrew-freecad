@@ -1,0 +1,115 @@
+commit 8c5492b0e8355e3d5021bbe7638736cba6e29606
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Sun Apr 28 15:08:42 2024 -0500
+
+    freecad@0.20.2_py310: fixes to build freecad for macos 12
+
+diff --git a/src/Gui/DlgPreferencePackManagementImp.cpp b/src/Gui/DlgPreferencePackManagementImp.cpp
+index 6134266424..47bbaae518 100644
+--- a/src/Gui/DlgPreferencePackManagementImp.cpp
++++ b/src/Gui/DlgPreferencePackManagementImp.cpp
+@@ -70,8 +70,12 @@ void DlgPreferencePackManagementImp::showEvent(QShowEvent* event)
+         for (const auto& mod : fs::directory_iterator(modDirectory)) {
+             auto packs = getPacksFromDirectory(mod);
+             if (!packs.empty()) {
+-                auto modName = mod.path().leaf().string();
+-                installedPacks.emplace(modName, packs);
++#if BOOST_VERSION >= 105800
++              auto modName = mod.path().filename().string();
++#else
++              auto modName = mod.path().leaf().string();
++#endif
++              installedPacks.emplace(modName, packs);
+             }
+         }
+     }
+diff --git a/src/Gui/PreferencePackManager.cpp b/src/Gui/PreferencePackManager.cpp
+index 6931d89e49..e001552c45 100644
+--- a/src/Gui/PreferencePackManager.cpp
++++ b/src/Gui/PreferencePackManager.cpp
+@@ -170,7 +170,12 @@ void Gui::PreferencePackManager::FindPreferencePacksInPackage(const fs::path& mo
+         try {
+             App::Metadata metadata(packageMetadataFile);
+             auto content = metadata.content();
++
++#if BOOST_VERSION >= 105800
++            auto basename = mod.filename().string();
++#else
+             auto basename = mod.leaf().string();
++#endif
+             if (mod == modDirectory)
+                 basename = "##USER_SAVED##";
+             else if (mod == resourcePath)
+@@ -536,4 +541,4 @@ std::vector<boost::filesystem::path> Gui::PreferencePackManager::configBackups()
+         }
+     }
+     return results;
+-}
+\ No newline at end of file
++}
+diff --git a/src/Gui/Selection.cpp b/src/Gui/Selection.cpp
+index 90c36c7c15..7d527d5c97 100644
+--- a/src/Gui/Selection.cpp
++++ b/src/Gui/Selection.cpp
+@@ -50,6 +50,7 @@
+ #include "Tree.h"
+ #include "ViewProviderDocumentObject.h"
+ 
++#include <array>
+ 
+ FC_LOG_LEVEL_INIT("Selection",false,true,true)
+ 
+diff --git a/src/Gui/SoFCUnifiedSelection.cpp b/src/Gui/SoFCUnifiedSelection.cpp
+index 5852d5e9f9..75e7c5f40f 100644
+--- a/src/Gui/SoFCUnifiedSelection.cpp
++++ b/src/Gui/SoFCUnifiedSelection.cpp
+@@ -84,6 +84,7 @@
+ #include "ViewProvider.h"
+ #include "ViewProviderDocumentObject.h"
+ 
++#include <array>
+ 
+ FC_LOG_LEVEL_INIT("SoFCUnifiedSelection",false,true,true)
+ 
+diff --git a/src/Gui/Splashscreen.cpp b/src/Gui/Splashscreen.cpp
+index 197c2f6402..8cfa23438f 100644
+--- a/src/Gui/Splashscreen.cpp
++++ b/src/Gui/Splashscreen.cpp
+@@ -758,14 +758,23 @@ void AboutDialog::on_copyButton_clicked()
+     bool firstMod = true;
+     if (fs::exists(modDir) && fs::is_directory(modDir)) {
+         for (const auto& mod : fs::directory_iterator(modDir)) {
+-            auto dirName = mod.path().leaf().string();
++#if BOOST_VERSION >= 105800
++          auto dirName = mod.path().filename().string();
++#else
++          auto dirName = mod.path().leaf().string();
++#endif
+             if (dirName[0] == '.') // Ignore dot directories
+                 continue;
+             if (firstMod) {
+                 firstMod = false;
+                 str << "Installed mods: \n";
+             }
++
++#if BOOST_VERSION >= 105800
++            str << "  * " << QString::fromStdString(mod.path().filename().string());
++#else
+             str << "  * " << QString::fromStdString(mod.path().leaf().string());
++#endif
+             auto metadataFile = mod.path() / "package.xml";
+             if (fs::exists(metadataFile)) {
+                 App::Metadata metadata(metadataFile);
+diff --git a/src/Gui/ViewProviderLink.cpp b/src/Gui/ViewProviderLink.cpp
+index 9b4577f7bd..a5081ea6c6 100644
+--- a/src/Gui/ViewProviderLink.cpp
++++ b/src/Gui/ViewProviderLink.cpp
+@@ -75,6 +75,8 @@
+ #include "Command.h"
+ #include "DlgObjectSelection.h"
+ 
++#include <array>
++
+ FC_LOG_LEVEL_INIT("App::Link", true, true)
+ 
+ using namespace Gui;
