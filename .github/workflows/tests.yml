@@ -31,7 +31,7 @@ jobs:
         # os: [ubuntu-latest, macos-latest] # NOTE: default
         # NOTE: homebrew/homebrew-core uses private self hosted runners
         os: 
-          ubuntu-22.04
+          - ubuntu-22.04
           # NOTE: macos-*-large runner requires additional spending limits
           # - macos-14-large
           - macos-14
