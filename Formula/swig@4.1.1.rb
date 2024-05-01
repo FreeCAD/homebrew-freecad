@@ -5,7 +5,7 @@ class SwigAT411 < Formula
   url "https://downloads.sourceforge.net/project/swig/swig/swig-4.1.1/swig-4.1.1.tar.gz"
   sha256 "2af08aced8fcd65cdb5cc62426768914bedc735b1c250325203716f78e39ac9b"
   license "GPL-3.0-only"
-  revision 4
+  revision 3
 
   livecheck do
     url :stable
@@ -28,7 +28,6 @@ class SwigAT411 < Formula
 
   keg_only :versioned_formula
 
-  depends_on "ruby" => :test if OS.linux?
   depends_on "pcre2"
 
   uses_from_macos "ruby" => :test
@@ -48,7 +47,8 @@ class SwigAT411 < Formula
     EOS
   end
 
-  # NOTE: add upstream python test to this formula
+  # NOTE: add upstream python test this formula, #3
+
   test do
     (testpath/"test.c").write <<~EOS
       int add(int x, int y)
@@ -67,22 +67,9 @@ class SwigAT411 < Formula
       puts Test.add(1, 1)
     EOS
     system "#{bin}/swig", "-ruby", "test.i"
-    if OS.mac?
-      system ENV.cc, "-c", "test.c"
-      system ENV.cc, "-c", "test_wrap.c", "-I#{MacOS.sdk_path}/System/Library/Frameworks/Ruby.framework/Headers/"
-      system ENV.cc, "-bundle", "-undefined", "dynamic_lookup", "test.o", "test_wrap.o", "-o", "test.bundle"
-    else
-      ruby = Formula["ruby"]
-      args = Utils.safe_popen_read(
-        ruby.opt_bin/"ruby", "-e", "'puts RbConfig::CONFIG[\"LIBRUBYARG\"]'"
-      ).chomp
-      system ENV.cc, "-c", "-fPIC", "test.c"
-      system ENV.cc, "-c", "-fPIC", "test_wrap.c",
-        "-I#{ruby.opt_include}/ruby-#{ruby.version.major_minor}.0",
-        "-I#{ruby.opt_include}/ruby-#{ruby.version.major_minor}.0/x86_64-linux/"
-      system ENV.cc, "-shared", "test.o", "test_wrap.o", "-o", "test.so",
-        *args.delete("'").split
-    end
-    assert_equal "2", shell_output("ruby run.rb").strip
+    system ENV.cc, "-c", "test.c"
+    system ENV.cc, "-c", "test_wrap.c", "-I#{MacOS.sdk_path}/System/Library/Frameworks/Ruby.framework/Headers/"
+    system ENV.cc, "-bundle", "-undefined", "dynamic_lookup", "test.o", "test_wrap.o", "-o", "test.bundle"
+    assert_equal "2", shell_output("/usr/bin/ruby run.rb").strip
   end
 end
