@@ -8,12 +8,7 @@ on:
       - master
 
   pull_request:
-    inputs:
-      debug_enabled:
-        type: boolean
-        description: 'run with tmate enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
-        required: false
-        default: false
+
   # workflow_dispatch:  # NOTE: nova with homebrew gha
 
 env:
@@ -54,10 +49,9 @@ jobs:
     timeout-minutes: 1200
 
     steps:
-      # enable tmate debugging if pull_request && debug enabled
-      - name: setup tmate session
+      - name: debug with tmate on failure
+        if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'pull_request' && inputs.debug_enabled }}
 
       - name: Get current date
         id: get_current_date
