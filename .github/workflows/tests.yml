@@ -49,10 +49,6 @@ jobs:
     timeout-minutes: 1200
 
     steps:
-      - name: debug with tmate on failure
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
-
       - name: Get current date
         id: get_current_date
         run: echo "date=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
@@ -172,3 +168,6 @@ jobs:
         if: steps.last_run_status.outputs.last_run_status != 'success'
         run: echo "last_run_status=${{ steps.test_run.outcome }}" >> $GITHUB_ENV
 
+      - name: debug with tmate on failure
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
