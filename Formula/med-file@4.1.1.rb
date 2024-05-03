@@ -16,7 +16,7 @@ class MedFileAT411 < Formula
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.1.1" => :build
   depends_on "python@3.11" => :build
-  depends_on "gcc"
+  depends_on "gcc" # may be better as a build dep, not fully sure at the moment
   depends_on "hdf5"
   depends_on "libaec"
 
@@ -39,6 +39,14 @@ class MedFileAT411 < Formula
   # end
 
   def install
+    # use gcc, g++, and gfrontran to build formula
+    ENV["CC"] = Formula["gcc"].opt_bin/"gcc-13"
+    ENV["CXX"] = Formula["gcc"].opt_bin/"g++-13"
+    ENV["FC"] = Formula["gcc"].opt_bin/"gfortran"
+
+    # work around Xcode.app >= v15
+    ENV.append "LDFLAGS", "-Wl,-ld_classic" if DevelopmentTools.clang_build_version >= 1500
+
     # ENV.cxx11
     hbp = HOMEBREW_PREFIX
 
@@ -48,35 +56,61 @@ class MedFileAT411 < Formula
       "-DCMAKE_INSTALL_LIBDIR",
     ]
 
+    ENV["PYTHON"] = Formula["python@3.11"].opt_bin/"python3.11"
+
+    python_exe = ENV["PYTHON"]
+    # Get the Python includes directory without duplicates
+    py_inc_dir = `#{python_exe}-config --includes`.scan(/-I([^\s]+)/).flatten.uniq.join(" ")
+
+    py_lib_path = if OS.mac?
+      `#{python_exe}-config --configdir`.strip + "/libpython3.11.dylib"
+    else
+      `#{python_exe}-config --configdir`.strip + "/libpython3.11.a"
+    end
+
+    puts "--------------------------------------------"
+    puts "PYTHON=#{ENV["PYTHON"]}"
+    puts "PYTHON_INCLUDE_DIR=#{py_inc_dir}"
+    puts "PYTHON_LIBRARY=#{py_lib_path}"
+
     args = std_cmake_args + %W[
       -DHOMEBREW_PREFIX=#{hbp}
+      -DMEDFILE_INSTALL_DOC=ON
+      -DMEDFILE_USE_UNICODE=ON
       -DMEDFILE_BUILD_PYTHON=ON
-      -DMEDFILE_BUILD_TESTS=OFF
-      -DMEDFILE_INSTALL_DOC=OFF
-      -DPYTHON_EXECUTABLE=#{Formula["python@3.11"].opt_bin}/python3.11
+      -DPYTHON_EXECUTABLE=#{python_exe}
+      -DPYTHON_INCLUDE_DIRS=#{py_inc_dir}
       -DCMAKE_PREFIX_PATH=#{Formula["hdf5"].opt_prefix};#{Formula["gcc"].opt_prefix};
       -DCMAKE_INSTALL_RPATH=#{rpath}
+      -DMEDFILE_BUILD_TESTS=0
     ]
-
-    if OS.mac?
-      args << "-DPYTHON_LIBRARY=#{hbp}/opt/python@3.11/Frameworks/Python.framework/Versions/Current/lib" \
-              "/libpython3.11.dylib"
-      args << "-DPYTHON_INCLUDE_DIRS=#{Formula["python@3.11"].opt_prefix}/Frameworks/Python.framework/Versions/" \
-              "3.11/Headers"
-    else
-      # NOTE: specifying the below cmake var still did not help in finding `Python.h`
-      args << "-DPYTHON_INCLUDE_DIRS=#{hbp}/opt/python@3.11/include/python3.11"
-      args << "-DPYTHON_LIBRARY=#{hbp}/opt/python@3.11/lib/libpython3.11.so"
-    end
 
     # Remove unwanted values from args
     args.reject! { |arg| rm_std_cmake_args.any? { |value| arg.include?(value) } }
 
-    mkdir "build" do
-      system "cmake", "..", *args
-      system "make"
-      system "make", "install"
-    end
+    system "cmake", "-S", ".", "-B", "build", *args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
+  end
+
+  def post_install
+    # Move installed Python module to the correct directory
+    site_packages_dir = lib/"python3.11/site-packages"
+    mkdir_p site_packages_dir
+    mv Dir["#{lib}/python.*/site-packages/med"], site_packages_dir
+
+    # explicitly set python version
+    python_version = "3.11"
+
+    # Unlink the existing .pth file to avoid reinstall issues
+    pth_file = lib/"python#{python_version}/medfile.pth"
+    pth_file.unlink if pth_file.exist?
+
+    ohai "Creating .pth file for medfile module"
+    # write the .pth file to the parent dir of site-packages
+    (lib/"python#{python_version}/medfile.pth").write <<~EOS
+      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
+    EOS
   end
 
   test do
