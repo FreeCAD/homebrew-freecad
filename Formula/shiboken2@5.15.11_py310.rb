@@ -19,8 +19,8 @@ class Shiboken2AT51511Py310 < Formula
 
   depends_on "cmake" => :build
   depends_on "python@3.10" => :build
+  depends_on "freecad/freecad/numpy@1.26.4_py310"
   depends_on "llvm@15"
-  depends_on "numpy"
   depends_on "qt@5"
   depends_on "sphinx-doc"
 
@@ -35,22 +35,37 @@ class Shiboken2AT51511Py310 < Formula
     rpaths = if OS.mac?
       shiboken2_module = prefix/Language::Python.site_packages(python3)/"shiboken2"
       [rpath, rpath(source: shiboken2_module)]
+    elsif OS.linux?
+      shiboken2_module = prefix/Language::Python.site_packages(python3)/"shiboken2"
+      [rpath, rpath(source: shiboken2_module)]
     end
 
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm@15"].opt_lib
+    ENV.append_path "CMAKE_PREFIX_PATH", Formula["freecad/freecad/numpy@1.26.4_py310"].opt_lib
 
     cmake_args = std_cmake_args
 
     # NOTE: ipatch, build will fail if using `python3` cmake requires major+minor ie. `python3.10`
-    python_executable = Formula["python@3.10"].opt_bin/"python3.10"
-    python_lib = Formula["python@3.10"].opt_lib/"libpython3.10.dylib"
+    py_exe = Formula["python@3.10"].opt_bin/"python3.10"
 
-    cmake_args << "-DPYTHON_EXECUTABLE=#{python_executable}"
-    cmake_args << "-DPYTHON_LIBRARY=#{python_lib}"
+    py_lib = if OS.mac?
+      Formula["python@3.10"].opt_lib/"libpython3.10.dylib"
+    else
+      Formula["python@3.10"].opt_lib/"libpython3.10.so"
+    end
+
+    cmake_args << "-DPYTHON_EXECUTABLE=#{py_exe}"
+    cmake_args << "-DPYTHON_LIBRARY=#{py_lib}"
+
+    cmake_args << "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}"
+
+    # Avoid shim reference.
+    # NOTE: ipatch, required or linux bottle will not build
+    # ref: https://github.com/FreeCAD/homebrew-freecad/pull/509#issuecomment-2098926437
+    inreplace "sources/shiboken2/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
     system "cmake", "-S", "./sources/shiboken2", "-B", "build",
-      "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
       "-DFORCE_LIMITED_API=no",
       "-DLLVM_CONFIG=#{Formula["llvm@15"].opt_bin}/llvm-config",
       "-DCMAKE_LIBRARY_PATH=#{Formula["llvm@15"].opt_lib}",
@@ -59,6 +74,14 @@ class Shiboken2AT51511Py310 < Formula
 
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
+
+    if OS.linux?
+      # remove references to the Homebrew shims directory
+      #---
+      # NOWORK!
+      # inreplace bin/"shiboken2", Superenv.shims_path, "/usr/bin"
+      #---
+    end
   end
 
   def post_install
