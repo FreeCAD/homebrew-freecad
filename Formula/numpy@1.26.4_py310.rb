@@ -29,9 +29,9 @@ class NumpyAT1264Py310 < Formula
   depends_on "python@3.10" => [:build, :test]
   depends_on "openblas" if OS.linux?
 
-  # NOTE: `brew update-python-resources` check for outdated py resources
   fails_with gcc: "5"
 
+  # NOTE: `brew update-python-resources` check for outdated py resources
   resource "meson-python" do
     url "https://files.pythonhosted.org/packages/a2/3b/276b596824a0820987fdcc7721618453b4f9a8305fe20b611a00ac3f948e/meson_python-0.15.0.tar.gz"
     sha256 "fddb73eecd49e89c1c41c87937cd89c2d0b65a1c63ba28238681d4bd9484d26f"
@@ -66,7 +66,7 @@ class NumpyAT1264Py310 < Formula
 
     # Prepend the installation path of mesonpy to PYTHONPATH
     ENV.prepend_path "PYTHONPATH", libexec/"lib/python3.10/site-packages"
-    ENV.prepend_path "PATH", Formula["libcython"].opt_libexec/"bin"
+    ENV.prepend_path "PATH", Formula["cython"].opt_libexec/"bin"
 
     # NOTE: https://stackoverflow.com/a/69869531/708807
     if OS.mac?
@@ -79,7 +79,7 @@ class NumpyAT1264Py310 < Formula
     end
 
     site_packages = Language::Python.site_packages(python3)
-    ENV.prepend_path "PYTHONPATH", Formula["libcython"].opt_libexec/site_packages
+    ENV.prepend_path "PYTHONPATH", Formula["cython"].opt_libexec/site_packages
 
     if OS.mac?
       ENV["NPY_LAPACK_ORDER"] = "accelerate"
