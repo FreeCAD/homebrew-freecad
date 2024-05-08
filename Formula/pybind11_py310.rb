@@ -11,14 +11,6 @@ class Pybind11Py310 < Formula
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_sonoma: "1cddede18121f7c50e8e0e5cdd17ce280f94c63faafa0712ee1a8ae866d595cc"
-    sha256 cellar: :any_skip_relocation, ventura:      "1b56d2b6327e9c96ccdf1707d2340da991617c244aa16be0839477f31588ea43"
-    sha256 cellar: :any_skip_relocation, monterey:     "1b56d2b6327e9c96ccdf1707d2340da991617c244aa16be0839477f31588ea43"
-  end
-
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
