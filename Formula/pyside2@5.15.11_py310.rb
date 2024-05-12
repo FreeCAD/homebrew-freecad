@@ -64,20 +64,25 @@ class Pyside2AT51511Py310 < Formula
       [lib, Formula["qt@5"].opt_lib]
     end
 
-    # Avoid shim reference.
-    inreplace "sources/shiboken2/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
+    ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm@15"].opt_lib
+    ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
 
     cmake_args = std_cmake_args
 
     # NOTE: ipatch build will fail if using `python3` cmake requires major+minor ie. `python3.10`
-    python_exe = Formula["python@3.10"].opt_bin/"python3.10"
-    python_lib = Formula["python@3.10"].opt_lib/"libpython3.10.dylib"
+    py_exe = Formula["python@3.10"].opt_bin/"python3.10"
 
-    cmake_args << "-DPYTHON_EXECUTABLE=#{python_exe}"
-    cmake_args << "-DPYTHON_LIBRARY=#{python_lib}"
+    py_lib = if OS.mac?
+      Formula["python@3.10"].opt_lib/"libpython3.10.dylib"
+    else
+      Formula["python@3.10"].opt_lib/"libpython3.10.so"
+    end
 
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm@15"].opt_lib
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
+    cmake_args << "-DPYTHON_EXECUTABLE=#{py_exe}"
+    cmake_args << "-DPYTHON_LIBRARY=#{py_lib}"
+
+    # Avoid shim reference.
+    inreplace "sources/shiboken2/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
     system "cmake", "-S", ".", "-B", "build",
       "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
@@ -109,6 +114,7 @@ class Pyside2AT51511Py310 < Formula
   def caveats
     <<-EOS
       this formula may require manual linking after install
+      this a versioned formula designed to work with the homebrew-freecad tap
     EOS
   end
 
