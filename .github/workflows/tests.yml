@@ -155,9 +155,20 @@ jobs:
           fi
         if: github.event_name == 'pull_request'
 
-      - name: debug with tmate on failure
+      # - name: debug with tmate on failure
+      #   if: ${{ failure() }}
+      #   uses: mxschmitt/action-tmate@v3      
+
+      - name: debug with lhotari/action-upterm
+        id: debug_workflow_run
+        # uses: actions/checkout@v2
+        uses: lhotari/action-upterm@v1
         if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3      
+        with:
+          # limit ssh access to user who triggered the workflow
+          limit-access-to-actor: true
+          # shut down server after 10 minutes if no one connects
+          wait-timeout-minutes: 10
 
       - name: Upload bottles as artifact
         id: upload_bottle_artifacts
