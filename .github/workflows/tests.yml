@@ -63,7 +63,7 @@ jobs:
 
       - name: Restore last run status
         id: restore_last_run_status
-        uses: actions/cache@v3.2.2
+        uses: actions/cache@v4.0.2
         with:
           path: |
             last_run_status
@@ -83,7 +83,7 @@ jobs:
       - name: Cache Homebrew Bundler RubyGems
         if: steps.last_run_status.outputs.last_run_status != 'success'
         id: cache
-        uses: actions/cache@v3.2.2
+        uses: actions/cache@v4.0.2
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
@@ -127,11 +127,15 @@ jobs:
             -e '/go@1.12/d' \
             $(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json
 
+      # NOTE: ipatch, env var required, see, https://github.com/orgs/Homebrew/discussions/4856
+      - name: unset HOMEBREW_NO_INSTALL_FROM_API for linux runners
+        run: |
+          if [[ $RUNNER_OS == 'Linux' ]]; then
+            unset HOMEBREW_NO_INSTALL_FROM_API
+          fi
+
       - name: build bottle using test-bot for current formula
         id: build_bottle
-        # NOTE: ipatch, below env var required, see, https://github.com/orgs/Homebrew/discussions/4856
-        env:
-          HOMEBREW_NO_INSTALL_FROM_API: 1
         run: |
           # Check if the runner name is vmmojave or vmcatalina and add the flag if true
           # NOTE: ipatch, keep-old is not the droid you're looking for,
@@ -173,7 +177,7 @@ jobs:
       - name: Upload bottles as artifact
         id: upload_bottle_artifacts
         if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v3.1.3
+        uses: actions/upload-artifact@v4.3.3
         with:
           name: bottles
           path: '*.bottle.*'
