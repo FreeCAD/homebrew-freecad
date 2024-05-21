@@ -9,7 +9,7 @@ jobs:
   pr-pull:
     if: contains(github.event.pull_request.labels.*.name, 'pr-pull')
     runs-on: ubuntu-latest
-    # NOTE: ipatch, don't macos runner to publish bottles
+    # NOTE: ipatch, don't use macos runner to publish bottles
     # SEE: https://github.com/orgs/Homebrew/discussions/4938#discussioncomment-7721218
     # runs-on: [ macos-latest ]
 
