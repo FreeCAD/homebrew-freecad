@@ -35,7 +35,6 @@ class Coin3dPy310 < Formula
   depends_on "cmake" => :build
   depends_on "doxygen" => :build
   depends_on "freecad/freecad/swig@4.1.1" => :build
-  depends_on "ninja" => :build
   depends_on "boost"
   depends_on "freecad/freecad/pyside2@5.15.11_py310"
   depends_on "python@3.10"
@@ -51,12 +50,11 @@ class Coin3dPy310 < Formula
 
   def install
     system "cmake", "-S", ".", "-B", "_build",
-                    "-DCOIN_BUILD_MAC_FRAMEWORK=OFF",
-                    "-DCOIN_BUILD_DOCUMENTATION=ON",
-                    "-DCOIN_BUILD_TESTS=OFF",
                     "-DCMAKE_CXX_STANDARD=11",
-                    "-L",
-                    *std_cmake_args
+                    "-DCOIN_BUILD_DOCUMENTATION=ON",
+                    "-DCOIN_BUILD_DOCUMENTATION_MAN=ON",
+                    "-DCMAKE_INSTALL_PREFIX=#{prefix}",
+                    "-L"
     system "cmake", "--build", "_build"
     system "cmake", "--install", "_build"
 
@@ -86,7 +84,8 @@ class Coin3dPy310 < Formula
     <<~EOS
       this formula is keg-only, and intended to aid in the building of freecad
       this formula should NOT be linked using `brew link` or else errors will
-      arise when opening the python3.10 repl
+      arise when opening the #{python3} repl
+      the test in this formula will fail in a screen (GUI) can not be accessed
     EOS
   end
 
