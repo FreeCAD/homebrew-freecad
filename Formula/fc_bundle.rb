@@ -47,6 +47,13 @@ class FcBundle < Formula
     (prefix/site_packages/"freecad-py-modules.pth").write pth_contents
   end
 
+  def caveats
+    <<-EOS
+    this formula is required to get necessary python runtime deps
+    working with freecad
+    EOS
+  end
+
   test do
     # TODO: i think a more sane test is importing the python modules
     # Check if the expected site-packages file exists
