@@ -10,10 +10,11 @@ class FcBundle < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 3
-    sha256 cellar: :any_skip_relocation, arm64_sonoma: "230d7aa64e0c563a909cb51cba4c61e71304895a8ca4a92296004a8f0fbb6716"
-    sha256 cellar: :any_skip_relocation, ventura:      "f1b8c272fdc2c245ea7669e91350f435e0155f921d4889013a15073296f8d31d"
-    sha256 cellar: :any_skip_relocation, monterey:     "31d13fd35dc98e1563c4a1809b917986a82e17f5fc1f3069d7fe095360b6d2ce"
+    rebuild 4
+    sha256 cellar: :any_skip_relocation, arm64_sonoma: "11e93c5aaf6a04506d6f1d29aff4eaf94e673b6042aa2760ab2d2f8a25264d7c"
+    sha256 cellar: :any_skip_relocation, ventura:      "a8aeefdfdd8ceed888f25c60e9dcff70546eeb8f4a2145872f0d977c66ea43ab"
+    sha256 cellar: :any_skip_relocation, monterey:     "181ac882a9d9cff5b3b0eab1c2cde9f78ff7cf0f365f88de34226299c0466eca"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "2508e930c3571ae5abe59f117816823d434f39f5d426ab291c7a2b6f75dbd723"
   end
 
   depends_on "freecad/freecad/coin3d_py310"
