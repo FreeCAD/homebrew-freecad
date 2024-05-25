@@ -22,7 +22,7 @@ class FreecadAT0202Py310 < Formula
   depends_on "hdf5" => :build # requires fortran compiler
   # epends_on "llvm" => :build
   depends_on "mesa" => :build if OS.linux?
-  depends_on "ninja" => :build
+  depends_on "ninja" => :build if OS.linux?
   depends_on "pkg-config" => :build
   depends_on "python@3.10" => :build
   depends_on "tbb" => :build
@@ -39,7 +39,8 @@ class FreecadAT0202Py310 < Formula
   depends_on "freetype"
   depends_on "glew"
   depends_on "icu4c"
-  depends_on macos: :high_sierra # no access to sierra test box
+  depends_on macos: :high_sierra
+  depends_on "mesa-glu" if OS.linux? # no access to sierra test box
   depends_on "openblas"
   depends_on "opencascade"
   depends_on "orocos-kdl"
@@ -126,20 +127,23 @@ class FreecadAT0202Py310 < Formula
   def install
     hbp = HOMEBREW_PREFIX
 
-    # NOTE: taken from node@14 formula, node uses autoconf and not cmake
+    # NOTE: ref'd from node@14 formula, node uses autoconf instead of cmake
     # make sure subprocesses spawned by make are using our Python 3
     #
     # NOTE: `which` cmd is not installed by default on some OSes
     # ENV["PYTHON"] = which("python3.10")
-    #
-    # Get the Python includes directory without duplicates
     ENV["PYTHON"] = Formula["python@3.10"].opt_bin/"python3.10"
 
+    # Get the Python includes directory without duplicates
     py_inc_output = `python3.10-config --includes`
     py_inc_dirs = py_inc_output.scan(/-I([^\s]+)/).flatten.uniq
     py_inc_dir = py_inc_dirs.join(" ")
 
-    py_lib_path = `python3.10-config --configdir`.strip + "/libpython3.10.dylib"
+    py_lib_path = if OS.mac?
+      `python3.10-config --configdir`.strip + "/libpython3.10.dylib"
+    else
+      `python3.10-config --configdir`.strip + "/libpython3.10.a"
+    end
 
     puts "--------------------------------------------"
     puts "PYTHON=#{ENV["PYTHON"]}"
@@ -198,6 +202,14 @@ class FreecadAT0202Py310 < Formula
     # cmake_prefix_paths << Formula["svn"].prefix
     # cmake_prefix_paths << Formula["llvm"].prefix
     cmake_prefix_paths << Formula["tbb"].prefix
+    cmake_prefix_paths << Formula["icu4c"].prefix
+
+    if OS.linux?
+      cmake_prefix_paths << Formula["mesa-glu"].prefix
+      cmake_prefix_paths << Formula["mesa"].prefix
+      cmake_prefix_paths << Formula["libx11"].prefix
+      cmake_prefix_paths << Formula["libxcb"].prefix
+    end
 
     cmake_prefix_path_string = cmake_prefix_paths.join(";")
 
@@ -252,6 +264,30 @@ class FreecadAT0202Py310 < Formula
       ]
     end
 
+    if OS.linux?
+      ninja_bin = Formula["ninja"].opt_bin/"ninja"
+      clang_cc = Formula["llvm"].opt_bin/"clang"
+      clang_cxx = Formula["llvm"].opt_bin/"clang++"
+      clang_ld = Formula["llvm"].opt_bin/"lld"
+      clang_ar = Formula["llvm"].opt_bin/"llvm-ar"
+      openglu_inc_dir = Formula["mesa"].opt_include
+
+      puts "----------------------------------------------------"
+      puts openglu_inc_dir
+      puts "----------------------------------------------------"
+
+      args_linux_only = %W[
+        -GNinja
+        -DCMAKE_MAKE_PROGRAM=#{ninja_bin}
+        -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
+        -DCMAKE_C_COMPILER=#{clang_cc}
+        -DCMAKE_CXX_COMPILER=#{clang_cxx}
+        -DCMAKE_LINKER=#{clang_ld}
+        -DCMAKE_AR=#{clang_ar}
+        -DOPENGL_GLU_INCLUDE_DIR=#{openglu_inc_dir}
+      ]
+    end
+
     args = %W[
       -DHOMEBREW_PREFIX=#{hbp}
       -DCMAKE_PREFIX_PATH=#{cmake_prefix_path_string}
@@ -282,14 +318,10 @@ class FreecadAT0202Py310 < Formula
 
     ENV.remove "CMAKE_FRAMEWORK_PATH", Formula["qt"].opt_prefix/"Frameworks"
 
-    # TODO: ipatch, causes audit exception, ie. `brew style freecad/freecad`
+    # TODO: ipatch, below cause audit exceptions, ie. `brew style freecad/freecad`
     # ENV.remove "PATH", Formula["python@3.12"].opt_prefix/"bin"
     # ENV.remove "PATH", Formula["python@3.12"].opt_prefix/"libexec/bin"
     # ENV.remove "PKG_CONFIG_PATH", Formula["python@3.12"].opt_prefix/"lib/pkgconfig"
-
-    # NOTE: ipatch, required for successful build
-    # ENV.prepend_path "PYTHONPATH", Formula["shiboken2@5.15.5"].opt_prefix/Language::Python.site_packages(python3)
-    # ENV.prepend_path "PYTHONPATH", Formula["pyside2@5.15.5"].opt_prefix/Language::Python.site_packages(python3)
 
     # NOTE: ipatch, do not make build dir a sub dir of the src dir
     puts "current working directory: #{Dir.pwd}"
@@ -308,7 +340,7 @@ class FreecadAT0202Py310 < Formula
     if OS.mac?
       system "cmake", *args, *args_macos_only, src_dir.to_s
     else
-      system "cmake", *args, src_dir.to_s
+      system "cmake", *args, *args_linux_only, src_dir.to_s
     end
     system "cmake", "--build", build_dir.to_s
     system "cmake", "--install", build_dir.to_s
