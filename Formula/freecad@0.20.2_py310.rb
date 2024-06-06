@@ -8,9 +8,10 @@ class FreecadAT0202Py310 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_sonoma: "607d8451410bdfa4d70632a0283fffbb5ac64bc406c3a8ea389a7e2af5d0e1a7"
-    sha256 cellar: :any, ventura:      "23d0e40ff2a250755952315accab6fcef9aceb930b3f0207d1532884de4ef4d9"
-    sha256 cellar: :any, monterey:     "e22e04ae434b810e27bca21a066657aff2b43bae8901d957e8d99ff61586920e"
+    rebuild 1
+    sha256 cellar: :any, arm64_sonoma: "828f3fd04fad8c66e023099aadad3ad8fa3e2382ddf2f0cfdbc4c5884f8b5ae5"
+    sha256 cellar: :any, ventura:      "75191fe652a6eacbf3714791355d9cccff73b189cfd5105f139ee1c206485944"
+    sha256 cellar: :any, monterey:     "f36100a71061ed0f7b34435ca6ced3a8a1b56e1efcded0e1e4fe343fbe9f7cd8"
   end
 
   keg_only :versioned_formula
