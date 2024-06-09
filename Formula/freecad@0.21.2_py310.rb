@@ -6,6 +6,13 @@ class FreecadAT0212Py310 < Formula
   license "GPL-2.0-only"
   head "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, arm64_sonoma: "e3027777a7ba7b68ae65c0652c1d5b7217032502db7adb4560723b52fb218414"
+    sha256 cellar: :any, ventura:      "0d0b5f0e0a07fe7fb87a7c7567e92489e65ec3e15efa7361d3f370932e9926d9"
+    sha256 cellar: :any, monterey:     "0aa395b4a32ca47fcb4dad6b9131d32f33772a636dc062e6854e48ba5660dbdb"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
