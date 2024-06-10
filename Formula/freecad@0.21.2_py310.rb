@@ -39,13 +39,12 @@ class FreecadAT0212Py310 < Formula
   depends_on "freetype"
   depends_on "glew"
   depends_on "icu4c"
-  depends_on macos: :high_sierra
-  depends_on "mesa-glu" if OS.linux? # no access to sierra test box
+  depends_on macos: :high_sierra # no access to sierra test box
+  depends_on "mesa-glu" if OS.linux?
   depends_on "openblas"
   depends_on "opencascade"
   depends_on "orocos-kdl"
   # epends_on "freecad/freecad/nglib@6.2.2105"
-  # TODO: is it possible to point qt@5 to a revision where py310 is being used
   depends_on "qt@5"
   depends_on "vtk"
   depends_on "webp"
@@ -79,37 +78,6 @@ class FreecadAT0212Py310 < Formula
   # patch :p1 do
   #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/a4b71def99b5fe907550729038752aaf6fa1b9bf/patches/freecad-0.20.1-macos-10.15-sdk.patch"
   #   sha256 "ce9f4b2afb2c621274e74208a563616eeeee54369f295b6c5f6f4f3112923135"
-  # end
-
-  # patch do
-  #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/06bd260fc8c8bce1c283f86df3641fd2efea186d/patches/freecad-0.20.2-e57-add-missing-include.patch"
-  #   sha256 "83f033112845fde21c84f18bfa91609b18394dc9adb268c24aa8a1e5ec5aca85"
-  # end
-
-  # # newer versions of occ have removed offending header file
-  # patch do
-  #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/06bd260fc8c8bce1c283f86df3641fd2efea186d/patches/freecad-0.20.2-occ-error.patch"
-  #   sha256 "e345d1ced6e46dd6d7cdaa136d32a8fe55eb54ccb01468f22fb425645e5a0585"
-  # end
-
-  # patch do
-  #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/1fde4f693950d77e8617c08921d50c1aba3f0a56/patches/freecad-0.20.2-cmake-find-xercesc.patch"
-  #   sha256 "adb30f5d723672d1d54db4a236bce8a85e9bc9d0667ef88a7360e4cae1bb27c9"
-  # end
-
-  # patch do
-  #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/10c1cfe62bc7264498f95091d309ea33dcf9da14/patches/freecad-0.20.2-import-ocaf2cpp.patch"
-  #   sha256 "2732f75d673df770754d838faec7f6cbbb86755cbef049b3b4932fa1e1bdd8d6"
-  # end
-
-  # patch do
-  #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/06e67d57c90d2f0e969f4a11121c1be68215d40e/patches/freecad-0.20.2-sofcselectioncpp.patch"
-  #   sha256 "6a74db4c5db876ecefd885514111a56c8cde462f95cf7d560c1b1e4baafaf642"
-  # end
-
-  # patch do
-  #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/92c1e993680710248fc29af05fcadfedcce0f8ad/patches/freecad-0.20.2-boost-v1.85-and-missing-includes.patch"
-  #   sha256 "9bd841ece3781acee3281b23443db47818a2935845163b16bf318e6e1e023209"
   # end
 
   def install
@@ -212,23 +180,25 @@ class FreecadAT0212Py310 < Formula
     end
 
     # TODO: stub out the below cmake vars
-    # -DCMAKE_OSX_DEPLOYMENT_TARGET=
-    # -DCMAKE_OSX_ARCHITECTURES=
     # -DCMAKE_OSX_SYSROOT=#{cmake_osx_sysroot}
     # -DCMAKE_CXX_FLAGS="-fuse-ld=lld"
+    # -DBUILD_ENABLE_CXX_STD=C++17
     # -DCMAKE_INSTALL_RPATH=#{prefix}/lib
     # -DCMAKE_INSTALL_RPATH=#{rpath}
     # -DBUILD_DRAWING=1
     # -DBUILD_SMESH=1
-    # -DBUILD_ENABLE_CXX_STD=C++17
     # -DFREECAD_USE_EXTERNAL_KDL=1
     # -DBUILD_FEM_NETGEN=0
-    # -DBUILD_QT5=1
     # -DFREECAD_USE_QTWEBMODULE=#{qtwebmodule}
     # HDF5_LIBRARIES HDF5_HL_LIBRARIES
 
     if OS.mac?
+      arch = Hardware::CPU.arch.to_s
+      fver = OS::Mac.full_version.to_s
+
       args_macos_only = %W[
+        -DCMAKE_OSX_ARCHITECTURES=#{arch}
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=#{fver}
         -DCMAKE_AR=#{cmake_ar}
         -DCMAKE_LINKER=#{cmake_ld}
         -DCMAKE_INSTALL_NAME_TOOL:FILEPATH=/usr/bin/install_name_tool
@@ -299,11 +269,6 @@ class FreecadAT0212Py310 < Formula
 
     ENV.remove "CMAKE_FRAMEWORK_PATH", Formula["qt"].opt_prefix/"Frameworks"
 
-    # TODO: ipatch, below cause audit exceptions, ie. `brew style freecad/freecad`
-    # ENV.remove "PATH", Formula["python@3.12"].opt_prefix/"bin"
-    # ENV.remove "PATH", Formula["python@3.12"].opt_prefix/"libexec/bin"
-    # ENV.remove "PKG_CONFIG_PATH", Formula["python@3.12"].opt_prefix/"lib/pkgconfig"
-
     # NOTE: ipatch, do not make build dir a sub dir of the src dir
     puts "current working directory: #{Dir.pwd}"
     src_dir = Dir.pwd.to_s
@@ -327,18 +292,17 @@ class FreecadAT0212Py310 < Formula
     system "cmake", "--install", build_dir.to_s
   end
 
-  # NOTE: reenable after successful build
-  # def post_install
-  #   if OS.mac?
-  #     ohai "the value of prefix = #{prefix}"
-  #     ln "#{prefix}/MacOS/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
-  #     ln "#{prefix}/MacOS/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
-  #   elsif OS.linux?
-  #     ohai "the value of prefix = #{prefix}"
-  #     ln "#{bin}/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
-  #     ln "#{bin}/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
-  #   end
-  # end
+  def post_install
+    if OS.mac?
+      ohai "the value of prefix = #{prefix}"
+      ln "#{prefix}/MacOS/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
+      ln "#{prefix}/MacOS/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
+    elsif OS.linux?
+      ohai "the value of prefix = #{prefix}"
+      ln "#{bin}/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
+      ln "#{bin}/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
+    end
+  end
 
   def caveats
     <<-EOS
