@@ -87,16 +87,15 @@ jobs:
         run: |
           for runner in "vmmojave" "vmcatalina" "vmbigsur"; do
             # Access the IP address using indirect expansion
-            runner_ip="${!runner}"
             status_selfhosted_runner=$(curl -s -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
             https://api.github.com/repos/freecad/homebrew-freecad/actions/runners \
             | jq -r ".runners[] | select(.name == \"$runner\") | .status // \"not found\"")
 
-            echo $"status_selfhosted_runner"
+            echo "$status_selfhosted_runner"
 
             if [[ "$status_selfhosted_runner" == "online" ]]; then
               echo "$runner is online ✅"
-              echo "${runner}_status=online" >> $GITHUB_ENV
+              echo "${runner}_status=online" >> "$GITHUB_ENV"
             else
               echo "the github runner service for $runner is OFFLINE 🚫"
               # Check reachability of host machine
@@ -106,19 +105,18 @@ jobs:
                 ssh shrunserver "date"
                 # ssh shrunserver "/usr/bin/sudo ls" # DEBUG
                 # echo "DEBUG $runner_ip" # DEBUG
-                if ssh shrunserver "nc -v -z -w 5 $runner_ip 22 < /dev/null"; then
+                if ssh shrunserver "nc -v -z -w 5 \$runner_ip\ 22 < /dev/null"; then
                   echo "virtual machine $runner appears to be online"
                 else
                   echo "could not reach the virtual machine $runner"
                   # NOTE: status the vm systemd service, if offline attempt to start the service
-                  # ssh shrunserver "echo \"/usr/bin/sudo systemctl restart $runner\";" # DEBUG
-                  ssh shrunserver "/usr/bin/sudo systemctl restart $runner" || echo "failed to restart service"
+                  ssh shrunserver "/usr/bin/sudo systemctl restart \$runner\\" || echo "failed to restart service"
                   sleep 45
-                  if ssh shrunserver "nc -v -z -w 5 $runner_ip 22 < /dev/null"; then
+                  if ssh shrunserver "nc -v -z -w 5 \$runner_ip\ 22 < /dev/null"; then
                     echo "$runner appears to have come back online ✅"
                   else
                     echo "$runner is still NOT online 🚫"
-                    echo "${runner}_status=down" >> $GITHUB_ENV
+                    echo "${runner}_status=down" >> "$GITHUB_ENV"
                   fi
                 fi
               else
@@ -141,7 +139,7 @@ jobs:
           env.vmcatalina_status == 'down' || 
           env.vmbigsur_status == 'down' 
           }}        
-        uses: dawidd6/action-send-mail@v2
+        uses: dawidd6/action-send-mail@v3.12.0
         with:
           server_address: smtp.gmail.com
           server_port: 587

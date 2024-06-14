@@ -1,4 +1,5 @@
 ---
+
 name: brew test-bot
 
 on:
@@ -50,38 +51,42 @@ jobs:
 
     steps:
       - name: Get current date
-        id: get_current_date
-        run: echo "date=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+        id: get-current-date
+        run: echo "date=$(date +'%Y-%m-%dT%H:%M:%S')" >> "$GITHUB_ENV"
+
+      - name: Set date output
+        id: set-date
+        run: echo "date=$(date +'%Y-%m-%dT%H:%M:%S')" >> "$GITHUB_OUTPUT"
 
       - name: Print value of date from previous step
-        id: print_date
-        run: echo "${{ steps.get_current_date.outputs.date }}"
+        id: print-date
+        run: echo "${{ steps.set-date.outputs.date }}"
 
       - name: Set default run status
-        id: set_default_run_status
-        run: echo "last_run_status=default" >> $GITHUB_ENV
+        id: set-default-run-status
+        run: echo "last-run-status=default" >> "$GITHUB-ENV"
 
       - name: Restore last run status
-        id: restore_last_run_status
+        id: restore-last-run-status
         uses: actions/cache@v4.0.2
         with:
           path: |
-            last_run_status
+            last-run-status
           key: |
-            ${{ github.run_id }}-${{ matrix.os }}-${{ steps.date.outputs.date }}
+            ${{ github.run_id }}-${{ matrix.os }}-${{ steps.set-date.outputs.date }}
           restore-keys: |
             ${{ github.run_id }}-${{ matrix.os }}-
 
       - name: Set last run status
-        id: set_last_run_status
-        run: echo "The last run status is ${{ env.last_run_status }}"
+        id: set-last-run-status
+        run: echo "last-run-status=${{ env.last-run-status }}" >> "GITHUB_OUTPUT"
 
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Cache Homebrew Bundler RubyGems
-        if: steps.last_run_status.outputs.last_run_status != 'success'
+        if: steps.set-last-run-status.outputs.last-run-status != 'success'
         id: cache
         uses: actions/cache@v4.0.2
         with:
@@ -90,18 +95,18 @@ jobs:
           restore-keys: ${{ runner.os }}-rubygems-
 
       - name: print env
-        id: print_env
+        id: print-env
         run: env
 
       # NOTE: use a condition to add env var for mojave runner
       # REF: https://docs.github.com/en/actions/learn-github-actions/environment-variables
       - name: condition, check runner name 
         if: runner.name == 'vmmojave'
-        run: echo "The operating system on the runner is, $RUNNER_OS."; echo HOMEBREW_DEVELOPER=1 >> $GITHUB_ENV
+        run: echo "The operating system on the runner is, $RUNNER_OS."; echo HOMEBREW_DEVELOPER=1 >> "$GITHUB_ENV"
         # NOTE: not possible to have two `run:` blocks within a `name`
 
       - name: Install Homebrew Bundler RubyGems
-        if: steps.cache.outputs.cache-hit != 'true' && steps.last_run_status.outputs.last_run_status != 'success'
+        if: steps.cache.outputs.cache-hit != 'true' && steps.set-last-run-status.outputs.last-run-status != 'success'
         run: brew install-bundler-gems
 
       - run: brew test-bot --only-cleanup-before
@@ -114,7 +119,7 @@ jobs:
       - name: check for catalina vm and set homebrew-core repo to specific commit
         if: runner.name == 'vmcatalina'
         run: |
-          cd $(brew --repo homebrew/core); \
+          cd "$(brew --repo homebrew/core)"; \
           git checkout ipatch-1015-cmake-bottle
 
       - name: condition, update style exceptions for vmmojave  
@@ -125,7 +130,7 @@ jobs:
             -e '/go@1.10/d' \
             -e '/go@1.11/d' \
             -e '/go@1.12/d' \
-            $(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json
+            "$(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json"
 
       # NOTE: ipatch, env var required, see, https://github.com/orgs/Homebrew/discussions/4856
       - name: unset HOMEBREW_NO_INSTALL_FROM_API for linux runners
@@ -135,7 +140,7 @@ jobs:
           fi
 
       - name: build bottle using test-bot for current formula
-        id: build_bottle
+        id: build-bottle
         run: |
           # Check if the runner name is vmmojave or vmcatalina and add the flag if true
           # NOTE: ipatch, keep-old is not the droid you're looking for,
@@ -164,7 +169,7 @@ jobs:
       #   uses: mxschmitt/action-tmate@v3      
 
       - name: debug with lhotari/action-upterm
-        id: debug_workflow_run
+        id: debug-workflow-run
         # uses: actions/checkout@v2
         uses: lhotari/action-upterm@v1
         if: ${{ failure() }}
@@ -177,7 +182,7 @@ jobs:
       # NOTE: ipatch, issue using upload-artifact@v4 
       # see: https://github.com/actions/upload-artifact/issues/478
       - name: Upload bottles as artifact
-        id: upload_bottle_artifacts
+        id: upload-bottle-artifacts
         if: always() && github.event_name == 'pull_request'
         # uses: actions/upload-artifact@v4.3.3
         uses: actions/upload-artifact@v3.1.3
@@ -186,8 +191,8 @@ jobs:
           path: '*.bottle.*'
 
       - name: Save run status
-        id: save_run_status
-        if: steps.last_run_status.outputs.last_run_status != 'success'
-        run: echo "last_run_status=${{ steps.test_run.outcome }}" >> $GITHUB_ENV
+        id: save-run-status
+        if: steps.set-last-run-status.outputs.last-run-status != 'success'
+        run: echo "last-run-status=${{ steps.build-bottle.outcome }}" >> "$GITHUB-ENV"
 
 
