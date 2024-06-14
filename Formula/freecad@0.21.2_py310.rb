@@ -296,12 +296,12 @@ class FreecadAT0212Py310 < Formula
   def post_install
     if OS.mac?
       ohai "the value of prefix = #{prefix}"
-      ln "#{prefix}/MacOS/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
-      ln "#{prefix}/MacOS/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
+      ln_s "#{prefix}/MacOS/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
+      ln_s "#{prefix}/MacOS/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
     elsif OS.linux?
       ohai "the value of prefix = #{prefix}"
-      ln "#{bin}/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
-      ln "#{bin}/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
+      ln_s "#{bin}/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
+      ln_s "#{bin}/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
     end
   end
 
