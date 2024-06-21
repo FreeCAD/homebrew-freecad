@@ -4,10 +4,10 @@
 
 <div align="center">
 <!-- homebrew logo -->
-<img src="https://cloud.githubusercontent.com/assets/4140247/26723866/91e6a282-4764-11e7-9e3b-b8eb4fdc03f1.PNG">
+<img src="https://brew.sh/assets/img/homebrew.svg" width="48" alt="homebrew logo">
 
 <!-- freecad logo -->
-<img src="https://cloud.githubusercontent.com/assets/4140247/26723951/f96fd95a-4764-11e7-96eb-4889cab6d246.PNG">
+<img src="https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Gui/Icons/freecad.svg" width="48" alt="freecad logo">
 </div>
 
 <!-- add a little spacing -->
@@ -42,7 +42,7 @@ brew install --only-dependencies freecad
 
 #### Install flags
 
-By default, freecad is installed as a binary to be launched from a CLI. To also create a .app bundle use `--with-macos-app`.
+By default, freecad is installed as a binary to be launched from a CLI. ~~To also create a .app bundle use `--with-macos-app`.~~
 
 ## Building The Current Release Version of FreeCAD
 

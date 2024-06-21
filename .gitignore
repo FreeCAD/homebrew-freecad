@@ -2,3 +2,5 @@
 **/steps_output.txt
 # ignore vim/neovim swap files throughout repo
 **/.swp
+# ignore local files within a tmp directory
+tmp/**
