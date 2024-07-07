@@ -1,10 +1,39 @@
 class FreecadAT0212Py310 < Formula
   desc "Parametric 3D modeler"
   homepage "https://www.freecadweb.org"
-  url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.21.2.tar.gz"
-  sha256 "ceaf77cd12e8ad533d1535cc27ae4ca2a6e80778502dc9cdec906415d674b674"
   license "GPL-2.0-only"
-  head "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
+
+  # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
+  #---
+  stable do
+    url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.21.2.tar.gz"
+    sha256 "ceaf77cd12e8ad533d1535cc27ae4ca2a6e80778502dc9cdec906415d674b674"
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-cmake-find-hdf5.patch"
+      sha256 "99d115426cb3e8d7e5ab070e1d726e51eda181ac08768866c6e0fd68cda97f20"
+    end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-vtk-9.3.patch"
+      sha256 "67794ebfcd70a160d379eeca7d2ef78d510057960d0eaa4e2e345acb7ae244aa"
+    end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/92c1e993680710248fc29af05fcadfedcce0f8ad/patches/freecad-0.20.2-drivergmfcpp.patch"
+      sha256 "f27576bf167d6989536307dc9ac330a582a0bc3eb69b97c6b2563ea84e93f406"
+    end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/ff35908c7512702264758bc570826b0a09b410fc/patches/freecad%400.21.2_py310-boost-185-PreferencePackManager-cpp.patch"
+      sha256 "91efb51ab77ecf91244c69b0a858b16ec6238bb647cc0f767cbc6fa1791efbfa"
+    end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/13cff0680069fd9c564b17e7ea8d4f012d887c8a/patches/freecad%400.21.2_py310-backport-occ-v7.8.patch"
+      sha256 "27d8dfb780a55696ba3b989481bf6d0fc736af9c95de03c80c638e9404f62dbf"
+    end
+  end
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -12,6 +41,25 @@ class FreecadAT0212Py310 < Formula
     sha256 cellar: :any, arm64_sonoma: "2febb9db7cb8093ebd7bf4f1570ff04d6fefe3d58dfae126ff44cd92579cf9b8"
     sha256 cellar: :any, ventura:      "4f3b3d6161dc881061cdc1ad07f6618274886342e4b61b718c9aaa6b3fdc8ebf"
     sha256 cellar: :any, monterey:     "ec8dfb9da409625cb306ee8c32779e714a4fb722259a838fd122b0014619363f"
+  end
+
+  # NOTE: ipatch, pull in git submodules
+  # https://github.com/orgs/Homebrew/discussions/2100#discussioncomment-1288233
+  head do
+    url "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
+
+    depends_on "opencascade"
+    depends_on "yaml-cpp"
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-cmake-find-hdf5.patch"
+      sha256 "99d115426cb3e8d7e5ab070e1d726e51eda181ac08768866c6e0fd68cda97f20"
+    end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/6ed12911b87a1d89727c172131bed35be22c4137/patches/freecad%400.21.2_py310-HEAD-toposhape.h-fix.patch"
+      sha256 "47f78a3838790b8fe7c41801cbecbc3f85cdc81ace48476dc79b319d5097e195"
+    end
   end
 
   keg_only :versioned_formula
@@ -34,6 +82,7 @@ class FreecadAT0212Py310 < Formula
   depends_on "freecad/freecad/fc_bundle"
   depends_on "freecad/freecad/med-file"
   depends_on "freecad/freecad/numpy@1.26.4_py310"
+  depends_on "freecad/freecad/opencascade@7.7.2"
   depends_on "freecad/freecad/pybind11_py310"
   depends_on "freecad/freecad/pyside2@5.15.11_py310"
   depends_on "freecad/freecad/shiboken2@5.15.11_py310"
@@ -43,7 +92,6 @@ class FreecadAT0212Py310 < Formula
   depends_on macos: :high_sierra # no access to sierra test box
   depends_on "mesa-glu" if OS.linux?
   depends_on "openblas"
-  depends_on "opencascade"
   depends_on "orocos-kdl"
   # epends_on "freecad/freecad/nglib@6.2.2105"
   depends_on "qt@5"
@@ -51,28 +99,6 @@ class FreecadAT0212Py310 < Formula
   depends_on "webp"
   depends_on "xerces-c"
   depends_on "zlib"
-
-  # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
-  #---
-  patch do
-    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-cmake-find-hdf5.patch"
-    sha256 "99d115426cb3e8d7e5ab070e1d726e51eda181ac08768866c6e0fd68cda97f20"
-  end
-
-  patch do
-    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-vtk-9.3.patch"
-    sha256 "67794ebfcd70a160d379eeca7d2ef78d510057960d0eaa4e2e345acb7ae244aa"
-  end
-
-  patch do
-    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/92c1e993680710248fc29af05fcadfedcce0f8ad/patches/freecad-0.20.2-drivergmfcpp.patch"
-    sha256 "f27576bf167d6989536307dc9ac330a582a0bc3eb69b97c6b2563ea84e93f406"
-  end
-
-  patch do
-    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/ff35908c7512702264758bc570826b0a09b410fc/patches/freecad%400.21.2_py310-boost-185-PreferencePackManager-cpp.patch"
-    sha256 "91efb51ab77ecf91244c69b0a858b16ec6238bb647cc0f767cbc6fa1791efbfa"
-  end
 
   # NOTE: https://docs.brew.sh/Formula-Cookbook#handling-different-system-configurations
   # patch for mojave with 10.15 SDK
@@ -99,7 +125,7 @@ class FreecadAT0212Py310 < Formula
       `python3.10-config --configdir`.strip + "/libpython3.10.a"
     end
 
-    puts "--------------------------------------------"
+    puts "----------------------------------------------------"
     puts "PYTHON=#{ENV["PYTHON"]}"
     puts "PYTHON_INCLUDE_DIR=#{py_inc_dir}"
     puts "PYTHON_LIBRARY=#{py_lib_path}"
@@ -111,10 +137,10 @@ class FreecadAT0212Py310 < Formula
 
     # NOTE: ipatch, attempt to nuke default cmake_prefix_path to prevent qt6 from sneaking in
     ENV.delete("CMAKE_PREFIX_PATH") # Clear existing paths
-    puts "--------------------------------------------"
+    puts "----------------------------------------------------"
     puts "CMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}"
     puts "CMAKE_PREFIX_PATH Datatype: #{ENV["CMAKE_PREFIX_PATH"].class}"
-    puts "--------------------------------------------"
+    puts "----------------------------------------------------"
     puts "homebrew prefix: #{hbp}"
     puts "prefix: #{prefix}"
     puts "rpath: #{rpath}"
@@ -122,14 +148,13 @@ class FreecadAT0212Py310 < Formula
     ENV.remove "PATH", Formula["qt"].opt_prefix/"bin"
     ENV.remove "PATH", Formula["pyqt"].opt_prefix/"bin"
     puts "PATH=#{ENV["PATH"]}"
-    puts "--------------------------------------------"
 
     cmake_prefix_paths = []
     cmake_prefix_paths << Formula["pybind11_py310"].prefix
     cmake_prefix_paths << Formula["doxygen"].prefix
     cmake_prefix_paths << Formula["xerces-c"].prefix
     cmake_prefix_paths << Formula["zlib"].prefix
-    cmake_prefix_paths << Formula["opencascade"].prefix
+    cmake_prefix_paths << Formula["opencascade@7.7.2"].prefix
     cmake_prefix_paths << Formula["vtk"].prefix
     cmake_prefix_paths << Formula["utf8cpp"].prefix
     cmake_prefix_paths << Formula["glew"].prefix
@@ -164,6 +189,9 @@ class FreecadAT0212Py310 < Formula
       cmake_prefix_paths << Formula["libxcb"].prefix
     end
 
+    cmake_prefix_paths << Formula["yaml-cpp"].prefix if build.head?
+    cmake_prefix_paths << Formula["opencascade"].prefix if build.head?
+
     cmake_prefix_path_string = cmake_prefix_paths.join(";")
 
     # Check if Xcode.app exists
@@ -192,6 +220,7 @@ class FreecadAT0212Py310 < Formula
     # -DBUILD_FEM_NETGEN=0
     # -DFREECAD_USE_QTWEBMODULE=#{qtwebmodule}
     # HDF5_LIBRARIES HDF5_HL_LIBRARIES
+    # -DCMAKE_EXE_LINKER_FLAGS="-v"
 
     if OS.mac?
       arch = Hardware::CPU.arch.to_s
@@ -257,6 +286,9 @@ class FreecadAT0212Py310 < Formula
       -DCMAKE_IGNORE_PATH=#{hbp}/lib;#{hbp}/include/QtCore;#{hbp}/Cellar/qt;
       -L
     ]
+
+    args << "-DINSTALL_TO_SITEPACKAGES=0" if build.head?
+
     # NOTE: useful cmake debugging args
     # --trace
     # -L
@@ -284,11 +316,10 @@ class FreecadAT0212Py310 < Formula
     puts Dir.pwd
     puts "----------------------------------------------------"
 
-    if OS.mac?
-      system "cmake", *args, *args_macos_only, src_dir.to_s
-    else
-      system "cmake", *args, *args_linux_only, src_dir.to_s
-    end
+    args.concat(args_macos_only) if OS.mac?
+    args.concat(args_linux_only) if OS.linux?
+
+    system "cmake", *args, src_dir.to_s
     system "cmake", "--build", build_dir.to_s
     system "cmake", "--install", build_dir.to_s
   end
