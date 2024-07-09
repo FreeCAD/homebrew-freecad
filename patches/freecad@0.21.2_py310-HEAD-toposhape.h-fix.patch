@@ -1,0 +1,19 @@
+commit a48198bca873e2106970a57ef04a80f7df766e47
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Tue Jul 9 18:21:08 2024 -0500
+
+    toposhape.h add missing include
+
+diff --git a/src/Mod/Part/App/TopoShape.h b/src/Mod/Part/App/TopoShape.h
+index cceb920f8e..5a1e6bcb4f 100644
+--- a/src/Mod/Part/App/TopoShape.h
++++ b/src/Mod/Part/App/TopoShape.h
+@@ -43,6 +43,8 @@
+ #include <BRepTools_ReShape.hxx>
+ #include <ShapeFix_Root.hxx>
+ 
++#include <unordered_map>
++
+ class gp_Ax1;
+ class gp_Ax2;
+ class gp_Pln;
