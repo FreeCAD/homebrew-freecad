@@ -1,0 +1,29 @@
+commit f64299b543c80f1758a6e8eadedbc85214c7db41
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Wed Jul 10 10:50:16 2024 -0500
+
+    pybind11 cmake setup patch
+
+diff --git a/cMake/FreeCAD_Helpers/SetupPybind11.cmake b/cMake/FreeCAD_Helpers/SetupPybind11.cmake
+index 7fc65dfe86..79e50c5039 100644
+--- a/cMake/FreeCAD_Helpers/SetupPybind11.cmake
++++ b/cMake/FreeCAD_Helpers/SetupPybind11.cmake
+@@ -4,7 +4,18 @@ macro(SetupPybind11)
+     # necessary for flat-mesh feature
+     option(FREECAD_USE_PYBIND11 "Use pybind11" OFF)
+     if (FREECAD_USE_PYBIND11)
++      if(HOMEBREW_PREFIX)
++        # https://pybind11.readthedocs.io/en/stable/cmake/index.html
++        # Specify the custom path for pybind11
++        set(pybind11_DIR ${HOMEBREW_PREFIX}/opt/pybind11_py310/share/cmake/pybind11)
++        include_directories(${pybind11_INCLUDE_DIRS})
++
++        # Display information about pybind11 found by CMake
++        message(STATUS "pybind11 include directory: ${pybind11_INCLUDE_DIRS}")
++        message(STATUS "pybind11 library: ${pybind11_LIBRARY}")
++      else()
+         find_package(pybind11 REQUIRED)
++      endif()
+     endif()
+ 
+ endmacro(SetupPybind11)
