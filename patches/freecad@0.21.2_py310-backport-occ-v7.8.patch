@@ -1,8 +1,10 @@
-commit 3af052684c935e9eec1976deacbb904c20eb5e1e
-Author: chris <chris.r.jones.1983@gmail.com>
-Date:   Sat Jul 13 17:06:40 2024 -0500
+commit ec164478be8d09942404abec3825e982d371cd8e
+Author: bgbsww <120601209+bgbsww@users.noreply.github.com>
+Date:   Tue Jan 9 20:47:25 2024 -0500
 
-    freecad@0.20.2_py310: backport occ v7.8 cmake for 0.21.2
+    Add support for OCCT 7.8.0 (#11909)
+    
+    rbme
 
 diff --git a/cMake/FindOCC.cmake b/cMake/FindOCC.cmake
 index 48e5c98750..c72066f43e 100644
@@ -55,3 +57,1316 @@ index 48e5c98750..c72066f43e 100644
    message(STATUS "-- Found OCE/OpenCASCADE version: ${OCC_VERSION_STRING}")
    message(STATUS "-- OCE/OpenCASCADE include directory: ${OCC_INCLUDE_DIR}")
    message(STATUS "-- OCE/OpenCASCADE shared libraries directory: ${OCC_LIBRARY_DIR}")
+diff --git a/src/3rdParty/salomesmesh/inc/SMESHDS_DataMapOfShape.hxx b/src/3rdParty/salomesmesh/inc/SMESHDS_DataMapOfShape.hxx
+index 3e083cd84d..67e9f91cde 100644
+--- a/src/3rdParty/salomesmesh/inc/SMESHDS_DataMapOfShape.hxx
++++ b/src/3rdParty/salomesmesh/inc/SMESHDS_DataMapOfShape.hxx
+@@ -29,13 +29,26 @@
+ 
+ #include <TopoDS_Shape.hxx>
+ 
++#include <Standard_Version.hxx>
++
+ /*
+  * This method needed for instance NCollection_DataMap with TopoDS_Shape as key
+  */
++#if OCC_VERSION_HEX >= 0x070800
++struct SMESHDS_Hasher
++{
++  size_t operator()(const TopoDS_Shape& S) const noexcept {
++    return std::hash<TopoDS_Shape>{}(S);
++  }
++  size_t operator()(const TopoDS_Shape& S1, const TopoDS_Shape& S2) const noexcept {
++    return S1.IsSame(S2);
++  }
++};
++#else
+ struct SMESHDS_Hasher
+ {
+   static inline Standard_Boolean IsEqual(const TopoDS_Shape& S1,
+-                                         const TopoDS_Shape& S2)
++                                        const TopoDS_Shape& S2)
+   {
+     return S1.IsSame(S2);
+   }
+@@ -45,6 +58,6 @@ struct SMESHDS_Hasher
+     return ::HashCode( S, Upper);
+   }
+ };
+-
++#endif
+ 
+ #endif
+diff --git a/src/3rdParty/salomesmesh/inc/SMESH_MeshVSLink.hxx b/src/3rdParty/salomesmesh/inc/SMESH_MeshVSLink.hxx
+index 3bc552eb23..6155e20539 100644
+--- a/src/3rdParty/salomesmesh/inc/SMESH_MeshVSLink.hxx
++++ b/src/3rdParty/salomesmesh/inc/SMESH_MeshVSLink.hxx
+@@ -57,9 +57,6 @@
+ #ifndef _MeshVS_EntityType_HeaderFile
+ #include <MeshVS_EntityType.hxx>
+ #endif
+-#ifndef _Standard_Address_HeaderFile
+-#include <Standard_Address.hxx>
+-#endif
+ #ifndef _TColStd_HArray1OfInteger_HeaderFile
+ #include <TColStd_HArray1OfInteger.hxx>
+ #endif
+diff --git a/src/3rdParty/salomesmesh/inc/SMESH_SMESH.hxx b/src/3rdParty/salomesmesh/inc/SMESH_SMESH.hxx
+index 1094aed0df..a8fe257ea7 100644
+--- a/src/3rdParty/salomesmesh/inc/SMESH_SMESH.hxx
++++ b/src/3rdParty/salomesmesh/inc/SMESH_SMESH.hxx
+@@ -37,4 +37,5 @@
+  #define SMESH_EXPORT
+ #endif
+ 
++#include <Standard_Version.hxx>
+ #endif
+diff --git a/src/3rdParty/salomesmesh/inc/SMESH_SequenceOfNode.hxx b/src/3rdParty/salomesmesh/inc/SMESH_SequenceOfNode.hxx
+index ada6c8b98b..33c7203cc8 100644
+--- a/src/3rdParty/salomesmesh/inc/SMESH_SequenceOfNode.hxx
++++ b/src/3rdParty/salomesmesh/inc/SMESH_SequenceOfNode.hxx
+@@ -28,10 +28,11 @@
+ 
+ #include "SMESH_SMESH.hxx"
+ 
+-#include <NCollection_DefineSequence.hxx>
+ #if OCC_VERSION_HEX >= 0x060703
+ #include <NCollection_IncAllocator.hxx>
+ #include <NCollection_Sequence.hxx>
++#else
++#include <NCollection_DefineSequence.hxx>
+ #endif
+ 
+ typedef const SMDS_MeshNode* SMDS_MeshNodePtr;
+diff --git a/src/3rdParty/salomesmesh/inc/SMESH_TypeDefs.hxx b/src/3rdParty/salomesmesh/inc/SMESH_TypeDefs.hxx
+index ac7aa480d8..7090537c46 100644
+--- a/src/3rdParty/salomesmesh/inc/SMESH_TypeDefs.hxx
++++ b/src/3rdParty/salomesmesh/inc/SMESH_TypeDefs.hxx
+@@ -185,11 +185,18 @@ typedef std::vector< UVPtStruct > UVPtStructVec;
+ 
+ // --------------------------------------------------------------------------------
+ // class SMESH_SequenceOfElemPtr
++#include <Standard_Version.hxx>
++#if OCC_VERSION_HEX >= 0x060703
++#include <NCollection_Sequence.hxx>
++#else
+ #include <NCollection_DefineSequence.hxx>
++#endif
+ 
+ class SMDS_MeshElement;
+ 
+ typedef const SMDS_MeshElement* SMDS_MeshElementPtr;
++#define DEFINE_SEQUENCE(_ClassName_, _BaseCollection_, TheItemType)            \
++typedef NCollection_Sequence<TheItemType > _ClassName_;
+ 
+ DEFINE_SEQUENCE (SMESH_SequenceOfElemPtr, SMESH_BaseCollectionElemPtr, SMDS_MeshElementPtr)
+ 
+diff --git a/src/3rdParty/salomesmesh/src/DriverSTL/DriverSTL_R_SMDS_Mesh.cpp b/src/3rdParty/salomesmesh/src/DriverSTL/DriverSTL_R_SMDS_Mesh.cpp
+index ec3ea2e8e3..4b3791292a 100644
+--- a/src/3rdParty/salomesmesh/src/DriverSTL/DriverSTL_R_SMDS_Mesh.cpp
++++ b/src/3rdParty/salomesmesh/src/DriverSTL/DriverSTL_R_SMDS_Mesh.cpp
+@@ -33,10 +33,33 @@
+ #include "SMDS_MeshNode.hxx"
+ #include "SMESH_File.hxx"
+ 
++#include <Standard_Version.hxx>
++
+ namespace
+ {
+   struct Hasher
+   {
++#if OCC_VERSION_HEX >= 0x070800
++    size_t operator()(const gp_Pnt& point) const noexcept
++    {
++      union
++      {
++        Standard_Real    R[3];
++        Standard_Integer I[6];
++      } U;
++
++      point.Coord( U.R[0], U.R[1], U.R[2] );
++      return std::hash<Standard_Integer>{}(U.I[0]/23+U.I[1]/19+U.I[2]/17+U.I[3]/13+U.I[4]/11+U.I[5]/7);
++    }
++
++    size_t operator()(const gp_Pnt& point1, const gp_Pnt& point2) const noexcept
++    {
++      static Standard_Real tab1[3], tab2[3];
++      point1.Coord(tab1[0],tab1[1],tab1[2]);
++      point2.Coord(tab2[0],tab2[1],tab2[2]);
++      return (memcmp(tab1,tab2,sizeof(tab1)) == 0);
++    }
++#else
+     //=======================================================================
+     //function : HashCode
+     //purpose  :
+@@ -51,9 +74,9 @@ namespace
+       } U;
+ 
+       point.Coord( U.R[0], U.R[1], U.R[2] );
+-
+-      return ::HashCode(U.I[0]/23+U.I[1]/19+U.I[2]/17+U.I[3]/13+U.I[4]/11+U.I[5]/7,Upper);
++      return std::hash<Standard_Integer>{}(U.I[0]/23+U.I[1]/19+U.I[2]/17+U.I[3]/13+U.I[4]/11+U.I[5]/7);
+     }
++ 
+     //=======================================================================
+     //function : IsEqual
+     //purpose  :
+@@ -66,7 +89,9 @@ namespace
+       point2.Coord(tab2[0],tab2[1],tab2[2]);
+       return (memcmp(tab1,tab2,sizeof(tab1)) == 0);
+     }
++#endif
+   };
++
+   typedef NCollection_DataMap<gp_Pnt,SMDS_MeshNode*,Hasher> TDataMapOfPntNodePtr;
+ 
+   const int HEADER_SIZE           = 84;
+diff --git a/src/3rdParty/salomesmesh/src/StdMeshers/StdMeshers_Quadrangle_2D.cpp b/src/3rdParty/salomesmesh/src/StdMeshers/StdMeshers_Quadrangle_2D.cpp
+index 5d5c15c366..5ebf9dbfb4 100644
+--- a/src/3rdParty/salomesmesh/src/StdMeshers/StdMeshers_Quadrangle_2D.cpp
++++ b/src/3rdParty/salomesmesh/src/StdMeshers/StdMeshers_Quadrangle_2D.cpp
+@@ -48,7 +48,6 @@
+ #include <Bnd_Box.hxx>
+ #include <GeomAPI_ProjectPointOnSurf.hxx>
+ #include <Geom_Surface.hxx>
+-#include <NCollection_DefineArray2.hxx>
+ #include <Precision.hxx>
+ #include <Standard_Real.hxx>
+ #include <TColStd_SequenceOfInteger.hxx>
+diff --git a/src/Mod/Fem/Gui/TaskCreateNodeSet.cpp b/src/Mod/Fem/Gui/TaskCreateNodeSet.cpp
+index 4e69796b26..2bebca3ca6 100644
+--- a/src/Mod/Fem/Gui/TaskCreateNodeSet.cpp
++++ b/src/Mod/Fem/Gui/TaskCreateNodeSet.cpp
+@@ -22,13 +22,8 @@
+ 
+ #include "PreCompiled.h"
+ #ifndef _PreComp_
+-# include <Inventor/events/SoMouseButtonEvent.h>
+-# include <Inventor/nodes/SoCamera.h>
+-# include <Inventor/nodes/SoEventCallback.h>
+-
+-# include <SMESH_Mesh.hxx>
+-# include <SMESHDS_Mesh.hxx>
+-# include <Standard_math.hxx>
++#include <Inventor/events/SoMouseButtonEvent.h>
++#include <Inventor/nodes/SoCamera.h>
+ #endif
+ 
+ #include <Base/Console.h>
+@@ -43,8 +38,8 @@
+ #include <Mod/Fem/App/FemMeshObject.h>
+ #include <Mod/Fem/App/FemSetNodesObject.h>
+ 
++#include "FemSelectionGate.h"
+ #include "TaskCreateNodeSet.h"
+-#include "ui_TaskCreateNodeSet.h"
+ #include "FemSelectionGate.h"
+ #include "ViewProviderFemMesh.h"
+ 
+@@ -54,10 +49,10 @@ using namespace Gui;
+ 
+ 
+ TaskCreateNodeSet::TaskCreateNodeSet(Fem::FemSetNodesObject* pcObject, QWidget* parent)
+-    : TaskBox(Gui::BitmapFactory().pixmap("FEM_CreateNodesSet"), tr("Nodes set"), true, parent),
+-      pcObject(pcObject),
+-      selectionMode(none),
+-      ui(new Ui_TaskCreateNodeSet)
++    : TaskBox(Gui::BitmapFactory().pixmap("FEM_CreateNodesSet"), tr("Nodes set"), true, parent)
++    , pcObject(pcObject)
++    , selectionMode(none)
++    , ui(new Ui_TaskCreateNodeSet)
+ {
+     // we need a separate container widget to add all controls to
+     proxy = new QWidget(this);
+@@ -92,7 +87,7 @@ void TaskCreateNodeSet::Poly()
+ {
+     Gui::Document* doc = Gui::Application::Instance->activeDocument();
+     Gui::MDIView* view = doc->getActiveView();
+-    if (view->getTypeId().isDerivedFrom(Gui::View3DInventor::getClassTypeId())) {
++    if (view->isDerivedFrom<Gui::View3DInventor>()) {
+         Gui::View3DInventorViewer* viewer = ((Gui::View3DInventor*)view)->getViewer();
+         viewer->setEditing(true);
+         viewer->startSelection(Gui::View3DInventorViewer::Clip);
+@@ -139,23 +134,26 @@ void TaskCreateNodeSet::DefineNodesCallback(void* ud, SoEventCallback* n)
+ 
+     Gui::SelectionRole role;
+     std::vector<SbVec2f> clPoly = view->getGLPolygon(&role);
+-    if (clPoly.size() < 3)
++    if (clPoly.size() < 3) {
+         return;
+-    if (clPoly.front() != clPoly.back())
++    }
++    if (clPoly.front() != clPoly.back()) {
+         clPoly.push_back(clPoly.front());
+ 
+     SoCamera* cam = view->getSoRenderManager()->getCamera();
+     SbViewVolume vv = cam->getViewVolume();
+     Gui::ViewVolumeProjection proj(vv);
+     Base::Polygon2d polygon;
+-    for (std::vector<SbVec2f>::const_iterator it = clPoly.begin(); it != clPoly.end(); ++it)
+-        polygon.Add(Base::Vector2d((*it)[0], (*it)[1]));
++    for (auto it : clPoly) {
++        polygon.Add(Base::Vector2d(it[0], it[1]));
++    }
+ 
+     taskBox->DefineNodes(polygon, proj, role == Gui::SelectionRole::Inner ? true : false);
+ }
+ 
+ void TaskCreateNodeSet::DefineNodes(const Base::Polygon2d& polygon,
+-                                    const Gui::ViewVolumeProjection& proj, bool inner)
++                                    const Gui::ViewVolumeProjection& proj,
++                                    bool inner)
+ {
+     const SMESHDS_Mesh* data = pcObject->FemMesh.getValue<Fem::FemMeshObject*>()
+                                    ->FemMesh.getValue()
+@@ -165,8 +163,9 @@ void TaskCreateNodeSet::DefineNodes(const Base::Polygon2d& polygon,
+     SMDS_NodeIteratorPtr aNodeIter = data->nodesIterator();
+     Base::Vector3f pt2d;
+ 
+-    if (!ui->checkBox_Add->isChecked())
++    if (!ui->checkBox_Add->isChecked()) {
+         tempSet.clear();
++    }
+ 
+     while (aNodeIter->more()) {
+         const SMDS_MeshNode* aNode = aNodeIter->next();
+@@ -181,8 +180,9 @@ void TaskCreateNodeSet::DefineNodes(const Base::Polygon2d& polygon,
+ 
+ void TaskCreateNodeSet::onSelectionChanged(const Gui::SelectionChanges& msg)
+ {
+-    if (selectionMode == none)
++    if (selectionMode == none) {
+         return;
++    }
+ 
+     if (msg.Type == Gui::SelectionChanges::AddSelection) {
+         std::string subName(msg.pSubName);
+diff --git a/src/Mod/Import/App/ImportOCAF.cpp b/src/Mod/Import/App/ImportOCAF.cpp
+index 2397b62c37..4dedd93910 100644
+--- a/src/Mod/Import/App/ImportOCAF.cpp
++++ b/src/Mod/Import/App/ImportOCAF.cpp
+@@ -25,26 +25,26 @@
+ # define WNT // avoid conflict with GUID
+ #endif
+ #ifndef _PreComp_
+-# include <climits>
+-# include <gp_Pln.hxx> // for Precision::Confusion()
+-# include <gp_Trsf.hxx>
+-# include <Bnd_Box.hxx>
+-# include <BRepBndLib.hxx>
+-# include <BRep_Builder.hxx>
+-# include <BRepExtrema_DistShapeShape.hxx>
+-# include <Quantity_ColorRGBA.hxx>
+-# include <Standard_Failure.hxx>
+-# include <Standard_Version.hxx>
+-# include <TDataStd_Name.hxx>
+-# include <TDF_ChildIterator.hxx>
+-# include <TDF_Label.hxx>
+-# include <TDF_LabelSequence.hxx>
+-# include <TDocStd_Document.hxx>
+-# include <TopExp_Explorer.hxx>
+-# include <TopoDS_Iterator.hxx>
+-# include <TopTools_IndexedMapOfShape.hxx>
+-# include <XCAFDoc_DocumentTool.hxx>
+-# include <XCAFDoc_Location.hxx>
++#include <BRepBndLib.hxx>
++#include <BRepExtrema_DistShapeShape.hxx>
++#include <BRep_Builder.hxx>
++#include <Bnd_Box.hxx>
++#include <Quantity_ColorRGBA.hxx>
++#include <Standard_Failure.hxx>
++#include <Standard_Version.hxx>
++#include <TDF_ChildIterator.hxx>
++#include <TDF_Label.hxx>
++#include <TDF_LabelSequence.hxx>
++#include <TDataStd_Name.hxx>
++#include <TDocStd_Document.hxx>
++#include <TopExp_Explorer.hxx>
++#include <TopTools_IndexedMapOfShape.hxx>
++#include <TopoDS_Iterator.hxx>
++#include <XCAFDoc_DocumentTool.hxx>
++#include <XCAFDoc_Location.hxx>
++#include <climits>
++#include <gp_Pln.hxx>  // for Precision::Confusion()
++#include <gp_Trsf.hxx>
+ #endif
+ 
+ #include <App/Application.h>
+@@ -57,21 +57,21 @@
+ 
+ 
+ #ifdef HAVE_TBB
+-# include <tbb/blocked_range.h>
+-# include <tbb/parallel_for.h>
+-# include <tbb/task_group.h>
++#include <tbb/blocked_range.h>
++#include <tbb/parallel_for.h>
++#include <tbb/task_group.h>
+ #endif
+ 
+ using namespace Import;
+ 
+ #if OCC_VERSION_HEX >= 0x070500
+ // See https://dev.opencascade.org/content/occt-3d-viewer-becomes-srgb-aware
+-#   define OCC_COLOR_SPACE Quantity_TOC_sRGB
++#define OCC_COLOR_SPACE Quantity_TOC_sRGB
+ #else
+-#   define OCC_COLOR_SPACE Quantity_TOC_RGB
++#define OCC_COLOR_SPACE Quantity_TOC_RGB
+ #endif
+ 
+-static inline App::Color convertColor(const Quantity_ColorRGBA &c)
++static inline App::Color convertColor(const Quantity_ColorRGBA& c)
+ {
+     Standard_Real r, g, b;
+     c.GetRGB().Values(r, g, b, OCC_COLOR_SPACE);
+@@ -84,9 +84,11 @@ static inline App::Color convertColor(const Quantity_ColorRGBA &c)
+ #define OCAF_KEEP_PLACEMENT
+ 
+ ImportOCAF::ImportOCAF(Handle(TDocStd_Document) h, App::Document* d, const std::string& name)
+-    : pDoc(h), doc(d), merge(true), default_name(name)
++    : pDoc(h)
++    , doc(d)
++    , default_name(name)
+ {
+-    aShapeTool = XCAFDoc_DocumentTool::ShapeTool (pDoc->Main());
++    aShapeTool = XCAFDoc_DocumentTool::ShapeTool(pDoc->Main());
+     aColorTool = XCAFDoc_DocumentTool::ColorTool(pDoc->Main());
+ }
+ 
+@@ -131,11 +133,14 @@ void ImportOCAF::loadShapes()
+ 
+ void ImportOCAF::setMerge(bool merge)
+ {
+-    this->merge=merge;
++    this->merge = merge;
+ }
+ 
+-void ImportOCAF::loadShapes(const TDF_Label& label, const TopLoc_Location& loc,
+-                            const std::string& defaultname, const std::string& assembly, bool isRef,
++void ImportOCAF::loadShapes(const TDF_Label& label,
++                            const TopLoc_Location& loc,
++                            const std::string& defaultname,
++                            const std::string& assembly,
++                            bool isRef,
+                             std::vector<App::DocumentObject*>& lValue)
+ {
+     int hash = 0;
+@@ -147,25 +152,31 @@ void ImportOCAF::loadShapes(const TDF_Label& label, const TopLoc_Location& loc,
+ 
+     std::vector<App::DocumentObject *> localValue;
+ 
+-    if (aShapeTool->GetShape(label,aShape)) {
++    if (aShapeTool->GetShape(label, aShape)) {
++#if OCC_VERSION_HEX >= 0x070800
++        hash = std::hash<TopoDS_Shape> {}(aShape);
++#else
+         hash = aShape.HashCode(HashUpper);
++#endif
++        hash = aShape.HashCode(HashUpper);
++#endif
+     }
+ 
+     Handle(TDataStd_Name) name;
+     std::string part_name = defaultname;
+     if (label.FindAttribute(TDataStd_Name::GetID(),name)) {
+         TCollection_ExtendedString extstr = name->Get();
+-        char* str = new char[extstr.LengthOfCString()+1];
++        char* str = new char[extstr.LengthOfCString() + 1];
+         extstr.ToUTF8CString(str);
+         part_name = str;
+-        delete [] str;
++        delete[] str;
+         if (part_name.empty()) {
+             part_name = defaultname;
+         }
+         else {
+-            bool ws=true;
+-            for (std::string::iterator it = part_name.begin(); it != part_name.end(); ++it) {
+-                if (*it != ' ') {
++            bool ws = true;
++            for (char it : part_name) {
++                if (it != ' ') {
+                     ws = false;
+                     break;
+                 }
+@@ -180,24 +191,23 @@ void ImportOCAF::loadShapes(const TDF_Label& label, const TopLoc_Location& loc,
+     if (label.FindAttribute(XCAFDoc_Location::GetID(), hLoc)) {
+         if (isRef)
+             part_loc = part_loc * hLoc->Get();
+-        else
++        }
++        else {
+             part_loc = hLoc->Get();
+     }
+ 
+ #ifdef FC_DEBUG
+     Base::Console().Log("H:%d, N:%s, T:%d, A:%d, S:%d, C:%d, SS:%d, F:%d, R:%d, C:%d, SS:%d\n",
+-        hash,
+-        part_name.c_str(),
+-        aShapeTool->IsTopLevel(label),
+-        aShapeTool->IsAssembly(label),
+-        aShapeTool->IsShape(label),
+-        aShapeTool->IsCompound(label),
+-        aShapeTool->IsSimpleShape(label),
+-        aShapeTool->IsFree(label),
+-        aShapeTool->IsReference(label),
+-        aShapeTool->IsComponent(label),
+-        aShapeTool->IsSubShape(label)
+-    );
++                        hash,
++                        part_name.c_str(),
++                        aShapeTool->IsTopLevel(label),
++                        aShapeTool->IsAssembly(label),
++                        aShapeTool->IsShape(label),
++                        aShapeTool->IsCompound(label),
++                        aShapeTool->IsSimpleShape(label),
++                        aShapeTool->IsFree(label),
++                        aShapeTool->IsReference(label),
++                        aShapeTool->IsComponent(label),
+ #endif
+ 
+ #if defined(OCAF_KEEP_PLACEMENT)
+@@ -217,18 +227,28 @@ void ImportOCAF::loadShapes(const TDF_Label& label, const TopLoc_Location& loc,
+ 
+     if (isRef || myRefShapes.find(hash) == myRefShapes.end()) {
+         TopoDS_Shape aShape;
+-        if (isRef && aShapeTool->GetShape(label, aShape))
++        if (isRef && aShapeTool->GetShape(label, aShape)) {
++#if OCC_VERSION_HEX >= 0x070800
++            myRefShapes.insert(std::hash<TopoDS_Shape> {}(aShape));
++#else
+             myRefShapes.insert(aShape.HashCode(HashUpper));
++#endif
++            myRefShapes.insert(aShape.HashCode(HashUpper));
++#endif
++        }
++
++        if (aShapeTool->IsSimpleShape(label) && (isRef || aShapeTool->IsFree(label))) {
++            if (!asm_name.empty()) {
+ 
+         if (aShapeTool->IsSimpleShape(label) && (isRef || aShapeTool->IsFree(label))) {
+             if (!asm_name.empty())
+                 part_name = asm_name;
+ 
+-            // TODO: The merge parameter (last one from createShape) should become an Importer/Exporter
+-            // option within the FreeCAD preference menu
+-            // Currently it is merging STEP Compound Shape into a single Shape Part::Feature which
+-            // is an OpenCascade computed Compound
+-            if (isRef)
++            // TODO: The merge parameter (last one from createShape) should become an
++            // Importer/Exporter option within the FreeCAD preference menu Currently it is merging
++            // STEP Compound Shape into a single Shape Part::Feature which is an OpenCascade
++            // computed Compound
++            if (isRef) {
+                 createShape(label, loc, part_name, lValue, this->merge);
+             else
+                 createShape(label, part_loc, part_name, localValue, this->merge);
+@@ -245,16 +265,17 @@ void ImportOCAF::loadShapes(const TDF_Label& label, const TopLoc_Location& loc,
+ 
+             // This is probably an Assembly let's try to create a Compound with the name
+             for (TDF_ChildIterator it(label); it.More(); it.Next()) {
+-                if (isRef)
++                if (isRef) {
+                     loadShapes(it.Value(), part_loc, part_name, asm_name, false, localValue);
+-                else
++                }
++                else {
+                     loadShapes(it.Value(), part_loc, part_name, asm_name, isRef, localValue);
+             }
+ 
+             if (!localValue.empty()) {
+                 if (aShapeTool->IsAssembly(label)) {
+-                    App::Part *pcPart = nullptr;
+-                    pcPart = static_cast<App::Part*>(doc->addObject("App::Part",asm_name.c_str()));
++                    App::Part* pcPart = nullptr;
++                    pcPart = static_cast<App::Part*>(doc->addObject("App::Part", asm_name.c_str()));
+                     pcPart->Label.setValue(asm_name);
+                     pcPart->addObjects(localValue);
+ 
+@@ -270,8 +291,11 @@ void ImportOCAF::loadShapes(const TDF_Label& label, const TopLoc_Location& loc,
+     }
+ }
+ 
+-void ImportOCAF::createShape(const TDF_Label& label, const TopLoc_Location& loc, const std::string& name,
+-                             std::vector<App::DocumentObject*>& lValue, bool mergeShape)
++void ImportOCAF::createShape(const TDF_Label& label,
++                             const TopLoc_Location& loc,
++                             const std::string& name,
++                             std::vector<App::DocumentObject*>& lValue,
++                             bool mergeShape)
+ {
+     const TopoDS_Shape& aShape = aShapeTool->GetShape(label);
+ #ifdef HAVE_TBB
+@@ -282,8 +306,8 @@ void ImportOCAF::createShape(const TDF_Label& label, const TopLoc_Location& loc,
+     if (!aShape.IsNull() && aShape.ShapeType() == TopAbs_COMPOUND) {
+         TopExp_Explorer xp;
+         int ctSolids = 0, ctShells = 0, ctVertices = 0, ctEdges = 0;
+-        std::vector<App::DocumentObject *> localValue;
+-        App::Part *pcPart = nullptr;
++        std::vector<App::DocumentObject*> localValue;
++        App::Part* pcPart = nullptr;
+ 
+         if (mergeShape) {
+ 
+@@ -296,26 +320,26 @@ void ImportOCAF::createShape(const TDF_Label& label, const TopLoc_Location& loc,
+             TopoDS_Compound comp;
+             builder.MakeCompound(comp);
+ 
+-/*
+-            std::vector<App::Color> colors;
+-            for (xp.Init(aShape, TopAbs_SOLID); xp.More(); xp.Next(), ctSolids++) {
+-                Quantity_Color aColor;
+-                App::Color color(0.8f,0.8f,0.8f);
+-                if (aColorTool->GetColor(xp.Current(), XCAFDoc_ColorGen, aColor) ||
+-                    aColorTool->GetColor(xp.Current(), XCAFDoc_ColorSurf, aColor) ||
+-                    aColorTool->GetColor(xp.Current(), XCAFDoc_ColorCurv, aColor)) {
+-                    color.r = (float)aColor.Red();
+-                    color.g = (float)aColor.Green();
+-                    color.b = (float)aColor.Blue();
+-                    colors.push_back(color);
+-                }
+-            }
+-
+-            if (colors.size() > 1) {
+-                createShape(label, loc, name, lValue, false);
+-                return;
+-            }
+-*/
++            /*
++                        std::vector<App::Color> colors;
++                        for (xp.Init(aShape, TopAbs_SOLID); xp.More(); xp.Next(), ctSolids++) {
++                            Quantity_Color aColor;
++                            App::Color color(0.8f,0.8f,0.8f);
++                            if (aColorTool->GetColor(xp.Current(), XCAFDoc_ColorGen, aColor) ||
++                                aColorTool->GetColor(xp.Current(), XCAFDoc_ColorSurf, aColor) ||
++                                aColorTool->GetColor(xp.Current(), XCAFDoc_ColorCurv, aColor)) {
++                                color.r = (float)aColor.Red();
++                                color.g = (float)aColor.Green();
++                                color.b = (float)aColor.Blue();
++                                colors.push_back(color);
++                            }
++                        }
++
++                        if (colors.size() > 1) {
++                            createShape(label, loc, name, lValue, false);
++                            return;
++                        }
++            */
+             for (xp.Init(aShape, TopAbs_SOLID); xp.More(); xp.Next(), ctSolids++) {
+                 const TopoDS_Shape& sh = xp.Current();
+                 if (!sh.IsNull()) {
+@@ -346,7 +370,7 @@ void ImportOCAF::createShape(const TDF_Label& label, const TopLoc_Location& loc,
+ 
+             // Ok we got a Compound which is computed
+             // Just need to add it to a Part::Feature and push it to lValue
+-            if (!comp.IsNull() && (ctSolids||ctShells||ctEdges||ctVertices)) {
++            if (!comp.IsNull() && (ctSolids || ctShells || ctEdges || ctVertices)) {
+                 Part::Feature* part = static_cast<Part::Feature*>(doc->addObject("Part::Feature"));
+                 // Let's allocate the relative placement of the Compound from the STEP file
+                 tryPlacementFromLoc(part, loc);
+@@ -373,7 +397,7 @@ void ImportOCAF::createShape(const TDF_Label& label, const TopLoc_Location& loc,
+         }
+ 
+         if (!localValue.empty() && !mergeShape) {
+-            pcPart = static_cast<App::Part*>(doc->addObject("App::Part",name.c_str()));
++            pcPart = static_cast<App::Part*>(doc->addObject("App::Part", name.c_str()));
+             pcPart->Label.setValue(name);
+ 
+             // localValue contain the objects that  must added to the local Part
+@@ -381,18 +405,18 @@ void ImportOCAF::createShape(const TDF_Label& label, const TopLoc_Location& loc,
+             pcPart->addObjects(localValue);
+ 
+             // Let's compute relative placement of the Part
+-/*
+-            gp_Trsf trf;
+-            Base::Matrix4D mtrx;
+-            if ( loc.IsIdentity() )
+-                 trf = loc.Transformation();
+-            else
+-                 trf = TopLoc_Location(loc.FirstDatum()).Transformation();
+-            Part::TopoShape::convertToMatrix(trf, mtrx);
+-            Base::Placement pl;
+-            pl.fromMatrix(mtrx);
+-            pcPart->Placement.setValue(pl);
+-*/
++            /*
++                        gp_Trsf trf;
++                        Base::Matrix4D mtrx;
++                        if ( loc.IsIdentity() )
++                             trf = loc.Transformation();
++                        else
++                             trf = TopLoc_Location(loc.FirstDatum()).Transformation();
++                        Part::TopoShape::convertToMatrix(trf, mtrx);
++                        Base::Placement pl;
++                        pl.fromMatrix(mtrx);
++                        pcPart->Placement.setValue(pl);
++            */
+             lValue.push_back(pcPart);
+         }
+ 
+@@ -404,15 +428,19 @@ void ImportOCAF::createShape(const TDF_Label& label, const TopLoc_Location& loc,
+     }
+ }
+ 
+-void ImportOCAF::createShape(const TopoDS_Shape& aShape, const TopLoc_Location& loc, const std::string& name,
++void ImportOCAF::createShape(const TopoDS_Shape& aShape,
++                             const TopLoc_Location& loc,
++                             const std::string& name,
+                              std::vector<App::DocumentObject*>& lvalue)
+ {
+     Part::Feature* part = static_cast<Part::Feature*>(doc->addObject("Part::Feature"));
+ 
+-    if (!loc.IsIdentity())
++    if (!loc.IsIdentity()) {
+         // part->Shape.setValue(aShape.Moved(TopLoc_Location(loc.FirstDatum())));
+         part->Shape.setValue(aShape.Moved(loc));
+-    else
++    }
++    else {
++        part->Shape.setValue(aShape);
+         part->Shape.setValue(aShape);
+ 
+     part->Label.setValue(name);
+@@ -424,10 +452,10 @@ void ImportOCAF::createShape(const TopoDS_Shape& aShape, const TopLoc_Location&
+ void ImportOCAF::loadColors(Part::Feature* part, const TopoDS_Shape& aShape)
+ {
+     Quantity_ColorRGBA aColor;
+-    App::Color color(0.8f,0.8f,0.8f);
+-    if (aColorTool->GetColor(aShape, XCAFDoc_ColorGen, aColor) ||
+-        aColorTool->GetColor(aShape, XCAFDoc_ColorSurf, aColor) ||
+-        aColorTool->GetColor(aShape, XCAFDoc_ColorCurv, aColor)) {
++    App::Color color(0.8f, 0.8f, 0.8f);
++    if (aColorTool->GetColor(aShape, XCAFDoc_ColorGen, aColor)
++        || aColorTool->GetColor(aShape, XCAFDoc_ColorSurf, aColor)
++        || aColorTool->GetColor(aShape, XCAFDoc_ColorCurv, aColor)) {
+         color = convertColor(aColor);
+         std::vector<App::Color> colors;
+         colors.push_back(color);
+@@ -435,7 +463,7 @@ void ImportOCAF::loadColors(Part::Feature* part, const TopoDS_Shape& aShape)
+     }
+ 
+     TopTools_IndexedMapOfShape faces;
+-    TopExp_Explorer xp(aShape,TopAbs_FACE);
++    TopExp_Explorer xp(aShape, TopAbs_FACE);
+     while (xp.More()) {
+         faces.Add(xp.Current());
+         xp.Next();
+@@ -444,14 +472,14 @@ void ImportOCAF::loadColors(Part::Feature* part, const TopoDS_Shape& aShape)
+     bool found_face_color = false;
+     std::vector<App::Color> faceColors;
+     faceColors.resize(faces.Extent(), color);
+-    xp.Init(aShape,TopAbs_FACE);
++    xp.Init(aShape, TopAbs_FACE);
+     while (xp.More()) {
+-        if (aColorTool->GetColor(xp.Current(), XCAFDoc_ColorGen, aColor) ||
+-            aColorTool->GetColor(xp.Current(), XCAFDoc_ColorSurf, aColor) ||
+-            aColorTool->GetColor(xp.Current(), XCAFDoc_ColorCurv, aColor)) {
++        if (aColorTool->GetColor(xp.Current(), XCAFDoc_ColorGen, aColor)
++            || aColorTool->GetColor(xp.Current(), XCAFDoc_ColorSurf, aColor)
++            || aColorTool->GetColor(xp.Current(), XCAFDoc_ColorCurv, aColor)) {
+             int index = faces.FindIndex(xp.Current());
+             color = convertColor(aColor);
+-            faceColors[index-1] = color;
++            faceColors[index - 1] = color;
+             found_face_color = true;
+         }
+         xp.Next();
+@@ -466,8 +494,7 @@ void ImportOCAF::loadColors(Part::Feature* part, const TopoDS_Shape& aShape)
+ 
+ ImportOCAFCmd::ImportOCAFCmd(Handle(TDocStd_Document) h, App::Document* d, const std::string& name)
+     : ImportOCAF(h, d, name)
+-{
+-}
++{}
+ 
+ void ImportOCAFCmd::applyColors(Part::Feature* part, const std::vector<App::Color>& colors)
+ {
+@@ -477,25 +504,25 @@ void ImportOCAFCmd::applyColors(Part::Feature* part, const std::vector<App::Colo
+ // ----------------------------------------------------------------------------
+ 
+ ImportXCAF::ImportXCAF(Handle(TDocStd_Document) h, App::Document* d, const std::string& name)
+-    : hdoc(h), doc(d), default_name(name)
++    : hdoc(h)
++    , doc(d)
++    , default_name(name)
+ {
+-    aShapeTool = XCAFDoc_DocumentTool::ShapeTool (hdoc->Main());
++    aShapeTool = XCAFDoc_DocumentTool::ShapeTool(hdoc->Main());
+     hColors = XCAFDoc_DocumentTool::ColorTool(hdoc->Main());
+ }
+ 
+-ImportXCAF::~ImportXCAF()
+-{
+-}
++ImportXCAF::~ImportXCAF() = default;
+ 
+ void ImportXCAF::loadShapes()
+ {
+     // collect sequence of labels to display
+     TDF_LabelSequence shapeLabels, colorLabels;
+-    aShapeTool->GetFreeShapes (shapeLabels);
++    aShapeTool->GetFreeShapes(shapeLabels);
+     hColors->GetColors(colorLabels);
+ 
+     // set presentations and show
+-    for (Standard_Integer i=1; i <= shapeLabels.Length(); i++ ) {
++    for (Standard_Integer i = 1; i <= shapeLabels.Length(); i++) {
+         // get the shapes and attributes
+         const TDF_Label& label = shapeLabels.Value(i);
+         loadShapes(label);
+@@ -532,10 +559,14 @@ void ImportXCAF::createShape(const TopoDS_Shape& shape, bool perface, bool setna
+     part->Label.setValue(default_name);
+     part->Shape.setValue(shape);
+     std::map<Standard_Integer, Quantity_ColorRGBA>::const_iterator jt;
++#if OCC_VERSION_HEX >= 0x070800
++    jt = myColorMap.find(std::hash<TopoDS_Shape> {}(shape));
++#else
+     jt = myColorMap.find(shape.HashCode(INT_MAX));
++#endif
+ 
+-    App::Color partColor(0.8f,0.8f,0.8f);
+-#if 0//TODO
++    App::Color partColor(0.8f, 0.8f, 0.8f);
++#if 0  // TODO
+     Gui::ViewProvider* vp = Gui::Application::Instance->getViewProvider(part);
+     if (vp && vp->isDerivedFrom(PartGui::ViewProviderPart::getClassTypeId())) {
+         if (jt != myColorMap.end()) {
+@@ -553,7 +584,11 @@ void ImportXCAF::createShape(const TopoDS_Shape& shape, bool perface, bool setna
+     // set label name if defined
+     if (setname && !myNameMap.empty()) {
+         std::map<Standard_Integer, std::string>::const_iterator jt;
++#if OCC_VERSION_HEX >= 0x070800
++        jt = myNameMap.find(std::hash<TopoDS_Shape> {}(shape));
++#else
+         jt = myNameMap.find(shape.HashCode(INT_MAX));
++#endif
+         if (jt != myNameMap.end()) {
+             part->Label.setValue(jt->second);
+         }
+@@ -562,7 +597,7 @@ void ImportXCAF::createShape(const TopoDS_Shape& shape, bool perface, bool setna
+     // check for colors per face
+     if (perface && !myColorMap.empty()) {
+         TopTools_IndexedMapOfShape faces;
+-        TopExp_Explorer xp(shape,TopAbs_FACE);
++        TopExp_Explorer xp(shape, TopAbs_FACE);
+         while (xp.More()) {
+             faces.Add(xp.Current());
+             xp.Next();
+@@ -571,9 +606,13 @@ void ImportXCAF::createShape(const TopoDS_Shape& shape, bool perface, bool setna
+         bool found_face_color = false;
+         std::vector<App::Color> faceColors;
+         faceColors.resize(faces.Extent(), partColor);
+-        xp.Init(shape,TopAbs_FACE);
++        xp.Init(shape, TopAbs_FACE);
+         while (xp.More()) {
++#if OCC_VERSION_HEX >= 0x070800
++            jt = myColorMap.find(std::hash<TopoDS_Shape> {}(xp.Current()));
++#else
+             jt = myColorMap.find(xp.Current().HashCode(INT_MAX));
++#endif
+             if (jt != myColorMap.end()) {
+                 int index = faces.FindIndex(xp.Current());
+                 faceColors[index-1] = convertColor(jt->second);
+@@ -607,44 +646,87 @@ void ImportXCAF::loadShapes(const TDF_Label& label)
+             int ctSolids = 0, ctShells = 0, ctComps = 0;
+             // add the shapes
+             TopExp_Explorer xp;
+-            for (xp.Init(aShape, TopAbs_SOLID); xp.More(); xp.Next(), ctSolids++)
++            for (xp.Init(aShape, TopAbs_SOLID); xp.More(); xp.Next(), ctSolids++) {
++#if OCC_VERSION_HEX >= 0x070800
++                this->mySolids[std::hash<TopoDS_Shape> {}(xp.Current())] = (xp.Current());
++#else
+                 this->mySolids[xp.Current().HashCode(INT_MAX)] = (xp.Current());
+-            for (xp.Init(aShape, TopAbs_SHELL, TopAbs_SOLID); xp.More(); xp.Next(), ctShells++)
++#endif
++            }
++            for (xp.Init(aShape, TopAbs_SHELL, TopAbs_SOLID); xp.More(); xp.Next(), ctShells++) {
++#if OCC_VERSION_HEX >= 0x070800
++                this->myShells[std::hash<TopoDS_Shape> {}(xp.Current())] = (xp.Current());
++#else
+                 this->myShells[xp.Current().HashCode(INT_MAX)] = (xp.Current());
++#endif
++            }
+             // if no solids and no shells were found then go for compounds
+             if (ctSolids == 0 && ctShells == 0) {
+-                for (xp.Init(aShape, TopAbs_COMPOUND); xp.More(); xp.Next(), ctComps++)
++                for (xp.Init(aShape, TopAbs_COMPOUND); xp.More(); xp.Next(), ctComps++) {
++#if OCC_VERSION_HEX >= 0x070800
++                    this->myCompds[std::hash<TopoDS_Shape> {}(xp.Current())] = (xp.Current());
++#else
+                     this->myCompds[xp.Current().HashCode(INT_MAX)] = (xp.Current());
++#endif
++                }
+             }
+             if (ctComps == 0) {
+-                for (xp.Init(aShape, TopAbs_FACE, TopAbs_SHELL); xp.More(); xp.Next())
++                for (xp.Init(aShape, TopAbs_FACE, TopAbs_SHELL); xp.More(); xp.Next()) {
++#if OCC_VERSION_HEX >= 0x070800
++                    this->myShapes[std::hash<TopoDS_Shape> {}(xp.Current())] = (xp.Current());
++#else
+                     this->myShapes[xp.Current().HashCode(INT_MAX)] = (xp.Current());
+-                for (xp.Init(aShape, TopAbs_WIRE, TopAbs_FACE); xp.More(); xp.Next())
++#endif
++                }
++                for (xp.Init(aShape, TopAbs_WIRE, TopAbs_FACE); xp.More(); xp.Next()) {
++#if OCC_VERSION_HEX >= 0x070800
++                    this->myShapes[std::hash<TopoDS_Shape> {}(xp.Current())] = (xp.Current());
++#else
+                     this->myShapes[xp.Current().HashCode(INT_MAX)] = (xp.Current());
+-                for (xp.Init(aShape, TopAbs_EDGE, TopAbs_WIRE); xp.More(); xp.Next())
++#endif
++                }
++                for (xp.Init(aShape, TopAbs_EDGE, TopAbs_WIRE); xp.More(); xp.Next()) {
++#if OCC_VERSION_HEX >= 0x070800
++                    this->myShapes[std::hash<TopoDS_Shape> {}(xp.Current())] = (xp.Current());
++#else
+                     this->myShapes[xp.Current().HashCode(INT_MAX)] = (xp.Current());
+-                for (xp.Init(aShape, TopAbs_VERTEX, TopAbs_EDGE); xp.More(); xp.Next())
++#endif
++                }
++                for (xp.Init(aShape, TopAbs_VERTEX, TopAbs_EDGE); xp.More(); xp.Next()) {
++#if OCC_VERSION_HEX >= 0x070800
++                    this->myShapes[std::hash<TopoDS_Shape> {}(xp.Current())] = (xp.Current());
++#else
+                     this->myShapes[xp.Current().HashCode(INT_MAX)] = (xp.Current());
++#endif
++                }
+             }
+         }
+ 
+         // getting color
+         Quantity_ColorRGBA col;
+-        if (hColors->GetColor(label, XCAFDoc_ColorGen, col) ||
+-            hColors->GetColor(label, XCAFDoc_ColorSurf, col) ||
+-            hColors->GetColor(label, XCAFDoc_ColorCurv, col)) {
++        if (hColors->GetColor(label, XCAFDoc_ColorGen, col)
++            || hColors->GetColor(label, XCAFDoc_ColorSurf, col)
++            || hColors->GetColor(label, XCAFDoc_ColorCurv, col)) {
+             // add defined color
++#if OCC_VERSION_HEX >= 0x070800
++            myColorMap[std::hash<TopoDS_Shape> {}(aShape)] = col;
++#else
+             myColorMap[aShape.HashCode(INT_MAX)] = col;
++#endif
+         }
+         else {
+             // http://www.opencascade.org/org/forum/thread_17107/
+             TopoDS_Iterator it;
+-            for (it.Initialize(aShape);it.More(); it.Next()) {
+-                if (hColors->GetColor(it.Value(), XCAFDoc_ColorGen, col) ||
+-                    hColors->GetColor(it.Value(), XCAFDoc_ColorSurf, col) ||
+-                    hColors->GetColor(it.Value(), XCAFDoc_ColorCurv, col)) {
++            for (it.Initialize(aShape); it.More(); it.Next()) {
++                if (hColors->GetColor(it.Value(), XCAFDoc_ColorGen, col)
++                    || hColors->GetColor(it.Value(), XCAFDoc_ColorSurf, col)
++                    || hColors->GetColor(it.Value(), XCAFDoc_ColorCurv, col)) {
+                     // add defined color
++#if OCC_VERSION_HEX >= 0x070800
++                    myColorMap[std::hash<TopoDS_Shape> {}(it.Value())] = col;
++#else
+                     myColorMap[it.Value().HashCode(INT_MAX)] = col;
++#endif
+                 }
+             }
+         }
+@@ -656,9 +738,14 @@ void ImportXCAF::loadShapes(const TDF_Label& label)
+             char* str = new char[extstr.LengthOfCString()+1];
+             extstr.ToUTF8CString(str);
+             std::string labelName(str);
+-            if (!labelName.empty())
++            if (!labelName.empty()) {
++#if OCC_VERSION_HEX >= 0x070800
++                myNameMap[std::hash<TopoDS_Shape> {}(aShape)] = labelName;
++#else
+                 myNameMap[aShape.HashCode(INT_MAX)] = labelName;
+-            delete [] str;
++#endif
++            }
++            delete[] str;
+         }
+ 
+ #if 0
+diff --git a/src/Mod/Import/App/ImportOCAF2.h b/src/Mod/Import/App/ImportOCAF2.h
+index e19b921971..a321f154e8 100644
+--- a/src/Mod/Import/App/ImportOCAF2.h
++++ b/src/Mod/Import/App/ImportOCAF2.h
+@@ -30,7 +30,6 @@
+ #include <unordered_map>
+ #include <vector>
+ 
+-#include <TDF_LabelMapHasher.hxx>
+ #include <TDocStd_Document.hxx>
+ #include <TopoDS_Shape.hxx>
+ #include <XCAFDoc_ColorTool.hxx>
+diff --git a/src/Mod/Import/App/Tools.h b/src/Mod/Import/App/Tools.h
+new file mode 100644
+index 0000000000..aa05e3067e
+--- /dev/null
++++ b/src/Mod/Import/App/Tools.h
+@@ -0,0 +1,79 @@
++/****************************************************************************
++ *   Copyright (c) 2018 Zheng, Lei (realthunder) <realthunder.dev@gmail.com>*
++ *                                                                          *
++ *   This file is part of the FreeCAD CAx development system.               *
++ *                                                                          *
++ *   This library is free software; you can redistribute it and/or          *
++ *   modify it under the terms of the GNU Library General Public            *
++ *   License as published by the Free Software Foundation; either           *
++ *   version 2 of the License, or (at your option) any later version.       *
++ *                                                                          *
++ *   This library  is distributed in the hope that it will be useful,       *
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of         *
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
++ *   GNU Library General Public License for more details.                   *
++ *                                                                          *
++ *   You should have received a copy of the GNU Library General Public      *
++ *   License along with this library; see the file COPYING.LIB. If not,     *
++ *   write to the Free Software Foundation, Inc., 59 Temple Place,          *
++ *   Suite 330, Boston, MA  02111-1307, USA                                 *
++ *                                                                          *
++ ****************************************************************************/
++
++#ifndef IMPORT_TOOLS_H
++#define IMPORT_TOOLS_H
++
++#include <Quantity_ColorRGBA.hxx>
++#include <TopoDS_Shape.hxx>
++#include <XCAFDoc_ColorTool.hxx>
++#include <XCAFDoc_ShapeTool.hxx>
++#include <App/Color.h>
++
++#include <Standard_Version.hxx>
++
++namespace Import
++{
++
++struct ShapeHasher
++{
++    std::size_t operator()(const TopoDS_Shape& shape) const
++    {
++#if OCC_VERSION_HEX >= 0x070800
++        return std::hash<TopoDS_Shape> {}(shape);
++#else
++        return shape.HashCode(INT_MAX);
++#endif
++    }
++};
++
++struct LabelHasher
++{
++    std::size_t operator()(const TDF_Label& label) const
++    {
++#if OCC_VERSION_HEX >= 0x070800
++        return std::hash<TDF_Label> {}(label);
++#else
++        return TDF_LabelMapHasher::HashCode(label, INT_MAX);
++#endif
++    }
++};
++
++struct Tools
++{
++    static App::Color convertColor(const Quantity_ColorRGBA& rgba);
++    static Quantity_ColorRGBA convertColor(const App::Color& col);
++    static std::string labelName(TDF_Label label);
++    static void printLabel(TDF_Label label,
++                           Handle(XCAFDoc_ShapeTool) aShapeTool,
++                           Handle(XCAFDoc_ColorTool) aColorTool,
++                           const char* msg = nullptr);
++
++    static void dumpLabels(TDF_Label label,
++                           Handle(XCAFDoc_ShapeTool) aShapeTool,
++                           Handle(XCAFDoc_ColorTool) aColorTool,
++                           int depth = 0);
++};
++
++}  // namespace Import
++
++#endif  // IMPORT_IMPORTOCAF2_H
+diff --git a/src/Mod/MeshPart/App/CurveProjector.h b/src/Mod/MeshPart/App/CurveProjector.h
+index 4fb0d5ff37..f73c1ca487 100644
+--- a/src/Mod/MeshPart/App/CurveProjector.h
++++ b/src/Mod/MeshPart/App/CurveProjector.h
+@@ -32,6 +32,7 @@
+ #include <Mod/Mesh/App/Mesh.h>
+ #include <Mod/MeshPart/MeshPartGlobal.h>
+ 
++#include <Standard_Version.hxx>
+ 
+ namespace MeshCore
+ {
+@@ -51,21 +52,14 @@ namespace MeshPart
+ class MeshPartExport CurveProjector
+ {
+ public:
+-  CurveProjector(const TopoDS_Shape &aShape, const MeshKernel &pMesh);
+-  virtual ~CurveProjector() {}
++    CurveProjector(const TopoDS_Shape& aShape, const MeshKernel& pMesh);
++    virtual ~CurveProjector() = default;
+ 
+-  struct FaceSplitEdge
+-  {
+-    MeshCore::FacetIndex ulFaceIndex;
+-    Base::Vector3f p1,p2;
+-  };
+-
+-  template<class T>
+-    struct TopoDSLess {
+-    bool operator()(const T& x, const T& y) const {
+-      return x.HashCode(INT_MAX-1) < y.HashCode(INT_MAX-1);
+-    }
+-  };
++    struct FaceSplitEdge
++    {
++        MeshCore::FacetIndex ulFaceIndex;
++        Base::Vector3f p1, p2;
++    };
+ 
+   using result_type = std::map<TopoDS_Edge, std::vector<FaceSplitEdge>,TopoDSLess<TopoDS_Edge> >;
+ 
+diff --git a/src/Mod/Part/App/ImportStep.cpp b/src/Mod/Part/App/ImportStep.cpp
+index 6c41ac5380..1d02eb2d63 100644
+--- a/src/Mod/Part/App/ImportStep.cpp
++++ b/src/Mod/Part/App/ImportStep.cpp
+@@ -137,7 +137,12 @@ int Part::ImportStepParts(App::Document *pcDoc, const char* Name)
+                 // This is a trick to access the GUI via Python and set the color property
+                 // of the associated view provider. If no GUI is up an exception is thrown
+                 // and cleared immediately
++#if OCC_VERSION_HEX >= 0x070800
++                std::hash<TopoDS_Solid> hasher;
++                std::map<int, Quantity_Color>::iterator it = hash_col.find(hasher(aSolid));
++#else
+                 std::map<int, Quantity_Color>::iterator it = hash_col.find(aSolid.HashCode(INT_MAX));
++#endif
+                 if (it != hash_col.end()) {
+                     try {
+                         Py::Object obj(pcFeature->getPyObject(), true);
+diff --git a/src/Mod/Part/App/TopoShapePyImp.cpp b/src/Mod/Part/App/TopoShapePyImp.cpp
+index c73a70c177..0bf5f81494 100644
+--- a/src/Mod/Part/App/TopoShapePyImp.cpp
++++ b/src/Mod/Part/App/TopoShapePyImp.cpp
+@@ -1304,7 +1304,11 @@ PyObject*  TopoShapePy::ancestorsOfType(PyObject *args)
+         TopTools_ListIteratorOfListOfShape it(ancestors);
+         for (; it.More(); it.Next()) {
+             // make sure to avoid duplicates
++#if OCC_VERSION_HEX >= 0x070800
++            const size_t code = std::hash<TopoDS_Shape>{}(static_cast<TopoDS_Shape>(it.Value()));
++#else
+             Standard_Integer code = it.Value().HashCode(INT_MAX);
++#endif
+             if (hashes.find(code) == hashes.end()) {
+                 list.append(shape2pyshape(it.Value()));
+                 hashes.insert(code);
+@@ -1919,7 +1923,11 @@ PyObject* TopoShapePy::hashCode(PyObject *args)
+     if (!PyArg_ParseTuple(args, "|i",&upper))
+         return nullptr;
+ 
++#if OCC_VERSION_HEX >= 0x070800
++    int hc = std::hash<TopoDS_Shape>{}(getTopoShapePtr()->getShape());
++#else
+     int hc = getTopoShapePtr()->getShape().HashCode(upper);
++#endif
+     return Py_BuildValue("i", hc);
+ }
+ 
+diff --git a/src/Mod/Part/Gui/AppPartGui.cpp b/src/Mod/Part/Gui/AppPartGui.cpp
+index 2ca6e878cb..5455361143 100644
+--- a/src/Mod/Part/Gui/AppPartGui.cpp
++++ b/src/Mod/Part/Gui/AppPartGui.cpp
+@@ -24,7 +24,6 @@
+ 
+ #include "PreCompiled.h"
+ #ifndef _PreComp_
+-# include <Standard_math.hxx>
+ #endif
+ 
+ #include <Base/Console.h>
+diff --git a/src/Mod/Part/Gui/Command.cpp b/src/Mod/Part/Gui/Command.cpp
+index b057ef4a81..c8d06c39bf 100644
+--- a/src/Mod/Part/Gui/Command.cpp
++++ b/src/Mod/Part/Gui/Command.cpp
+@@ -26,7 +26,6 @@
+ # include <QFileInfo>
+ # include <QPointer>
+ # include <QString>
+-# include <Standard_math.hxx>
+ # include <Standard_Version.hxx>
+ # include <TopExp_Explorer.hxx>
+ # include <TopoDS_Shape.hxx>
+diff --git a/src/Mod/Part/Gui/CommandSimple.cpp b/src/Mod/Part/Gui/CommandSimple.cpp
+index e46d034e1d..aaa04fe249 100644
+--- a/src/Mod/Part/Gui/CommandSimple.cpp
++++ b/src/Mod/Part/Gui/CommandSimple.cpp
+@@ -23,7 +23,6 @@
+ 
+ #include "PreCompiled.h"
+ #ifndef _PreComp_
+-# include <Standard_math.hxx>
+ # include <QInputDialog>
+ #endif
+ 
+diff --git a/src/Mod/Part/Gui/CrossSections.cpp b/src/Mod/Part/Gui/CrossSections.cpp
+index 1f42410aaf..7e35addbc5 100644
+--- a/src/Mod/Part/Gui/CrossSections.cpp
++++ b/src/Mod/Part/Gui/CrossSections.cpp
+@@ -28,7 +28,6 @@
+ # include <QKeyEvent>
+ 
+ # include <BRep_Builder.hxx>
+-# include <Standard_math.hxx>
+ # include <TopoDS.hxx>
+ # include <TopoDS_Compound.hxx>
+ 
+diff --git a/src/Mod/Part/Gui/ViewProvider2DObject.cpp b/src/Mod/Part/Gui/ViewProvider2DObject.cpp
+index 880586d337..61ff90578e 100644
+--- a/src/Mod/Part/Gui/ViewProvider2DObject.cpp
++++ b/src/Mod/Part/Gui/ViewProvider2DObject.cpp
+@@ -25,7 +25,6 @@
+ #ifndef _PreComp_
+ # include <cfloat>
+ 
+-# include <Standard_math.hxx>
+ 
+ # include <Inventor/nodes/SoAnnotation.h>
+ # include <Inventor/nodes/SoBaseColor.h>
+diff --git a/src/Mod/Part/Gui/ViewProviderExt.cpp b/src/Mod/Part/Gui/ViewProviderExt.cpp
+index 554f7a405a..4ad97b08bd 100644
+--- a/src/Mod/Part/Gui/ViewProviderExt.cpp
++++ b/src/Mod/Part/Gui/ViewProviderExt.cpp
+@@ -987,7 +987,11 @@ void ViewProviderPartExt::updateVisual()
+ 
+             TopExp_Explorer xp;
+             for (xp.Init(faceMap(i),TopAbs_EDGE);xp.More();xp.Next())
++#if OCC_VERSION_HEX >= 0x070800
++                faceEdges.insert(std::hash<TopoDS_Shape>{}(xp.Current()));
++#else
+                 faceEdges.insert(xp.Current().HashCode(INT_MAX));
++#endif
+             numFaces++;
+         }
+ 
+@@ -1015,7 +1019,11 @@ void ViewProviderPartExt::updateVisual()
+             // So, we have to store the hashes of the edges associated to a face.
+             // If the hash of a given edge is not in this list we know it's really
+             // a free edge.
++#if OCC_VERSION_HEX >= 0x070800
++            int hash = std::hash<TopoDS_Shape>{}(aEdge);
++#else
+             int hash = aEdge.HashCode(INT_MAX);
++#endif
+             if (faceEdges.find(hash) == faceEdges.end()) {
+                 Handle(Poly_Polygon3D) aPoly = Part::Tools::polygonOfEdge(aEdge, aLoc);
+                 if (!aPoly.IsNull()) {
+@@ -1214,7 +1222,11 @@ void ViewProviderPartExt::updateVisual()
+             TopLoc_Location aLoc;
+ 
+             // handling of the free edge that are not associated to a face
++#if OCC_VERSION_HEX >= 0x070800
++            int hash = std::hash<TopoDS_Shape>{}(aEdge);
++#else
+             int hash = aEdge.HashCode(INT_MAX);
++#endif
+             if (faceEdges.find(hash) == faceEdges.end()) {
+                 Handle(Poly_Polygon3D) aPoly = Part::Tools::polygonOfEdge(aEdge, aLoc);
+                 if (!aPoly.IsNull()) {
+diff --git a/src/Mod/Part/Gui/ViewProviderExt.h b/src/Mod/Part/Gui/ViewProviderExt.h
+index 01b75aaa2a..94b2866ee6 100644
+--- a/src/Mod/Part/Gui/ViewProviderExt.h
++++ b/src/Mod/Part/Gui/ViewProviderExt.h
+@@ -24,7 +24,6 @@
+ #define PARTGUI_VIEWPROVIDERPARTEXT_H
+ 
+ #include <map>
+-#include <Standard_math.hxx>
+ 
+ #include <App/PropertyUnits.h>
+ #include <Gui/ViewProviderGeometryObject.h>
+diff --git a/src/Mod/Part/Gui/ViewProviderMirror.cpp b/src/Mod/Part/Gui/ViewProviderMirror.cpp
+index f9210f9042..1f9132cc39 100644
+--- a/src/Mod/Part/Gui/ViewProviderMirror.cpp
++++ b/src/Mod/Part/Gui/ViewProviderMirror.cpp
+@@ -27,7 +27,6 @@
+ # include <QMenu>
+ # include <QTimer>
+ 
+-# include <Standard_math.hxx>
+ # include <TopExp.hxx>
+ # include <TopTools_IndexedMapOfShape.hxx>
+ 
+diff --git a/src/Mod/Part/Gui/ViewProviderPython.cpp b/src/Mod/Part/Gui/ViewProviderPython.cpp
+index e7fa75fe1b..1b6a1ff8d4 100644
+--- a/src/Mod/Part/Gui/ViewProviderPython.cpp
++++ b/src/Mod/Part/Gui/ViewProviderPython.cpp
+@@ -22,7 +22,6 @@
+ 
+ #include "PreCompiled.h"
+ 
+-#include <Standard_math.hxx>
+ #ifndef _PreComp_
+ # include <Inventor/nodes/SoSeparator.h>
+ #endif
+diff --git a/src/Mod/Part/Gui/ViewProviderReference.h b/src/Mod/Part/Gui/ViewProviderReference.h
+index b7a0219b3b..af40af2fae 100644
+--- a/src/Mod/Part/Gui/ViewProviderReference.h
++++ b/src/Mod/Part/Gui/ViewProviderReference.h
+@@ -24,7 +24,6 @@
+ #ifndef PARTGUI_ViewProviderPartReference_H
+ #define PARTGUI_ViewProviderPartReference_H
+ 
+-#include <Standard_math.hxx>
+ #include <Standard_Boolean.hxx>
+ #include <TopoDS_Shape.hxx>
+ #include <Gui/ViewProviderGeometryObject.h>
+diff --git a/src/Mod/Path/App/Voronoi.cpp b/src/Mod/Path/App/Voronoi.cpp
+index 27a509c20c..443b747507 100644
+--- a/src/Mod/Path/App/Voronoi.cpp
++++ b/src/Mod/Path/App/Voronoi.cpp
+@@ -22,7 +22,8 @@
+ 
+ #include "PreCompiled.h"
+ #ifndef _PreComp_
+-# include <Standard_math.hxx>
++#define _USE_MATH_DEFINES
++# include <math.h>
+ #endif
+ 
+ #include <Base/Vector3D.h>
+diff --git a/src/Mod/Path/Gui/PreCompiled.h b/src/Mod/Path/Gui/PreCompiled.h
+index f12ef8f919..ed8cef500f 100644
+--- a/src/Mod/Path/Gui/PreCompiled.h
++++ b/src/Mod/Path/Gui/PreCompiled.h
+@@ -38,8 +38,6 @@
+ # define PathGuiExport
+ #endif
+ 
+-#include <Standard_math.hxx>
+-
+ #ifdef _MSC_VER
+ # pragma warning( disable : 4273 )
+ #endif
+diff --git a/src/Mod/Robot/Gui/PreCompiled.h b/src/Mod/Robot/Gui/PreCompiled.h
+index eb2a061446..e5496201ec 100644
+--- a/src/Mod/Robot/Gui/PreCompiled.h
++++ b/src/Mod/Robot/Gui/PreCompiled.h
+@@ -38,8 +38,6 @@
+ # define RobotGuiExport
+ #endif
+ 
+-#include <Standard_math.hxx>
+-
+ #ifdef _MSC_VER
+ # pragma warning(disable : 4005)
+ # pragma warning(disable : 4273)
+diff --git a/src/Mod/Sketcher/Gui/EditDatumDialog.cpp b/src/Mod/Sketcher/Gui/EditDatumDialog.cpp
+index dbfd423b99..ceae48c4ef 100644
+--- a/src/Mod/Sketcher/Gui/EditDatumDialog.cpp
++++ b/src/Mod/Sketcher/Gui/EditDatumDialog.cpp
+@@ -23,7 +23,6 @@
+ #include "PreCompiled.h"
+ 
+ #ifndef _PreComp_
+-#include <Standard_math.hxx>
+ /// Qt Include Files
+ #include <Inventor/sensors/SoSensor.h>
+ #include <QApplication>
