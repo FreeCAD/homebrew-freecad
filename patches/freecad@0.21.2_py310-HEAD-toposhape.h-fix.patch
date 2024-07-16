@@ -1,17 +1,18 @@
-commit a48198bca873e2106970a57ef04a80f7df766e47
+commit 20d04e1668c6a8a5f4bc9b9f32c547f7a3792a92
 Author: chris <chris.r.jones.1983@gmail.com>
-Date:   Tue Jul 9 18:21:08 2024 -0500
+Date:   Tue Jul 16 14:19:53 2024 -0500
 
-    toposhape.h add missing include
+    ipatch: toposhape.h add unordered_map
 
 diff --git a/src/Mod/Part/App/TopoShape.h b/src/Mod/Part/App/TopoShape.h
-index cceb920f8e..5a1e6bcb4f 100644
+index f67ce107e4..4be630c5fa 100644
 --- a/src/Mod/Part/App/TopoShape.h
 +++ b/src/Mod/Part/App/TopoShape.h
-@@ -43,6 +43,8 @@
+@@ -43,6 +43,9 @@
  #include <BRepTools_ReShape.hxx>
  #include <ShapeFix_Root.hxx>
  
++// see: https://github.com/FreeCAD/FreeCAD/issues/15329
 +#include <unordered_map>
 +
  class gp_Ax1;
