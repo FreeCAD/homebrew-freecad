@@ -16,9 +16,6 @@
 **FreeCAD** is a Free (as in Libre) multiplatform Open Source Parametric 3D CAD software.<br />
 **Homebrew** is a MacOSX Package Manager.
 
-[img1]: <https://cloud.githubusercontent.com/assets/4140247/26723866/91e6a282-4764-11e7-9e3b-b8eb4fdc03f1.PNG>
-[img2]: <https://cloud.githubusercontent.com/assets/4140247/26723951/f96fd95a-4764-11e7-96eb-4889cab6d246.PNG>
-
 ## Overview
 
 The primary and frequent use case for this formula is for developers to conveniently install all the required FreeCAD dependencies to support FreeCAD development.
@@ -46,22 +43,26 @@ By default, freecad is installed as a binary to be launched from a CLI. ~~To als
 
 ## Building The Current Release Version of FreeCAD
 
+> due to multiple freecad formula being setup from various taps, ie. **homebrew-cask** it's better to explicitly reference the freecad formula from this tap
+
 ```sh
 brew tap freecad/freecad
-brew install freecad -v
+brew install freecad/freecad/freecad
 ```
 
 ## Building HEAD Version of FreeCAD
 
 ```sh
-brew install --HEAD freecad
+brew install --HEAD freecad/freecad/freecad
 ```
 
 ## Continuous Integration Support
 
-The Travis CI system uses this freecad formula to build and test FreeCAD every time
-a change is made to the FreeCAD/FreeCAD repo meaning that the formula is very well
-tested itself.
+the formula in this tap are tested with homebrew test-bot using the workflow files defined within this repo.
+
+~~The Travis CI system uses this freecad formula to build and test FreeCAD every time~~
+~~a change is made to the FreeCAD/FreeCAD repo meaning that the formula is very well~~
+~~tested itself.~~
 
 ## Contributing 🤝
 
@@ -70,7 +71,7 @@ tested itself.
 Submitting PR's for this repo can go along way, that's not to say it's an easy task.
 Following the below guidelines will help all that use this repo.
 
-1. when submitting a PR, _rebase_ all commits into a single commit
+1. when submitting a PR, _rebase_ all commits into a single commit, **please & thank you** 🙏
 > homebrew test-bot currently will fail ❌ to publish a bottle
 > if a PR contains more than one commit. A quick solution is to rebase, and squash
 > all unneeded commits thus making the brew test-bot happy. [learn more][lnk3]
@@ -82,9 +83,8 @@ change one formula file in a PR.
   file at a time.
 
 Not all PR's require running through the CI, one example would be updating this README file.
-If a PR does not update a formula file within this repo then within the PR description,
-and in the commit message add the following `[no ci]` allowing the PR to be merged into
-the repo without running CI checks.
+If a PR does not update a formula file within this repo add the following `[no ci]` to the
+commit message allowing the PR to be merged into the repo without running CI checks.
 
 ## Maintenance 🧹
 
@@ -99,7 +99,7 @@ Self-hosted runners will [**disappear**][lnk2] from a repo on GitHub if they are
 within **30 days**. However, a new self-hosted runner can be readded
 to this repo using github's web based UI. After the runner is added and labeled
 properly than the runner can pick up the job, and the status of the job can be viewed
-from the _actions_ tab at the top of the repo.
+from the _actions_ tab at the top of github web ui.
 
 > [I've][lnk1] had to readd macos vm's several times due to inactivity, but isn't an issue as
 > the self-hosted runner picks up where it left off. More information about this nuance
@@ -131,7 +131,7 @@ that should allow the 0.20.1 release to build and run against python 3.11
 
 > the below video demonstrates how I created a patch file for python 3.11 support
 
-<!-- could not figure out how to host the mp4 file in the repo resorted to using a gist -->
+<!-- could not figure out how to host the mp4 file in the repo, resorted to using a personal gist -->
 
 <div align="center">
 <video src="https://private-user-images.githubusercontent.com/613805/293290218-65e5e959-d3a8-4cc0-98be-45a77eaac632.mp4" />
@@ -143,6 +143,7 @@ that should allow the 0.20.1 release to build and run against python 3.11
 
 <a id="todos"></a>
 
+- [ ] presently i can not get the 0.21.2 freecad release to build using the upstream homebrew-core opencascade at v7.8.x
 - [ ] publish bottles for older versions of macos ie. ~~mojave~~ & high sierra, there is an active discussion about the topic [here][lnk4]
 
 [lnk4]: <https://github.com/Homebrew/discussions/discussions/2340>
