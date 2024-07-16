@@ -34,7 +34,7 @@ Developers may find it convenient to simply install the pre-requisites prior to 
 
 ```sh
 brew tap freecad/freecad
-brew install --only-dependencies freecad
+brew install --only-dependencies freecad/freecad/freecad
 ```
 
 #### Install flags
