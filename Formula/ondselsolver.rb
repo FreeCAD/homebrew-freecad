@@ -6,6 +6,14 @@ class Ondselsolver < Formula
   license "LGPL-2.1-or-later"
   head "https://github.com/Ondsel-Development/OndselSolver.git", branch: "main"
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any,                 arm64_sonoma: "f0b3097540552a493e0548a652d1c8796f24acc49d99f781f363bc892c02737e"
+    sha256 cellar: :any,                 ventura:      "e17618aedd480bd3e7f90b7d0d74d570275316cc0abb85bca7a35336b32ce286"
+    sha256 cellar: :any,                 monterey:     "40aa5a2b1e193b6f41800f05e763c6aa9214414b2471071f1afe00982d2fe6bf"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "83c4a6048dab5b8c16e2cc02bd6d0f2dd99226e18001171f0ffbdb289d0d01aa"
+  end
+
   depends_on "cmake" => :build
 
   def install
