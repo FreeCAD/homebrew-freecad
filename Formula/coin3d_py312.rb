@@ -7,6 +7,12 @@ class Coin3dPy312 < Formula
     url "https://github.com/coin3d/coin/releases/download/v4.0.2/coin-4.0.2-src.zip"
     sha256 "b764a88674f96fa540df3a9520d80586346843779858dcb6cd8657725fcb16f0"
 
+    resource "soqt" do
+      url "https://github.com/coin3d/soqt",
+      :using => :git,
+      :revision => "c4ea49cb671753bad04d57e58ed520dc42d65784"
+    end
+
     resource "pivy" do
       url "https://github.com/coin3d/pivy/archive/931d18f8aa98126f738ff9224ba0ccbd6beed75c.tar.gz"
       sha256 "a318f0988e7cc0598d819e6143c2c88769d02029a03f3dcaca3e6b02c32608d9"
