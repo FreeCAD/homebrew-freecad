@@ -40,16 +40,19 @@ class MedFileAT411 < Formula
   # end
 
   def install
+    # ENV.cxx11
+    hbp = HOMEBREW_PREFIX
+
+    gcc_formula = Formula["gcc"]
+    gcc_version = gcc_formula.version.to_s.split(".").first
+
     # use gcc, g++, and gfrontran to build formula
-    ENV["CC"] = Formula["gcc"].opt_bin/"gcc-13"
-    ENV["CXX"] = Formula["gcc"].opt_bin/"g++-13"
-    ENV["FC"] = Formula["gcc"].opt_bin/"gfortran"
+    ENV["CC"] = Formula["gcc"].opt_bin/"gcc-#{gcc_version}"
+    ENV["CXX"] = Formula["gcc"].opt_bin/"g++-#{gcc_version}"
+    ENV["FC"] = Formula["gcc"].opt_bin/"gfortran-#{gcc_version}"
 
     # work around Xcode.app >= v15
     ENV.append "LDFLAGS", "-Wl,-ld_classic" if DevelopmentTools.clang_build_version >= 1500
-
-    # ENV.cxx11
-    hbp = HOMEBREW_PREFIX
 
     # hb default values not used
     rm_std_cmake_args = [
@@ -86,7 +89,7 @@ class MedFileAT411 < Formula
       -DMEDFILE_BUILD_TESTS=0
     ]
 
-    # Remove unwanted values from args
+    # remove unwanted values from args
     args.reject! { |arg| rm_std_cmake_args.any? { |value| arg.include?(value) } }
 
     system "cmake", "-S", ".", "-B", "build", *args
@@ -95,13 +98,15 @@ class MedFileAT411 < Formula
   end
 
   def post_install
-    # Move installed Python module to the correct directory
-    site_packages_dir = lib/"python3.11/site-packages"
-    mkdir_p site_packages_dir
-    mv Dir["#{lib}/python.*/site-packages/med"], site_packages_dir
-
     # explicitly set python version
     python_version = "3.11"
+
+    # move installed Python module to the correct directory
+    site_packages_dir = lib/"python3.11/site-packages"
+
+    mkdir_p site_packages_dir
+
+    mv Dir["#{lib}/#{python_version}/site-packages/med"], site_packages_dir
 
     # Unlink the existing .pth file to avoid reinstall issues
     pth_file = lib/"python#{python_version}/medfile.pth"
