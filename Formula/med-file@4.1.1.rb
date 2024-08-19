@@ -7,11 +7,11 @@ class MedFileAT411 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 6
-    sha256 cellar: :any,                 arm64_sonoma: "84b98dd1f5267227a40b375455bccce0fe68a7bd755625756d9a863b650cb7cc"
-    sha256 cellar: :any,                 ventura:      "fd508ae91fcfd886d4f4211f3d5acad09ebe48846a85209c9dac81145caf9683"
-    sha256 cellar: :any,                 monterey:     "5a335eac8eac3e8c15680f7e54548c3f9d94869137a446a130d59696b266d4b0"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "a2f84e49e3dd18220fd84c02218dd4d7a1f24c7ace26dd907cd820f66e1b714e"
+    rebuild 7
+    sha256 cellar: :any,                 arm64_sonoma: "20f58ae32076f199c31a29fb2e65676e7f3e165304ed1e713d96560364cca6cf"
+    sha256 cellar: :any,                 ventura:      "f32b7f5919bea990bd17300140b25f0f65040a95a7c1416b436dd2cad61815f8"
+    sha256 cellar: :any,                 monterey:     "c849ac24686f6a9f8253e9e1dde42920cb4a143442124cc41a25466d4db4923f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "1e7723239f623cd4df03702c361af699441357a211bf5b75c44f175da40eee00"
   end
 
   depends_on "cmake" => :build
