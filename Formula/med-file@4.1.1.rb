@@ -14,6 +14,8 @@ class MedFileAT411 < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux: "1e7723239f623cd4df03702c361af699441357a211bf5b75c44f175da40eee00"
   end
 
+  keg_only :versioned_formula
+
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.1.1" => :build
   depends_on "python@3.11" => :build
@@ -99,23 +101,33 @@ class MedFileAT411 < Formula
 
   def post_install
     # explicitly set python version
-    python_version = "3.11"
+    py_ver = "3.11"
 
-    # move installed Python module to the correct directory
-    site_packages_dir = lib/"python3.11/site-packages"
-
-    mkdir_p site_packages_dir
-
-    mv Dir["#{lib}/#{python_version}/site-packages/med"], site_packages_dir
+    python_dir = Dir["#{lib}/python."].first
+    if python_dir && File.directory?(python_dir)
+      mv(python_dir, "#{lib}/python#{py_ver}")
+    else
+      odie "Directory #{lib}/python. does not exist."
+    end
 
     # Unlink the existing .pth file to avoid reinstall issues
-    pth_file = lib/"python#{python_version}/medfile.pth"
+    pth_file = lib/"python#{py_ver}/medfile.pth"
     pth_file.unlink if pth_file.exist?
 
-    ohai "Creating .pth file for medfile module"
+    ohai "Creating .pth file for medfile python module"
     # write the .pth file to the parent dir of site-packages
-    (lib/"python#{python_version}/medfile.pth").write <<~EOS
-      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
+    (lib/"python#{py_ver}/medfile.pth").write <<~EOS
+      import site; site.addsitedir('#{lib}/python#{py_ver}/site-packages/')
+    EOS
+  end
+
+  def caveats
+    <<-EOS
+      the current medfile install will create a non standard python module path
+      thus the post install step is used fix the directory structure for the python module
+
+      the same issue can be seen in the gentoo package file
+      https://gitweb.gentoo.org/repo/gentoo.git/tree/sci-libs/med/med-4.1.1-r3.ebuild#n49
     EOS
   end
 
