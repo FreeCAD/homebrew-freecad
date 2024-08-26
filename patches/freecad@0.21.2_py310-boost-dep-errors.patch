@@ -1,0 +1,113 @@
+From c9a586f34a3f7892ce934e4114417e0916de295d Mon Sep 17 00:00:00 2001
+From: wmayer <wmayer@freecad.org>
+Date: Thu, 22 Aug 2024 17:00:03 +0200
+Subject: [PATCH] Building: Boost dependency errors
+
+Fixes #15999
+---
+ src/Mod/Part/App/Geometry.cpp           | 1 +
+ src/Mod/Part/App/PreCompiled.h          | 1 +
+ src/Mod/Sketcher/App/Constraint.cpp     | 1 +
+ src/Mod/TechDraw/App/CenterLine.cpp     | 1 +
+ src/Mod/TechDraw/App/Cosmetic.cpp       | 1 +
+ src/Mod/TechDraw/App/CosmeticVertex.cpp | 1 +
+ src/Mod/TechDraw/App/Geometry.cpp       | 1 +
+ src/Mod/TechDraw/App/PreCompiled.h      | 1 +
+ 9 files changed, 9 insertions(+)
+
+diff --git a/src/Mod/Part/App/Geometry.cpp b/src/Mod/Part/App/Geometry.cpp
+index 046d2624d6d3..307fddb0aab1 100644
+--- a/src/Mod/Part/App/Geometry.cpp
++++ b/src/Mod/Part/App/Geometry.cpp
+@@ -102,6 +102,7 @@
+ # include <GeomAdaptor_HCurve.hxx>
+ # endif
+ 
++# include <boost/random.hpp>
+ # include <cmath>
+ # include <ctime>
+ #endif //_PreComp_
+diff --git a/src/Mod/Part/App/PreCompiled.h b/src/Mod/Part/App/PreCompiled.h
+index 804a3216a137..ca53f56d2028 100644
+--- a/src/Mod/Part/App/PreCompiled.h
++++ b/src/Mod/Part/App/PreCompiled.h
+@@ -65,6 +65,7 @@
+ #include <boost/algorithm/string/predicate.hpp>
+ #include <boost/core/ignore_unused.hpp>
+ #include <boost/math/special_functions/fpclassify.hpp>
++#include <boost/random.hpp>
+ #include <boost/uuid/uuid_generators.hpp>
+ #include <boost/uuid/uuid_io.hpp>
+ 
+diff --git a/src/Mod/Sketcher/App/Constraint.cpp b/src/Mod/Sketcher/App/Constraint.cpp
+index 1ee3e53753a9..b802e36d5864 100644
+--- a/src/Mod/Sketcher/App/Constraint.cpp
++++ b/src/Mod/Sketcher/App/Constraint.cpp
+@@ -23,6 +23,7 @@
+ #include "PreCompiled.h"
+ #ifndef _PreComp_
+ #include <QDateTime>
++#include <boost/random.hpp>
+ #include <cmath>
+ #endif
+ 
+diff --git a/src/Mod/TechDraw/App/CenterLine.cpp b/src/Mod/TechDraw/App/CenterLine.cpp
+index eac348ce0b2a..21a39e2b9b94 100644
+--- a/src/Mod/TechDraw/App/CenterLine.cpp
++++ b/src/Mod/TechDraw/App/CenterLine.cpp
+@@ -23,6 +23,7 @@
+ 
+ #include "PreCompiled.h"
+ #ifndef _PreComp_
++    #include <boost/random.hpp>
+     #include <boost/uuid/uuid_io.hpp>
+     #include <boost/uuid/uuid_generators.hpp>
+     #include <BRepBuilderAPI_MakeEdge.hxx>
+diff --git a/src/Mod/TechDraw/App/Cosmetic.cpp b/src/Mod/TechDraw/App/Cosmetic.cpp
+index c2e9fe24a446..6dc50ec5c9af 100644
+--- a/src/Mod/TechDraw/App/Cosmetic.cpp
++++ b/src/Mod/TechDraw/App/Cosmetic.cpp
+@@ -24,6 +24,7 @@
+ #include "PreCompiled.h"
+ #ifndef _PreComp_
+ # include <BRepBuilderAPI_MakeEdge.hxx>
++# include <boost/random.hpp>
+ # include <boost/uuid/uuid_generators.hpp>
+ # include <boost/uuid/uuid_io.hpp>
+ #endif
+diff --git a/src/Mod/TechDraw/App/CosmeticVertex.cpp b/src/Mod/TechDraw/App/CosmeticVertex.cpp
+index 24401e78d259..e2ffe27b474c 100644
+--- a/src/Mod/TechDraw/App/CosmeticVertex.cpp
++++ b/src/Mod/TechDraw/App/CosmeticVertex.cpp
+@@ -25,6 +25,7 @@
+ 
+ #include "PreCompiled.h"
+ #ifndef _PreComp_
++    #include <boost/random.hpp>
+     #include <boost/uuid/uuid_generators.hpp>
+     #include <boost/uuid/uuid_io.hpp>
+ #endif // _PreComp_
+diff --git a/src/Mod/TechDraw/App/Geometry.cpp b/src/Mod/TechDraw/App/Geometry.cpp
+index 504bea6d07c0..43510f4da365 100644
+--- a/src/Mod/TechDraw/App/Geometry.cpp
++++ b/src/Mod/TechDraw/App/Geometry.cpp
+@@ -24,6 +24,7 @@
+ 
+ #ifndef _PreComp_
+ # include <cmath>
++# include <boost/random.hpp>
+ # include <boost/uuid/uuid_generators.hpp>
+ # include <boost/uuid/uuid_io.hpp>
+ 
+diff --git a/src/Mod/TechDraw/App/PreCompiled.h b/src/Mod/TechDraw/App/PreCompiled.h
+index 53c0711b75e9..7f3a2f8e3532 100644
+--- a/src/Mod/TechDraw/App/PreCompiled.h
++++ b/src/Mod/TechDraw/App/PreCompiled.h
+@@ -47,6 +47,7 @@
+ // boost
+ #include <boost/graph/boyer_myrvold_planar_test.hpp>
+ #include <boost/graph/is_kuratowski_subgraph.hpp>
++#include <boost/random.hpp>
+ #include <boost_regex.hpp>
+ #include <boost/uuid/uuid.hpp>
+ #include <boost/uuid/uuid_generators.hpp>
