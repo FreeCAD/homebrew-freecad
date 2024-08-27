@@ -42,10 +42,10 @@ class FreecadAT0212Py310 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 3
-    sha256 cellar: :any, arm64_sonoma: "86df8b564f86d3a360e00ac6b34991524b1fdb25c3cd26ddec05022ab4a7ba4a"
-    sha256 cellar: :any, ventura:      "bd99da083f46da4e5f89e4de0fad90461af970079ad48dbe89d033655dd391fa"
-    sha256 cellar: :any, monterey:     "5099d7d0f51499a4dc8c1511affd801e3542dff1b7fc94b06d6e3e8a18b45e47"
+    rebuild 4
+    sha256 cellar: :any, arm64_sonoma: "a1ca74446f517695f4cda9fe75f3fe41ff532790de10a298796705b6ae7d3a7a"
+    sha256 cellar: :any, ventura:      "fb83a29b1c875ba2d369ed59078073d15fa061f2e162d0d2d202c0a1d8b4fd79"
+    sha256 cellar: :any, monterey:     "754be89e36f4031ff3d79cf99fe7cbeb87e2c5454a5f28f3f8b8b9fee12c0650"
   end
 
   # NOTE: ipatch, pull in git submodules
