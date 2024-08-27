@@ -33,6 +33,11 @@ class FreecadAT0212Py310 < Formula
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/13cff0680069fd9c564b17e7ea8d4f012d887c8a/patches/freecad%400.21.2_py310-backport-occ-v7.8.patch"
       sha256 "27d8dfb780a55696ba3b989481bf6d0fc736af9c95de03c80c638e9404f62dbf"
     end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/b510bf8a0feba8b3d75e121a2fe32fa697a6fef5/patches/freecad%400.21.2_py310-boost-dep-errors.patch"
+      sha256 "535316c559a1fb1bd6fab0287c12fcc6ccd6c5b065bbe339207c2bb98fa600b6"
+    end
   end
 
   bottle do
