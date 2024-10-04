@@ -107,8 +107,11 @@ class MedFileAT411 < Formula
     if python_dir && File.directory?(python_dir)
       mv(python_dir, "#{lib}/python#{py_ver}")
     else
-      odie "Directory #{lib}/python. does not exist."
+      opoo "Directory #{lib}/python. does not exist."
     end
+
+    correct_py_dir = Dir["#{lib}/python#{py_ver}"].first
+    ohai "Directory #{lib}/python#{py_ver} does exist." if correct_py_dir && File.directory?(correct_py_dir)
 
     # Unlink the existing .pth file to avoid reinstall issues
     pth_file = lib/"python#{py_ver}/medfile.pth"
@@ -124,10 +127,13 @@ class MedFileAT411 < Formula
   def caveats
     <<-EOS
       the current medfile install will create a non standard python module path
-      thus the post install step is used fix the directory structure for the python module
+      thus the post install step is used to fix the directory structure for the python module
 
       the same issue can be seen in the gentoo package file
       https://gitweb.gentoo.org/repo/gentoo.git/tree/sci-libs/med/med-4.1.1-r3.ebuild#n49
+
+      to use the python module provided by this formula the fc_bundle formula should be installed
+      or the formula will require manual linking using the `brew link` command.
     EOS
   end
 
