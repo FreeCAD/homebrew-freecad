@@ -10,6 +10,14 @@ class SwigAT421 < Formula
     url :stable
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 arm64_sonoma: "87cc41900d33f48647ef36e8d496c0a640b9883125f7cd5d5c5bf9b70f2eebee"
+    sha256 ventura:      "217ffbf87ee89dbc2d3337c34b7504126e7731bef3932656ad90ed40c6adacf8"
+    sha256 monterey:     "abec8ef98173dfd0f48044bc60f28b6c8b7f8a032cf022b16b67e812c429771d"
+    sha256 x86_64_linux: "dbaafa7f00a3cba4cc410d6c4011a8564db14248cebcf8800820d49079579ec6"
+  end
+
   head do
     url "https://github.com/swig/swig.git", branch: "master"
 
