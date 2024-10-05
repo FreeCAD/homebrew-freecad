@@ -5,6 +5,13 @@ class MedFileAT411Py312 < Formula
   sha256 "ee8b3b6d46bfee25c1d289308b16c7f248d1339161fd5448339382125e6119ad"
   license "GPL-3.0-only"
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any,                 arm64_sonoma: "29fa8ebe4ac0e6ef1f68b98021c01b1875577fddb5223c7c9abfa42227b3c61c"
+    sha256 cellar: :any,                 ventura:      "41e5132dce5505a4114f91a8a707c481eb3898d15b28d4310d5e67474521f908"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "11e00b1bd5270066afb5a8d570dbffb2affa9ca48e5d0cbc6f6eeab678c10727"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
