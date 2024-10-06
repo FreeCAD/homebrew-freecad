@@ -10,6 +10,13 @@ class NumpyAT211Py312 < Formula
     url :stable
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma: "98b8e54c5feafe7ec2b2315db4adf8071ac73854e75a763e6072f985b54c22f8"
+    sha256 cellar: :any_skip_relocation, ventura:      "482729f567e490ffa35f5e3626e769a4e7861375e49f8919707bb84c95d5ef55"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "208cc1b96c4ab44e612791ab5e776eb9ba6ee2e71f4de1229f3865d333bb4acf"
+  end
+
   keg_only :versioned_formula
 
   depends_on "gcc" => :build # for gfortran
