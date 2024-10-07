@@ -6,6 +6,13 @@ class Shiboken2AT51515Py312 < Formula
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
   head "https://github.com/qt/qt5.git", branch: "dev", shallow: false
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any,                 arm64_sonoma: "7cc98377f2b91b144541c7c8e72f881ed1cf019d146a527e121b2bb9a2b05045"
+    sha256 cellar: :any,                 ventura:      "5eb0a8a6a763440473c1f05a8723d9d2a5a6e1e383a00c2c637e7b2e3cf1e1c3"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "e7a2e57d8f193d7cea0c630335731ea1b56ee1d955e1f7157c7bd63e55cfb63c"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
