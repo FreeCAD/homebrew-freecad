@@ -171,7 +171,10 @@ jobs:
       - name: debug with lhotari/action-upterm
         id: debug-workflow-run
         # uses: actions/checkout@v2
-        uses: lhotari/action-upterm@v1
+        # NOTE: ipatch, seems to be issue with macos runners circa oct 2024
+        # uses: lhotari/action-upterm@v1
+        #-------
+        uses: owenthereal/action-upterm@v1
         if: ${{ failure() }}
         with:
           # limit ssh access to user who triggered the workflow
