@@ -28,6 +28,13 @@ class Coin3dAT403Py312 < Formula
     strategy :github_latest
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any,                 arm64_sonoma: "bee1c474ef60f585aaf29202b677c12eb2e1bcc28c4e6455e8d5d94e131d7511"
+    sha256 cellar: :any,                 ventura:      "8ac7df6690a40390d8c2a1f6df529582daa7fb30928bcb7e1bc54e27040a4549"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "1f4278d3e63e63260d2e15fd42843695aa9dee73762feadeeb74093985c7feb2"
+  end
+
   head do
     url "https://github.com/coin3d/coin.git", branch: "master"
 
