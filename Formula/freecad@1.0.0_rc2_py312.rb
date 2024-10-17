@@ -51,6 +51,12 @@ class FreecadAT100Rc2Py312 < Formula
     # end
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, arm64_sonoma: "bd7644337749751a3e47d0dcf9b00261dc4fa1687b5f8feabd217e2951c39256"
+    sha256 cellar: :any, ventura:      "0912edd29383b3e2b239bba2745aa235a095a816f673f1c3670a903946f6b3ec"
+  end
+
   # NOTE: ipatch, pull in git submodules
   # https://github.com/orgs/Homebrew/discussions/2100#discussioncomment-1288233
   head do
