@@ -5,6 +5,7 @@ class SwigAT421 < Formula
   url "https://downloads.sourceforge.net/project/swig/swig/swig-4.2.1/swig-4.2.1.tar.gz"
   sha256 "fa045354e2d048b2cddc69579e4256245d4676894858fcf0bab2290ecf59b7d8"
   license "GPL-3.0-only"
+  revision 1
 
   livecheck do
     url :stable
