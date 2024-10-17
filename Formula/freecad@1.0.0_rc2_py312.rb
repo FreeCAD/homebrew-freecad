@@ -28,27 +28,6 @@ class FreecadAT100Rc2Py312 < Formula
       url "https://github.com/microsoft/GSL/archive/refs/tags/v4.1.0.tar.gz"
       sha256 "14255cb38a415ba0cc4f696969562be7d0ed36bbaf13c5e4748870babf130c48"
     end
-
-    # patch do
-    #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-vtk-9.3.patch"
-    #   sha256 "67794ebfcd70a160d379eeca7d2ef78d510057960d0eaa4e2e345acb7ae244aa"
-    # end
-    # patch do
-    #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/92c1e993680710248fc29af05fcadfedcce0f8ad/patches/freecad-0.20.2-drivergmfcpp.patch"
-    #   sha256 "f27576bf167d6989536307dc9ac330a582a0bc3eb69b97c6b2563ea84e93f406"
-    # end
-    # patch do
-    #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/ff35908c7512702264758bc570826b0a09b410fc/patches/freecad%400.21.2_py310-boost-185-PreferencePackManager-cpp.patch"
-    #   sha256 "91efb51ab77ecf91244c69b0a858b16ec6238bb647cc0f767cbc6fa1791efbfa"
-    # end
-    # patch do
-    #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/13cff0680069fd9c564b17e7ea8d4f012d887c8a/patches/freecad%400.21.2_py310-backport-occ-v7.8.patch"
-    #   sha256 "27d8dfb780a55696ba3b989481bf6d0fc736af9c95de03c80c638e9404f62dbf"
-    # end
-    # patch do
-    #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/b510bf8a0feba8b3d75e121a2fe32fa697a6fef5/patches/freecad%400.21.2_py310-boost-dep-errors.patch"
-    #   sha256 "535316c559a1fb1bd6fab0287c12fcc6ccd6c5b065bbe339207c2bb98fa600b6"
-    # end
   end
 
   bottle do
@@ -57,21 +36,12 @@ class FreecadAT100Rc2Py312 < Formula
     sha256 cellar: :any, ventura:      "0912edd29383b3e2b239bba2745aa235a095a816f673f1c3670a903946f6b3ec"
   end
 
-  # NOTE: ipatch, pull in git submodules
-  # https://github.com/orgs/Homebrew/discussions/2100#discussioncomment-1288233
   head do
     url "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
-
-    depends_on "opencascade"
 
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-cmake-find-hdf5.patch"
       sha256 "99d115426cb3e8d7e5ab070e1d726e51eda181ac08768866c6e0fd68cda97f20"
-    end
-
-    patch do
-      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/6ed12911b87a1d89727c172131bed35be22c4137/patches/freecad%400.21.2_py310-HEAD-toposhape.h-fix.patch"
-      sha256 "47f78a3838790b8fe7c41801cbecbc3f85cdc81ace48476dc79b319d5097e195"
     end
   end
 
@@ -89,26 +59,22 @@ class FreecadAT100Rc2Py312 < Formula
   depends_on "python@3.12" => :build
   depends_on "tbb" => :build
   depends_on "boost"
-  # NOTE: exp with resource instead of formula
-  # epends_on "cpp-gsl"
   depends_on "cython"
   depends_on "doxygen"
   depends_on "freecad/freecad/coin3d@4.0.3_py312"
   depends_on "freecad/freecad/fc_bundle_py312"
   depends_on "freecad/freecad/med-file@4.1.1_py312"
   depends_on "freecad/freecad/numpy@2.1.1_py312"
-  depends_on "freecad/freecad/opencascade@7.7.2"
   depends_on "freecad/freecad/pybind11_py312"
   depends_on "freecad/freecad/pyside2@5.15.15_py312"
   depends_on "freecad/freecad/shiboken2@5.15.15_py312"
   depends_on "freetype"
   depends_on "glew"
-  # https://github.com/FreeCAD/homebrew-freecad/pull/574#issuecomment-2417673707
-  # epends_on "googletest"
   depends_on "icu4c"
   depends_on macos: :high_sierra # no access to sierra test box
   depends_on "mesa-glu" if OS.linux?
   depends_on "openblas"
+  depends_on "opencascade"
   depends_on "orocos-kdl"
   # epends_on "freecad/freecad/nglib@6.2.2105"
   depends_on "qt@5"
@@ -187,7 +153,7 @@ class FreecadAT100Rc2Py312 < Formula
     cmake_prefix_paths << Formula["libtiff"].prefix
     cmake_prefix_paths << Formula["lz4"].prefix
     cmake_prefix_paths << Formula["med-file@4.1.1_py312"].prefix
-    cmake_prefix_paths << Formula["opencascade@7.7.2"].prefix
+    cmake_prefix_paths << Formula["opencascade"].prefix
     cmake_prefix_paths << Formula["pkg-config"].prefix
     cmake_prefix_paths << Formula["pugixml"].prefix
     cmake_prefix_paths << Formula["pybind11_py312"].prefix
@@ -209,8 +175,6 @@ class FreecadAT100Rc2Py312 < Formula
       cmake_prefix_paths << Formula["libx11"].prefix
       cmake_prefix_paths << Formula["libxcb"].prefix
     end
-
-    cmake_prefix_paths << Formula["opencascade"].prefix if build.head?
 
     cmake_prefix_path_string = cmake_prefix_paths.join(";")
 
@@ -271,7 +235,7 @@ class FreecadAT100Rc2Py312 < Formula
       clang_cxx = Formula["llvm"].opt_bin/"clang++"
       clang_ld = Formula["llvm"].opt_bin/"lld"
       clang_ar = Formula["llvm"].opt_bin/"llvm-ar"
-      openglu_inc_dir = Formula["mesa"].opt_include
+      openglu_inc_dir = Formula["mesa-glu"].opt_include
 
       puts "----------------------------------------------------"
       puts openglu_inc_dir
@@ -308,8 +272,6 @@ class FreecadAT100Rc2Py312 < Formula
 
       -L
     ]
-    # NOWORK!
-    # -DINSTALL_GTEST:BOOL=OFF
 
     # TODO: probably require a seperate formula to post_install the freecad py module
     args << "-DINSTALL_TO_SITEPACKAGES=0"
@@ -343,9 +305,9 @@ class FreecadAT100Rc2Py312 < Formula
     puts "Buildpath is: #{buildpath}"
     puts "----------------------------------------------------"
 
+    # NOTE: resources have to be in the correct buildpath
     resource("googletest").stage(buildpath/"tests/lib")
     resource("msgsl").stage(buildpath/"src/3rdParty/GSL")
-    # NOTE: stage the ondselsolver in the correct directory for cmake
     resource("ondselsolver").stage(buildpath/"src/3rdParty/OndselSolver")
 
     args.concat(args_macos_only) if OS.mac?
