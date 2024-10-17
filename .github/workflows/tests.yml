@@ -32,15 +32,19 @@ jobs:
       matrix:
         # os: [ubuntu-latest, macos-latest] # NOTE: default
         # NOTE: homebrew/homebrew-core uses private self hosted runners
+        # https://github.com/actions/runner-images
         os: 
-          - ubuntu-22.04
           # NOTE: macos-*-large runner requires additional spending limits
           # - macos-14-large
+          - macos-15
           - macos-14
           # - macos-13-large
+          # NOTE: macos-13 is the last free intel runner provided by github
           - macos-13
           # - macos-12-large
-          - macos-12
+          # upstream homebrew-core has deprecated macos-12 and github will retire images on 12/3/24
+          # - macos-12
+          - ubuntu-22.04
           # - self-hosted-catalinavm
           # - self-hosted-bigsurvm
           # - self-hosted-mojavevm
@@ -197,5 +201,4 @@ jobs:
         id: save-run-status
         if: steps.set-last-run-status.outputs.last-run-status != 'success'
         run: echo "last-run-status=${{ steps.build-bottle.outcome }}" >> "$GITHUB-ENV"
-
 
