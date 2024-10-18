@@ -12,9 +12,9 @@ class FcBundlePy312 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma: "ccb1f91c3cb467b92aecb2f117236688359e71299f70f4dea8cafa77b0992625"
-    sha256 cellar: :any_skip_relocation, ventura:      "7ae6445573d3afe1eb77db16202b7ecae2e419e476324e404cf883042be06686"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "a5b2fc3c54d7c701180241bfeda68c61b5d6125417ec657cb444083571e644c0"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma: "83bbc12c253570281c011b441cd348f2197baead0b72f503da5bf47771ff1236"
+    sha256 cellar: :any_skip_relocation, ventura:      "d2cd778ca84bc37e958495274d810f25adaedecdfe4180423e5cd649c561c861"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "65f51a076c147c5dec1bde0ad4bd363e532f26a74224103d4ae094496146901f"
   end
 
   depends_on "freecad/freecad/coin3d@4.0.3_py312"
