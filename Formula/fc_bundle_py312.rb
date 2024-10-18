@@ -8,6 +8,7 @@ class FcBundlePy312 < Formula
 
   # sha of file:///dev/null
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  revision 1
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
