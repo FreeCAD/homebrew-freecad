@@ -14,9 +14,10 @@ class Pybind11Py312 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma: "1fe50b45f829f670e6b83bcb1ca7452b64ff47a624d8f06fcffd40360f84cd2d"
-    sha256 cellar: :any_skip_relocation, ventura:      "b3934577df62f641c8e286a01a727ad4fe3c74c4b776723a0ff67efebaf38813"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "5d156fae04250d96f0f7119f3b785b6bd414dfc4eea71dcf9e9eaa0bf1f25e0d"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "d632a10195e9989bcabff284592ba99485b4eac883f825011ea59cea5e100e09"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "d632a10195e9989bcabff284592ba99485b4eac883f825011ea59cea5e100e09"
+    sha256 cellar: :any_skip_relocation, ventura:       "f473e5ec835af6ab5db0c5a4f7b4b6bbade6a531b467f9e9032f2c52f61c7a1f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "93f0735360cdb433d7811257f2442a7b7a190292343ec7af725fdd9e6abdd420"
   end
 
   keg_only :versioned_formula
