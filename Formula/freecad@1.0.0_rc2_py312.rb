@@ -14,6 +14,7 @@ class FreecadAT100Rc2Py312 < Formula
       sha256 "99d115426cb3e8d7e5ab070e1d726e51eda181ac08768866c6e0fd68cda97f20"
     end
 
+    # NOTE: ipatch, building the rc2 tag of freecad requires the resources due the new use of git submodules
     resource "ondselsolver" do
       url "https://github.com/Ondsel-Development/OndselSolver/archive/889196e3267597127b5889572b0c86f9316e16f0.tar.gz"
       sha256 "83124c67971e7322b553599cf5883bb28cceffe0efde7e8524c090adc3d94b6e"
@@ -26,7 +27,7 @@ class FreecadAT100Rc2Py312 < Formula
 
     resource "msgsl" do
       url "https://github.com/microsoft/GSL/archive/refs/tags/v4.1.0.tar.gz"
-      sha256 "14255cb38a415ba0cc4f696969562be7d0ed36bbaf13c5e4748870babf130c48"
+      sha256 "0a227fc9c8e0bf25115f401b9a46c2a68cd28f299d24ab195284eb3f1d7794bd"
     end
   end
 
@@ -62,13 +63,14 @@ class FreecadAT100Rc2Py312 < Formula
   depends_on "boost"
   depends_on "cython"
   depends_on "doxygen"
+  depends_on "expat"
+  depends_on "fmt"
   depends_on "freecad/freecad/coin3d@4.0.3_py312"
   depends_on "freecad/freecad/fc_bundle_py312"
   depends_on "freecad/freecad/med-file@4.1.1_py312"
   depends_on "freecad/freecad/numpy@2.1.1_py312"
   depends_on "freecad/freecad/pybind11_py312"
   depends_on "freecad/freecad/pyside2@5.15.15_py312"
-  depends_on "freecad/freecad/shiboken2@5.15.15_py312"
   depends_on "freetype"
   depends_on "glew"
   depends_on "icu4c"
@@ -138,13 +140,13 @@ class FreecadAT100Rc2Py312 < Formula
     cmake_prefix_paths = []
     # cmake_prefix_paths << Formula["llvm"].prefix
     # cmake_prefix_paths << Formula["open-mpi"].prefix
-    # cmake_prefix_paths << Formula["cpp-gsl"].prefix
     cmake_prefix_paths << Formula["boost"].prefix
     cmake_prefix_paths << Formula["coin3d@4.0.3_py312"].prefix
     cmake_prefix_paths << Formula["double-conversion"].prefix
     cmake_prefix_paths << Formula["doxygen"].prefix
     cmake_prefix_paths << Formula["eigen"].prefix
     cmake_prefix_paths << Formula["expat"].prefix
+    cmake_prefix_paths << Formula["fmt"].prefix
     cmake_prefix_paths << Formula["freetype"].prefix
     cmake_prefix_paths << Formula["glew"].prefix
     cmake_prefix_paths << Formula["hdf5"].prefix
@@ -160,7 +162,6 @@ class FreecadAT100Rc2Py312 < Formula
     cmake_prefix_paths << Formula["pybind11_py312"].prefix
     cmake_prefix_paths << Formula["pyside2@5.15.15_py312"].prefix
     cmake_prefix_paths << Formula["qt@5"].prefix
-    cmake_prefix_paths << Formula["shiboken2@5.15.15_py312"].prefix
     cmake_prefix_paths << Formula["swig@4.2.1"].prefix
     cmake_prefix_paths << Formula["tbb"].prefix
     cmake_prefix_paths << Formula["utf8cpp"].prefix
@@ -204,7 +205,6 @@ class FreecadAT100Rc2Py312 < Formula
     # -DFREECAD_USE_EXTERNAL_KDL=1
     # -DBUILD_FEM_NETGEN=0
     # -DFREECAD_USE_QTWEBMODULE=#{qtwebmodule}
-    # HDF5_LIBRARIES HDF5_HL_LIBRARIES
     # -DCMAKE_EXE_LINKER_FLAGS="-v"
 
     if OS.mac?
@@ -254,13 +254,12 @@ class FreecadAT100Rc2Py312 < Formula
       ]
     end
 
-    # TODO: exp with use of py var for python3_EXE instead of hardcoding path
     args = %W[
       -DHOMEBREW_PREFIX=#{hbp}
       -DCMAKE_PREFIX_PATH=#{cmake_prefix_path_string}
       -DCMAKE_INSTALL_PREFIX=#{prefix}
       -DCMAKE_VERBOSE_MAKEFILE=1
-      -DPython3_EXECUTABLE=#{hbp}/opt/python@3.12/bin/python3.12
+      -DPython3_EXECUTABLE=#{ENV["PYTHON"]}
       -DPython3_INCLUDE_DIRS=#{py_inc_dir}
       -DPython3_LIBRARIES=#{py_lib_path}
       -DFREECAD_USE_PYBIND11=1
@@ -275,7 +274,7 @@ class FreecadAT100Rc2Py312 < Formula
     ]
 
     # TODO: probably require a seperate formula to post_install the freecad py module
-    args << "-DINSTALL_TO_SITEPACKAGES=0"
+    args << "-DINSTALL_TO_SITEPACKAGES=OFF"
 
     # NOTE: useful cmake debugging args
     # --trace
@@ -340,18 +339,6 @@ class FreecadAT100Rc2Py312 < Formula
        copied executables and libraries into a FreeCAD.app
        bundle. Until a fix or work around is made freecad
        is built for CLI by default now.
-
-    2. if freecad launches with runtime errors a common fix
-       i use is to force link pyside2@5.15.X and
-       shiboken2@5.15.X so workbenches such Draft and Arch
-       have the necessary runtime deps, see brew documenation
-       about force linking the above packages
-
-    4. upstream homebrew/core has begun to introduce python 3.11
-       with that said, testing the formula manually on my local
-       catalina box i ran into issues with regard to boost.
-       the quick fix, unlink python 3.11 and cmake is able to
-       finish its checks and the build process can begin
     EOS
   end
 
