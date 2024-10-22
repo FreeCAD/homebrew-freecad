@@ -13,9 +13,10 @@ class NumpyAT211Py312 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma: "98b8e54c5feafe7ec2b2315db4adf8071ac73854e75a763e6072f985b54c22f8"
-    sha256 cellar: :any_skip_relocation, ventura:      "482729f567e490ffa35f5e3626e769a4e7861375e49f8919707bb84c95d5ef55"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "208cc1b96c4ab44e612791ab5e776eb9ba6ee2e71f4de1229f3865d333bb4acf"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "d004be4d9a36c7daa4c764952b30f2d52ca1c1eca877dea351e8088d89e367b8"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "e87ad0b33782f9a3a01b815a230d20a7303d651edada8b820263dc2369b712ed"
+    sha256 cellar: :any_skip_relocation, ventura:       "4549aaf1fdca90a686b4025395452947d32a3bc3640d3eefb52d1afaffb30b43"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "901a0e6d72ae3ce2d035ea7136ec741e8c80c3e5288b06ff6bf694cc40d7cd0b"
   end
 
   keg_only :versioned_formula
