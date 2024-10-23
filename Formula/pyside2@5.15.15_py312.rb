@@ -1,8 +1,8 @@
 class Pyside2AT51515Py312 < Formula
   desc "Python bindings for Qt5 and greater"
   homepage "https://code.qt.io/cgit/pyside/pyside-setup.git/tree/README.pyside2.md?h=5.15.2"
-  url "https://download.qt.io/official_releases/QtForPython/shiboken2/PySide2-5.15.15-src/pyside-setup-opensource-src-5.15.15.zip"
-  sha256 "2be116ac3e5a2fac0fdc9d076284c125325e0f3b5d714e1cd60e4a27d25ca6ca"
+  url "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.15-src/pyside-setup-opensource-src-5.15.15.tar.xz"
+  sha256 "21d6818b064834b08501180e48890e5fd87df2fb3769f80c58143457f548c408"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
 
   livecheck do
@@ -19,11 +19,14 @@ class Pyside2AT51515Py312 < Formula
 
   keg_only :versioned_formula
 
+  # Requires various patches and cannot be built with `FORCE_LIMITED_API` with Python 3.12.
+  # `qt@5` is also officially EOL on 2025-05-25.
+  disable! date: "2025-05-26", because: :versioned_formula
+
   depends_on "cmake" => :build
-  depends_on "python-setuptools" => :build
-  depends_on "freecad/freecad/shiboken2@5.15.15_py312"
-  depends_on "llvm@15" # Upstream issue ref: https://bugreports.qt.io/browse/PYSIDE-2268
-  # epends_on "llvm"
+  depends_on "freecad/freecad/numpy@2.1.1_py312"
+  depends_on "llvm"
+  depends_on "python-setuptools"
   depends_on "python@3.12"
   depends_on "qt@5"
   depends_on "sphinx-doc"
@@ -42,11 +45,10 @@ class Pyside2AT51515Py312 < Formula
   # https://github.com/OpenMandrivaAssociation/qt5-qtbase/blob/master/qtbase-5.15.9-work-around-pyside2-brokenness.patch
 
   # Don't copy qt@5 tools.
-  # NO WORK! with v5.15.15
-  # patch do
-  #   url "https://src.fedoraproject.org/rpms/python-pyside2/raw/009100c67a63972e4c5252576af1894fec2e8855/f/pyside2-tools-obsolete.patch"
-  #   sha256 "ede69549176b7b083f2825f328ca68bd99ebf8f42d245908abd320093bac60c9"
-  # end
+  patch do
+    url "https://src.fedoraproject.org/rpms/python-pyside2/raw/009100c67a63972e4c5252576af1894fec2e8855/f/pyside2-tools-obsolete.patch"
+    sha256 "ede69549176b7b083f2825f328ca68bd99ebf8f42d245908abd320093bac60c9"
+  end
 
   # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
   # NOTE: ipatch, when working with patch file using the above example, `brew cleanup` needs to be ran each time
@@ -54,9 +56,30 @@ class Pyside2AT51515Py312 < Formula
   #------
   # the tarbal / .zip file of the pyside source defaults to CRLF line endings thus the mixed line endings in the
   # patch file
+  # to avoid the mixed line endings use the .xz archive
   patch do
-    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/e7d0112dbbb29b4a652236693ea1ace5bb8c052b/patches/pyside2%405.15.15_py312-python-v3.12-support.patch"
-    sha256 "d6f44ed0385f21d835805fd1a9a8dfbe9b7bdfead8acc36dd8e0a2923c9c3a54"
+    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/fb307f43ef9e556f9b86348d865356b1fe072ef2/patches/pyside2%405.15.15_py312-python-v3.12-support-unix.patch"
+    sha256 "0fd9b2b1a53f65f8162cc14d866db165e80b30fe87b83b7401a0573e7d40fb91"
+  end
+
+  # fix for numpy >= v2.x see: https://github.com/FreeCAD/homebrew-freecad/pull/590#issuecomment-2433266412
+  patch do
+    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/fb307f43ef9e556f9b86348d865356b1fe072ef2/patches/pyside2%405.15.15_py312-fix-for-numpy-v2.patch"
+    sha256 "20d67f948eb95b11295faa82f3f758a0494c4c4611bc40c154e4ca6805afe6ec"
+  end
+
+  # Apply Debian patches to support Clang >= v15 https://bugreports.qt.io/browse/PYSIDE-2268
+  patch do
+    url "http://deb.debian.org/debian/pool/main/p/pyside2/pyside2_5.15.14-1.debian.tar.xz"
+    sha256 "a0dae3cc101b50f4ce1cda8076d817261feaa66945f9003560a3af2c0a9a7cd8"
+    apply "patches/shiboken2-clang-Fix-clashes-between-type-name-and-enumera.patch",
+          "patches/shiboken2-clang-Fix-and-simplify-resolveType-helper.patch",
+          "patches/shiboken2-clang-Remove-typedef-expansion.patch",
+          "patches/shiboken2-clang-Fix-build-with-clang-16.patch",
+          "patches/shiboken2-clang-Record-scope-resolution-of-arguments-func.patch",
+          "patches/shiboken2-clang-Suppress-class-scope-look-up-for-paramete.patch",
+          "patches/shiboken2-clang-Write-scope-resolution-for-all-parameters.patch",
+          "patches/Modify-sendCommand-signatures.patch"
   end
 
   def python3
@@ -65,13 +88,6 @@ class Pyside2AT51515Py312 < Formula
 
   # NOTE: ipatch tarballs >= qt@5.15.3 require a c++17 compiler
   def install
-    # TODO: need to patch 2x header files in the qt@5 install to compile with llvm >= v16
-    # ie. qevent.h & qgraphicssceneevent.h
-    # NOTE: operation permitted
-    # system "touch", "#{HOMEBREW_PREFIX}/Cellar/qt@5/5.15.13_1/lib/QtGui.framework/Versions/Current/Headers/qevent.h"
-    # NOTE: operation permitted
-    # system "touch", "#{HOMEBREW_PREFIX}/Cellar/qt@5/5.15.13_1/lib/QtGui.framework/Versions/Current/Headers/foobar"
-
     rpaths = if OS.mac?
       pyside2_module = prefix/Language::Python.site_packages(python3)/"PySide2"
       [rpath, rpath(source: pyside2_module)]
@@ -88,8 +104,9 @@ class Pyside2AT51515Py312 < Formula
     end
 
     # ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm"].opt_lib
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm@15"].opt_lib
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
+    ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm"].opt_prefix
+    ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_prefix
+    ENV.append_path "CMAKE_PREFIX_PATH", Formula["freecad/freecad/numpy@2.1.1_py312"].opt_prefix
 
     cmake_args = std_cmake_args
 
@@ -108,13 +125,18 @@ class Pyside2AT51515Py312 < Formula
     # Avoid shim reference.
     inreplace "sources/shiboken2/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
+    ENV.prepend_path "PYTHONPATH", Formula["numpy@2.1.1_py312"].opt_prefix/Language::Python.site_packages(py_exe)
+
+    puts "-------------------------------------------------"
+    puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
+    puts "CFLAGS=#{ENV["CFLAGS"]}"
+    puts "-------------------------------------------------"
+
     system "cmake", "-S", ".", "-B", "build",
       "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
       "-DFORCE_LIMITED_API=NO",
-      "-DLLVM_CONFIG=#{Formula["llvm@15"].opt_bin}/llvm-config",
-      # "-DLLVM_CONFIG=#{Formula["llvm"].opt_bin}/llvm-config",
-      "-DCMAKE_LIBRARY_PATH=#{Formula["llvm@15"].opt_lib}",
-      # "-DCMAKE_LIBRARY_PATH=#{Formula["llvm"].opt_lib}",
+      "-DLLVM_CONFIG=#{Formula["llvm"].opt_bin}/llvm-config",
+      "-DCMAKE_LIBRARY_PATH=#{Formula["llvm"].opt_lib}",
       "-L",
       *cmake_args
 
@@ -139,8 +161,16 @@ class Pyside2AT51515Py312 < Formula
 
   def caveats
     <<-EOS
-      this formula may require manual linking after install
       this a versioned formula designed to work with the homebrew-freecad tap
+
+      the source code for pyside2 can be accessed at the  below link
+      https://code.qt.io/cgit/pyside/pyside-setup.git/
+
+      an example of how this software is built on archlinux
+      https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=pyside2
+
+      an example of how this software is built on gentoo
+      https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-python/pyside2/pyside2-5.15.14.ebuild
     EOS
   end
 
