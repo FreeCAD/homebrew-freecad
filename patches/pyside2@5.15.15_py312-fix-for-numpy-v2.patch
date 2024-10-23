@@ -1,0 +1,19 @@
+commit 1a58a2d5424b5d14f1cc06d4e97f7ff6c6492bbf
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Wed Oct 23 19:46:24 2024 +0000
+
+    fix for numpy v2
+
+diff --git a/sources/shiboken2/libshiboken/CMakeLists.txt b/sources/shiboken2/libshiboken/CMakeLists.txt
+index 96effd2..4353706 100644
+--- a/sources/shiboken2/libshiboken/CMakeLists.txt
++++ b/sources/shiboken2/libshiboken/CMakeLists.txt
+@@ -111,7 +111,7 @@ target_include_directories(libshiboken PUBLIC
+ )
+ 
+ if (NOT "${PYTHON_NUMPY_LOCATION}" STREQUAL "")
+-    target_include_directories(libshiboken PRIVATE ${PYTHON_NUMPY_LOCATION}/core/include)
++    target_include_directories(libshiboken PRIVATE ${PYTHON_NUMPY_LOCATION}/_core/include)
+     target_compile_definitions(libshiboken PRIVATE -DHAVE_NUMPY
+                                            PRIVATE -DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION)
+ 
