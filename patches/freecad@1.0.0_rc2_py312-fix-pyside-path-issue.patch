@@ -1,0 +1,19 @@
+commit a9681c579d190630aaf979fb4769192b33885f07
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Thu Oct 24 15:25:41 2024 +0000
+
+    freecad@1.0.0_rc2_py312: fix runtime issue with PySide
+
+diff --git a/cMake/FreeCAD_Helpers/SetupShibokenAndPyside.cmake b/cMake/FreeCAD_Helpers/SetupShibokenAndPyside.cmake
+index 5626251..550f5e6 100644
+--- a/cMake/FreeCAD_Helpers/SetupShibokenAndPyside.cmake
++++ b/cMake/FreeCAD_Helpers/SetupShibokenAndPyside.cmake
+@@ -109,7 +109,7 @@ macro(SetupShibokenAndPyside)
+         DIRECTORY
+             ${CMAKE_BINARY_DIR}/Ext/PySide
+         DESTINATION
+-            MacOS
++            Ext
+         )
+     else()
+         install(
