@@ -52,8 +52,7 @@ class FreecadAT100Rc2Py312 < Formula
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.2.1" => :build
   depends_on "gcc" => :build
-  # epends_on "hdf5-mpi" => :build # requires fortran compiler
-  depends_on "hdf5" => :build # requires fortran compiler
+  depends_on "hdf5" => :build
   depends_on "llvm" => :build if OS.linux?
   depends_on "mesa" => :build if OS.linux?
   depends_on "ninja" => :build if OS.linux?
@@ -74,18 +73,22 @@ class FreecadAT100Rc2Py312 < Formula
   depends_on "freetype"
   depends_on "glew"
   depends_on "icu4c"
-  depends_on macos: :high_sierra # no access to sierra test box
+  depends_on macos: :high_sierra
   depends_on "mesa-glu" if OS.linux?
   depends_on "openblas"
   depends_on "opencascade"
   depends_on "orocos-kdl"
-  # epends_on "freecad/freecad/nglib@6.2.2105"
   depends_on "qt@5"
   depends_on "vtk"
   depends_on "webp"
   depends_on "xerces-c"
   depends_on "yaml-cpp"
   depends_on "zlib"
+
+  patch do
+    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/a979a1011bb1d911c2c26db9b663b04862b8b950/patches/freecad%401.0.0_rc2_py312-fix-pyside-path-issue.patch"
+    sha256 "c312676f490a9850691cc47ced760849bd440d20f0fdbefcac42b613f5873a2f"
+  end
 
   # NOTE: https://docs.brew.sh/Formula-Cookbook#handling-different-system-configurations
   # patch for mojave with 10.15 SDK
