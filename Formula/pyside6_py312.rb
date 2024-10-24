@@ -3,8 +3,8 @@ class Pyside6Py312 < Formula
 
   desc "Official Python bindings for Qt"
   homepage "https://wiki.qt.io/Qt_for_Python"
-  url "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.7.0-src/pyside-setup-everywhere-src-6.7.0.tar.xz"
-  sha256 "82eae370737df5ecf539c165d09d7c81d5fc6153a541b8d3d37b11275f9e3e8f"
+  url "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.7.3-src/pyside-setup-everywhere-src-6.7.3.tar.xz"
+  sha256 "a4c414be013d5051a2d10a9a1151e686488a3172c08a57461ea04b0a0ab74e09"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-3.0-only"]
 
   livecheck do
@@ -23,12 +23,13 @@ class Pyside6Py312 < Formula
   depends_on "cmake" => :build
   depends_on "ninja" => :build
   depends_on "python-setuptools" => :build
-  # NOTE: ipatch, am able to build without full xcode install
-  # epends_on xcode: :build
+  depends_on xcode: :build
   depends_on "gettext" => :test # req for linking against -lintl
+  depends_on "freecad/freecad/numpy@2.1.1_py312"
   depends_on "llvm"
   depends_on "python@3.12"
   depends_on "qt"
+  depends_on "sphinx-doc"
 
   uses_from_macos "libxml2"
   uses_from_macos "libxslt"
@@ -74,17 +75,48 @@ class Pyside6Py312 < Formula
     # Avoid shim reference
     inreplace "sources/shiboken6/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
+    cmake_args = std_cmake_args
+
+    ENV.prepend_path "CMAKE_PREFIX_PATH", Formula["python@3.12"].opt_prefix
+
+    # setup numpy include dir
+    numpy_inc_dir = Formula["numpy@2.1.1_py312"].opt_prefix/"lib/python3.12/site-packages/numpy/_core/include"
+
+    puts "-------------------------------------------------"
+    puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
+    puts "PATH=#{ENV["PATH"]}"
+    puts "PATH Datatype: #{ENV["PATH"].class}"
+    puts "CMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}"
+    puts "-------------------------------------------------"
+
     system "cmake", "-S", ".", "-B", "build",
                      "-DCMAKE_INSTALL_RPATH=#{lib}",
-                     "-DCMAKE_PREFIX_PATH=#{Formula["qt"].opt_lib}",
-                     "-DPYTHON_EXECUTABLE=#{which(python3)}",
+                     "-DCMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}",
                      "-DBUILD_TESTS=OFF",
+                     "-DBUILD_DOCS=ON",
                      "-DNO_QT_TOOLS=yes",
                      "-DFORCE_LIMITED_API=no",
-                     *std_cmake_args
-
+                     "-DNUMPY_INCLUDE_DIR=#{numpy_inc_dir}",
+                     "-G Ninja",
+                     "-L",
+                     *cmake_args
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
+  end
+
+  def post_install
+    # explicitly set python version
+    python_version = "3.12"
+
+    # Unlink the existing .pth file to avoid reinstall issues
+    pth_file = lib/"python#{python_version}/pyside6.pth"
+    pth_file.unlink if pth_file.exist?
+
+    ohai "Creating .pth file for pyside6 module"
+    # write the .pth file to the parent dir of site-packages
+    (lib/"python#{python_version}/pyside6.pth").write <<~EOS
+      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
+    EOS
   end
 
   def caveats
@@ -93,8 +125,11 @@ class Pyside6Py312 < Formula
       and differs from the upstream formula by not enabling the
       PY_LIMITED_API
 
-      2. this formula can not be installed at the same time as the upstream
-      homebrew-core version of pyside, ie. pyside@6
+      2. this formula can not be installed while theupstream
+      homebrew-core version of pyside, ie. pyside@6 is linked
+
+      3. if a newer verison pyside is released ie. 6.8 the qt major minor
+      version must match, ie. qt 6.7.x can not build pyside 6.8.x
     EOS
   end
 
