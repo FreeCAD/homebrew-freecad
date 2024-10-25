@@ -28,7 +28,8 @@ jobs:
       #   ...so limit job to one runner at a time.
       # REF: 
       # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#defining-the-maximum-number
-      max-parallel: 1
+      # max-parallel: 1
+      max-parallel: 4
       matrix:
         # os: [ubuntu-latest, macos-latest] # NOTE: default
         # NOTE: homebrew/homebrew-core uses private self hosted runners
