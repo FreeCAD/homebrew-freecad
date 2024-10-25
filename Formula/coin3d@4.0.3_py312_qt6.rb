@@ -29,6 +29,13 @@ class Coin3dAT403Py312Qt6 < Formula
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any,                 arm64_sonoma: "41f829be47ac7cb20d0f59de23994ac7803086168b9fabbc316bde0cdb427aff"
+    sha256 cellar: :any,                 ventura:      "b76c3439315559061d17a5ca18287bd03e89825ddfd272e34931ede50f430588"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "f06d466b18a52217418954e0f0d5a2619a2e1d4961ac4410b33e0769bbf0ccba"
+  end
+
   head do
     url "https://github.com/coin3d/coin.git", branch: "master"
 
