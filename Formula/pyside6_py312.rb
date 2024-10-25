@@ -14,10 +14,9 @@ class Pyside6Py312 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any,                 arm64_sonoma: "0a865c24e4805531798545811f62cd320f447232d58cfa8db39bdd33b874ea5f"
-    sha256 cellar: :any,                 ventura:      "3de1c3e0232346a5b3f1041b46dc962178985f6c75a24165469cd0d89670e95e"
-    sha256 cellar: :any,                 monterey:     "7bede4fc0fc2d2e171ba912a70b5a60fbece63660e95a1e067ed2ac6b6a170aa"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "d0a7acc7ccd78f960334066fa1c37f9e24bf857e80fd8bd99d6664abed9a8c3e"
+    sha256 cellar: :any,                 arm64_sonoma: "ab1748a56336bd92f5466a46c872ff28c6b0dad88e1d62b0e9937e13d813f08e"
+    sha256 cellar: :any,                 ventura:      "4e11410fd18530910a48317e0dfb6b2ecbb8553d990b74743d57ee0734799a39"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "cb2cfbda2db25d594e811297c44f80641ea2a8708d140eb4a2bc36688d47158f"
   end
 
   depends_on "cmake" => :build
