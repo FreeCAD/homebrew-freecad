@@ -12,11 +12,11 @@ class Pyside2AT51515Py312 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 1
-    sha256 cellar: :any,                 arm64_sequoia: "23d91f0a25f6e811a5f31cf345fad0b64bc5290f64b471efb2c9c0ef7af3e29d"
-    sha256 cellar: :any,                 arm64_sonoma:  "874aea34323622c5915d14a1b1013ff644983af1a47b518753a3183ca6844d18"
-    sha256 cellar: :any,                 ventura:       "6b7a9683e12d8632a1899bc55d5b0114edf79282e46f34543764db7464778db2"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "e9f79b36b4f0d11193570b1865c66b5de07f3625a3def099639814417766bdeb"
+    rebuild 2
+    sha256 cellar: :any,                 arm64_sequoia: "49e141a4fa85e9ed9a9a2aeba4e6ced866cfaf920af869c2121671e9e37e0f98"
+    sha256 cellar: :any,                 arm64_sonoma:  "df84cf1539125f6b5ccdb9094932bc403f9cf3e85960d9ee876607e3d58d00b5"
+    sha256 cellar: :any,                 ventura:       "4ba2e54ec58ecd717ce210753595580795a313dd861f0958f98efc7be303735e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "a70e1463d491b3aeb35a936a10e9363b137fa3bf62c90dc9bcc25619d2a92794"
   end
 
   keg_only :versioned_formula
