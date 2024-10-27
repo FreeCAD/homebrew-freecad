@@ -177,6 +177,64 @@ class Pyside2AT51515Py312 < Formula
   end
 
   test do
+    # NOTE: ipatch, the below resolve to something like, HOMEBREW_PREFIX/Cellar/formula/lib/python/site-packages
+    ENV.append_path "PYTHONPATH", prefix/Language::Python.site_packages(python3)
+
+    puts "--------------------------------------------------------"
+    puts "PYTHON=#{ENV["PYTHON"]}"
+    puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
+    puts "--------------------------------------------------------"
+
+    system python3, "-c", "import PySide2"
+    system python3, "-c", "import shiboken2"
+
+    modules = %w[
+      Core
+      Gui
+      Network
+      Positioning
+      Quick
+      Svg
+      Widgets
+      Xml
+    ]
+    modules << "WebEngineCore" if OS.linux? || (DevelopmentTools.clang_build_version > 1200)
+    modules.each { |mod| system python3, "-c", "import PySide2.Qt#{mod}" }
+
+    pyincludes = shell_output("#{python3}-config --includes").chomp.split
+    pylib = shell_output("#{python3}-config --ldflags --embed").chomp.split
+
+    if OS.linux?
+      pyver = Language::Python.major_minor_version python3
+      pylib += %W[
+        -Wl,-rpath,#{Formula["python@#{pyver}"].opt_lib}
+        -Wl,-rpath,#{lib}
+      ]
+    end
+
+    (testpath/"test.cpp").write <<~EOS
+      #include <shiboken.h>
+      int main()
+      {
+        Py_Initialize();
+        Shiboken::AutoDecRef module(Shiboken::Module::import("shiboken2"));
+        assert(!module.isNull());
+        return 0;
+      }
+    EOS
+
+    shiboken_lib = if OS.mac?
+      "shiboken2.cpython-312-darwin"
+    else
+      "shiboken2.cpython-312-x86_64-linux-gnu"
+    end
+
+    system ENV.cxx, "-std=c++17", "test.cpp",
+                    "-I#{include}/shiboken2",
+                    "-L#{lib}", "-l#{shiboken_lib}",
+                    "-L#{Formula["gettext"].opt_lib}",
+                    *pyincludes, *pylib, "-o", "test"
+    system "./test"
     Language::Python.each_python(build) do |python, _version|
       system python, "-c", "from PySide2 import QtCore"
     end
