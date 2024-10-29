@@ -10,6 +10,11 @@ class FreecadAT0212Py310 < Formula
     sha256 "ceaf77cd12e8ad533d1535cc27ae4ca2a6e80778502dc9cdec906415d674b674"
 
     patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/844db5e2847b262d95cc0bece1628c0adf913905/patches/freecad%400.21.2_py310-backport-xercesc-tests-updates.patch"
+      sha256 "fce55c5179756c3a89d1a3e9b6c01e81a82bee21f876c1485044b7fe1b7c822a"
+    end
+
+    patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-cmake-find-hdf5.patch"
       sha256 "99d115426cb3e8d7e5ab070e1d726e51eda181ac08768866c6e0fd68cda97f20"
     end
@@ -90,9 +95,9 @@ class FreecadAT0212Py310 < Formula
   depends_on "freecad/freecad/opencascade@7.7.2"
   depends_on "freecad/freecad/pybind11_py310"
   depends_on "freecad/freecad/pyside2@5.15.11_py310"
-  depends_on "freecad/freecad/shiboken2@5.15.11_py310"
   depends_on "freetype"
   depends_on "glew"
+  depends_on "googletest"
   depends_on "icu4c"
   depends_on macos: :high_sierra # no access to sierra test box
   depends_on "mesa-glu" if OS.linux?
@@ -115,9 +120,13 @@ class FreecadAT0212Py310 < Formula
   def install
     hbp = HOMEBREW_PREFIX
 
-    # NOTE: `which` cmd is not installed by default on some OSes
+    # NOTE: `which` cmd is not installed by default on every OS
     # ENV["PYTHON"] = which("python3.10")
     ENV["PYTHON"] = Formula["python@3.10"].opt_bin/"python3.10"
+
+    # NOTE: ipatch, taken from the pyside@2 test block
+    # pyincludes = shell_output("#{python}-config --includes").chomp.split
+    # pylib = shell_output("#{python}-config --ldflags --embed").chomp.split
 
     # Get the Python includes directory without duplicates
     py_inc_output = `python3.10-config --includes`
@@ -152,40 +161,41 @@ class FreecadAT0212Py310 < Formula
 
     ENV.remove "PATH", Formula["qt"].opt_prefix/"bin"
     ENV.remove "PATH", Formula["pyqt"].opt_prefix/"bin"
+    # TODO: put each path entry on a separate line
     puts "PATH=#{ENV["PATH"]}"
 
     cmake_prefix_paths = []
-    cmake_prefix_paths << Formula["pybind11_py310"].prefix
+    # cmake_prefix_paths << Formula["open-mpi"].prefix
+    # cmake_prefix_paths << Formula["llvm"].prefix
+    cmake_prefix_paths << Formula["boost"].prefix
+    cmake_prefix_paths << Formula["coin3d_py310"].prefix
+    cmake_prefix_paths << Formula["double-conversion"].prefix
     cmake_prefix_paths << Formula["doxygen"].prefix
-    cmake_prefix_paths << Formula["xerces-c"].prefix
-    cmake_prefix_paths << Formula["zlib"].prefix
-    cmake_prefix_paths << Formula["opencascade@7.7.2"].prefix
-    cmake_prefix_paths << Formula["vtk"].prefix
-    cmake_prefix_paths << Formula["utf8cpp"].prefix
-    cmake_prefix_paths << Formula["glew"].prefix
-    cmake_prefix_paths << Formula["hdf5"].prefix
-    cmake_prefix_paths << Formula["libpng"].prefix
-    cmake_prefix_paths << Formula["pugixml"].prefix
     cmake_prefix_paths << Formula["eigen"].prefix
     cmake_prefix_paths << Formula["expat"].prefix
-    cmake_prefix_paths << Formula["double-conversion"].prefix
-    cmake_prefix_paths << Formula["lz4"].prefix
-    cmake_prefix_paths << Formula["xz"].prefix
-    cmake_prefix_paths << Formula["libjpeg-turbo"].prefix
-    cmake_prefix_paths << Formula["libtiff"].prefix
-    cmake_prefix_paths << Formula["medfile"].prefix
-    cmake_prefix_paths << Formula["pkg-config"].prefix
-    cmake_prefix_paths << Formula["boost"].prefix
-    cmake_prefix_paths << Formula["swig@4.1.1"].prefix
     cmake_prefix_paths << Formula["freetype"].prefix
-    cmake_prefix_paths << Formula["coin3d_py310"].prefix
-    cmake_prefix_paths << Formula["qt@5"].prefix
-    # cmake_prefix_paths << Formula["open-mpi"].prefix
-    cmake_prefix_paths << Formula["shiboken2@5.15.11_py310"].prefix
-    cmake_prefix_paths << Formula["pyside2@5.15.11_py310"].prefix
-    # cmake_prefix_paths << Formula["llvm"].prefix
-    cmake_prefix_paths << Formula["tbb"].prefix
+    cmake_prefix_paths << Formula["glew"].prefix
+    cmake_prefix_paths << Formula["googletest"].prefix
+    cmake_prefix_paths << Formula["hdf5"].prefix
     cmake_prefix_paths << Formula["icu4c"].prefix
+    cmake_prefix_paths << Formula["libjpeg-turbo"].prefix
+    cmake_prefix_paths << Formula["libpng"].prefix
+    cmake_prefix_paths << Formula["libtiff"].prefix
+    cmake_prefix_paths << Formula["lz4"].prefix
+    cmake_prefix_paths << Formula["medfile"].prefix
+    cmake_prefix_paths << Formula["opencascade@7.7.2"].prefix
+    cmake_prefix_paths << Formula["pkg-config"].prefix
+    cmake_prefix_paths << Formula["pugixml"].prefix
+    cmake_prefix_paths << Formula["pybind11_py310"].prefix
+    cmake_prefix_paths << Formula["pyside2@5.15.11_py310"].prefix
+    cmake_prefix_paths << Formula["qt@5"].prefix
+    cmake_prefix_paths << Formula["swig@4.1.1"].prefix
+    cmake_prefix_paths << Formula["tbb"].prefix
+    cmake_prefix_paths << Formula["utf8cpp"].prefix
+    cmake_prefix_paths << Formula["vtk"].prefix
+    cmake_prefix_paths << Formula["xerces-c"].prefix
+    cmake_prefix_paths << Formula["xz"].prefix
+    cmake_prefix_paths << Formula["zlib"].prefix
 
     if OS.linux?
       cmake_prefix_paths << Formula["mesa-glu"].prefix
@@ -353,16 +363,14 @@ class FreecadAT0212Py310 < Formula
        is built for CLI by default now.
 
     2. if freecad launches with runtime errors a common fix
-       i use is to force link pyside2@5.15.X and
-       shiboken2@5.15.X so workbenches such Draft and Arch
-       have the necessary runtime deps, see brew documenation
-       about force linking the above packages
+       i use is to force link pyside2@5.15.X so workbenches
+       such Draft and Arch have the necessary runtime deps,
+       see brew documenation about force linking the above packages
 
-    4. upstream homebrew/core has begun to introduce python 3.11
-       with that said, testing the formula manually on my local
-       catalina box i ran into issues with regard to boost.
-       the quick fix, unlink python 3.11 and cmake is able to
-       finish its checks and the build process can begin
+    3. use the absolute path to launch freecad ie.
+       #{HOMEBREW_PREFIX}/bin/freecad
+       using the above to launch freecad may resolve runtime
+       issues related to proxy PySide python module
     EOS
   end
 
