@@ -1,0 +1,37 @@
+commit fae2566ff773f948a56efbfabe03f5aa023a891b
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Tue Oct 29 14:35:41 2024 -0300
+
+    freecad@0.21.2_py310: update tests to work with xercesc v3.3
+
+diff --git a/tests/src/App/Metadata.cpp b/tests/src/App/Metadata.cpp
+index fa045cc7ea..1c7a69a91c 100644
+--- a/tests/src/App/Metadata.cpp
++++ b/tests/src/App/Metadata.cpp
+@@ -192,11 +192,11 @@ class MetadataTest: public ::testing::Test
+ protected:
+     void SetUp() override
+     {
+-        xercesc_3_2::XMLPlatformUtils::Initialize();
++        XERCES_CPP_NAMESPACE::XMLPlatformUtils::Initialize();
+     }
+     void TearDown() override
+     {
+-        xercesc_3_2::XMLPlatformUtils::Terminate();
++        XERCES_CPP_NAMESPACE::XMLPlatformUtils::Terminate();
+     }
+     std::string GivenSimpleMetadataXMLString()
+     {
+diff --git a/tests/src/Base/Reader.cpp b/tests/src/Base/Reader.cpp
+index 64fbc92e67..b83d235dc3 100644
+--- a/tests/src/Base/Reader.cpp
++++ b/tests/src/Base/Reader.cpp
+@@ -16,7 +16,7 @@ class ReaderTest: public ::testing::Test
+ protected:
+     void SetUp() override
+     {
+-        xercesc_3_2::XMLPlatformUtils::Initialize();
++        XERCES_CPP_NAMESPACE::XMLPlatformUtils::Initialize();
+         _tempDir = fs::temp_directory_path();
+         std::string filename = "unit_test_Reader.xml";
+         _tempFile = _tempDir / filename;
