@@ -49,6 +49,7 @@ jobs:
           # - self-hosted-catalinavm
           # - self-hosted-bigsurvm
           # - self-hosted-mojavevm
+          - self-hosted-ubuntu-22.04
 
     runs-on: ${{ matrix.os }}
 
