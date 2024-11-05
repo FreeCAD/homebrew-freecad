@@ -104,8 +104,8 @@ jobs:
         id: print-env
         run: env
 
-      - name: tshoot linux build error with ci
-        run: "false"
+      # - name: tshoot linux build error with ci
+      #   run: "false"
 
       # NOTE: use a condition to add env var for mojave runner
       # REF: https://docs.github.com/en/actions/learn-github-actions/environment-variables
