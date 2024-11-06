@@ -2,17 +2,17 @@
 
 # NOTE: ipatch, self-hosted runners are removed from runner registry if they don't connect to github in 14 days
 # 1. check if remote machine hosting the virtual machine running the self-hosted runner is online
-# 2. if remote box is online, check to see if vm serice ie. vmmojave is up and running.
+# 2. if remote box is online, check to see if vm service ie. vmmojave is up and running.
 #   a. status the systemd service for the vm
 #   b. use `nc` to verify the online status of the vm using its static ip (ping is NOT an option)
 #   c. if the vm for the self-hosted runner is online, verify online status of the self-hosted runner service/process
 # 3. if one of our checks fails we need to send an email followed by an action / step to try
 # and bring the service online, and then move to the next step.
-# 4. etup a specific group on remote box and virtual-machine allowing an isolated $USER to run specific tasks for statusing and controlling runner related services.
+# 4. setup a specific group on remote box and virtual-machine allowing an isolated $USER to run specific tasks for statusing and controlling runner related services.
 
 # the way of thinking of this is to,
 # 1 .first check if the runner is online, by querying the github api endpoint
-#   a1. if getting a successful online respone from api take note
+#   a1. if getting a successful online response from api take note
 #   b1. if runner is offline, run through the below steps/checks
 
 name: validate self-hosted runner status
