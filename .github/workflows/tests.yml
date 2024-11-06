@@ -104,6 +104,20 @@ jobs:
         id: print-env
         run: env
 
+      - name: set GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED env var for self-hosted runners
+        id: set-homebrew-specific-env-var-for-self-hosted-runners
+        run: |
+          if [[ "${{ matrix.os }}" == *"self-hosted"* ]]; then
+            echo "GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=1" >> "$GITHUB_ENV"
+          else
+            echo "GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=0" >> "$GITHUB_ENV"
+          fi
+
+      - name: check env
+        id: print-the-value-of-GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED-env-var
+        run: |
+          echo "the value of GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED is $GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED"
+
       # - name: tshoot linux build error with ci
       #   run: "false"
 
