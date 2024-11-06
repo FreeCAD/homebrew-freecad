@@ -70,7 +70,7 @@ jobs:
 
       - name: Set default run status
         id: set-default-run-status
-        run: echo "last-run-status=default" >> "$GITHUB-ENV"
+        run: echo "last-run-status=default" >> "$GITHUB_ENV"
 
       - name: Restore last run status
         id: restore-last-run-status
@@ -219,5 +219,5 @@ jobs:
       - name: Save run status
         id: save-run-status
         if: steps.set-last-run-status.outputs.last-run-status != 'success'
-        run: echo "last-run-status=${{ steps.build-bottle.outcome }}" >> "$GITHUB-ENV"
+        run: echo "last-run-status=${{ steps.build-bottle.outcome }}" >> "$GITHUB_ENV"
 
