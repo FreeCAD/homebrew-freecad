@@ -108,6 +108,9 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/freecad/homebrew-freecad/actions/runners)
+
+          # debug output of response
+          echo "API response: $RESPONSE"
                                                                                                                                       # Check if any runner is self-hosted
           RUNNER_NAME=$(echo "$RESPONSE" | jq -r '.runners[] | select(.labels[]?.name == "self-hosted") | .name')
 
@@ -118,9 +121,44 @@ jobs:
             echo "No self-hosted runner found"
           fi
 
+      # # Step to add Homebrew paths to GITHUB_ENV if using act locally
+      # - name: Set Homebrew environment variables for act
+      #   if: runner.os == 'Linux' && env.ACT == 'true'
+      #   run: |
+      #     #!/bin/bash
+      #     echo "Adding Homebrew paths to GITHUB_ENV"
+      #     { 
+      #       echo "PATH=/home/linuxbrew/.linuxbrew/sbin:/home/linuxbrew/.linuxbrew/bin:${PATH}" 
+      #       echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" 
+      #       echo "HOMEBREW_NO_ANALYTICS=1" 
+      #     } >> "$GITHUB_ENV"
+
+      - name: print message about add homebrew paths to GITHUB_ENV
+        if: runner.os == 'Linux' && env.ACT == 'true'
+        run: |
+          echo "Adding Homebrew paths to GITHUB_ENV"
+
+      - name: update PATH with homebrew bin & sbin dirs
+        if: runner.os == 'Linux' && env.ACT == 'true'
+        run: |
+          echo "PATH=/home/linuxbrew/.linuxbrew/sbin:/home/linuxbrew/.linuxbrew/bin:${PATH}" >> "$GITHUB_ENV"
+
+      # - name: foo3
+      #   if: runner.os == 'Linux' && env.ACT == 'true'
+      #   run: |
+      #     echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" >> "$GIHTUB_ENV"
+
+      - name: disable homebrew analytics
+        if: runner.os == 'Linux' && env.ACT == 'true'
+        run: |
+          echo "HOMEBREW_NO_ANALYTICS=1" >> "$GITHUB_ENV"
+      
       - name: print env
         id: print-env
         run: env
+
+      - name: run brew config
+        run: brew config
 
       - name: check env
         id: print-the-value-of-GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED-env-var
@@ -171,6 +209,11 @@ jobs:
             unset HOMEBREW_NO_INSTALL_FROM_API
           fi
 
+      - name: Debug Event Name & Content ----------------------------------------DEBUG
+        run: |
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Event Content: ${{ toJson(github.event) }}"
+
       - name: build bottle using test-bot for current formula
         id: build-bottle
         run: |
@@ -202,21 +245,20 @@ jobs:
 
       - name: debug with lhotari/action-upterm
         id: debug-workflow-run
-        # uses: actions/checkout@v2
-        # NOTE: ipatch, seems to be issue with macos runners circa oct 2024
+        if: ${{ failure() && !env.ACT }} # skip during local actions testing using `act`
+        # NOTE: ipatch, issue with macos runners circa oct 2024
         # uses: lhotari/action-upterm@v1
         #-------
         uses: owenthereal/action-upterm@v1
-        if: ${{ failure() }}
         with:
           # limit ssh access to user who triggered the workflow
           limit-access-to-actor: true
           # shut down server after 10 minutes if no one connects
           wait-timeout-minutes: 10
 
+      - name: Upload bottles as artifact
       # NOTE: ipatch, issue using upload-artifact@v4 
       # see: https://github.com/actions/upload-artifact/issues/478
-      - name: Upload bottles as artifact
         id: upload-bottle-artifacts
         if: always() && github.event_name == 'pull_request'
         # uses: actions/upload-artifact@v4.3.3
