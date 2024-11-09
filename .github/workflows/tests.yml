@@ -65,7 +65,7 @@ jobs:
       # https://stackoverflow.com/a/77882553/708807
       - name: Generate github app token
         id: generate-gh-app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v1.11.0
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
