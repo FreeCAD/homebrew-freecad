@@ -56,6 +56,30 @@ jobs:
     timeout-minutes: 1200
 
     steps:
+      - name: Test GitHub Token
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
+        run: |
+          # if [ -z "$GITHUB_TOKEN" ]; then
+          #   echo "Error: GITHUB_TOKEN is not set."
+          #   exit 1
+          # fi
+
+          RESPONSE=$(curl -s -L \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/${{ github.repository }})
+
+          echo "API response: $RESPONSE"
+
+          if echo "$RESPONSE" | grep -q '"message": "Bad credentials"'; then
+            echo "Error: Bad credentials - the GitHub token may be invalid or lacks permissions."
+            exit 1
+          fi
+
+          echo "Success: GitHub token is valid."
+
       - name: Get current date
         id: get-current-date
         run: echo "date=$(date +'%Y-%m-%dT%H:%M:%S')" >> "$GITHUB_ENV"
@@ -133,22 +157,17 @@ jobs:
       #       echo "HOMEBREW_NO_ANALYTICS=1" 
       #     } >> "$GITHUB_ENV"
 
-      - name: print message about add homebrew paths to GITHUB_ENV
+      - name: print message about adding homebrew paths to GITHUB_ENV
         if: runner.os == 'Linux' && env.ACT == 'true'
         run: |
           echo "Adding Homebrew paths to GITHUB_ENV"
 
-      - name: update PATH with homebrew bin & sbin dirs
+      - name: add paths to GIHTUB_ENV
         if: runner.os == 'Linux' && env.ACT == 'true'
         run: |
           echo "PATH=/home/linuxbrew/.linuxbrew/sbin:/home/linuxbrew/.linuxbrew/bin:${PATH}" >> "$GITHUB_ENV"
 
-      # - name: foo3
-      #   if: runner.os == 'Linux' && env.ACT == 'true'
-      #   run: |
-      #     echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" >> "$GIHTUB_ENV"
-
-      - name: disable homebrew analytics
+      - name: disable homebrew analytics and store value in GITHUB_ENV
         if: runner.os == 'Linux' && env.ACT == 'true'
         run: |
           echo "HOMEBREW_NO_ANALYTICS=1" >> "$GITHUB_ENV"
@@ -164,9 +183,6 @@ jobs:
         id: print-the-value-of-GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED-env-var
         run: |
           echo "the value of GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED is $GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED"
-
-      # - name: tshoot linux build error with ci
-      #   run: "false"
 
       # NOTE: use a condition to add env var for mojave runner
       # REF: https://docs.github.com/en/actions/learn-github-actions/environment-variables
@@ -203,13 +219,13 @@ jobs:
             "$(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json"
 
       # NOTE: ipatch, env var required, see, https://github.com/orgs/Homebrew/discussions/4856
-      - name: unset HOMEBREW_NO_INSTALL_FROM_API for linux runners
+      - name: unset HOMEBREW_NO_INSTALL_FROM_API for linux runners -------------------
         run: |
           if [[ $RUNNER_OS == 'Linux' ]]; then
             unset HOMEBREW_NO_INSTALL_FROM_API
           fi
 
-      - name: Debug Event Name & Content ----------------------------------------DEBUG
+      - name: print envent name & content ----------------------------------------DEBUG
         run: |
           echo "Event Name: ${{ github.event_name }}"
           echo "Event Content: ${{ toJson(github.event) }}"
@@ -256,9 +272,9 @@ jobs:
           # shut down server after 10 minutes if no one connects
           wait-timeout-minutes: 10
 
-      - name: Upload bottles as artifact
       # NOTE: ipatch, issue using upload-artifact@v4 
       # see: https://github.com/actions/upload-artifact/issues/478
+      - name: Upload bottles as artifact
         id: upload-bottle-artifacts
         if: always() && github.event_name == 'pull_request'
         # uses: actions/upload-artifact@v4.3.3
