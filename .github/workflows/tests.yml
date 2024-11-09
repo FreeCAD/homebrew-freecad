@@ -71,7 +71,7 @@ jobs:
           #   exit 1
           # fi
 
-          -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
+          # -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
           # https://api.github.com/repos/${{ github.repository }})
           #
           RESPONSE=$(curl -v -s -L \
