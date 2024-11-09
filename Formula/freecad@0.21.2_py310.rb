@@ -341,12 +341,22 @@ class FreecadAT0212Py310 < Formula
   def post_install
     if OS.mac?
       ohai "the value of prefix = #{prefix}"
-      ln_s "#{prefix}/MacOS/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
-      ln_s "#{prefix}/MacOS/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
+      freecad_path = Pathname.new("#{prefix}/MacOS/FreeCAD")
+      freecadcmd_path = Pathname.new("#{prefix}/MacOS/FreeCADCmd")
+
+      ln_s freecad_path.relative_path_from(Pathname.new("#{HOMEBREW_PREFIX}/bin")), "#{HOMEBREW_PREFIX}/bin/freecad",
+force: true
+      ln_s freecadcmd_path.relative_path_from(Pathname.new("#{HOMEBREW_PREFIX}/bin")),
+"#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
     elsif OS.linux?
       ohai "the value of prefix = #{prefix}"
-      ln_s "#{bin}/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
-      ln_s "#{bin}/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
+      freecad_path = Pathname.new("#{bin}/FreeCAD")
+      freecadcmd_path = Pathname.new("#{bin}/FreeCADCmd")
+
+      ln_s freecad_path.relative_path_from(Pathname.new("#{HOMEBREW_PREFIX}/bin")), "#{HOMEBREW_PREFIX}/bin/freecad",
+force: true
+      ln_s freecadcmd_path.relative_path_from(Pathname.new("#{HOMEBREW_PREFIX}/bin")),
+"#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
     end
   end
 
