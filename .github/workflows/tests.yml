@@ -9,7 +9,6 @@ on:
       - master
 
   pull_request:
-  pull_request_target:
 
   workflow_dispatch:  # NOTE: nova with homebrew gha
 
@@ -92,24 +91,14 @@ jobs:
       #     echo "Success: GitHub token is valid."
 
       - name: Test GitHub Token
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
         run: |
-          # if [ -z "$GITHUB_TOKEN" ]; then
-          #   echo "Error: GITHUB_TOKEN is not set."
-          #   exit 1
-          # fi
-          # -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-
-          # https://api.github.com/repos/${{ github.repository }})
-          #
-          RESPONSE=$(curl -v -s -L \
+          RESPONSE=$(curl -s -L \
           -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/freecad/homebrew-freecad/actions/runners)
 
-          echo "API response: $RESPONSE"
+          # echo "API response: $RESPONSE"
 
           if echo "$RESPONSE" | grep -q '"message": "Bad credentials"'; then
             echo "Error: Bad credentials - the GitHub token may be invalid or lacks permissions."
@@ -222,9 +211,9 @@ jobs:
         run: |
           echo "the value of GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED is $GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED"
 
+      - name: condition, check runner name 
       # NOTE: use a condition to add env var for mojave runner
       # REF: https://docs.github.com/en/actions/learn-github-actions/environment-variables
-      - name: condition, check runner name 
         if: runner.name == 'vmmojave'
         run: echo "The operating system on the runner is, $RUNNER_OS."; echo HOMEBREW_DEVELOPER=1 >> "$GITHUB_ENV"
         # NOTE: not possible to have two `run:` blocks within a `name`
@@ -263,10 +252,10 @@ jobs:
             unset HOMEBREW_NO_INSTALL_FROM_API
           fi
 
-      - name: print envent name & content ----------------------------------------DEBUG
+      - name: print event name ----------------------------------------DEBUG
         run: |
           echo "Event Name: ${{ github.event_name }}"
-          echo "Event Content: ${{ toJson(github.event) }}"
+          # echo "Event Content: ${{ toJson(github.event) }}"
 
       - name: build bottle using test-bot for current formula
         id: build-bottle
