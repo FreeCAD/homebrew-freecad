@@ -90,7 +90,8 @@ jobs:
 
       #     echo "Success: GitHub token is valid."
 
-      - name: Test GitHub Token
+      - name: Test GitHub Token, ie. HOMEBREW_GITHUB_API_TOKEN
+        continue-on-error: true
         run: |
           RESPONSE=$(curl -s -L \
           -H "Authorization: Bearer ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}" \
@@ -152,6 +153,7 @@ jobs:
           restore-keys: ${{ runner.os }}-rubygems-
 
       - name: Fetch GitHub runners and check if self-hosted
+        continue-on-error: true
         id: fetch-runners-then-check-for-self-hosted
         run: |
           RESPONSE=$(curl -s -L \
@@ -228,8 +230,8 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
 
-      # NOTE: ipatch, attempt to set homebrew-core repo to specific commit for catalina bottling
       - name: check for catalina vm and set homebrew-core repo to specific commit
+      # NOTE: ipatch, attempt to set homebrew-core repo to specific commit for catalina bottling
         if: runner.name == 'vmcatalina'
         run: |
           cd "$(brew --repo homebrew/core)"; \
@@ -245,8 +247,8 @@ jobs:
             -e '/go@1.12/d' \
             "$(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json"
 
-      # NOTE: ipatch, env var required, see, https://github.com/orgs/Homebrew/discussions/4856
       - name: unset HOMEBREW_NO_INSTALL_FROM_API for linux runners -------------------
+      # NOTE: ipatch, env var required, see, https://github.com/orgs/Homebrew/discussions/4856
         run: |
           if [[ $RUNNER_OS == 'Linux' ]]; then
             unset HOMEBREW_NO_INSTALL_FROM_API
