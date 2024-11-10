@@ -174,6 +174,16 @@ jobs:
             echo "No self-hosted runner found"
           fi
 
+      - name: manually update GITHUB_ENV based on RUNNER_NAME
+        id: update-github_env-based-on-runner_name
+        run: |
+          if [ "$RUNNER_NAME" = "self-hosted-ubuntu-22.04" ]; then
+            echo "GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=1" >> "$GITHUB_ENV"
+            echo "Self-hosted runner found: $RUNNER_NAME"
+          else
+            echo "No self-hosted runner found"
+          fi
+
       # # Step to add Homebrew paths to GITHUB_ENV if using act locally
       # - name: Set Homebrew environment variables for act
       #   if: runner.os == 'Linux' && env.ACT == 'true'
