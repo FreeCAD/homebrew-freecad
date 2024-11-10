@@ -179,6 +179,7 @@ jobs:
         run: |
           if [ "$RUNNER_NAME" = "self-hosted-ubuntu-22.04" ]; then
             echo "GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=1" >> "$GITHUB_ENV"
+            echo "GITHUB_ACTIONS=0" >> "$GITHUB_ENV"
             echo "Self-hosted runner found: $RUNNER_NAME"
           else
             echo "No self-hosted runner found"
