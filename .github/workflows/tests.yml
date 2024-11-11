@@ -179,7 +179,9 @@ jobs:
         run: |
           if [ "$RUNNER_NAME" = "self-hosted-ubuntu-22.04" ]; then
             echo "GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=1" >> "$GITHUB_ENV"
-            echo "GITHUB_ACTIONS=0" >> "$GITHUB_ENV"
+            echo "HOMEBREW_GITHUB_ACTIONS=1" >> "$GITHUB_ENV"
+            export GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=1
+            export HOMEBREW_GITHUB_ACTIONS=1
             echo "Self-hosted runner found: $RUNNER_NAME"
           else
             echo "No self-hosted runner found"
@@ -312,9 +314,9 @@ jobs:
           # shut down server after 10 minutes if no one connects
           wait-timeout-minutes: 10
 
+      - name: Upload bottles as artifact
       # NOTE: ipatch, issue using upload-artifact@v4 
       # see: https://github.com/actions/upload-artifact/issues/478
-      - name: Upload bottles as artifact
         id: upload-bottle-artifacts
         if: always() && github.event_name == 'pull_request'
         # uses: actions/upload-artifact@v4.3.3
