@@ -24,12 +24,6 @@ jobs:
     strategy:
       # NOTE: ipatch, `fail-fast` disabled because subsequent runners can not run job if previous job failed
       fail-fast: false
-      # NOTE: ipatch, all three self hosted runners (vms) are hosted on same computer
-      #   ...so limit job to one runner at a time.
-      # REF: 
-      # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#defining-the-maximum-number
-      # max-parallel: 1
-      max-parallel: 4
       matrix:
         # os: [ubuntu-latest, macos-latest] # NOTE: default
         # NOTE: homebrew/homebrew-core uses private self hosted runners
@@ -50,6 +44,12 @@ jobs:
           # - self-hosted-bigsurvm
           # - self-hosted-mojavevm
           - self-hosted-ubuntu-22.04
+      # NOTE: ipatch, all three self hosted runners (vms) are hosted on same computer
+      #   ...so limit job to one runner at a time.
+      # REF: 
+      # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#defining-the-maximum-number
+      # max-parallel: 1
+      max-parallel: 5
 
     runs-on: ${{ matrix.os }}
     permissions: read-all
@@ -62,34 +62,6 @@ jobs:
     timeout-minutes: 1200
 
     steps:
-      # # https://stackoverflow.com/a/77882553/708807
-      # - name: Generate github app token
-      #   id: generate-gh-app-token
-      #   uses: actions/create-github-app-token@v1.11.0
-      #   with:
-      #     app-id: ${{ vars.APP_ID }}
-      #     private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
-      # - name: Use the token
-      #   # env:
-      #   #   GH_TOKEN: ${{ steps.generate-gh-app-token.outputs.token }}
-      #   run: |
-      #     # gh api octocat
-      #     RESPONSE=$(curl -v -s -L \
-      #     -H "Authorization: Bearer $GITHUB_TOKEN" \
-      #     -H "Accept: application/vnd.github+json" \
-      #     -H "X-GitHub-Api-Version: 2022-11-28" \
-      #     https://api.github.com/repos/freecad/homebrew-freecad/actions/runners)
-
-      #     echo "API response: $RESPONSE"
-
-      #     if echo "$RESPONSE" | grep -q '"message": "Bad credentials"'; then
-      #       echo "Error: Bad credentials - the GitHub token may be invalid or lacks permissions."
-      #       exit 1
-      #     fi
-
-      #     echo "Success: GitHub token is valid."
-
       - name: Test GitHub Token, ie. HOMEBREW_GITHUB_API_TOKEN
         continue-on-error: true
         run: |
@@ -278,11 +250,11 @@ jobs:
 
       - name: build bottle using test-bot for current formula
         id: build-bottle
+        # Check if the runner name is vmmojave or vmcatalina and add the flag if true
+        # NOTE: ipatch, keep-old is not the droid you're looking for,
+        # see: https://github.com/orgs/Homebrew/discussions/4935
+        # --keep-old \
         run: |
-          # Check if the runner name is vmmojave or vmcatalina and add the flag if true
-          # NOTE: ipatch, keep-old is not the droid you're looking for,
-          # see: https://github.com/orgs/Homebrew/discussions/4935
-          # --keep-old \
           if [[ runner.name == 'vmmojave' || runner.name == 'vmcatalina' ]]; then
             brew test-bot \
             --skip-online-checks \
