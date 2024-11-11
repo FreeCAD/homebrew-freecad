@@ -237,7 +237,11 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true' && steps.set-last-run-status.outputs.last-run-status != 'success'
         run: brew install-bundler-gems
 
-      - run: brew test-bot --only-cleanup-before
+      - name: only run brew test-bot cleanup before on github hosted runners
+        if: ${{ !contains(matrix.os, 'self-hosted-ubuntu-22.04') }}
+        id: brew-test-bot-cleanup-before
+        run: |
+          brew test-bot --only-cleanup-before
 
       - run: brew test-bot --only-setup
 
