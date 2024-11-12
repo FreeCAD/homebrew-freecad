@@ -1,0 +1,20 @@
+commit c0021f32f711e28328e16363f692ba8e41474577
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Tue Nov 12 19:34:53 2024 +0000
+
+    freecad@0.21.2_py310: fix cmake HDF5 error ie. issue #583
+
+diff --git a/cMake/FreeCAD_Helpers/SetupSalomeSMESH.cmake b/cMake/FreeCAD_Helpers/SetupSalomeSMESH.cmake
+index 513ec18..7744a21 100644
+--- a/cMake/FreeCAD_Helpers/SetupSalomeSMESH.cmake
++++ b/cMake/FreeCAD_Helpers/SetupSalomeSMESH.cmake
+@@ -91,7 +91,8 @@ macro(SetupSalomeSMESH)
+                 endif()
+                 pkg_search_module(HDF5 ${HDF5_VARIANT})
+                 if(HOMEBREW_PREFIX)
+-                  set(HDF5_ROOT ${HOMEBREW_PREFIX}/opt/hdf5)
++                  unset(HDF5_FOUND CACHE)
++                  # set(HDF5_ROOT ${HOMEBREW_PREFIX}/opt/hdf5)
+                   message("--------------------------------------------")
+                   message("ipatch, manually set hdf5_root, cmake build of hdf5 breaks h5cc")
+                   message("--------------------------------------------")

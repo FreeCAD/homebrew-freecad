@@ -1,0 +1,20 @@
+---
+AllCops:
+  TargetRubyVersion: 3.3
+  NewCops: enable
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: start_of_line
+Layout/SpaceAroundOperators:
+  Enabled: false
+Style/StringConcatenation:
+  Exclude:
+  - "**/{Formula,Casks}/**/*.rb"
+Style/FetchEnvVar:
+  Exclude:
+  - "**/Formula/**/*.rb"
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
