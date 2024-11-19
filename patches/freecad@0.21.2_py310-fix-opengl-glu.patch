@@ -1,0 +1,33 @@
+commit ca55b7f4553f5799ef75e88f6643e2b96e3d6b98
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Tue Nov 19 16:15:26 2024 -0600
+
+    fix linuxbrew build error with opengl_glu
+
+diff --git a/src/Gui/CMakeLists.txt b/src/Gui/CMakeLists.txt
+index 4282978fe7..580afaf181 100644
+--- a/src/Gui/CMakeLists.txt
++++ b/src/Gui/CMakeLists.txt
+@@ -3,6 +3,22 @@ add_subdirectory(Stylesheets)
+ add_subdirectory(PreferencePacks)
+ add_subdirectory(PreferencePackTemplates)
+ 
++# TODO: also need to check for linux, as issue only appears to happen with gnu+linux ie. linuxbrew
++if(HOMEBREW_PREFIX AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
++  find_path(GLU_INCLUDE_DIR GL/glu.h PATH_SUFFIXES GL PATHS ${CMAKE_PREFIX_PATH})
++  find_library(GLU_LIBRARY GLU PATHS ${CMAKE_PREFIX_PATH})
++
++  if(EXISTS "${GLU_INCLUDE_DIR}/GL/glu.h" AND EXISTS "${GLU_LIBRARY}")
++    message(STATUS "Found GLU headers at: ${GLU_INCLUDE_DIR}")
++    message(STATUS "Found GLU library at: ${GLU_LIBRARY}")
++  else()
++    message(FATAL_ERROR "----------------------\n"
++      "GLU library not found.\n"
++      "Please check that mesa-glu is installed.\n"
++      "----------------------")
++  endif()
++endif()
++
+ if(WIN32)
+ add_definitions(-DFCGui -DQSINT_MAKEDLL -DOVR_OS_WIN32 -DQUARTER_INTERNAL -DQUARTER_MAKE_DLL -DCOIN_DLL)
+ endif(WIN32)
