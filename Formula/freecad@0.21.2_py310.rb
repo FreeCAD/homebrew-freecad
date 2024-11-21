@@ -15,11 +15,6 @@ class FreecadAT0212Py310 < Formula
     end
 
     patch do
-      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-cmake-find-hdf5.patch"
-      sha256 "99d115426cb3e8d7e5ab070e1d726e51eda181ac08768866c6e0fd68cda97f20"
-    end
-
-    patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-vtk-9.3.patch"
       sha256 "67794ebfcd70a160d379eeca7d2ef78d510057960d0eaa4e2e345acb7ae244aa"
     end
@@ -43,6 +38,11 @@ class FreecadAT0212Py310 < Formula
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/b510bf8a0feba8b3d75e121a2fe32fa697a6fef5/patches/freecad%400.21.2_py310-boost-dep-errors.patch"
       sha256 "535316c559a1fb1bd6fab0287c12fcc6ccd6c5b065bbe339207c2bb98fa600b6"
     end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/e78eeda91a16658ce4954114b5fdb85b7e72e774/patches/freecad%400.21.2_py310-hdf5-fix-cmake-reruns.patch"
+      sha256 "b1becbdc867e96aa1bfe8d8fd1c1b01053b2ce5d1d9483cd0ed19b2d2c6f387f"
+    end
   end
 
   bottle do
@@ -61,8 +61,8 @@ class FreecadAT0212Py310 < Formula
     depends_on "yaml-cpp"
 
     patch do
-      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/95e5aa838ae8b5e7d4fd6ddd710bc53c8caedddc/patches/freecad-0.20.2-cmake-find-hdf5.patch"
-      sha256 "99d115426cb3e8d7e5ab070e1d726e51eda181ac08768866c6e0fd68cda97f20"
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/e78eeda91a16658ce4954114b5fdb85b7e72e774/patches/freecad%400.21.2_py310-hdf5-fix-cmake-reruns.patch"
+      sha256 "b1becbdc867e96aa1bfe8d8fd1c1b01053b2ce5d1d9483cd0ed19b2d2c6f387f"
     end
 
     patch do
