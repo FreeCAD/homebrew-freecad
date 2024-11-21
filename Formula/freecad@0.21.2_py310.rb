@@ -43,6 +43,16 @@ class FreecadAT0212Py310 < Formula
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/b510bf8a0feba8b3d75e121a2fe32fa697a6fef5/patches/freecad%400.21.2_py310-boost-dep-errors.patch"
       sha256 "535316c559a1fb1bd6fab0287c12fcc6ccd6c5b065bbe339207c2bb98fa600b6"
     end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/52f707a3506cf8233129ed9e6e750f4288f32945/patches/freecad%400.21.2_py310-hdf5-cmake-fix.patch"
+      sha256 "615d2ecd7e00da516ad7591c006f2be9bf61a1118cd33952d7c8c2eb5bc13383"
+    end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/8c794052eb381c69da39af94dabafcc72549e70f/patches/freecad%400.21.2_py310-fix-opengl-glu.patch"
+      sha256 "a787e132b0421e1f33532d4a3278a94a5488e73f7dd204ae913e0dc5e240b37a"
+    end
   end
 
   bottle do
@@ -68,6 +78,16 @@ class FreecadAT0212Py310 < Formula
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/6ed12911b87a1d89727c172131bed35be22c4137/patches/freecad%400.21.2_py310-HEAD-toposhape.h-fix.patch"
       sha256 "47f78a3838790b8fe7c41801cbecbc3f85cdc81ace48476dc79b319d5097e195"
+    end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/52f707a3506cf8233129ed9e6e750f4288f32945/patches/freecad%400.21.2_py310-hdf5-cmake-fix.patch"
+      sha256 "615d2ecd7e00da516ad7591c006f2be9bf61a1118cd33952d7c8c2eb5bc13383"
+    end
+
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/8c794052eb381c69da39af94dabafcc72549e70f/patches/freecad%400.21.2_py310-fix-opengl-glu.patch"
+      sha256 "a787e132b0421e1f33532d4a3278a94a5488e73f7dd204ae913e0dc5e240b37a"
     end
   end
 
@@ -265,11 +285,6 @@ class FreecadAT0212Py310 < Formula
       clang_cxx = Formula["llvm"].opt_bin/"clang++"
       clang_ld = Formula["llvm"].opt_bin/"lld"
       clang_ar = Formula["llvm"].opt_bin/"llvm-ar"
-      openglu_inc_dir = Formula["mesa"].opt_include
-
-      puts "----------------------------------------------------"
-      puts openglu_inc_dir
-      puts "----------------------------------------------------"
 
       args_linux_only = %W[
         -GNinja
@@ -279,7 +294,6 @@ class FreecadAT0212Py310 < Formula
         -DCMAKE_CXX_COMPILER=#{clang_cxx}
         -DCMAKE_LINKER=#{clang_ld}
         -DCMAKE_AR=#{clang_ar}
-        -DOPENGL_GLU_INCLUDE_DIR=#{openglu_inc_dir}
       ]
     end
 
