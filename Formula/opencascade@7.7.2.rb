@@ -39,14 +39,21 @@ class OpencascadeAT772 < Formula
   depends_on "freeimage"
   depends_on "freetype"
   depends_on "tbb"
-  depends_on "tcl-tk"
+  depends_on "tcl-tk@8" # TCL 9 issue: https://tracker.dev.opencascade.org/view.php?id=33725
 
   on_linux do
+    depends_on "libx11"
     depends_on "mesa" # For OpenGL
   end
 
+  # Backport fix for incorrect type
+  patch do
+    url "https://github.com/Open-Cascade-SAS/OCCT/commit/7236e83dcc1e7284e66dc61e612154617ef715d6.patch?full_index=1"
+    sha256 "ed8848b3891df4894de56ae8f8c51f6a4b78477c0063d957321c1cace4613c29"
+  end
+
   def install
-    tcltk = Formula["tcl-tk"]
+    tcltk = Formula["tcl-tk@8"]
     libtcl = tcltk.opt_lib/shared_library("libtcl#{tcltk.version.major_minor}")
     libtk = tcltk.opt_lib/shared_library("libtk#{tcltk.version.major_minor}")
 
@@ -96,8 +103,12 @@ class OpencascadeAT772 < Formula
       \.(\d+) # 4
       (\.dylib)? # 5
     /x
+
+    # NOTE: ipatch, `audit_result: false` should resolve the below
+    # MethodDeprecatedError: Calling gsub!(before, after, false) is deprecated!
+    # ...Use gsub!(before, after, audit_result: false) instead.
     inreplace (lib/"cmake/opencascade").glob("*.cmake") do |s|
-      s.gsub! tbb_regex, 'libtbb\1\2.\3\5', false
+      s.gsub! tbb_regex, 'libtbb\1\2.\3\5', audit_result: false
     end
 
     bin.env_script_all_files(libexec, CASROOT: prefix)
