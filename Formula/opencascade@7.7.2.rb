@@ -21,10 +21,11 @@ class OpencascadeAT772 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any,                 arm64_sonoma: "e263e6d0a549dfdb2c0f39d2d2f2fd791c4d3e60ab9c5ef28c6db00375706a7d"
-    sha256 cellar: :any,                 ventura:      "f109009717aef8efae35415edb35a14cf20cd2bf6a31283740090ce861255af8"
-    sha256 cellar: :any,                 monterey:     "8d4d7629e9696161c8c2957c7202dfeabe0047663a532e2999d747016c99b389"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "3f6bbfde5ce676e7a02f3f3bf7c7b19d6983ddae8ce99af38edb39c4e2ecbf2c"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_sequoia: "3c2362f5b8a6424caacc6ba9f8d73761a72f23dbb967aeca78d0c21c5bd40648"
+    sha256 cellar: :any,                 arm64_sonoma:  "645b8bcc26c114ee5822f063b4e4f43d305e3723834082dbe58e972734090ad2"
+    sha256 cellar: :any,                 ventura:       "9b6032c9e0007bdbc951498e85350a5294f197ed433f063de67cb51f46867219"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "9a7cf40240dede922304079568cd325d221f89ea88649970e0afc84d728cd3b0"
   end
 
   # NOTE: ipatch, this formula file was copied from
