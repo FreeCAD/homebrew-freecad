@@ -1,0 +1,82 @@
+commit ece952778a40cf3c9e5fb2f7c77b35d169a96e70
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Thu Dec 5 16:52:21 2024 +0000
+
+    freecad@1.0.0_py312: fix missing include headers
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e76f622..5b35ea4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,6 +59,18 @@ if(NOT FREECAD_LIBPACK_USE OR FREECAD_LIBPACK_CHECKFILE_CLBUNDLER OR FREECAD_LIB
+     SetupPybind11()
+     SetupXercesC()
+     find_package(ZLIB REQUIRED)
++
++    if(HOMEBREW_PREFIX)
++      # NOTE: ipatch, possible bug / feature fix related to cmake
++      # set zlib include directory manually
++      set(ZLIB_INCLUDE_DIR ${HOMEBREW_PREFIX}/opt/zlib/include)
++      include_directories(${ZLIB_INCLUDE_DIR})
++
++      # Display information about zlib found by CMake
++      message(STATUS "zlib include directory: ${ZLIB_INCLUDE_DIR}")
++      message(STATUS "zlib library: ${ZLIB_LIBRARY}")
++    endif()
++
+     find_package(PyCXX REQUIRED)
+     SetupOpenCasCade()
+     if(BUILD_GUI)
+@@ -113,6 +125,28 @@ if (ENABLE_DEVELOPER_TESTS)
+     add_subdirectory(tests)
+ endif()
+ 
++get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
++foreach(dir ${dirs})
++  message(STATUS "-ipatch----------------------------------------------------------------------")
++  message(STATUS "dir='${dir}'")
++  message(STATUS "-ipatch----------------------------------------------------------------------")
++endforeach()
++
++# NOTE: ipatch, NO WORK! WRONG!
++# -- OpenGLU_Incl:                [/home/linuxbrew/.linuxbrew/opt/mesa/include]
++#--------------------
++# value from CMakeCache.txt
++#--------------------
++# //Path to a file.
++# OPENGL_GLU_INCLUDE_DIR:PATH=/home/linuxbrew/.linuxbrew/opt/mesa-glu/include
++if(HOMEBREW_PREFIX)
++  include_directories(BEFORE ${HOMEBREW_PREFIX}/opt/mesa-glu/include)
++  set(OPENGL_GLU_INCLUDE_DIR ${HOMEBREW_PREFIX}/opt/mesa-glu/include CACHE PATH "Path to OpenGL GLU include directory" FORCE)
++  message(STATUS "-ipatch -------------------------------------------------")
++  message(STATUS "Custom mesa-glu include directory: ${OPENGL_GLU_INCLUDE_DIR}")
++  message(STATUS "-ipatch -------------------------------------------------")
++endif()
++
+ PrintFinalReport()
+ 
+ message("\n=================================================\n"
+diff --git a/cMake/FreeCAD_Helpers/SetupOpenGL.cmake b/cMake/FreeCAD_Helpers/SetupOpenGL.cmake
+index 4ce3924..19f8f5d 100644
+--- a/cMake/FreeCAD_Helpers/SetupOpenGL.cmake
++++ b/cMake/FreeCAD_Helpers/SetupOpenGL.cmake
+@@ -3,6 +3,19 @@ macro(SetupOpenGL)
+ 
+     find_package(OpenGL)
+     include(FindPackageMessage)
++
++    # Override or prioritize OPENGL_GLU_INCLUDE_DIR with custom path if defined
++    if(DEFINED OPENGL_GLU_INCLUDE_DIR)
++      # Ensure the custom path is included
++      include_directories(${OPENGL_GLU_INCLUDE_DIR})
++      message(STATUS "-ipatch -------------------------------------------------")
++      message(STATUS "Using custom OpenGLU include directory: ${OPENGL_GLU_INCLUDE_DIR}")
++      message(STATUS "-ipatch -------------------------------------------------")
++    else()
++      # Fallback to default behavior if not provided
++      message(WARNING "Custom OpenGLU include directory not set. Using defaults.")
++    endif()
++
+     if(OPENGL_GLU_FOUND)
+         find_package_message(OPENGL_GLU
+             "Found OpenGLU: ${OPENGL_glu_LIBRARY}"
