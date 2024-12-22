@@ -13,7 +13,7 @@ class FreecadAT100Py312 < Formula
     # NOTE: ipatch, vtk >= 9.4 will break build of 1.0
     patch do
       url "https://github.com/wwmayer/FreeCAD/commit/8934af10128f0bd2d0ffada946d1c93bc5d8869f.patch?full_index=1"
-      sha256 "aaf53617dff2119805b2f4d415181d7685e43b80e18905d0f64e2b909afc8510"
+      sha256 "1c4f0d32f0726a94ac607a44e1efbdc42a32f8fbd97a9ccd20151defda368f76"
     end
 
     patch do
