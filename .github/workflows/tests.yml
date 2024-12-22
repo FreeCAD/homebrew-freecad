@@ -43,7 +43,7 @@ jobs:
           # - self-hosted-catalinavm
           # - self-hosted-bigsurvm
           # - self-hosted-mojavevm
-          - self-hosted-ubuntu-22.04
+          # - self-hosted-ubuntu-22.04
       # NOTE: ipatch, all three self hosted runners (vms) are hosted on same computer
       #   ...so limit job to one runner at a time.
       # REF: 
