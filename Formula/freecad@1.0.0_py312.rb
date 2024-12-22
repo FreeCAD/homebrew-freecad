@@ -10,6 +10,12 @@ class FreecadAT100Py312 < Formula
     url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.0.tar.gz"
     sha256 "51115afd8e3b89f4bac343b986b0800d8e1c68fc1e322c3cd179cfe1033ef937"
 
+    # NOTE: ipatch, vtk >= 9.4 will break build of 1.0
+    patch do
+      url "https://github.com/wwmayer/FreeCAD/commit/8934af10128f0bd2d0ffada946d1c93bc5d8869f.patch?full_index=1"
+      sha256 "aaf53617dff2119805b2f4d415181d7685e43b80e18905d0f64e2b909afc8510"
+    end
+
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/e78eeda91a16658ce4954114b5fdb85b7e72e774/patches/freecad%400.21.2_py310-hdf5-fix-cmake-reruns.patch"
       sha256 "b1becbdc867e96aa1bfe8d8fd1c1b01053b2ce5d1d9483cd0ed19b2d2c6f387f"
