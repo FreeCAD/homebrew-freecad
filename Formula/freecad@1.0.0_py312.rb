@@ -76,12 +76,11 @@ class FreecadAT100Py312 < Formula
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.2.1" => :build
   depends_on "gcc" => :build # gfortran req for FEM WB
-  depends_on "hdf5" => :build
+  depends_on "lld" => :build if OS.linux?
   depends_on "llvm" => :build if OS.linux?
   depends_on "mesa" => :build if OS.linux?
   depends_on "ninja" => :build if OS.linux?
   depends_on "pkg-config" => :build
-  depends_on "python@3.12" => :build
   depends_on "boost"
   depends_on "cython"
   depends_on "doxygen"
@@ -93,14 +92,18 @@ class FreecadAT100Py312 < Formula
   depends_on "freecad/freecad/numpy@2.1.1_py312"
   depends_on "freecad/freecad/pybind11_py312"
   depends_on "freecad/freecad/pyside2@5.15.15_py312"
+  depends_on "freeimage"
   depends_on "freetype"
   depends_on "glew"
+  depends_on "hdf5"
   depends_on "icu4c"
   depends_on macos: :high_sierra
   depends_on "mesa-glu" if OS.linux?
+  depends_on "nlohmann-json"
   depends_on "openblas"
   depends_on "opencascade"
   depends_on "orocos-kdl"
+  depends_on "python@3.12"
   depends_on "qt@5"
   depends_on "tbb"
   depends_on "vtk"
@@ -175,6 +178,7 @@ class FreecadAT100Py312 < Formula
     cmake_prefix_paths << Formula["eigen"].prefix
     cmake_prefix_paths << Formula["expat"].prefix
     cmake_prefix_paths << Formula["fmt"].prefix
+    cmake_prefix_paths << Formula["freeimage"].prefix
     cmake_prefix_paths << Formula["freetype"].prefix
     cmake_prefix_paths << Formula["glew"].prefix
     cmake_prefix_paths << Formula["hdf5"].prefix
@@ -184,6 +188,7 @@ class FreecadAT100Py312 < Formula
     cmake_prefix_paths << Formula["libtiff"].prefix
     cmake_prefix_paths << Formula["lz4"].prefix
     cmake_prefix_paths << Formula["med-file@4.1.1_py312"].prefix
+    cmake_prefix_paths << Formula["nlohmann-json"].prefix
     cmake_prefix_paths << Formula["opencascade"].prefix
     cmake_prefix_paths << Formula["pkg-config"].prefix
     cmake_prefix_paths << Formula["pugixml"].prefix
@@ -265,7 +270,7 @@ class FreecadAT100Py312 < Formula
       ninja_bin = Formula["ninja"].opt_bin/"ninja"
       clang_cc = Formula["llvm"].opt_bin/"clang"
       clang_cxx = Formula["llvm"].opt_bin/"clang++"
-      clang_ld = Formula["llvm"].opt_bin/"lld"
+      clang_ld = Formula["lld"].opt_bin/"lld"
       clang_ar = Formula["llvm"].opt_bin/"llvm-ar"
 
       openglu_inc_dir = Formula["mesa-glu"].opt_include
@@ -273,6 +278,9 @@ class FreecadAT100Py312 < Formula
       puts "----------------------------------------------------"
       puts openglu_inc_dir
       puts "----------------------------------------------------"
+
+      linux_linker_flags = "-L#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current " \
+                           "-Wl,-rpath,#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current"
 
       args_linux_only = %W[
         -GNinja
@@ -283,6 +291,7 @@ class FreecadAT100Py312 < Formula
         -DCMAKE_LINKER=#{clang_ld}
         -DCMAKE_AR=#{clang_ar}
         -DOPENGL_GLU_INCLUDE_DIR=#{openglu_inc_dir}
+        -DCMAKE_EXE_LINKER_FLAGS=#{linux_linker_flags}
       ]
     end
 
