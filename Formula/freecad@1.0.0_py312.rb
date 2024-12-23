@@ -103,6 +103,7 @@ class FreecadAT100Py312 < Formula
   depends_on "glew"
   depends_on "hdf5"
   depends_on "icu4c"
+  depends_on "libomp" if OS.linux?
   depends_on "llvm" if OS.linux?
   depends_on macos: :high_sierra
   depends_on "mesa-glu" if OS.linux?
@@ -191,6 +192,7 @@ class FreecadAT100Py312 < Formula
     cmake_prefix_paths << Formula["hdf5"].prefix
     cmake_prefix_paths << Formula["icu4c"].prefix
     cmake_prefix_paths << Formula["libjpeg-turbo"].prefix
+    cmake_prefix_paths << Formula["libomp"].prefix
     cmake_prefix_paths << Formula["libpng"].prefix
     cmake_prefix_paths << Formula["libtiff"].prefix
     cmake_prefix_paths << Formula["lz4"].prefix
