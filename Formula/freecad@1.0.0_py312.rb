@@ -84,7 +84,6 @@ class FreecadAT100Py312 < Formula
   depends_on "freecad/freecad/swig@4.2.1" => :build
   depends_on "gcc" => :build # gfortran req for FEM WB
   depends_on "lld" => :build if OS.linux?
-  depends_on "llvm" => :build if OS.linux?
   depends_on "mesa" => :build if OS.linux?
   depends_on "ninja" => :build if OS.linux?
   depends_on "pkg-config" => :build
@@ -104,6 +103,7 @@ class FreecadAT100Py312 < Formula
   depends_on "glew"
   depends_on "hdf5"
   depends_on "icu4c"
+  depends_on "llvm" if OS.linux?
   depends_on macos: :high_sierra
   depends_on "mesa-glu" if OS.linux?
   depends_on "nlohmann-json"
