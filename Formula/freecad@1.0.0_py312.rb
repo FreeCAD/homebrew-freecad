@@ -216,6 +216,7 @@ class FreecadAT100Py312 < Formula
       cmake_prefix_paths << Formula["mesa"].prefix
       cmake_prefix_paths << Formula["libx11"].prefix
       cmake_prefix_paths << Formula["libxcb"].prefix
+      cmake_prefix_paths << Formula["llvm"].prefix
     end
 
     cmake_prefix_path_string = cmake_prefix_paths.join(";")
