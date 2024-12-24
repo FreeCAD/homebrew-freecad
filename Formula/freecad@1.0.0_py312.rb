@@ -113,6 +113,7 @@ class FreecadAT100Py312 < Formula
   depends_on "nlohmann-json"
   depends_on "openblas" if OS.linux?
   depends_on "opencascade"
+  depends_on "openmpi" if OS.linux?
   depends_on "orocos-kdl"
   depends_on "python@3.12"
   depends_on "qt@5"
