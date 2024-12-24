@@ -85,7 +85,6 @@ class FreecadAT100Py312 < Formula
   depends_on "freecad/freecad/swig@4.2.1" => :build
   depends_on "gcc" => :build # gfortran req for FEM WB
   depends_on "lld" => :build if OS.linux?
-  depends_on "mesa" => :build if OS.linux?
   depends_on "ninja" => :build if OS.linux?
   depends_on "pkg-config" => :build
   depends_on "boost"
@@ -93,6 +92,7 @@ class FreecadAT100Py312 < Formula
   depends_on "doxygen"
   depends_on "expat"
   depends_on "fmt"
+  depends_on "fontconfig" if OS.linux?
   depends_on "freecad/freecad/coin3d@4.0.3_py312"
   depends_on "freecad/freecad/fc_bundle_py312"
   depends_on "freecad/freecad/med-file@4.1.1_py312"
@@ -105,11 +105,13 @@ class FreecadAT100Py312 < Formula
   depends_on "hdf5"
   depends_on "icu4c"
   depends_on "libomp" if OS.linux?
+  depends_on "libx11" if OS.linux?
   depends_on "llvm" if OS.linux?
   depends_on macos: :high_sierra
+  depends_on "mesa" if OS.linux?
   depends_on "mesa-glu" if OS.linux?
   depends_on "nlohmann-json"
-  depends_on "openblas"
+  depends_on "openblas" if OS.linux?
   depends_on "opencascade"
   depends_on "orocos-kdl"
   depends_on "python@3.12"
@@ -200,6 +202,7 @@ class FreecadAT100Py312 < Formula
     cmake_prefix_paths << Formula["med-file@4.1.1_py312"].prefix
     cmake_prefix_paths << Formula["nlohmann-json"].prefix
     cmake_prefix_paths << Formula["opencascade"].prefix
+    cmake_prefix_paths << Formula["orocos-kdl"].prefix
     cmake_prefix_paths << Formula["pkg-config"].prefix
     cmake_prefix_paths << Formula["pugixml"].prefix
     cmake_prefix_paths << Formula["pybind11_py312"].prefix
@@ -215,11 +218,13 @@ class FreecadAT100Py312 < Formula
     cmake_prefix_paths << Formula["zlib"].prefix
 
     if OS.linux?
-      cmake_prefix_paths << Formula["mesa-glu"].prefix
-      cmake_prefix_paths << Formula["mesa"].prefix
+      cmake_prefix_paths << Formula["fontconfig"].prefix
       cmake_prefix_paths << Formula["libx11"].prefix
       cmake_prefix_paths << Formula["libxcb"].prefix
       cmake_prefix_paths << Formula["llvm"].prefix
+      cmake_prefix_paths << Formula["mesa"].prefix
+      cmake_prefix_paths << Formula["mesa-glu"].prefix
+      cmake_prefix_paths << Formula["openblas"].prefix
     end
 
     cmake_prefix_path_string = cmake_prefix_paths.join(";")
@@ -387,10 +392,11 @@ class FreecadAT100Py312 < Formula
        building a FreeCAD.app bundle using the existing python
        script no longer works due to updating the rpaths of the
        copied executables and libraries into a FreeCAD.app
-       bundle. Until a fix or work around is made freecad
-       is built for CLI by default now.
+       bundle, unless performing a work around described in the
+       below github issue comment,
+       https://github.com/FreeCAD/homebrew-freecad/issues/348#issuecomment-1248927545
 
-    2. presently the freecad py module is globally accessible, ie.
+    2. presently the freecad py module is NOT globally accessible, ie.
        one cannot directly run `import freecad` from a python v3.12
        repl
     EOS
