@@ -52,10 +52,10 @@ class FreecadAT100Py312 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 2
-    sha256 cellar: :any, arm64_sonoma: "20479c595f2c722f3a4c09a52339aba4d2274dde065227939a575877c3955118"
-    sha256 cellar: :any, ventura:      "38dc6262d778152d36f31739e5d1a77da4f03dca56a48d066488ffbc7bd040f8"
-    sha256               x86_64_linux: "b6adc316dbce1234daf124269e591d56cb790b2c7317e931345a94f6eab112be"
+    rebuild 3
+    sha256 cellar: :any, arm64_sonoma: "f83bc134d8a6b335bdb53461b92d1c3aa6597913993583b05c322316dfeb4f86"
+    sha256 cellar: :any, ventura:      "c768790f31c9b191872ca2dbd01deb8de657fed1a7bcbdeb7d240cd15e78d92c"
+    sha256               x86_64_linux: "4a6d141fe7e5815e2cd0c297b195f5a0c095a629c33281b4f76f600c06d9a2e2"
   end
 
   head do
