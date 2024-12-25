@@ -226,6 +226,7 @@ class FreecadAT100Py312 < Formula
       cmake_prefix_paths << Formula["mesa"].prefix
       cmake_prefix_paths << Formula["mesa-glu"].prefix
       cmake_prefix_paths << Formula["openblas"].prefix
+      cmake_prefix_paths << Formula["openmpi"].prefix
     end
 
     cmake_prefix_path_string = cmake_prefix_paths.join(";")
@@ -303,6 +304,7 @@ class FreecadAT100Py312 < Formula
         -GNinja
         -DCMAKE_MAKE_PROGRAM=#{ninja_bin}
         -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
+        -DFREECAD_USE_EXTERNAL_KDL=1
         -DCMAKE_C_COMPILER=#{clang_cc}
         -DCMAKE_CXX_COMPILER=#{clang_cxx}
         -DCMAKE_LINKER=#{clang_ld}
