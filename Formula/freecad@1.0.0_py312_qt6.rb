@@ -50,6 +50,13 @@ class FreecadAT100Py312Qt6 < Formula
     end
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, arm64_sonoma: "e941002597a446d0d9d4bee6cedec61e87dba1a613d4cb5faec421cd2c672e69"
+    sha256 cellar: :any, ventura:      "49adb656c817eb6bdb5ef00a61260a36d3a5c1f95b0b9902ecb38ae3c9e737ae"
+    sha256               x86_64_linux: "84b95425b80a05937e27667f91dfd924822db7e230689c0cdf8297fcc704e093"
+  end
+
   head do
     url "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
 
