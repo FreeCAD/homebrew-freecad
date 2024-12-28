@@ -57,8 +57,7 @@ class Pyside2AT51515Py312 < Formula
   # before a `brew install` to get the latest changes
   #------
   # the tarbal / .zip file of the pyside source defaults to CRLF line endings thus the mixed line endings in the
-  # patch file
-  # to avoid the mixed line endings use the .xz archive
+  # patch file, to avoid the mixed line endings use the .xz archive
   patch do
     url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/fb307f43ef9e556f9b86348d865356b1fe072ef2/patches/pyside2%405.15.15_py312-python-v3.12-support-unix.patch"
     sha256 "0fd9b2b1a53f65f8162cc14d866db165e80b30fe87b83b7401a0573e7d40fb91"
@@ -72,8 +71,8 @@ class Pyside2AT51515Py312 < Formula
 
   # Apply Debian patches to support Clang >= v15 https://bugreports.qt.io/browse/PYSIDE-2268
   patch do
-    url "http://deb.debian.org/debian/pool/main/p/pyside2/pyside2_5.15.14-1.debian.tar.xz"
-    sha256 "a0dae3cc101b50f4ce1cda8076d817261feaa66945f9003560a3af2c0a9a7cd8"
+    url "http://deb.debian.org/debian/pool/main/p/pyside2/pyside2_5.15.16-1.debian.tar.xz"
+    sha256 "3a4b596537c26bac8f94f92256f64f0e30f436f311af7e43197ba34fd13aa5f1"
     apply "patches/shiboken2-clang-Fix-clashes-between-type-name-and-enumera.patch",
           "patches/shiboken2-clang-Fix-and-simplify-resolveType-helper.patch",
           "patches/shiboken2-clang-Remove-typedef-expansion.patch",
