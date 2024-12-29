@@ -1,4 +1,6 @@
 {
 "python3.9": "homebrew/core/python@3.9",
-"python3.9.6": "homebrew/core/python@3.9"
+"python3.9.6": "homebrew/core/python@3.9",
+"freecad@1.0.0_rc2_py312": "freecad@1.0.0_py312",
+"tbb@2020_u3": "homebrew/core/tbb"
 }
