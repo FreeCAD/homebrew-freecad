@@ -18,15 +18,38 @@ class FcBundlePy312 < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux:  "fa916c83def42476422e0e917e3b031e3da16c5bc5177f22d80572ea13eb3a03"
   end
 
+  depends_on "patchelf" => :build
+  depends_on "pkgconf" => :build
+  # epends_on "brotli" if OS.linux?
   depends_on "freecad/freecad/coin3d@4.0.3_py312"
   depends_on "freecad/freecad/med-file@4.1.1_py312"
   depends_on "freecad/freecad/numpy@2.1.1_py312"
   depends_on "freecad/freecad/pybind11_py312"
   depends_on "freecad/freecad/pyside2@5.15.15_py312" # pyside includes the shiboken2 module as well
+  depends_on "freetype"
+  # epends_on "libxau" if OS.linux?
+  depends_on "libyaml" # reqd by pyyaml
+  depends_on "webp" if OS.linux?
+  # epends_on "pillow" if OS.linux?
 
   resource "six" do
     url "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz"
     sha256 "1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"
+  end
+
+  resource "matplotlib" do
+    url "https://files.pythonhosted.org/packages/68/dd/fa2e1a45fce2d09f4aea3cee169760e672c8262325aa5796c49d543dc7e6/matplotlib-3.10.0.tar.gz"
+    sha256 "b886d02a581b96704c9d1ffe55709e49b4d2d52709ccebc4be42db856e511278"
+  end
+
+  resource "ply" do
+    url "https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz"
+    sha256 "00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3"
+  end
+
+  resource "pyyaml" do
+    url "https://files.pythonhosted.org/packages/54/ed/79a089b6be93607fa5cdaedf301d7dfb23af5f25c398d5ead2525b063e17/pyyaml-6.0.2.tar.gz"
+    sha256 "d584d9ec91ad65861cc08d42e834324ef890a082e591037abe114850ff7bbc3e"
   end
 
   def install
@@ -42,6 +65,36 @@ class FcBundlePy312 < Formula
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
     resource("six").stage do
+      system venv_pip, "install", "."
+    end
+
+    resource("matplotlib").stage do
+      (buildpath/"mplsetup.cfg").write <<~EOS
+        [libs]
+        system_freetype = true
+      EOS
+
+      # Set MPLSETUPCFG to point to the custom config
+      ENV["MPLSETUPCFG"] = buildpath/"mplsetup.cfg"
+      ENV.prepend_path "PKG_CONFIG_PATH", Formula["freetype"].opt_lib/"pkgconfig"
+      ENV.prepend_path "PKG_CONFIG_PATH", Formula["webp"].opt_lib/"pkgconfig"
+
+      # Install matplotlib within the virtual environment
+      system venv_pip, "install", "."
+
+      lib_path = "#{libexec}/vendor/lib/python3.12/site-packages/pillow.libs"
+      if Dir.exist?(lib_path)
+        Dir["#{lib_path}/*.so.*"].each do |so|
+          system "patchelf", "--set-rpath", lib_path, so
+        end
+      end
+    end
+
+    resource("ply").stage do
+      system venv_pip, "install", "."
+    end
+
+    resource("pyyaml").stage do
       system venv_pip, "install", "."
     end
 
