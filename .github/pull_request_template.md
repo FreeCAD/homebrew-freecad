@@ -1,8 +1,7 @@
 - [ ] Have you ensured that your commits follow the [commit style guide](https://docs.brew.sh/Formula-Cookbook#commit)?
 
-<!-- NOTE: ipatch, recently rubocop started styling this file, the below code example causes a styling error  -->
-```shell
-brew style freecad/freecad/[NAME_OF_FORMULA_FILE]
+```
+brew style freecad/freecad/[NAME_OF_FORMULA_FILE] 
 ```
 
 **output** from running above command should _output_ something similiar to the below
@@ -13,7 +12,7 @@ brew style freecad/freecad/[NAME_OF_FORMULA_FILE]
 
 - [ ] Have you ensured your commit passed audit checks, ie.
 
-```shell
+```
 brew audit freecad/freecad/[NAME_OF_FORMULA_FILE] --online --new-formula
 ```
 
