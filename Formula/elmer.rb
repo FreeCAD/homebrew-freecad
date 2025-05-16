@@ -29,11 +29,10 @@ class Elmer < Formula
   def install
     qwt_inc_dir = "#{Formula["#{@tap}/qwtelmer"].opt_prefix}/lib/qwt.framework/Versions/Current/Headers;"
 
-    prefix_paths = "\""
-    prefix_paths << (Formula["qt@5"].opt_prefix;)
+    prefix_paths = []
+    prefix_paths << Formula["qt@5"].opt_prefix
     # prefix_paths << (Formula["vtk@8.2"].opt_prefix/"lib/cmake;")
-    prefix_paths << (Formula["#{@tap}/opencascade@7.5.3"].opt_prefix;)
-    prefix_paths << "\""
+    prefix_paths << Formula["#{@tap}/opencascade@7.5.3"].opt_prefix
 
     # cmake_cflags = ""
     # cmake_cflags << ('" -F' + Formula["#{@tap}/qwtelmer"].opt_prefix+"/lib/" + ' -framework qwt"')
