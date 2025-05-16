@@ -98,7 +98,7 @@ jobs:
 
       - name: Restore last run status
         id: restore-last-run-status
-        uses: actions/cache@v4.0.2
+        uses: actions/cache@v4.2.3
         with:
           path: |
             last-run-status
@@ -118,7 +118,7 @@ jobs:
       - name: Cache Homebrew Bundler RubyGems
         if: steps.set-last-run-status.outputs.last-run-status != 'success'
         id: cache
-        uses: actions/cache@v4.0.2
+        uses: actions/cache@v4.2.3
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
