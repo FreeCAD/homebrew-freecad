@@ -1,0 +1,21 @@
+From 585e80066adc2ae9300f6706ae971f1cd3ddd0c4 Mon Sep 17 00:00:00 2001
+From: chris <chris.r.jones.1983@gmail.com>
+Date: Sun, 18 May 2025 14:48:12 -0500
+Subject: [PATCH] fix for upstream #20656 to work with 1.0.1 tarball
+
+---
+ cMake/FindOCC.cmake | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/cMake/FindOCC.cmake b/cMake/FindOCC.cmake
+index c72066f43e2f33f5c35fd3848c7149bb9e341b9c..56d15936349bfcaa77fad1638b50d727a1877da1 100644
+--- a/cMake/FindOCC.cmake
++++ b/cMake/FindOCC.cmake
+@@ -139,6 +139,7 @@ if(OCC_FOUND)
+     TKPrim
+     TKHLR
+     TKFeat
++    TKExpress
+   )
+   set(OCC_OCAF_LIBRARIES
+     TKBin
