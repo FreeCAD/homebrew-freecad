@@ -10,12 +10,6 @@ class FreecadAT101Py312 < Formula
     url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.1.tar.gz"
     sha256 "f62bc07c477544eff62b6ab0fc3bb63fa7f1e6f94763c51b0049507842d444f3"
 
-    # NOTE: ipatch, freecad v1.0.1 has since fixed this issue.
-    # patch do
-    #   url "https://github.com/wwmayer/FreeCAD/commit/8934af10128f0bd2d0ffada946d1c93bc5d8869f.patch?full_index=1"
-    #   sha256 "1c4f0d32f0726a94ac607a44e1efbdc42a32f8fbd97a9ccd20151defda368f76"
-    # end
-
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/e05121267ee55892871c8b05d0dccceb3cb7e91a/patches/freecad%401.0.1_py312-fix-bld-with-occ-v79.patch"
       sha256 "03b55da349d2e9bc4112b92d5160fc261173f79ae1a0c985ea776b8164111c39"
