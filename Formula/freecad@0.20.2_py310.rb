@@ -1,6 +1,6 @@
 class FreecadAT0202Py310 < Formula
   desc "Parametric 3D modeler"
-  homepage "https://www.freecadweb.org"
+  homepage "https://freecad.org/"
   url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.20.2.tar.gz"
   sha256 "46922f3a477e742e1a89cd5346692d63aebb2b67af887b3e463e094a4ae055da"
   license "GPL-2.0-only"

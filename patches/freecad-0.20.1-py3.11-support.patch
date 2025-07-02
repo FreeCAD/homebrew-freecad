@@ -3,7 +3,7 @@ Author: wmayer <wmayer@users.sourceforge.net>
 Date:   Tue Aug 30 15:26:12 2022 +0200
 
     Py: make FreeCAD 0.v20 to compile with Py3.11
-    As requested in this thread: https://forum.freecadweb.org/viewtopic.php?p=622230#p622230
+    As requested in this thread: https://forum.freecad.org/viewtopic.php?p=622230#p622230
 
 diff --git a/src/Base/ConsoleObserver.cpp b/src/Base/ConsoleObserver.cpp
 index c6428a7f18..ab3b3e9157 100644

@@ -1,6 +1,6 @@
 class FcBundle < Formula
   desc "Meta formula for bundling needed python modules"
-  homepage "https://www.freecadweb.org"
+  homepage "https://freecad.org/"
   # Dummy URL since no source is being downloaded
   url "file:///dev/null"
   version "0.21.1"

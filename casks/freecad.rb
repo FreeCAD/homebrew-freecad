@@ -8,7 +8,7 @@ cask "freecad" do
       verified: "github.com/freecad/homebrew-freecad/"
   name "FreeCAD"
   desc "3D parametric modler"
-  homepage "https://www.freecad.org/"
+  homepage "https://freecad.org/"
 
   livecheck do
     url "https://github.com/freecad/homebrew-freecad/releases/latest"

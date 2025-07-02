@@ -1,6 +1,6 @@
 class FcBundlePy312Qt6 < Formula
   desc "Meta formula for bundling needed python modules"
-  homepage "https://www.freecadweb.org"
+  homepage "https://freecad.org/"
   # Dummy URL since no source is being downloaded
   url "file:///dev/null"
   # this version works with the freecad v1rc2 release thus the 0.9.2 versioning

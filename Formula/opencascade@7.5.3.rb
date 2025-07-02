@@ -31,7 +31,7 @@ class OpencascadeAT753 < Formula
   depends_on "tcl-tk"
 
   # NOTE: https://tracker.dev.opencascade.org/view.php?id=32328
-  # NOTE: https://forum.freecadweb.org/viewtopic.php?f=4&t=58090
+  # NOTE: https://forum.freecad.org/viewtopic.php?f=4&t=58090
   patch :DATA
 
   def install
