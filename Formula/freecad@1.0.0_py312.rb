@@ -1,6 +1,6 @@
 class FreecadAT100Py312 < Formula
   desc "Parametric 3D modeler"
-  homepage "https://www.freecadweb.org"
+  homepage "https://freecad.org/"
   license "GPL-2.0-only"
 
   # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`

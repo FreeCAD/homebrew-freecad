@@ -1,6 +1,6 @@
 class FreecadAT020 < Formula
   desc "Parametric 3D modeler"
-  homepage "https://www.freecadweb.org"
+  homepage "https://freecad.org/"
   url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/0.20.tar.gz"
   sha256 "c4d9ce782d3da0edfa16d6218db4ce8613e346124ee47b3fe6a6dae40c0a61d9"
   license "GPL-2.0-only"
