@@ -23,7 +23,7 @@ class Pyside2AT51515Py312 < Formula
 
   # Requires various patches and cannot be built with `FORCE_LIMITED_API` with Python 3.12.
   # `qt@5` is also officially EOL on 2025-05-25.
-  disable! date: "2025-05-26", because: :versioned_formula
+  disable! date: "2025-12-31", because: :versioned_formula
 
   depends_on "cmake" => :build
   depends_on "freecad/freecad/numpy@2.1.1_py312"
