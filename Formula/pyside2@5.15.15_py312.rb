@@ -71,8 +71,8 @@ class Pyside2AT51515Py312 < Formula
 
   # Apply Debian patches to support Clang >= v15 https://bugreports.qt.io/browse/PYSIDE-2268
   patch do
-    url "http://deb.debian.org/debian/pool/main/p/pyside2/pyside2_5.15.16-1.debian.tar.xz"
-    sha256 "3a4b596537c26bac8f94f92256f64f0e30f436f311af7e43197ba34fd13aa5f1"
+    url "https://github.com/FreeCAD/homebrew-freecad/raw/refs/heads/master/patches/pyside2_5.15.16-3.1.debian.tar.xz"
+    sha256 "523d191e45b1a9720e8eb8ea66fd930f49ffad54df1295ca09efea8838257aa6"
     apply "patches/shiboken2-clang-Fix-clashes-between-type-name-and-enumera.patch",
           "patches/shiboken2-clang-Fix-and-simplify-resolveType-helper.patch",
           "patches/shiboken2-clang-Remove-typedef-expansion.patch",
