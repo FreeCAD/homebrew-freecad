@@ -104,7 +104,6 @@ class Pyside2AT51515Py312 < Formula
       [lib, Formula["qt@5"].opt_lib]
     end
 
-    # ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm"].opt_lib
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm"].opt_prefix
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_prefix
     ENV.append_path "CMAKE_PREFIX_PATH", Formula["freecad/freecad/numpy@2.1.1_py312"].opt_prefix
@@ -139,6 +138,7 @@ class Pyside2AT51515Py312 < Formula
       "-DLLVM_CONFIG=#{Formula["llvm"].opt_bin}/llvm-config",
       "-DCMAKE_LIBRARY_PATH=#{Formula["llvm"].opt_lib}",
       "-L",
+      "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
       *cmake_args
 
     system "cmake", "--build", "build"
