@@ -89,6 +89,10 @@ class MedFileAT411Py312 < Formula
       -DCMAKE_PREFIX_PATH=#{Formula["hdf5"].opt_prefix};#{Formula["gcc"].opt_prefix};
       -DCMAKE_INSTALL_RPATH=#{rpath}
       -DMEDFILE_BUILD_TESTS=0
+      -DCMAKE_C_STANDARD=17
+      -DCMAKE_C_EXTENSIONS=ON
+      -DCMAKE_CXX_STANDARD=17
+      -DCMAKE_CXX_EXTENSIONS=ON
     ]
 
     # remove unwanted values from args
