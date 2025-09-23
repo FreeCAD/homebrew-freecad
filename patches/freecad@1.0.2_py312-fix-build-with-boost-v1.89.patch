@@ -1,0 +1,31 @@
+commit eb4bda1ebb4665dfa9ff76857f25e12a435e8f91
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Tue Sep 23 13:19:35 2025 -0500
+
+    ipatch: fix build with boost version >= v1.89
+
+diff --git a/cMake/FreeCAD_Helpers/SetupBoost.cmake b/cMake/FreeCAD_Helpers/SetupBoost.cmake
+index 0bb1343c3f..ee77e6af03 100644
+--- a/cMake/FreeCAD_Helpers/SetupBoost.cmake
++++ b/cMake/FreeCAD_Helpers/SetupBoost.cmake
+@@ -3,9 +3,18 @@ macro(SetupBoost)
+ 
+     set(_boost_TEST_VERSIONS ${Boost_ADDITIONAL_VERSIONS})
+ 
+-    set (BOOST_COMPONENTS filesystem program_options regex system thread date_time)
++    set (BOOST_COMPONENTS filesystem program_options regex thread date_time)
++
++    find_package(Boost ${BOOST_MIN_VERSION} REQUIRED)
++
++    # add system component if boost version is less than v1.89
++    if(Boost_VERSION_STRING VERSION_LESS "1.89.0")
++      list(APPEND BOOST_COMPONENTS system)
++    endif()
++
++    # now find package with the appropriate components
+     find_package(Boost ${BOOST_MIN_VERSION}
+-        COMPONENTS ${BOOST_COMPONENTS} REQUIRED)
++      COMPONENTS ${BOOST_COMPONENTS} REQUIRED)
+ 
+     if(UNIX AND NOT APPLE)
+         # Boost.Thread 1.67+ headers reference pthread_condattr_*
