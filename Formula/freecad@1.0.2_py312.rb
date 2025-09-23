@@ -10,6 +10,12 @@ class FreecadAT102Py312 < Formula
     url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.2.tar.gz"
     sha256 "228ee52f00627c7d8fa61998179deb01865ece69390829feb1300228d24f7e9e"
 
+    # NOTE: ipatch, fix build with boost >= v1.89
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/3bdee9ba0ca1fcea4aa3f41c21de2d410dc3fc78.patch?full_index=1"
+      sha256 "6f9ac475b112a3fc31c50ba2ba877219efad14fae20103b7f688235d6320b20b"
+    end
+
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/e05121267ee55892871c8b05d0dccceb3cb7e91a/patches/freecad%401.0.1_py312-fix-bld-with-occ-v79.patch"
       sha256 "03b55da349d2e9bc4112b92d5160fc261173f79ae1a0c985ea776b8164111c39"
