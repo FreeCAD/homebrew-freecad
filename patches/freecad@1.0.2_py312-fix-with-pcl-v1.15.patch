@@ -1,0 +1,23 @@
+commit 992abc1ed8acd68f2ce9e99532745d4b81c8236c
+Author: chris <chris.r.jones.1983@gmail.com>
+Date:   Thu Sep 25 12:55:54 2025 -0500
+
+    fix build error with newer versions of PCL >= v1.13
+
+diff --git a/src/Mod/ReverseEngineering/App/SurfaceTriangulation.cpp b/src/Mod/ReverseEngineering/App/SurfaceTriangulation.cpp
+index 220b1207d5..bad18cbb46 100644
+--- a/src/Mod/ReverseEngineering/App/SurfaceTriangulation.cpp
++++ b/src/Mod/ReverseEngineering/App/SurfaceTriangulation.cpp
+@@ -40,7 +40,11 @@
+ #include <pcl/common/io.h>
+ #include <pcl/features/normal_3d.h>
+ #include <pcl/pcl_config.h>
+-#include <pcl/point_traits.h>
++#if __has_include(<pcl/point_struct_traits.h>)
++#include <pcl/point_struct_traits.h>
++#else
++#include <pcl/type_traits.h>
++#endif
+ #include <pcl/point_types.h>
+ #include <pcl/surface/ear_clipping.h>
+ #include <pcl/surface/gp3.h>
