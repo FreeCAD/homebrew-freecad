@@ -53,6 +53,31 @@ class FcBundlePy312 < Formula
     sha256 "d584d9ec91ad65861cc08d42e834324ef890a082e591037abe114850ff7bbc3e"
   end
 
+  # NOTE: ipatch, https://docs.ifcopenshell.org/ifcopenshell-python/installation.html#zip-packages
+  resource "ifcopenshell" do
+    if OS.mac? && Hardware::CPU.arm?
+      url "https://github.com/IfcOpenShell/IfcOpenShell/releases/download/ifcopenshell-python-0.8.3.post1/ifcopenshell-python-0.8.3.post1-py312-macosm164.zip"
+      sha256 "166d349f9bc0efb848699bed7e9b6d706693c5fb45a2c5e9b2104da809754cfa"
+    elsif OS.mac?
+      url "https://github.com/IfcOpenShell/IfcOpenShell/releases/download/ifcopenshell-python-0.8.3.post1/ifcopenshell-python-0.8.3.post1-py312-macos64.zip"
+      url "https://github.com/IfcOpenShell/IfcOpenShell/releases/download/ifcopenshell-python-0.8.3.post1/ifcopenshell-python-0.8.3.post1-py312-macos64.zip"
+      sha256 "e0428f156ee000ba9d0348e12cdda1a7950d3a42c6706e650780dce6b90621f6"
+    elsif OS.linux?
+      url "https://github.com/IfcOpenShell/IfcOpenShell/releases/download/ifcopenshell-python-0.8.3.post1/ifcopenshell-python-0.8.3.post1-py312-linux64.zip"
+      sha256 "622ba7d27e87855d9ba90a8fa14ca2a7c4ce582d393ccdd347e0fc90da414703"
+    end
+  end
+
+  resource "lark" do
+    url "https://files.pythonhosted.org/packages/1d/37/a13baf0135f348af608c667633cbe5d13aa2c5c15a56ae9ad3e6cba45ae3/lark-1.3.0.tar.gz"
+    sha256 "9a3839d0ca5e1faf7cfa3460e420e859b66bcbde05b634e73c369c8244c5fa48"
+  end
+
+  resource "shapely" do
+    url "https://files.pythonhosted.org/packages/4d/bc/0989043118a27cccb4e906a46b7565ce36ca7b57f5a18b78f4f1b0f72d9d/shapely-2.1.2.tar.gz"
+    sha256 "2ed4ecb28320a433db18a5bf029986aa8afcfd740745e78847e330d5d94922a9"
+  end
+
   def install
     # explicitly set python version
     pyver = "3.12"
@@ -62,6 +87,15 @@ class FcBundlePy312 < Formula
     # Create a virtual environment
     system "python3.12", "-m", "venv", venv_dir
     venv_pip = venv_dir/"bin/pip"
+
+    resource("ifcopenshell").stage do
+      site_packages = venv_dir/"lib/python#{pyver}/site-packages"
+      (site_packages/"ifcopenshell").install Dir["*"]
+    end
+
+    resource("lark").stage do
+      system venv_pip, "install", "."
+    end
 
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
@@ -109,9 +143,10 @@ class FcBundlePy312 < Formula
       File.read("#{Formula["med-file@4.1.1_py312"].opt_prefix}/lib/python#{pyver}/medfile.pth").strip
     numpy_pth_contents =
       File.read("#{Formula["numpy@2.1.1_py312"].opt_prefix}/lib/python#{pyver}/numpy.pth").strip
-    pybind11_pth_contents = File.read(
-      "#{Formula["pybind11_py312"].opt_prefix}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
-    ).strip
+    pybind11_pth_contents =
+      File.read(
+        "#{Formula["pybind11_py312"].opt_prefix}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
+      ).strip
     pyside2_pth_contents =
       File.read("#{Formula["pyside2@5.15.15_py312"].opt_prefix}/lib/python#{pyver}/pyside2.pth").strip
 
@@ -144,5 +179,6 @@ class FcBundlePy312 < Formula
     else
       onoe "Test: Error - freecad-py-modules.pth file not found"
     end
+    system "#{libexec}/vendor/bin/python3.12", "-c", "import ifcopenshell"
   end
 end
