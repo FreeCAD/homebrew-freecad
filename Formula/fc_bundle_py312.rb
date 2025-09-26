@@ -27,6 +27,7 @@ class FcBundlePy312 < Formula
   depends_on "freecad/freecad/pybind11_py312"
   depends_on "freecad/freecad/pyside2@5.15.15_py312" # pyside includes the shiboken2 module as well
   depends_on "freetype"
+  depends_on "geos"
   # epends_on "libxau" if OS.linux?
   depends_on "libyaml" # reqd by pyyaml
   depends_on "webp" if OS.linux?
@@ -92,7 +93,15 @@ class FcBundlePy312 < Formula
       (site_packages/"ifcopenshell").install Dir["*"]
     end
 
+    # ifcopenshell dep
     resource("lark").stage do
+      system venv_pip, "install", "."
+    end
+
+    # ifcopenshell dep
+    resource("shapely").stage do
+      ENV.prepend_path "PKG_CONFIG_PATH", Formula["geos"].opt_lib/"pkgconfig"
+      ENV.prepend_path "PKG_CONFIG_PATH", Formula["freecad/freecad/numpy@2.1.1_py312"].opt_lib/"pkgconfig"
       system venv_pip, "install", "."
     end
 
@@ -179,5 +188,6 @@ class FcBundlePy312 < Formula
       onoe "Test: Error - freecad-py-modules.pth file not found"
     end
     system "#{libexec}/vendor/bin/python3.12", "-c", "import ifcopenshell"
+    system "#{libexec}/vendor/bin/python3.12", "-c", "import shapely"
   end
 end
