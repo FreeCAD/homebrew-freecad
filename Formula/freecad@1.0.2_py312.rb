@@ -10,6 +10,11 @@ class FreecadAT102Py312 < Formula
     url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.2.tar.gz"
     sha256 "228ee52f00627c7d8fa61998179deb01865ece69390829feb1300228d24f7e9e"
 
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/62857c1d35a78119f11a304c5948ab43b0adb84e/patches/freecad%401.0.2_py312-fix-with-pcl-v1.15.patch"
+      sha256 "486cb79489ea143bca4cfe7e69f577e4a814888e3601721be3dac5110f27f9b2"
+    end
+
     # NOTE: ipatch, fix build with boost >= v1.89
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/12a318c22ca15645fb776c98eda480fde78abead/patches/freecad%401.0.2_py312-fix-build-with-boost-v1.89.patch"
@@ -116,6 +121,7 @@ class FreecadAT102Py312 < Formula
   depends_on "hdf5"
   depends_on "icu4c"
   depends_on "libomp" if OS.linux?
+  depends_on "libspnav"
   depends_on "libx11" if OS.linux?
   depends_on "llvm" if OS.linux?
   depends_on macos: :high_sierra
@@ -126,7 +132,9 @@ class FreecadAT102Py312 < Formula
   depends_on "opencascade"
   depends_on "openmpi" if OS.linux?
   depends_on "orocos-kdl"
+  depends_on "pcl"
   depends_on "python@3.12"
+  depends_on "qhull"
   depends_on "qt@5"
   depends_on "tbb"
   depends_on "vtk"
@@ -209,16 +217,19 @@ class FreecadAT102Py312 < Formula
     cmake_prefix_paths << Formula["libjpeg-turbo"].prefix
     cmake_prefix_paths << Formula["libomp"].prefix
     cmake_prefix_paths << Formula["libpng"].prefix
+    cmake_prefix_paths << Formula["libspnav"].prefix
     cmake_prefix_paths << Formula["libtiff"].prefix
     cmake_prefix_paths << Formula["lz4"].prefix
     cmake_prefix_paths << Formula["med-file@4.1.1_py312"].prefix
     cmake_prefix_paths << Formula["nlohmann-json"].prefix
     cmake_prefix_paths << Formula["opencascade"].prefix
     cmake_prefix_paths << Formula["orocos-kdl"].prefix
+    cmake_prefix_paths << Formula["pcl"].prefix
     cmake_prefix_paths << Formula["pkg-config"].prefix
     cmake_prefix_paths << Formula["pugixml"].prefix
     cmake_prefix_paths << Formula["pybind11_py312"].prefix
     cmake_prefix_paths << Formula["pyside2@5.15.15_py312"].prefix
+    cmake_prefix_paths << Formula["qhull"].prefix
     cmake_prefix_paths << Formula["qt@5"].prefix
     cmake_prefix_paths << Formula["swig@4.2.1"].prefix
     cmake_prefix_paths << Formula["tbb"].prefix
@@ -266,7 +277,6 @@ class FreecadAT102Py312 < Formula
     # -DCMAKE_INSTALL_RPATH=#{rpath}
     # -DBUILD_DRAWING=1
     # -DBUILD_SMESH=1
-    # -DFREECAD_USE_EXTERNAL_KDL=1
     # -DBUILD_FEM_NETGEN=0
     # -DFREECAD_USE_QTWEBMODULE=#{qtwebmodule}
     # -DCMAKE_EXE_LINKER_FLAGS="-v"
@@ -286,6 +296,7 @@ class FreecadAT102Py312 < Formula
         -DOPENGL_gl_LIBRARY=#{apl_frmwks}/OpenGL.framework
         -DOPENGL_GLU_INCLUDE_DIR=#{apl_frmwks}/OpenGL.framework
         -DOPENGL_glu_LIBRARY=#{apl_frmwks}/OpenGL.framework
+        -D_qt5gui_OPENGL_INCLUDE_DIR=#{apl_frmwks}/OpenGL.framework
         -D_Qt5UiTools_RELEASE_AppKit_PATH=#{apl_frmwks}/AppKit.framework
         -D_Qt5UiTools_RELEASE_Metal_PATH=#{apl_frmwks}/Metal.framework
         -D_Qt5UiTools_RELEASE_DiskArbitration_PATH=#{apl_frmwks}/DiskArbitration.framework
@@ -318,7 +329,6 @@ class FreecadAT102Py312 < Formula
         -GNinja
         -DCMAKE_MAKE_PROGRAM=#{ninja_bin}
         -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
-        -DFREECAD_USE_EXTERNAL_KDL=1
         -DCMAKE_C_COMPILER=#{clang_cc}
         -DCMAKE_CXX_COMPILER=#{clang_cxx}
         -DCMAKE_LINKER=#{clang_ld}
@@ -337,6 +347,9 @@ class FreecadAT102Py312 < Formula
       -DPython3_INCLUDE_DIRS=#{py_inc_dir}
       -DPython3_LIBRARIES=#{py_lib_path}
       -DFREECAD_USE_PYBIND11=1
+      -DFREECAD_USE_PCL=0
+      -DFREECAD_USE_EXTERNAL_KDL=1
+      -DFREECAD_QT_VERSION:STRING=5
       -DCMAKE_BUILD_TYPE=RelWithDebInfo
       -Dgtest_force_shared_crt=0
 
