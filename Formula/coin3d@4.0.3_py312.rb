@@ -81,6 +81,7 @@ class Coin3dAT403Py312 < Formula
                     "-DCOIN_BUILD_DOCUMENTATION=ON",
                     "-DCOIN_BUILD_DOCUMENTATION_MAN=ON",
                     "-DCMAKE_INSTALL_PREFIX=#{prefix}",
+                    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
                     "-L"
     puts "----------------------------------------------------"
     puts "CMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}"
@@ -88,6 +89,24 @@ class Coin3dAT403Py312 < Formula
     puts "----------------------------------------------------"
     system "cmake", "--build", "_build-coin"
     system "cmake", "--install", "_build-coin"
+
+    # Debug: list what cmake files were actually installed
+    puts "----------------------------------------------------"
+    system "find", prefix.to_s, "-name", "*.cmake"
+    puts "----------------------------------------------------"
+
+    cmake_config = if File.exist?("#{lib}/cmake/Coin-#{version}/coin-config.cmake")
+      "#{lib}/cmake/Coin-#{version}/coin-config.cmake"
+    else
+      "#{prefix}/lib64/cmake/Coin-#{version}/coin-config.cmake"
+    end
+
+    # Fix cmake config file for newer CMake versions
+    if cmake_config
+      inreplace cmake_config,
+        /cmake_minimum_required\(VERSION [0-9.]+\)/,
+        "cmake_minimum_required(VERSION 3.5...3.29)"
+    end
 
     resource("soqt").stage do
       system "cmake", "-S", ".", "-B", "_build-soqt",
@@ -98,6 +117,7 @@ class Coin3dAT403Py312 < Formula
                       "-DSOQT_BUILD_TESTS=OFF",
                       "-DSOQT_USE_QT6:BOOL=OFF",
                       "-DCMAKE_PREFIX_PATH=#{prefix}",
+                      "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
                       "-L",
                       *std_cmake_args(find_framework: "FIRST")
       puts "----------------------------------------------------"
@@ -119,8 +139,10 @@ class Coin3dAT403Py312 < Formula
       puts "CMAKE_PREFIX_PATH Datatype: #{ENV["CMAKE_PREFIX_PATH"].class}"
       puts "----------------------------------------------------"
 
-      # Allow setup.py to build with Qt6 as we saw some issues using CMake directly on Intel
       inreplace "distutils_cmake/CMakeLists.txt", " NONE)", ")" # allow languages
+      inreplace "distutils_cmake/CMakeLists.txt",
+        "cmake_minimum_required(VERSION 3.5)",
+        "cmake_minimum_required(VERSION 3.5)\ncmake_policy(VERSION 3.5)"
       ENV.append "CXXFLAGS", "-std=c++17"
       ENV["LDFLAGS"] = "-Wl,-rpath,#{opt_lib}"
       system python3, "-m", "pip", "install", *std_pip_args, "."
