@@ -76,12 +76,16 @@ class Coin3dAT403Py312 < Formula
     # https://gitlab.archlinux.org/archlinux/packaging/packages/soqt/-/blob/main/PKGBUILD
     # https://gitlab.archlinux.org/archlinux/packaging/packages/python-pivy/-/blob/main/PKGBUILD
 
+    # NOTE: ipatch, on asahi linux libCoin.so.80 installs into #{prefix}/lib64
+    # and not the standard #{prefix}/lib so set the below cmake var CMAKE_INSTALL_LIBDIR
+
     system "cmake", "-S", ".", "-B", "_build-coin",
                     "-DCMAKE_CXX_STANDARD=11",
                     "-DCOIN_BUILD_DOCUMENTATION=ON",
                     "-DCOIN_BUILD_DOCUMENTATION_MAN=ON",
                     "-DCMAKE_INSTALL_PREFIX=#{prefix}",
                     "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+                    "-DCMAKE_INSTALL_LIBDIR=lib",
                     "-L"
     puts "----------------------------------------------------"
     puts "CMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}"
