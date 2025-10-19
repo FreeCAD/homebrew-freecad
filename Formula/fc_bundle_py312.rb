@@ -26,6 +26,7 @@ class FcBundlePy312 < Formula
   depends_on "freecad/freecad/numpy@2.1.1_py312"
   depends_on "freecad/freecad/pybind11_py312"
   depends_on "freecad/freecad/pyside2@5.15.15_py312" # pyside includes the shiboken2 module as well
+  depends_on "freecad/freecad/vtk@9.5.2_py312"
   depends_on "freetype"
   depends_on "geos"
   # epends_on "libxau" if OS.linux?
@@ -157,6 +158,8 @@ class FcBundlePy312 < Formula
       ).strip
     pyside2_pth_contents =
       File.read("#{Formula["pyside2@5.15.15_py312"].opt_prefix}/lib/python#{pyver}/pyside2.pth").strip
+    vtk_pth_contents =
+      File.read("#{Formula["vtk@9.5.2_py312"].opt_prefix}/lib/python#{pyver}/vtk_py312.pth").strip
 
     site_packages = Language::Python.site_packages("python3.12")
     # {shiboken2_pth_contents}
@@ -166,6 +169,7 @@ class FcBundlePy312 < Formula
       #{numpy_pth_contents}
       #{pybind11_pth_contents}
       #{pyside2_pth_contents}
+      #{vtk_pth_contents}
       #{venv_dir}/lib/python#{pyver}/site-packages
     EOS
     (prefix/site_packages/"freecad-py-modules.pth").write pth_contents
