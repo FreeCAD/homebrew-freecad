@@ -113,9 +113,10 @@ class FreecadAT102Py312 < Formula
   depends_on "freeimage"
   depends_on "freetype"
   depends_on "glew"
+  depends_on "gmsh"
   depends_on "hdf5"
   depends_on "icu4c"
-  depends_on "libomp" if OS.linux?
+  depends_on "libomp"
   depends_on "libx11" if OS.linux?
   depends_on "llvm" if OS.linux?
   depends_on macos: :high_sierra
@@ -204,6 +205,7 @@ class FreecadAT102Py312 < Formula
     cmake_prefix_paths << Formula["freeimage"].prefix
     cmake_prefix_paths << Formula["freetype"].prefix
     cmake_prefix_paths << Formula["glew"].prefix
+    cmake_prefix_paths << Formula["gmsh"].prefix
     cmake_prefix_paths << Formula["hdf5"].prefix
     cmake_prefix_paths << Formula["icu4c"].prefix
     cmake_prefix_paths << Formula["libjpeg-turbo"].prefix
