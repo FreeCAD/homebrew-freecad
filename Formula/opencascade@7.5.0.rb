@@ -10,19 +10,14 @@ class OpencascadeAT750 < Formula
     regex(/href=.*?opencascade[._-]v?(\d+(?:\.\d+)+)\.t/i)
   end
 
-  bottle do
-    root_url "https://github.com/freecad/homebrew-freecad/releases/download/07.28.2021"
-    sha256 cellar: :any, big_sur:   "1f625aeaef44b9a78714fae89f5feaa79ce43ae1515b3cb6139cfce3d603e412"
-    sha256 cellar: :any, catalina:  "721771a181d3d8b3c2863df9ebf91d6f50e858ef81ed9cf2440c60bc6569fcc8"
-    sha256 cellar: :any, mojave:    "7653f9d90250ae0d221578e93ac533d048f8c63ecb6932d9fe84519a838ba028"
-  end
+  disable! date: "2025-10-20", because: "no longer required"
 
   depends_on "cmake" => :build
   depends_on "doxygen" => :build
   depends_on "rapidjson" => :build
-  depends_on "freecad/freecad/tbb@2020_u3"
   depends_on "freeimage"
   depends_on "freetype"
+  depends_on "tbb"
 
   def install
     system "cmake", ".",
