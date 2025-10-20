@@ -19,19 +19,12 @@ class OpencascadeAT772 < Formula
     end
   end
 
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 1
-    sha256 cellar: :any,                 arm64_sequoia: "3c2362f5b8a6424caacc6ba9f8d73761a72f23dbb967aeca78d0c21c5bd40648"
-    sha256 cellar: :any,                 arm64_sonoma:  "645b8bcc26c114ee5822f063b4e4f43d305e3723834082dbe58e972734090ad2"
-    sha256 cellar: :any,                 ventura:       "9b6032c9e0007bdbc951498e85350a5294f197ed433f063de67cb51f46867219"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "9a7cf40240dede922304079568cd325d221f89ea88649970e0afc84d728cd3b0"
-  end
+  keg_only :versioned_formula
+
+  disable! date: "2025-10-20", because: "no longer required"
 
   # NOTE: ipatch, this formula file was copied from
   # https://github.com/Homebrew/homebrew-core/blob/029de2514455bb00b99d0785896fdfdc58882293/Formula/o/opencascade.rb
-
-  keg_only :versioned_formula
 
   depends_on "cmake" => [:build, :test]
   depends_on "doxygen" => :build

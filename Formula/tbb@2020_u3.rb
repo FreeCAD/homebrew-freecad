@@ -9,9 +9,11 @@ class TbbAT2020U3 < Formula
 
   keg_only :versioned_formula
 
+  disable! date: "2025-10-20", because: "no longer required, use onetbb from homebrew/core"
+
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.0.2" => :build
-  depends_on "python@3.9"
+  depends_on "python@3.12"
 
   # Remove when upstream fix is released
   # https://github.com/oneapi-src/oneTBB/pull/258
@@ -38,7 +40,7 @@ class TbbAT2020U3 < Formula
 
     cd "python" do
       ENV["TBBROOT"] = prefix
-      python3 = Formula["python@3.9"].opt_bin/"python3"
+      python3 = Formula["python@3.12"].opt_bin/"python3"
       system python3, *Language::Python.setup_install_args(prefix)
     end
 
@@ -81,7 +83,5 @@ class TbbAT2020U3 < Formula
 
     system ENV.cxx, "sum1-100.cpp", "--std=c++14", "-L#{lib}", "-I#{include}", "-ltbb", "-o", "sum1-100"
     assert_equal "5050", shell_output("./sum1-100").chomp
-
-    # system "#{HOMEBREW_PREFIX}/bin/python3", "-c", "import tbb"
   end
 end
