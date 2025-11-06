@@ -172,10 +172,10 @@ jobs:
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
           
           # Remove large packages
-          sudo apt-get remove -y '^aspnetcore-.*' || true
-          sudo apt-get remove -y '^dotnet-.*' --fix-missing || true
+          # sudo apt-get remove -y '^aspnetcore-.*' || true
+          # sudo apt-get remove -y '^dotnet-.*' --fix-missing || true
           sudo apt-get remove -y '^llvm-.*' --fix-missing || true
-          sudo apt-get remove -y 'php.*' --fix-missing || true
+          # sudo apt-get remove -y 'php.*' --fix-missing || true
           sudo apt-get remove -y '^mongodb-.*' --fix-missing || true
           sudo apt-get remove -y '^mysql-.*' --fix-missing || true
           sudo apt-get remove -y azure-cli google-chrome-stable firefox powershell mono-devel libgl1-mesa-dri --fix-missing || true
@@ -183,7 +183,7 @@ jobs:
           sudo apt-get clean
           
           # Remove Docker images
-          docker rmi $(docker image ls -aq) || true
+          docker image ls -aq | xargs -r docker rmi 2>/dev/null || true
           
           echo "Disk space after cleanup:"
           df -h
