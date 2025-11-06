@@ -26,8 +26,8 @@ class Pybind11Py312 < Formula
   depends_on "python-setuptools" => :build
   depends_on "python@3.12" => [:build, :test]
 
-  if OS.mac? && MacOS.version <= :mojave
-    depends_on "gettext"
+  on_macos do
+    depends_on "gettext" if MacOS.version <= :mojave
   end
 
   def python3
