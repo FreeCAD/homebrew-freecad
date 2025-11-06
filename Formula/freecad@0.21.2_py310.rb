@@ -98,7 +98,7 @@ class FreecadAT0212Py310 < Formula
   depends_on "glew"
   depends_on "googletest"
   depends_on "icu4c"
-  depends_on macos: :high_sierra # no access to sierra test box
+  # epends_on macos: :high_sierra # no access to sierra test box
   depends_on "mesa-glu" if OS.linux?
   depends_on "openblas"
   depends_on "orocos-kdl"

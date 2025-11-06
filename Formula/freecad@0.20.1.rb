@@ -35,7 +35,7 @@ class FreecadAT0201 < Formula
   depends_on "icu4c"
   # epends_on "freecad/freecad/nglib@6.2.2105"
   depends_on "llvm"
-  depends_on macos: :high_sierra # no access to sierra test box
+  # epends_on macos: :high_sierra # no access to sierra test box
   depends_on "openblas"
   depends_on "opencascade"
   depends_on "orocos-kdl"
