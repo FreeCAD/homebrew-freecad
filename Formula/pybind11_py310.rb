@@ -25,7 +25,7 @@ class Pybind11Py310 < Formula
   depends_on "cmake" => :build
   depends_on "python@3.10" => [:build, :test]
 
-  on_mojave :or_older do
+  if OS.mac? && MacOS.version <= :mojave
     depends_on "gettext"
   end
 
