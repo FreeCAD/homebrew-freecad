@@ -107,7 +107,7 @@ class FreecadAT100Py312Qt6 < Formula
   depends_on "libomp" if OS.linux?
   depends_on "libx11" if OS.linux?
   depends_on "llvm" if OS.linux?
-  depends_on macos: :high_sierra
+  # epends_on macos: :high_sierra
   depends_on "mesa" if OS.linux?
   depends_on "mesa-glu" if OS.linux?
   depends_on "nlohmann-json"
