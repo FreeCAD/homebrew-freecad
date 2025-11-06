@@ -31,14 +31,12 @@ jobs:
         os: 
           # NOTE: macos-*-large runner requires additional spending limits
           # - macos-14-large
+          - macos-26
           - macos-15
+          - macos-15-intel
           - macos-14
-          # - macos-13-large
-          # NOTE: macos-13 is the last free intel runner provided by github
-          - macos-13
-          # - macos-12-large
-          # upstream homebrew-core has deprecated macos-12 and github will retire images on 12/3/24
-          # - macos-12
+          # NOTE: deprecated circa nov 4 2025
+          # - macos-13
           - ubuntu-22.04
           # - self-hosted-catalinavm
           # - self-hosted-bigsurvm
@@ -158,6 +156,37 @@ jobs:
           else
             echo "No self-hosted runner found"
           fi
+
+      - name: free up disk space on github hosted ubuntu runner
+        if: matrix.os == 'ubuntu-22.04'
+        # if: ${{ !contains(matrix.os, 'self-hosted-ubuntu-22.04') }}
+        run: |
+          echo "Disk space before cleanup:"
+          df -h
+          
+          # Remove unnecessary packages and tools
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          
+          # Remove large packages
+          sudo apt-get remove -y '^aspnetcore-.*' || true
+          sudo apt-get remove -y '^dotnet-.*' --fix-missing || true
+          sudo apt-get remove -y '^llvm-.*' --fix-missing || true
+          sudo apt-get remove -y 'php.*' --fix-missing || true
+          sudo apt-get remove -y '^mongodb-.*' --fix-missing || true
+          sudo apt-get remove -y '^mysql-.*' --fix-missing || true
+          sudo apt-get remove -y azure-cli google-chrome-stable firefox powershell mono-devel libgl1-mesa-dri --fix-missing || true
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+          
+          # Remove Docker images
+          docker rmi $(docker image ls -aq) || true
+          
+          echo "Disk space after cleanup:"
+          df -h
 
       # # Step to add Homebrew paths to GITHUB_ENV if using act locally
       # - name: Set Homebrew environment variables for act
