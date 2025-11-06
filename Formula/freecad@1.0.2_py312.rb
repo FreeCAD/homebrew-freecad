@@ -10,6 +10,11 @@ class FreecadAT102Py312 < Formula
     url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.2.tar.gz"
     sha256 "228ee52f00627c7d8fa61998179deb01865ece69390829feb1300228d24f7e9e"
 
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/378dd20b0a68a02b821610ffe3af379168507913.patch?full_index=1"
+      sha256 "b9f3d31a0308d3a7c13e87db573a34884698fef32f2bae8ff8587f0cd3871e0f"
+    end
+
     # NOTE: ipatch, fix build with boost >= v1.89
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/12a318c22ca15645fb776c98eda480fde78abead/patches/freecad%401.0.2_py312-fix-build-with-boost-v1.89.patch"
@@ -329,6 +334,16 @@ class FreecadAT102Py312 < Formula
       ]
     end
 
+    # Add missing include paths for test targets
+    # if OS.linux?
+    #   ENV.append "CXXFLAGS", "-isystem #{Formula["boost"].opt_include}"
+    #   ENV.append "CXXFLAGS", "-isystem #{Formula["fmt"].opt_include}"
+    #   ENV.append "CXXFLAGS", "-isystem #{Formula["qt@5"].opt_include}"
+    #   ENV.append "CXXFLAGS", "-isystem #{Formula["qt@5"].opt_include}/QtCore"
+    #   ENV.append "CXXFLAGS", "-isystem #{Formula["qt@5"].opt_include}/QtGui"
+    #   ENV.append "CXXFLAGS", "-isystem #{Formula["qt@5"].opt_include}/QtWidgets"
+    # end
+
     args = %W[
       -DHOMEBREW_PREFIX=#{hbp}
       -DCMAKE_PREFIX_PATH=#{cmake_prefix_path_string}
@@ -388,6 +403,17 @@ class FreecadAT102Py312 < Formula
     args.concat(args_linux_only) if OS.linux?
 
     system "cmake", *args, src_dir.to_s
+
+    # Fix missing Sketcher library path in link commands
+    # if OS.linux?
+    #   inreplace "#{build_dir}/build.ninja" do |s|
+    #     s.gsub!(
+    #       /-lSketcherGui/,
+    #       "-L#{build_dir}/Mod/Sketcher -lSketcherGui"
+    #     )
+    #   end
+    # end
+
     system "cmake", "--build", build_dir.to_s
     system "cmake", "--install", build_dir.to_s
   end
