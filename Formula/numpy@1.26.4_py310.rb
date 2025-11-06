@@ -88,8 +88,8 @@ class NumpyAT1264Py310 < Formula
       # system python3, "setup.py", "--help-commands"
       # system python3, "setup.py", "install", "--help"
       system python3, "setup.py", "install",
-        "--prefix=#{prefix}", \
-        "--install-lib=#{lib}/python3.10/site-packages", \
+        "--prefix=#{prefix}",
+        "--install-lib=#{lib}/python3.10/site-packages",
         "--install-scripts=#{prefix}"
     else
       system python3, "-m", "pip", "install", *std_pip_args, ".",
