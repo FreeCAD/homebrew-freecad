@@ -122,6 +122,11 @@ jobs:
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ runner.os }}-rubygems-
 
+      - name: sanatize homebrew-core tap
+        run: |
+          brew update-reset "$(brew --repository homebrew/core)" || true
+          git -C "$(brew --repository homebrew/core)" clean -fd || true
+
       - name: Fetch GitHub runners and check if self-hosted
         continue-on-error: true
         id: fetch-runners-then-check-for-self-hosted
