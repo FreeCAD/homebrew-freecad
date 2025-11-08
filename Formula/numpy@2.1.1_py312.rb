@@ -4,7 +4,7 @@ class NumpyAT211Py312 < Formula
   url "https://files.pythonhosted.org/packages/59/5f/9003bb3e632f2b58f5e3a3378902dcc73c5518070736c6740fe52454e8e1/numpy-2.1.1.tar.gz"
   sha256 "d0cf7d55b1051387807405b3898efafa862997b4cba8aa5dbe657be794afeafd"
   license "BSD-3-Clause"
-  revision 1
+  revision 2
   head "https://github.com/numpy/numpy.git", branch: "main"
 
   livecheck do
