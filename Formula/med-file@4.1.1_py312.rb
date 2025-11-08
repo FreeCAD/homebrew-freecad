@@ -8,11 +8,10 @@ class MedFileAT411Py312 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 1
-    sha256 cellar: :any,                 arm64_sequoia: "8c7eca032b6777c4e2a5dac04f5ada3fbb2dd639bb60eea2358de65b9cbe5f38"
-    sha256 cellar: :any,                 arm64_sonoma:  "70c01c34378d3f73805aef0c538b4356bbc515e5ca89f1bf77f48f844dc4d58f"
-    sha256 cellar: :any,                 ventura:       "38ca4f08b0dd396a431810fe9f140005a46c95632781680479146e9e41ddb0a2"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "504e420195b48e95b0773c2344d1a916e527fd8ec506d2031000ae591296c7ba"
+    sha256 cellar: :any,                 arm64_tahoe:   "518cbbf12dac98d4bb514e1a29f075fc56fadc6ca0b729ac82e9be8d226da9d6"
+    sha256 cellar: :any,                 arm64_sequoia: "bfe3caca1bea3255e2bc860883927cabec84fcd31ad7ba47e008f21542af708b"
+    sha256 cellar: :any,                 arm64_sonoma:  "542dc331e534fd51e2b7c1e13667001dd061fe326addc8a15d67eadbcc496fe7"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "4e910a4616852eec328ed6019fb64de21c33a8b1ec30dea9332f823b28b24c64"
   end
 
   keg_only :versioned_formula
