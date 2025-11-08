@@ -27,7 +27,8 @@ class Pybind11Py312 < Formula
   depends_on "python@3.12" => [:build, :test]
 
   on_macos do
-    depends_on "gettext" if MacOS.version <= :mojave
+    # NOTE: ipatch, only required if macos is mojave or older
+    depends_on "gettext"
   end
 
   def python3
