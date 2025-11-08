@@ -13,10 +13,10 @@ class SwigAT421 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 arm64_tahoe:   "e2bca25c8899561bd1e42939e8ac5254e1d6c4068dc1b5d7c0a5e3838ce108fc"
-    sha256 arm64_sequoia: "de928d10496a879f8db2b0d1dcc14a35cef0f9e2a591fa26096a55a3c7cdfa06"
-    sha256 arm64_sonoma:  "5e4fb0f6479f4e8aafc15bb9667758fe76f4217cfccf4c85fede8fb64b0ad51c"
-    sha256 x86_64_linux:  "c49d52b5c32f923cac396386395a08179eeffb5f28e0ec7335b542e211134b05"
+    sha256 arm64_tahoe:   "684172d7f908bc071df34c6d54223eca80d73a074f4708d64efdedc9d9cf1f63"
+    sha256 arm64_sequoia: "d2152237258ccae34c7ada3546e06abd6fc611ff84c0e956c3b9ef86d30e2241"
+    sha256 arm64_sonoma:  "c213016b24bbb34103e254c1e4d5f9e31a4dd74e1a3fd0f62e0744b8b3fc48b1"
+    sha256 x86_64_linux:  "191392ae135be7c701f998fe5b5017d90295f9adbe8f8ca428e358af86bd32cc"
   end
 
   head do
