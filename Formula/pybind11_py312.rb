@@ -4,7 +4,7 @@ class Pybind11Py312 < Formula
   url "https://github.com/pybind/pybind11/archive/refs/tags/v2.13.6.tar.gz"
   sha256 "e08cb87f4773da97fa7b5f035de8763abc656d87d5773e62f6da0587d1f0ec20"
   license "BSD-3-Clause"
-  revision 1
+  revision 2
   head "https://github.com/pybind/pybind11.git", branch: "master", shallow: false
 
   livecheck do
