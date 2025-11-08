@@ -14,10 +14,7 @@ jobs:
     # NOTE: ipatch, don't use macos runner to publish bottles
     # SEE: https://github.com/orgs/Homebrew/discussions/4938#discussioncomment-7721218
     # runs-on: [ macos-latest ]
-    permissions:
-      contents: write
-      packages: write
-      actions: write
+    permissions: write-all
 
     steps:
       - name: Set up Homebrew
