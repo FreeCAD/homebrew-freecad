@@ -4,7 +4,7 @@ class MedFileAT411Py312 < Formula
   url "https://github.com/chennes/med/archive/refs/tags/v4.1.1.tar.gz"
   sha256 "ee8b3b6d46bfee25c1d289308b16c7f248d1339161fd5448339382125e6119ad"
   license "GPL-3.0-only"
-  revision 1
+  revision 2
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
