@@ -4,7 +4,7 @@ class NumpyAT211Py312 < Formula
   url "https://files.pythonhosted.org/packages/59/5f/9003bb3e632f2b58f5e3a3378902dcc73c5518070736c6740fe52454e8e1/numpy-2.1.1.tar.gz"
   sha256 "d0cf7d55b1051387807405b3898efafa862997b4cba8aa5dbe657be794afeafd"
   license "BSD-3-Clause"
-  revision 2
+  revision 3
   head "https://github.com/numpy/numpy.git", branch: "main"
 
   livecheck do
@@ -38,6 +38,13 @@ class NumpyAT211Py312 < Formula
   end
 
   def install
+    # Fix build failure on macOS Sequoia/Tahoe with Xcode 16+ (missing std::ptrdiff_t)
+    if OS.mac? && MacOS.version >= :sequoia
+      inreplace "numpy/_core/src/umath/string_fastsearch.h",
+        /^#include <type_traits>/,
+        "#include <type_traits>\n#include <cstddef>"
+    end
+
     pythons.each do |python|
       python3 = python.opt_libexec/"bin/python"
       system python3, "-m", "pip", "install", "-Csetup-args=-Dblas=openblas",
