@@ -9,9 +9,10 @@ class VtkAT952Py312 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any,                 arm64_sequoia: "bf7807837621e2d8a8126abcdd8d6175a2e28c6ea1ccfa6582b8d1d992e737e0"
-    sha256 cellar: :any,                 arm64_sonoma:  "2e4e78240f3fcff6f92213711c872c9bb7c47eb956302377997d1e1f63678a12"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "566ae3829c3911e0889d2d596e07c6fe046969dbd4569a44544475912c4f1a2b"
+    sha256 cellar: :any,                 arm64_tahoe:   "85c61dbfce76ff794c5c8b2a519e3c8fcf0d281d47b2e4f169f2d3a2ac627580"
+    sha256 cellar: :any,                 arm64_sequoia: "0fd7c51fe0fc179f6c4370c9824cbd596dde8af2b5923a85dd6f7719afd40092"
+    sha256 cellar: :any,                 arm64_sonoma:  "52b0dc6116c75b355eab1804a7f3face29b1c5c0574bf940883fa245961c5b49"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "6408f2dfb0cfd644fee23f89c842cc1e87072473c7e242ae5cdf291ba8ce2f56"
   end
 
   keg_only :versioned_formula
