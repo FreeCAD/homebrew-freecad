@@ -5,6 +5,14 @@ class CalculixAT223 < Formula
   version "2.23"
   sha256 "9c88385c10fb04f5dc6c4e98027a51bebdd8aee3920e05190d6c1dd08357d6e7"
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any,                 arm64_tahoe:   "fb04b0417f9fffb65c05cd2271cb97dff01d430f4e9c5e7dc5bbfc5a3adc74b5"
+    sha256 cellar: :any,                 arm64_sequoia: "018b5c8c36de6eb5dab7a0c8c372c2c85e573b3fc896ff386f7a7155cee93e7f"
+    sha256 cellar: :any,                 arm64_sonoma:  "8074146ebd2a5634f6554cbdf3891e6a5c1aea9c797e1aa7660147ec0042dd4f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "8f06dea19dab57fd9f04dc7a4fdc256126e13e7cc8b16eba9808c439eb6bb298"
+  end
+
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
