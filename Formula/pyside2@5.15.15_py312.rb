@@ -4,7 +4,7 @@ class Pyside2AT51515Py312 < Formula
   url "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.15-src/pyside-setup-opensource-src-5.15.15.tar.xz"
   sha256 "21d6818b064834b08501180e48890e5fd87df2fb3769f80c58143457f548c408"
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
-  revision 1
+  revision 2
 
   livecheck do
     url "https://download.qt.io/official_releases/QtForPython/pyside2/"
