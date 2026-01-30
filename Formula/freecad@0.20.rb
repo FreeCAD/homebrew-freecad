@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the FreeCAD project.
+
 class FreecadAT020 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the FreeCAD project.
+
 class Elmer < Formula
   desc "CFD"
   homepage "https://www.csc.fi/web/elmer"

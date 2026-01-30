@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the FreeCAD project.
+
 class MedFileAT411 < Formula
   desc "Modeling and Data Exchange standardized format library"
   homepage "https://www.salome-platform.org/"

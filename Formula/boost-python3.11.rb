@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the FreeCAD project.
+
 class BoostPython311 < Formula
   desc "C++ library for C++/Python3 interoperability"
   homepage "https://www.boost.org/"

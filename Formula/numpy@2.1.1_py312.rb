@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the FreeCAD project.
+
 class NumpyAT211Py312 < Formula
   desc "Package for scientific computing with Python"
   homepage "https://www.numpy.org/"
