@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the FreeCAD project.
+
 class OpencascadeAT753 < Formula
   desc "3D modeling and numerical simulation software for CAD/CAM/CAE"
   homepage "https://github.com/Open-Cascade-SAS"

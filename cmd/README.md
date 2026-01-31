@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: LGPL-2.1-or-later -->
+<!-- SPDX-FileNotice: Part of the FreeCAD project. -->
+
 ## Notes
 
 This directory is used to house _external commands_ specific to this tap ie. _freecad/homebrew-freecad_. To learn more about external commands, and what they can do see the below link.

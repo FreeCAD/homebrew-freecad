@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: LGPL-2.1-or-later -->
+<!-- SPDX-FileNotice: Part of the FreeCAD project. -->
+
 <!-- use html tags to center content -->
 
 <h2 align="center">homebrew-freecad</h2>

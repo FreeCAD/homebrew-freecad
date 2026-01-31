@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the FreeCAD project.
+
 class NumpyAT1264Py310 < Formula
   include Language::Python::Virtualenv
   desc "Package for scientific computing with Python"

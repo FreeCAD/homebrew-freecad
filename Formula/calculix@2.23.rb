@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the FreeCAD project.
+
 class CalculixAT223 < Formula
   desc "Free Software Three-Dimensional Structural Finite Element Program"
   homepage "https://www.calculix.de/"

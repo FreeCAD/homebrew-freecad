@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the FreeCAD project.
+
 class Opencamlib < Formula
   desc "Computer Aided Manufacturing libraries"
   homepage "http://www.anderswallin.net/CAM/"

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the FreeCAD project.
+
 class SwigAT402 < Formula
   desc "Generate scripting interfaces to C/C++ code"
   homepage "https://www.swig.org/"
