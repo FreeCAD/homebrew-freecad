@@ -3,6 +3,7 @@
 
 class NumpyAT1264Py310 < Formula
   include Language::Python::Virtualenv
+
   desc "Package for scientific computing with Python"
   homepage "https://www.numpy.org/"
   license "BSD-3-Clause"
