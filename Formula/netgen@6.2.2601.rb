@@ -9,6 +9,14 @@ class NetgenAT622601 < Formula
   license "LGPL-2.1-only"
   head "https://github.com/ngsolve/netgen.git", branch: "master"
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, arm64_tahoe:   "9d2d35cb24df02274a2e9f47be305891ee1c884e521af5279ff3f4e783d67c94"
+    sha256 cellar: :any, arm64_sequoia: "c36d9878e077261798b2039bb325c430adaf58816b7de1b9f04d41624c004eed"
+    sha256 cellar: :any, arm64_sonoma:  "dbbba33c8f5dc8c9dad8268dede0c21fa5d4b356fc5c61dfa3bc8ea27d67d846"
+    sha256               x86_64_linux:  "421531daa528b4ee9f6cf5ebe27947c58ee7eaa565ae786933d982e1d9feeb2f"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
