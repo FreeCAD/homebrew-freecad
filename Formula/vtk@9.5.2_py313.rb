@@ -100,6 +100,7 @@ class VtkAT952Py313 < Formula
       -DPython3_EXECUTABLE:FILEPATH=#{which(python)}
       -DVTK_GROUP_ENABLE_Qt:STRING=YES
       -DVTK_QT_VERSION:STRING=6
+      -DHDF5_IS_PARALLEL:BOOL=OFF
     ]
     # External gl2ps causes failure linking to macOS OpenGL.framework
     args << "-DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=ON" unless OS.mac?
