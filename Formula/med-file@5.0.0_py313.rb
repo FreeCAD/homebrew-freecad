@@ -132,7 +132,7 @@ class MedFileAT500Py313 < Formula
     # https://github.com/FreeCAD/homebrew-freecad/pull/760#issuecomment-3930614769
     if OS.mac?
       Dir[lib/"python3.13/site-packages/med/*.so"].each do |f|
-        MachO::Tools.add_rpath(lib.to_s, f)
+        MachO::Tools.add_rpath(f, lib.to_s)
       end
     end
   end
