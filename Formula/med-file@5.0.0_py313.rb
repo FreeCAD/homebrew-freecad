@@ -5,7 +5,7 @@ class MedFileAT500Py313 < Formula
   desc "Modeling and Data Exchange standardized format library"
   homepage "https://www.salome-platform.org/"
   url "https://github.com/chennes/med/archive/refs/tags/v5.0.0.tar.gz"
-  sha256 ""
+  sha256 "8701f142087b87e8b74958fd0432498eadf28011b20ad05cf56bf911be081888"
   license "GPL-3.0-only"
 
   keg_only :versioned_formula
@@ -13,19 +13,24 @@ class MedFileAT500Py313 < Formula
   depends_on "cmake" => :build
   depends_on "python@3.13" => :build
   depends_on "swig" => :build
-  depends_on "gcc" # may be better as a build dep, not fully sure at the moment
+  depends_on "gcc"
   depends_on "hdf5"
   depends_on "libaec"
 
-  # patch do
-  #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/8efd96c520e35c36cbd55460669a643b53b27c29/patches/med-file-4.1.1-cmake-find-python-h.patch"
-  #   sha256 "8fe32c1217704c5c963f35adbf1a05f3e7e3f1b3db686066c5bdd34bf45e409a"
-  # end
+  patch do
+    url "https://src.fedoraproject.org/rpms/med/raw/rawhide/f/hdf5-1.14.patch"
+    sha256 "e18d32101826d36007c65ccf9975a10eff750b6a7b5215846987d808aae2a3cd"
+  end
 
-  # patch do
-  #   url "https://gitweb.gentoo.org/repo/gentoo.git/plain/sci-libs/med/files/med-4.1.0-0003-build-against-hdf5-1.14.patch"
-  #   sha256 "d4551df69f4dcb3c8a649cdeb0a6c9d27a03aebc0c6dcdba74cac39a8732f8d1"
-  # end
+  patch do
+    url "https://src.fedoraproject.org/rpms/med/raw/rawhide/f/med-swig-4.3.0.patch"
+    sha256 "b8c7d5eb2500fd1d66d215b571f5b9488ae8171e0b6fa80a29e2255ee5d713a5"
+  end
+
+  patch do
+    url "https://src.fedoraproject.org/rpms/med/raw/rawhide/f/med-py3.13.patch"
+    sha256 "43b99506d4132492bf0e397755147eae957ffec9aa71d454142ac4590ad5faf6"
+  end
 
   # TODO: a valid regex is required for livecheck
   # livecheck do
@@ -80,7 +85,8 @@ class MedFileAT500Py313 < Formula
       -DMEDFILE_USE_UNICODE=ON
       -DMEDFILE_BUILD_PYTHON=ON
       -DPYTHON_EXECUTABLE=#{python_exe}
-      -DPYTHON_INCLUDE_DIRS=#{py_inc_dir}
+      -DPYTHON_INCLUDE_DIR=#{py_inc_dir}
+      -DPYTHON_LIBRARY=#{py_lib_path}
       -DCMAKE_PREFIX_PATH=#{Formula["hdf5"].opt_prefix};#{Formula["gcc"].opt_prefix};
       -DCMAKE_INSTALL_RPATH=#{rpath}
       -DMEDFILE_BUILD_TESTS=0
@@ -145,7 +151,7 @@ class MedFileAT500Py313 < Formula
         return 0;
       }
     EOS
-    system ENV.cc, "-I#{include}", "-I#{Formula["hdf5"].include}", "-L#{lib}", "-lmedC", "test.c"
+    system ENV.cc, "-I#{include}", "-I#{Formula["hdf5"].include}", "-L#{lib}", "-lmedC", "-Wl,-rpath,#{lib}", "test.c"
     assert_equal version.to_s, shell_output("./a.out").chomp
   end
 end
