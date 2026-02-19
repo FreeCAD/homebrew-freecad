@@ -127,6 +127,14 @@ class MedFileAT500Py313 < Formula
     (lib/"python#{py_ver}/medfile.pth").write <<~EOS
       import site; site.addsitedir('#{lib}/python#{py_ver}/site-packages/')
     EOS
+
+    # NOTE: see the below comment,
+    # https://github.com/FreeCAD/homebrew-freecad/pull/760#issuecomment-3930614769
+    if OS.mac?
+      Dir[lib/"python3.13/site-packages/med/*.so"].each do |f|
+        MachO::Tools.add_rpath(lib.to_s, f)
+      end
+    end
   end
 
   def caveats
