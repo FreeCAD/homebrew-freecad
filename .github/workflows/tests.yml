@@ -41,6 +41,7 @@ jobs:
           # NOTE: deprecated circa nov 4 2025
           # - macos-13
           - ubuntu-22.04
+          - ubuntu-22.04-arm
           # - self-hosted-catalinavm
           # - self-hosted-bigsurvm
           # - self-hosted-mojavevm
