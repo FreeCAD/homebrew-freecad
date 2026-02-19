@@ -1,40 +1,31 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileNotice: Part of the FreeCAD project.
 
-class MedFileAT411Py312 < Formula
+class MedFileAT500Py313 < Formula
   desc "Modeling and Data Exchange standardized format library"
   homepage "https://www.salome-platform.org/"
-  url "https://github.com/chennes/med/archive/refs/tags/v4.1.1.tar.gz"
-  sha256 "ee8b3b6d46bfee25c1d289308b16c7f248d1339161fd5448339382125e6119ad"
+  url "https://github.com/chennes/med/archive/refs/tags/v5.0.0.tar.gz"
+  sha256 ""
   license "GPL-3.0-only"
-  revision 2
-
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any,                 arm64_tahoe:   "518cbbf12dac98d4bb514e1a29f075fc56fadc6ca0b729ac82e9be8d226da9d6"
-    sha256 cellar: :any,                 arm64_sequoia: "bfe3caca1bea3255e2bc860883927cabec84fcd31ad7ba47e008f21542af708b"
-    sha256 cellar: :any,                 arm64_sonoma:  "542dc331e534fd51e2b7c1e13667001dd061fe326addc8a15d67eadbcc496fe7"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "4e910a4616852eec328ed6019fb64de21c33a8b1ec30dea9332f823b28b24c64"
-  end
 
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
-  depends_on "freecad/freecad/swig@4.2.1" => :build
-  depends_on "python@3.12" => :build
+  depends_on "python@3.13" => :build
+  depends_on "swig" => :build
   depends_on "gcc" # may be better as a build dep, not fully sure at the moment
   depends_on "hdf5"
   depends_on "libaec"
 
-  patch do
-    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/8efd96c520e35c36cbd55460669a643b53b27c29/patches/med-file-4.1.1-cmake-find-python-h.patch"
-    sha256 "8fe32c1217704c5c963f35adbf1a05f3e7e3f1b3db686066c5bdd34bf45e409a"
-  end
+  # patch do
+  #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/8efd96c520e35c36cbd55460669a643b53b27c29/patches/med-file-4.1.1-cmake-find-python-h.patch"
+  #   sha256 "8fe32c1217704c5c963f35adbf1a05f3e7e3f1b3db686066c5bdd34bf45e409a"
+  # end
 
-  patch do
-    url "https://gitweb.gentoo.org/repo/gentoo.git/plain/sci-libs/med/files/med-4.1.0-0003-build-against-hdf5-1.14.patch"
-    sha256 "d4551df69f4dcb3c8a649cdeb0a6c9d27a03aebc0c6dcdba74cac39a8732f8d1"
-  end
+  # patch do
+  #   url "https://gitweb.gentoo.org/repo/gentoo.git/plain/sci-libs/med/files/med-4.1.0-0003-build-against-hdf5-1.14.patch"
+  #   sha256 "d4551df69f4dcb3c8a649cdeb0a6c9d27a03aebc0c6dcdba74cac39a8732f8d1"
+  # end
 
   # TODO: a valid regex is required for livecheck
   # livecheck do
@@ -65,22 +56,23 @@ class MedFileAT411Py312 < Formula
       "-DCMAKE_INSTALL_LIBDIR",
     ]
 
-    ENV["PYTHON"] = Formula["python@3.12"].opt_bin/"python3.12"
+    ENV["PYTHON"] = Formula["python@3.13"].opt_bin/"python3.13"
 
     python_exe = ENV["PYTHON"]
     # Get the Python includes directory without duplicates
     py_inc_dir = `#{python_exe}-config --includes`.scan(/-I([^\s]+)/).flatten.uniq.join(" ")
 
     py_lib_path = if OS.mac?
-      `#{python_exe}-config --configdir`.strip + "/libpython3.12.dylib"
+      `#{python_exe}-config --configdir`.strip + "/libpython3.13.dylib"
     else
-      `#{python_exe}-config --configdir`.strip + "/libpython3.12.a"
+      `#{python_exe}-config --configdir`.strip + "/libpython3.13.a"
     end
 
     puts "--------------------------------------------"
     puts "PYTHON=#{ENV["PYTHON"]}"
     puts "PYTHON_INCLUDE_DIR=#{py_inc_dir}"
     puts "PYTHON_LIBRARY=#{py_lib_path}"
+    puts "--------------------------------------------"
 
     args = std_cmake_args + %W[
       -DHOMEBREW_PREFIX=#{hbp}
@@ -93,8 +85,8 @@ class MedFileAT411Py312 < Formula
       -DCMAKE_INSTALL_RPATH=#{rpath}
       -DMEDFILE_BUILD_TESTS=0
       -DCMAKE_C_STANDARD=17
-      -DCMAKE_C_EXTENSIONS=ON
       -DCMAKE_CXX_STANDARD=17
+      -DCMAKE_C_EXTENSIONS=ON
       -DCMAKE_CXX_EXTENSIONS=ON
     ]
 
@@ -108,7 +100,7 @@ class MedFileAT411Py312 < Formula
 
   def post_install
     # explicitly set python version
-    py_ver = "3.12"
+    py_ver = "3.13"
 
     python_dir = Dir["#{lib}/python."].first
     if python_dir && File.directory?(python_dir)
@@ -139,7 +131,7 @@ class MedFileAT411Py312 < Formula
       the same issue can be seen in the gentoo package file
       https://gitweb.gentoo.org/repo/gentoo.git/tree/sci-libs/med/med-4.1.1-r3.ebuild#n49
 
-      to use the python module provided by this formula the fc_bundle formula should be installed
+      to use the python module provided by this formula the fc_bundle_py313_qt6 formula should be installed
       or the formula will require manual linking using the `brew link` command.
     EOS
   end
