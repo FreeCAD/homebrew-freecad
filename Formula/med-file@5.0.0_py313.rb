@@ -8,6 +8,14 @@ class MedFileAT500Py313 < Formula
   sha256 "8701f142087b87e8b74958fd0432498eadf28011b20ad05cf56bf911be081888"
   license "GPL-3.0-only"
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any,                 arm64_tahoe:   "0ad452b5c117dcac22386bf026710edccaf220ba0abeecc277485b5f5d037604"
+    sha256 cellar: :any,                 arm64_sequoia: "4e2b5b776cd75ed32ae0e71f8616d17309962a022f6f04c0621f608f68f8ed01"
+    sha256 cellar: :any,                 arm64_sonoma:  "6c26ef494d959bb24fd004261f0cbf3c70663b3c56224f5cf4bbeffd45d16068"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "027fbe65bfc98febb7d1d82b28469cf2b48382ea86c041dc5ca4c9c10638b0c1"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
