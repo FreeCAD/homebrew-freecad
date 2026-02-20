@@ -101,6 +101,7 @@ class VtkAT952Py313 < Formula
       -DVTK_GROUP_ENABLE_Qt:STRING=YES
       -DVTK_QT_VERSION:STRING=6
       -DHDF5_IS_PARALLEL:BOOL=OFF
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo
     ]
     # External gl2ps causes failure linking to macOS OpenGL.framework
     args << "-DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=ON" unless OS.mac?
@@ -150,7 +151,7 @@ class VtkAT952Py313 < Formula
       }
     CPP
 
-    system "cmake", ".", "-DCMAKE_BUILD_TYPE=Debug", "-DCMAKE_VERBOSE_MAKEFILE=ON", "-DVTK_DIR=#{vtk_dir}"
+    system "cmake", ".", "-DCMAKE_BUILD_TYPE=RelWithDebInfo", "-DCMAKE_VERBOSE_MAKEFILE=ON", "-DVTK_DIR=#{vtk_dir}"
     system "make"
     system "./Distance2BetweenPoints"
 
