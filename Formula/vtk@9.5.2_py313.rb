@@ -45,6 +45,7 @@ class VtkAT952Py313 < Formula
     depends_on "libx11"
     depends_on "libxcursor"
     depends_on "mesa"
+    depends_on "zlib-ng-compat"
   end
 
   def install
