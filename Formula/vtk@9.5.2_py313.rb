@@ -6,6 +6,14 @@ class VtkAT952Py313 < Formula
   license "BSD-3-Clause"
   head "https://gitlab.kitware.com/vtk/vtk.git", branch: "master"
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any,                 arm64_tahoe:   "39eee490c8021a6d0f24b916bac76c227407ef43e8d93fc3a577e3e5d86edfde"
+    sha256 cellar: :any,                 arm64_sequoia: "c1d77e599d2dcca21d5c4cb1d73447f18643b9ece72d07e3e5ef86caeaff123a"
+    sha256 cellar: :any,                 arm64_sonoma:  "4c202fac8a5637166a26be165cf6a5dc918d205074d81a6859526e02ee52de08"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "69731ea70043038bcf2898a95dd14e6a889d3134d8ae2678338167926d1fa3f6"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => [:build, :test]
