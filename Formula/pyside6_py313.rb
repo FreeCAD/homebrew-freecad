@@ -1,28 +1,40 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileNotice: Part of the FreeCAD project.
 
-class Pyside6Py312 < Formula
+class Pyside6Py313 < Formula
   include Language::Python::Virtualenv
 
   desc "Official Python bindings for Qt"
   homepage "https://wiki.qt.io/Qt_for_Python"
-  url "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.7.3-src/pyside-setup-everywhere-src-6.7.3.tar.xz"
-  sha256 "a4c414be013d5051a2d10a9a1151e686488a3172c08a57461ea04b0a0ab74e09"
-  license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-3.0-only"]
+  url "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.10.2-src/pyside-setup-everywhere-src-6.10.2.tar.xz"
+  mirror "https://cdimage.debian.org/mirror/qt.io/qtproject/official_releases/QtForPython/pyside6/PySide6-6.10.2-src/pyside-setup-everywhere-src-6.10.2.tar.xz"
+  sha256 "05eec38bb71bffff8860786e3c0766cc4b86affc72439bd246c54889bdcb7400"
+  # NOTE: We omit some licenses even though they are in SPDX-License-Identifier or LICENSES/ directory:
+  # 1. LicenseRef-Qt-Commercial is removed from "OR" options as non-free
+  # 2. GFDL-1.3-no-invariants-only is only used by not installed docs, e.g. sources/{pyside6,shiboken6}/doc
+  # 3. BSD-3-Clause is only used by not installed examples, tutorials and build scripts
+  # 4. Apache-2.0 is only used by not installed examples
+  license all_of: [
+    { "GPL-3.0-only" => { with: "Qt-GPL-exception-1.0" } },
+    { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] },
+  ]
 
   livecheck do
     url "https://download.qt.io/official_releases/QtForPython/pyside6/"
     regex(%r{href=.*?PySide6[._-]v?(\d+(?:\.\d+)+)-src/}i)
   end
 
+  keg_only :versioned_formula
+
   depends_on "cmake" => :build
   depends_on "ninja" => :build
   depends_on "python-setuptools" => :build
+  depends_on "qtshadertools" => :build
   depends_on xcode: :build
-  depends_on "gettext" => :test # req for linking against -lintl
-  depends_on "freecad/freecad/numpy@2.1.1_py312"
+  depends_on "gettext" # req for linking against -lintl
   depends_on "llvm"
-  depends_on "python@3.12"
+  depends_on "numpy"
+  depends_on "python@3.13"
   depends_on "qt"
   depends_on "sphinx-doc"
 
@@ -31,6 +43,7 @@ class Pyside6Py312 < Formula
 
   on_linux do
     depends_on "mesa"
+    depends_on "gettext" => :test # req for linking against -lintl
   end
 
   conflicts_with "pyside",
@@ -38,12 +51,8 @@ class Pyside6Py312 < Formula
 
   fails_with gcc: "5"
 
-  # Fix .../sources/pyside6/qtexampleicons/module.c:4:10: fatal error: 'Python.h' file not found
-  # Upstream issue: https://bugreports.qt.io/browse/PYSIDE-2491
-  patch :DATA
-
   def python3
-    "python3.12"
+    "python3.13"
   end
 
   def install
@@ -52,30 +61,15 @@ class Pyside6Py312 < Formula
     extra_include_dirs = [Formula["qt"].opt_include]
     extra_include_dirs << Formula["mesa"].opt_include if OS.linux?
 
-    # upstream issue: https://bugreports.qt.io/browse/PYSIDE-1684
-    inreplace "sources/pyside6/cmake/Macros/PySideModules.cmake",
-              "${shiboken_include_dirs}",
-              "${shiboken_include_dirs}:#{extra_include_dirs.join(":")}"
-
-    # Fix build failure on macOS because `CMAKE_BINARY_DIR` points to /tmp but
-    # `location` points to `/private/tmp`, which makes this conditional fail.
-    # Submitted upstream here: https://codereview.qt-project.org/c/pyside/pyside-setup/+/416706.
-    inreplace "sources/pyside6/PySide6/__init__.py.in",
-              "in_build = Path(\"@CMAKE_BINARY_DIR@\") in location.parents",
-              "in_build = Path(\"@CMAKE_BINARY_DIR@\").resolve() in location.parents"
-
-    # Install python scripts into pkgshare rather than bin
-    inreplace "sources/pyside-tools/CMakeLists.txt", "DESTINATION bin", "DESTINATION #{pkgshare}"
-
     # Avoid shim reference
     inreplace "sources/shiboken6/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
     cmake_args = std_cmake_args
 
-    ENV.prepend_path "CMAKE_PREFIX_PATH", Formula["python@3.12"].opt_prefix
+    ENV.prepend_path "CMAKE_PREFIX_PATH", Formula["python@3.13"].opt_prefix
 
     # setup numpy include dir
-    numpy_inc_dir = Formula["numpy@2.1.1_py312"].opt_prefix/"lib/python3.12/site-packages/numpy/_core/include"
+    numpy_inc_dir = Formula["numpy"].opt_prefix/"lib/python3.13/site-packages/numpy/_core/include"
 
     puts "-------------------------------------------------"
     puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
@@ -89,7 +83,7 @@ class Pyside6Py312 < Formula
                      "-DCMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}",
                      "-DBUILD_TESTS=OFF",
                      "-DBUILD_DOCS=ON",
-                     "-DNO_QT_TOOLS=yes",
+                     "-DNO_QT_TOOLS=no",
                      "-DFORCE_LIMITED_API=no",
                      "-DNUMPY_INCLUDE_DIR=#{numpy_inc_dir}",
                      "-G Ninja",
@@ -101,7 +95,7 @@ class Pyside6Py312 < Formula
 
   def post_install
     # explicitly set python version
-    python_version = "3.12"
+    python_version = "3.13"
 
     # Unlink the existing .pth file to avoid reinstall issues
     pth_file = lib/"python#{python_version}/pyside6.pth"
@@ -168,31 +162,16 @@ class Pyside6Py312 < Formula
     EOS
 
     shiboken_lib = if OS.mac?
-      "shiboken6.cpython-312-darwin"
+      "shiboken6.cpython-313-darwin"
     else
-      "shiboken6.cpython-312-x86_64-linux-gnu"
+      "shiboken6.cpython-313-x86_64-linux-gnu"
     end
 
     system ENV.cxx, "-std=c++17", "test.cpp",
                     "-I#{include}/shiboken6",
                     "-L#{lib}", "-l#{shiboken_lib}",
-                    "-L#{Formula["gettext"].opt_lib}",
+                    # "-L#{Formula["gettext"].opt_lib}",
                     *pyincludes, *pylib, "-o", "test"
     system "./test"
   end
 end
-
-__END__
-diff --git a/sources/pyside6/qtexampleicons/CMakeLists.txt b/sources/pyside6/qtexampleicons/CMakeLists.txt
-index 1562f7b..0611399 100644
---- a/sources/pyside6/qtexampleicons/CMakeLists.txt
-+++ b/sources/pyside6/qtexampleicons/CMakeLists.txt
-@@ -32,6 +32,8 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-     target_compile_definitions(QtExampleIcons PRIVATE "-DNDEBUG")
- endif()
-
-+get_property(SHIBOKEN_PYTHON_INCLUDE_DIRS GLOBAL PROPERTY shiboken_python_include_dirs)
-+
- target_include_directories(QtExampleIcons PRIVATE ${SHIBOKEN_PYTHON_INCLUDE_DIRS})
-
- get_property(SHIBOKEN_PYTHON_LIBRARIES GLOBAL PROPERTY shiboken_python_libraries)
