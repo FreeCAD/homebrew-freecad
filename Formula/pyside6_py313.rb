@@ -135,6 +135,9 @@ class Pyside6Py313 < Formula
                      *cmake_args
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
+
+    # Ensure .py scripts installed in `bin` are executable
+    bin.glob("*.py").each { |f| f.chmod 0755 }
   end
 
   def post_install
