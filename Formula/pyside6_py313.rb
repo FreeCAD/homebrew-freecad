@@ -69,25 +69,20 @@ class Pyside6Py313 < Formula
     depends_on "qtshadertools"
   end
 
+  on_sonoma :or_newer do
+    depends_on "qtwebengine"
+    depends_on "qtwebview"
+  end
+
   on_linux do
     depends_on "gettext" => :test
     depends_on "mesa" # req for linking against -lintl
+    # TODO: Add dependencies on all Linux when `qtwebengine` is bottled on arm64 Linux
+    on_intel do
+      depends_on "qtwebengine"
+      depends_on "qtwebview"
+    end
   end
-
-  # on_sonoma :or_newer do
-  #   epends_on "qtwebengine"
-  #   epends_on "qtwebview"
-  # end
-
-  # on_linux do
-  #   epends_on "mesa"
-
-  #   # TODO: Add dependencies on all Linux when `qtwebengine` is bottled on arm64 Linux
-  #   on_intel do
-  #     epends_on "qtwebengine"
-  #     epends_on "qtwebview"
-  #   end
-  # end
 
   conflicts_with "pyside",
     because: "both this version and upstream pyside@6 attempt to install py modules into the site-packages dir"
@@ -172,6 +167,8 @@ class Pyside6Py313 < Formula
   end
 
   test do
+    ENV.append_path "PYTHONPATH", lib/"python3.13/site-packages"
+
     system python3, "-c", "import PySide6"
     system python3, "-c", "import shiboken6"
 
