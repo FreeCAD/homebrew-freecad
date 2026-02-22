@@ -115,6 +115,11 @@ class Pyside6Py313 < Formula
     # setup numpy include dir
     numpy_inc_dir = Formula["numpy"].opt_prefix/"lib/python3.13/site-packages/numpy/_core/include"
 
+    # Remove Assistant/Designer/Linguist - not provided by the qt formula
+    inreplace "sources/pyside-tools/CMakeLists.txt" do |s|
+      s.gsub!(/^\s*if \(APPLE\).*?endif\(\)\n/m, "")
+    end
+
     puts "-------------------------------------------------"
     puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
     puts "PATH=#{ENV["PATH"]}"
