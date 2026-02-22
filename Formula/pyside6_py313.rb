@@ -31,20 +31,63 @@ class Pyside6Py313 < Formula
   depends_on "python-setuptools" => :build
   depends_on "qtshadertools" => :build
   depends_on xcode: :build
-  depends_on "gettext" # req for linking against -lintl
+  depends_on "pkgconf" => :test
+
   depends_on "llvm"
   depends_on "numpy"
   depends_on "python@3.13"
   depends_on "qt"
+  depends_on "qt3d"
+  depends_on "qtbase"
+  depends_on "qtcharts"
+  depends_on "qtconnectivity"
+  depends_on "qtdatavis3d"
+  depends_on "qtdeclarative"
+  depends_on "qtgraphs"
+  depends_on "qthttpserver"
+  depends_on "qtlocation"
+  depends_on "qtmultimedia"
+  depends_on "qtnetworkauth"
+  depends_on "qtpositioning"
+  depends_on "qtquick3d"
+  depends_on "qtremoteobjects"
+  depends_on "qtscxml"
+  depends_on "qtsensors"
+  depends_on "qtserialbus"
+  depends_on "qtserialport"
+  depends_on "qtspeech"
+  depends_on "qtsvg"
+  depends_on "qttools"
+  depends_on "qtwebchannel"
+  depends_on "qtwebsockets"
   depends_on "sphinx-doc"
 
   uses_from_macos "libxml2"
   uses_from_macos "libxslt"
 
-  on_linux do
-    depends_on "mesa"
-    depends_on "gettext" => :test # req for linking against -lintl
+  on_macos do
+    depends_on "qtshadertools"
   end
+
+  on_linux do
+    depends_on "gettext" => :test
+    depends_on "mesa" # req for linking against -lintl
+  end
+
+  # on_sonoma :or_newer do
+  #   epends_on "qtwebengine"
+  #   epends_on "qtwebview"
+  # end
+
+  # on_linux do
+  #   epends_on "mesa"
+
+  #   # TODO: Add dependencies on all Linux when `qtwebengine` is bottled on arm64 Linux
+  #   on_intel do
+  #     epends_on "qtwebengine"
+  #     epends_on "qtwebview"
+  #   end
+  # end
 
   conflicts_with "pyside",
     because: "both this version and upstream pyside@6 attempt to install py modules into the site-packages dir"
@@ -60,6 +103,12 @@ class Pyside6Py313 < Formula
 
     extra_include_dirs = [Formula["qt"].opt_include]
     extra_include_dirs << Formula["mesa"].opt_include if OS.linux?
+    extra_include_dirs << [Formula["qttools"].opt_include]
+
+    # upstream issue: https://bugreports.qt.io/browse/PYSIDE-1684
+    inreplace "sources/pyside6/cmake/Macros/PySideModules.cmake",
+      "${shiboken_include_dirs}",
+      "${shiboken_include_dirs}:#{extra_include_dirs.join(":")}"
 
     # Avoid shim reference
     inreplace "sources/shiboken6/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
@@ -170,7 +219,7 @@ class Pyside6Py313 < Formula
     system ENV.cxx, "-std=c++17", "test.cpp",
                     "-I#{include}/shiboken6",
                     "-L#{lib}", "-l#{shiboken_lib}",
-                    # "-L#{Formula["gettext"].opt_lib}",
+                    "-L#{Formula["gettext"].opt_lib}",
                     *pyincludes, *pylib, "-o", "test"
     system "./test"
   end
