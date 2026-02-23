@@ -143,6 +143,15 @@ class Pyside6Py313 < Formula
 
     # Ensure .py scripts installed in `bin` are executable
     bin.glob("*.py").each { |f| f.chmod 0755 }
+
+    # fix rpath issues on macos with python packages / modules, same fix used in med
+    if OS.mac?
+      %w[PySide6 shiboken6].each do |pkg|
+        Dir[lib/"python3.13/site-packages/#{pkg}/*.so"].each do |f|
+          MachO::Tools.add_rpath(f, lib.to_s)
+        end
+      end
+    end
   end
 
   def post_install
