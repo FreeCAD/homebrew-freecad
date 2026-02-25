@@ -213,7 +213,7 @@ class Pyside6Py313 < Formula
       ]
     end
 
-    (testpath/"test.cpp").write <<~EOS
+    (testpath/"test.cpp").write <<~CPP
       #include <shiboken.h>
       int main()
       {
@@ -222,9 +222,9 @@ class Pyside6Py313 < Formula
         assert(!module.isNull());
         return 0;
       }
-    EOS
+    CPP
 
-    shiboken_include = (prefix/"shiboken6/include" if OS.mac? && OS.linux?)
+    shiboken_include = prefix/"shiboken6/include"
 
     shiboken_lib = if OS.mac?
       "shiboken6.cpython-313-darwin"
