@@ -224,6 +224,8 @@ class Pyside6Py313 < Formula
       }
     EOS
 
+    shiboken_include = (prefix/"shiboken6/include" if OS.mac? && OS.linux?)
+
     shiboken_lib = if OS.mac?
       "shiboken6.cpython-313-darwin"
     else
@@ -231,7 +233,7 @@ class Pyside6Py313 < Formula
     end
 
     system ENV.cxx, "-std=c++17", "test.cpp",
-                    "-I#{include}/shiboken6",
+                    "-I#{shiboken_include}",
                     "-L#{lib}", "-l#{shiboken_lib}",
                     "-L#{Formula["gettext"].opt_lib}",
                     *pyincludes, *pylib, "-o", "test"
