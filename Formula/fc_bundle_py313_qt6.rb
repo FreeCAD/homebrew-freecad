@@ -12,6 +12,14 @@ class FcBundlePy313Qt6 < Formula
   # sha of file:///dev/null
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "ed009d05a9ea96f4fc3159d01d47b1952f72e7e3e40eb7847249e9e7af0e616d"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "cf5d89e8765fe5891672b0466363afdf3c49026506cd5ccc404b72dcc9f710d1"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "3c11ad393f7ec92ed17bf5a599063fce0863abb734b982d9a810cd7072a61a4c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "2ed5548d18df013b0900ff09eb89fb66e8b9c7fcf368118df2f1bc82f0bf76d9"
+  end
+
   depends_on "coin3d"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
   depends_on "freecad/freecad/pyside6_py313"
