@@ -19,12 +19,19 @@ class FcBundlePy313Qt6 < Formula
   depends_on "numpy"
   depends_on "pybind11" # pyside includes the shiboken module as well
 
+  # NOTE: it appears it has been several years since the six pypi package has been updated
   resource "six" do
     url "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz"
     sha256 "1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"
   end
 
-  # TODO: need to add new dep lark as the latest freecad versions require it.
+  # NOTE: newer versions of the BIM wb require lark
+  resource "lark" do
+    url "https://files.pythonhosted.org/packages/da/34/28fff3ab31ccff1fd4f6c7c7b0ceb2b6968d8ea4950663eadcb5720591a0/lark-1.3.1.tar.gz"
+    sha256 "b426a7a6d6d53189d318f2b6236ab5d6429eaf09259f1ca33eb716eed10d2905"
+  end
+
+  # TODO: still probably need to add the pynastran to make the test suite happy
 
   def install
     # explicitly set python version
