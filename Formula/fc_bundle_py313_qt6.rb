@@ -12,11 +12,12 @@ class FcBundlePy313Qt6 < Formula
   # sha of file:///dev/null
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
-  depends_on "freecad/freecad/coin3d@4.0.3_py312_qt6"
-  depends_on "freecad/freecad/med-file@4.1.1_py312"
-  depends_on "freecad/freecad/numpy@2.1.1_py312"
-  depends_on "freecad/freecad/pybind11_py312"
-  depends_on "freecad/freecad/pyside6_py312" # pyside includes the shiboken2 module as well
+  depends_on "coin3d"
+  depends_on "freecad/freecad/med-file@5.0.0_py313"
+  depends_on "freecad/freecad/pyside6_py313"
+  depends_on "freecad/freecad/vtk@9.5.2_py313"
+  depends_on "numpy"
+  depends_on "pybind11" # pyside includes the shiboken module as well
 
   resource "six" do
     url "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz"
@@ -45,42 +46,40 @@ class FcBundlePy313Qt6 < Formula
     # shiboken2_pth_contents = \
     # File.read("#{Formula["shiboken2@5.15.11"].opt_prefix}/lib/python#{pyver}/site-packages/shiboken2.pth").strip
 
-    coin3d_pivy_pth_contents =
-      File.read("#{Formula["coin3d@4.0.3_py312_qt6"].opt_prefix}/lib/python#{pyver}/coin3d_py312_qt6-pivy.pth").strip
     medfile_pth_contents =
-      File.read("#{Formula["med-file@4.1.1_py312"].opt_prefix}/lib/python#{pyver}/medfile.pth").strip
-    numpy_pth_contents =
-      File.read("#{Formula["numpy@2.1.1_py312"].opt_prefix}/lib/python#{pyver}/numpy.pth").strip
-    pybind11_pth_contents = File.read(
-      "#{Formula["pybind11_py312"].opt_prefix}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
-    ).strip
+      File.read("#{Formula["med-file@5.0.0_py313"].opt_prefix}/lib/python#{pyver}/medfile.pth").strip
+    # numpy_pth_contents =
+    # File.read("#{Formula["numpy"].opt_prefix}/lib/python#{pyver}/numpy.pth").strip
+    # pybind11_pth_contents = File.read(
+    # "#{Formula["pybind11"].opt_prefix}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
+    # ).strip
     pyside6_pth_contents =
-      File.read("#{Formula["pyside6_py312"].opt_prefix}/lib/python#{pyver}/pyside6.pth").strip
+      File.read("#{Formula["pyside6_py313"].opt_prefix}/lib/python#{pyver}/pyside6.pth").strip
+    vtk_952_py313_pth_contents =
+      File.read("#{Formula["vtk@9.5.2_py313"].opt_prefix}/lib/python#{pyver}/vtk_py313.pth").strip
 
-    site_packages = Language::Python.site_packages("python3.12")
+    site_packages = Language::Python.site_packages("python3.13")
     # {shiboken2_pth_contents}
-    pth_contents = <<~EOS
-      #{coin3d_pivy_pth_contents}
+    pth_contents = <<~RUBY
       #{medfile_pth_contents}
-      #{numpy_pth_contents}
-      #{pybind11_pth_contents}
       #{pyside6_pth_contents}
+      #{vtk_952_py313_pth_contents}
       #{venv_dir}/lib/python#{pyver}/site-packages
-    EOS
+    RUBY
     (prefix/site_packages/"freecad-py-modules.pth").write pth_contents
   end
 
   def caveats
     <<-EOS
     this formula is required to get necessary python runtime deps
-    working with freecad
+    working with freecad ie. freecad@1.0.2_py313_qt6
     EOS
   end
 
   test do
     # TODO: i think a more sane test is importing the python modules
     # Check if the expected site-packages file exists
-    site_packages_file = prefix/"lib/python3.12/site-packages/freecad-py-modules.pth"
+    site_packages_file = prefix/"lib/python3.13/site-packages/freecad-py-modules.pth"
     if site_packages_file.exist?
       puts "Test: OK - freecad-py-modules.pth file exists"
     else
