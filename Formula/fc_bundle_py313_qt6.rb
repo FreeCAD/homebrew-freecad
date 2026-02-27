@@ -45,8 +45,11 @@ class FcBundlePy313Qt6 < Formula
 
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
-    resource("six").stage do
-      system venv_pip, "install", "."
+    # setup and install both six and lark
+    resources.each do |r|
+      r.stage do
+        system venv_pip, "install", "."
+      end
     end
 
     # Example: Read the contents of the .pth file into a variable
