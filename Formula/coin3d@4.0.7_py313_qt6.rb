@@ -119,12 +119,20 @@ class Coin3dAT407Py313Qt6 < Formula
       ENV.append "CXXFLAGS", "-std=c++17"
 
       qt = Formula["qt"]
-      ENV.append "CXXFLAGS", "-I#{qt.opt_include}"
-      qt.opt_include.glob("Qt*").each do |dir|
-        ENV.append "CXXFLAGS", "-I#{dir}"
+      if OS.mac?
+        ENV.append "CXXFLAGS", "-F#{qt.opt_lib}"
+        qt.opt_lib.glob("Qt*.framework/Headers").each do |dir|
+          ENV.append "CXXFLAGS", "-I#{dir}"
+        end
+      else
+        ENV.append "CXXFLAGS", "-I#{qt.opt_include}"
+        qt.opt_include.glob("Qt*").each do |dir|
+          ENV.append "CXXFLAGS", "-I#{dir}"
+        end
       end
 
       ENV["LDFLAGS"] = "-Wl,-rpath,#{opt_lib}"
+
       # NOTE: `--verbose` flag is on by default
       system python3, "-m", "pip", "install", *std_pip_args, "."
     end
