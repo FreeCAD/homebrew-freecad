@@ -56,6 +56,8 @@ class Coin3dAT407Py313Qt6 < Formula
   depends_on "qtbase"
 
   on_linux do
+    depends_on "libx11"
+    depends_on "libxi"
     depends_on "mesa"
     depends_on "mesa-glu"
   end
