@@ -53,6 +53,7 @@ class Coin3dAT407Py313Qt6 < Formula
   depends_on "python-setuptools"
   depends_on "python@3.13"
   depends_on "qt"
+  depends_on "qtbase"
 
   on_linux do
     depends_on "mesa"
