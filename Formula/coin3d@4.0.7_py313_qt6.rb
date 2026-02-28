@@ -115,9 +115,18 @@ class Coin3dAT407Py313Qt6 < Formula
 
       # Allow setup.py to build with Qt6 as we saw some issues using CMake directly on Intel
       inreplace "distutils_cmake/CMakeLists.txt", " NONE)", ")" # allow languages
+
       ENV.append "CXXFLAGS", "-std=c++17"
+
+      qt = Formula["qt"]
+      ENV.append "CXXFLAGS", "-I#{qt.opt_include}"
+      qt.opt_include.glob("Qt*").each do |dir|
+        ENV.append "CXXFLAGS", "-I#{dir}"
+      end
+
       ENV["LDFLAGS"] = "-Wl,-rpath,#{opt_lib}"
-      system python3, "-m", "pip", "install", "--verbose", *std_pip_args, "."
+      # NOTE: `--verbose` flag is on by default
+      system python3, "-m", "pip", "install", *std_pip_args, "."
     end
   end
 
