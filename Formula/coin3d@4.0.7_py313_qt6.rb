@@ -159,7 +159,7 @@ class Coin3dAT407Py313Qt6 < Formula
 
     ohai "Creating .pth file for pivy module"
     # write the .pth file to the site-packages directory
-    (lib/"python#{python_version}/coin3d_py312_qt6-pivy.pth").write <<~PYTHON
+    (lib/"python#{python_version}/coin3d_py313_qt6-pivy.pth").write <<~PYTHON
       import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
     PYTHON
   end
