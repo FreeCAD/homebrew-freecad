@@ -44,7 +44,6 @@ class Pyside6Py313 < Formula
   depends_on "llvm"
   depends_on "numpy"
   depends_on "python@3.13"
-  depends_on "qt"
   depends_on "qt3d"
   depends_on "qtbase"
   depends_on "qtcharts"
