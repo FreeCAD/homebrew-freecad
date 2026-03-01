@@ -20,12 +20,12 @@ class FcBundlePy313Qt6 < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux:  "2ed5548d18df013b0900ff09eb89fb66e8b9c7fcf368118df2f1bc82f0bf76d9"
   end
 
-  depends_on "coin3d"
+  depends_on "freecad/freecad/coin3d@4.0.7_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
-  depends_on "freecad/freecad/pyside6_py313"
+  depends_on "freecad/freecad/pyside6_py313" # pyside includes the shiboken module as well
   depends_on "freecad/freecad/vtk@9.5.2_py313"
   depends_on "numpy"
-  depends_on "pybind11" # pyside includes the shiboken module as well
+  depends_on "pybind11"
 
   # NOTE: it appears it has been several years since the six pypi package has been updated
   resource "six" do
@@ -66,8 +66,8 @@ class FcBundlePy313Qt6 < Formula
 
     medfile_pth_contents =
       File.read("#{Formula["med-file@5.0.0_py313"].opt_prefix}/lib/python#{pyver}/medfile.pth").strip
-    # numpy_pth_contents =
-    # File.read("#{Formula["numpy"].opt_prefix}/lib/python#{pyver}/numpy.pth").strip
+    coin3d_pth_contents =
+      File.read("#{Formula["coin3d@4.0.7_py313_qt6"].opt_prefix}/lib/python#{pyver}/coin3d_py313_qt6-pivy.pth").strip
     # pybind11_pth_contents = File.read(
     # "#{Formula["pybind11"].opt_prefix}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
     # ).strip
@@ -80,6 +80,7 @@ class FcBundlePy313Qt6 < Formula
     # {shiboken2_pth_contents}
     pth_contents = <<~RUBY
       #{medfile_pth_contents}
+      #{coin3d_pth_contents}
       #{pyside6_pth_contents}
       #{vtk_952_py313_pth_contents}
       #{venv_dir}/lib/python#{pyver}/site-packages
