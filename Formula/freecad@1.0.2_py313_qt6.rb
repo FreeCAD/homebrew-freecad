@@ -49,8 +49,8 @@ class FreecadAT102Py313Qt6 < Formula
 
     # NOTE: ipatch, building rc2 >= tags of freecad require resource blocks due to the use of git submodules
     resource "ondselsolver" do
-      url "https://github.com/Ondsel-Development/OndselSolver/archive/889196e3267597127b5889572b0c86f9316e16f0.tar.gz"
-      sha256 "83124c67971e7322b553599cf5883bb28cceffe0efde7e8524c090adc3d94b6e"
+      url "https://github.com/Ondsel-Development/OndselSolver/archive/09d6175a2ba69e7016fcecc4f384946a2f84f92d.tar.gz"
+      sha256 "890fb6ddeb1b42face95854689ff7b96c926c368b7d616d9e31e4b35f79ddde8"
     end
 
     resource "googletest" do
