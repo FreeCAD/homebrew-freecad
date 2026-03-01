@@ -175,6 +175,13 @@ class Pyside6Py313 < Formula
     (lib/"python#{python_version}/pyside6.pth").write <<~EOS
       import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
     EOS
+
+    cd prefix do
+      ln_s Pathname.new("share/PySide6/typesystems"), "typesystems" unless File.exist?("typesystems")
+      ln_s Pathname.new("share/PySide6/glue"), "glue" unless File.exist?("glue")
+      ln_s Pathname.new("include/shiboken6"), "shiboken6" unless File.exist?("shiboken6")
+      ln_s Pathname.new("include/PySide6"), "PySide6" unless File.exist?("PySide6")
+    end
   end
 
   def caveats
@@ -188,6 +195,9 @@ class Pyside6Py313 < Formula
 
       3. if a newer verison pyside is released ie. 6.8 the qt major minor
       version must match, ie. qt 6.7.x can not build pyside 6.8.x
+
+      4. it seems pyside v6.10 changed the install layout directory
+      structure, thus the need for an additional post install steps.
     EOS
   end
 
