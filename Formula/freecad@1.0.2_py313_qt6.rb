@@ -92,7 +92,7 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "freecad/freecad/coin3d@4.0.7_py313_qt6"
   depends_on "freecad/freecad/fc_bundle_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
-  depends_on "freecad/freecad/numpy"
+  depends_on "numpy"
   depends_on "freecad/freecad/pybind11"
   depends_on "freecad/freecad/pyside6_py313"
   depends_on "freecad/freecad/vtk@9.5.2_py313"
