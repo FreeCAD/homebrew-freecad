@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileNotice: Part of the FreeCAD project.
 
-class FreecadAT100Py312Qt6 < Formula
+class FreecadAT102Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
@@ -10,8 +10,8 @@ class FreecadAT100Py312Qt6 < Formula
   # run `brew cleanup` when editing local patch files on each subsequent `brew install`
   #---
   stable do
-    url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.0.tar.gz"
-    sha256 "51115afd8e3b89f4bac343b986b0800d8e1c68fc1e322c3cd179cfe1033ef937"
+    url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.2.tar.gz"
+    sha256 "228ee52f00627c7d8fa61998179deb01865ece69390829feb1300228d24f7e9e"
 
     # NOTE: ipatch, vtk >= 9.4 will break build of 1.0
     patch do
@@ -53,13 +53,6 @@ class FreecadAT100Py312Qt6 < Formula
     end
   end
 
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_sonoma: "e941002597a446d0d9d4bee6cedec61e87dba1a613d4cb5faec421cd2c672e69"
-    sha256 cellar: :any, ventura:      "49adb656c817eb6bdb5ef00a61260a36d3a5c1f95b0b9902ecb38ae3c9e737ae"
-    sha256               x86_64_linux: "84b95425b80a05937e27667f91dfd924822db7e230689c0cdf8297fcc704e093"
-  end
-
   head do
     url "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
 
@@ -84,11 +77,11 @@ class FreecadAT100Py312Qt6 < Formula
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
-  depends_on "freecad/freecad/swig@4.2.1" => :build
-  depends_on "gcc" => :build # gfortran req for FEM WB
+  depends_on "gcc" => :build
   depends_on "lld" => :build if OS.linux?
   depends_on "ninja" => :build if OS.linux?
   depends_on "pkg-config" => :build
+  depends_on "swig" => :build # gfortran req for FEM WB
   depends_on "boost"
   depends_on "cups" # qt6
   depends_on "cython"
@@ -96,12 +89,13 @@ class FreecadAT100Py312Qt6 < Formula
   depends_on "expat"
   depends_on "fmt"
   depends_on "fontconfig" if OS.linux?
-  depends_on "freecad/freecad/coin3d@4.0.3_py312"
-  # epends_on "freecad/freecad/fc_bundle_py312"
-  depends_on "freecad/freecad/med-file@4.1.1_py312"
-  depends_on "freecad/freecad/numpy@2.1.1_py312"
-  depends_on "freecad/freecad/pybind11_py312"
-  depends_on "freecad/freecad/pyside6_py312"
+  depends_on "freecad/freecad/coin3d@4.0.7_py313_qt6"
+  depends_on "freecad/freecad/fc_bundle_py313_qt6"
+  depends_on "freecad/freecad/med-file@5.0.0_py313"
+  depends_on "freecad/freecad/numpy"
+  depends_on "freecad/freecad/pybind11"
+  depends_on "freecad/freecad/pyside6_py313"
+  depends_on "freecad/freecad/vtk@9.5.2_py313"
   depends_on "freeimage"
   depends_on "freetype"
   depends_on "glew"
@@ -110,7 +104,7 @@ class FreecadAT100Py312Qt6 < Formula
   depends_on "libomp" if OS.linux?
   depends_on "libx11" if OS.linux?
   depends_on "llvm" if OS.linux?
-  # epends_on macos: :high_sierra
+  depends_on macos: :ventura # QT lts support
   depends_on "mesa" if OS.linux?
   depends_on "mesa-glu" if OS.linux?
   depends_on "nlohmann-json"
@@ -118,10 +112,9 @@ class FreecadAT100Py312Qt6 < Formula
   depends_on "opencascade"
   depends_on "openmpi" if OS.linux?
   depends_on "orocos-kdl"
-  depends_on "python@3.12"
+  depends_on "python@3.13"
   depends_on "qt"
   depends_on "tbb"
-  depends_on "vtk"
   depends_on "vulkan-headers"
   depends_on "webp"
   depends_on "xerces-c"
@@ -147,17 +140,17 @@ class FreecadAT100Py312Qt6 < Formula
     # NOTE: `which` cmd is not installed by default on every OS
     # ENV["PYTHON"] = which("python3.10")
     #------------
-    ENV["PYTHON"] = Formula["python@3.12"].opt_bin/"python3.12"
+    ENV["PYTHON"] = Formula["python@3.13"].opt_bin/"python3.13"
 
     # Get the Python includes directory without duplicates
-    py_inc_output = `python3.12-config --includes`
+    py_inc_output = `python3.13-config --includes`
     py_inc_dirs = py_inc_output.scan(/-I([^\s]+)/).flatten.uniq
     py_inc_dir = py_inc_dirs.join(" ")
 
     py_lib_path = if OS.mac?
-      `python3.12-config --configdir`.strip + "/libpython3.12.dylib"
+      `python3.13-config --configdir`.strip + "/libpython3.13.dylib"
     else
-      `python3.12-config --configdir`.strip + "/libpython3.12.a"
+      `python3.13-config --configdir`.strip + "/libpython3.13.a"
     end
 
     puts "----------------------------------------------------"
@@ -187,7 +180,7 @@ class FreecadAT100Py312Qt6 < Formula
     # cmake_prefix_paths << Formula["llvm"].prefix
     # cmake_prefix_paths << Formula["open-mpi"].prefix
     cmake_prefix_paths << Formula["boost"].prefix
-    cmake_prefix_paths << Formula["coin3d@4.0.3_py312"].prefix
+    cmake_prefix_paths << Formula["coin3d@4.0.7_py313"].prefix
     cmake_prefix_paths << Formula["cups"].prefix
     cmake_prefix_paths << Formula["double-conversion"].prefix
     cmake_prefix_paths << Formula["doxygen"].prefix
@@ -204,20 +197,20 @@ class FreecadAT100Py312Qt6 < Formula
     cmake_prefix_paths << Formula["libpng"].prefix
     cmake_prefix_paths << Formula["libtiff"].prefix
     cmake_prefix_paths << Formula["lz4"].prefix
-    cmake_prefix_paths << Formula["med-file@4.1.1_py312"].prefix
+    cmake_prefix_paths << Formula["med-file@5.0.0_py313"].prefix
     cmake_prefix_paths << Formula["nlohmann-json"].prefix
     cmake_prefix_paths << Formula["opencascade"].prefix
     cmake_prefix_paths << Formula["orocos-kdl"].prefix
     cmake_prefix_paths << Formula["pkg-config"].prefix
     cmake_prefix_paths << Formula["pugixml"].prefix
-    cmake_prefix_paths << Formula["pybind11_py312"].prefix
-    cmake_prefix_paths << Formula["pyside6_py312"].prefix
+    cmake_prefix_paths << Formula["pybind11"].prefix
+    cmake_prefix_paths << Formula["pyside6_py313"].prefix
     cmake_prefix_paths << Formula["qt"].prefix
-    cmake_prefix_paths << Formula["swig@4.2.1"].prefix
+    cmake_prefix_paths << Formula["swig"].prefix
     cmake_prefix_paths << Formula["tbb"].prefix
     cmake_prefix_paths << Formula["utf8cpp"].prefix
     cmake_prefix_paths << Formula["vulkan-headers"].prefix
-    cmake_prefix_paths << Formula["vtk"].prefix
+    cmake_prefix_paths << Formula["vtk@9.5.2_py313"].prefix
     cmake_prefix_paths << Formula["xerces-c"].prefix
     cmake_prefix_paths << Formula["xz"].prefix
     cmake_prefix_paths << Formula["yaml-cpp"].prefix
