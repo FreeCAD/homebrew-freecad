@@ -14,9 +14,20 @@ class FreecadAT102Py313Qt6 < Formula
     sha256 "228ee52f00627c7d8fa61998179deb01865ece69390829feb1300228d24f7e9e"
 
     # NOTE: ipatch, vtk >= 9.4 will break build of 1.0
+    # patch do
+    #   url "https://github.com/wwmayer/FreeCAD/commit/8934af10128f0bd2d0ffada946d1c93bc5d8869f.patch?full_index=1"
+    #   sha256 "1c4f0d32f0726a94ac607a44e1efbdc42a32f8fbd97a9ccd20151defda368f76"
+    # end
+
     patch do
-      url "https://github.com/wwmayer/FreeCAD/commit/8934af10128f0bd2d0ffada946d1c93bc5d8869f.patch?full_index=1"
-      sha256 "1c4f0d32f0726a94ac607a44e1efbdc42a32f8fbd97a9ccd20151defda368f76"
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/9fc9f20790799beb411e638f87a31b76a34d29e2/patches/freecad%401.0.2_py313_qt6-fix-bld-with-boost-v189.patch"
+      sha256 "d9d04550d78a930078be1c3507272bccdb80394ef7e299e361b34d75b110b110"
+    end
+
+    # fix build with eigen v5
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/378dd20b0a68a02b821610ffe3af379168507913.patch?full_index=1"
+      sha256 "b9f3d31a0308d3a7c13e87db573a34884698fef32f2bae8ff8587f0cd3871e0f"
     end
 
     patch do
@@ -92,8 +103,6 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "freecad/freecad/coin3d@4.0.7_py313_qt6"
   depends_on "freecad/freecad/fc_bundle_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
-  depends_on "numpy"
-  depends_on "freecad/freecad/pybind11"
   depends_on "freecad/freecad/pyside6_py313"
   depends_on "freecad/freecad/vtk@9.5.2_py313"
   depends_on "freeimage"
@@ -101,17 +110,20 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "glew"
   depends_on "hdf5"
   depends_on "icu4c"
+  depends_on "libaec"
   depends_on "libomp" if OS.linux?
   depends_on "libx11" if OS.linux?
   depends_on "llvm" if OS.linux?
-  depends_on macos: :ventura # QT lts support
+  depends_on macos: :ventura
   depends_on "mesa" if OS.linux?
   depends_on "mesa-glu" if OS.linux?
   depends_on "nlohmann-json"
+  depends_on "numpy"
   depends_on "openblas" if OS.linux?
   depends_on "opencascade"
   depends_on "openmpi" if OS.linux?
   depends_on "orocos-kdl"
+  depends_on "pybind11" # QT lts support
   depends_on "python@3.13"
   depends_on "qt"
   depends_on "tbb"
@@ -180,7 +192,7 @@ class FreecadAT102Py313Qt6 < Formula
     # cmake_prefix_paths << Formula["llvm"].prefix
     # cmake_prefix_paths << Formula["open-mpi"].prefix
     cmake_prefix_paths << Formula["boost"].prefix
-    cmake_prefix_paths << Formula["coin3d@4.0.7_py313"].prefix
+    cmake_prefix_paths << Formula["coin3d@4.0.7_py313_qt6"].prefix
     cmake_prefix_paths << Formula["cups"].prefix
     cmake_prefix_paths << Formula["double-conversion"].prefix
     cmake_prefix_paths << Formula["doxygen"].prefix
@@ -193,6 +205,7 @@ class FreecadAT102Py313Qt6 < Formula
     cmake_prefix_paths << Formula["hdf5"].prefix
     cmake_prefix_paths << Formula["icu4c"].prefix
     cmake_prefix_paths << Formula["libjpeg-turbo"].prefix
+    cmake_prefix_paths << Formula["libaec"].prefix
     cmake_prefix_paths << Formula["libomp"].prefix
     cmake_prefix_paths << Formula["libpng"].prefix
     cmake_prefix_paths << Formula["libtiff"].prefix
