@@ -40,6 +40,9 @@ class FcBundlePy313Qt6 < Formula
     elsif OS.mac?
       url "https://github.com/IfcOpenShell/IfcOpenShell/releases/download/ifcopenshell-python-0.8.4/ifcopenshell-python-0.8.4-py313-macos64.zip"
       sha256 "7edd7d0c5d234ae74934f4a9c81c9d2a02d376a42ebbe52a4a50dba62031c24a"
+    elsif OS.linux? && Hardware::CPU.arm?
+      url "https://files.pythonhosted.org/packages/f6/6f/2f8c4f64796c993f7014c77f8d38ddc0e073cac4ad3efab64231cdfbd655/ifcopenshell-0.8.4.post1-py313-none-manylinux_2_31_aarch64.whl"
+      sha256 "ae1c75b42768db0c40d3d7de0a17f1836488591908f45c9dd3fa5b993ee2b61b"
     elsif OS.linux?
       url "https://github.com/IfcOpenShell/IfcOpenShell/releases/download/ifcopenshell-python-0.8.4/ifcopenshell-python-0.8.4-py313-linux64.zip"
       sha256 "1d3e49c65636f5d46a4c6825142ffd3b97a6fbcedaeb24301166cd256103f24c"
@@ -90,8 +93,15 @@ class FcBundlePy313Qt6 < Formula
     end
 
     resource("ifcopenshell").stage do
-      site_packages = venv_dir/"lib/python#{pyver}/site-packages"
-      (site_packages/"ifcopenshell").install Dir["*"]
+      if OS.linux? && Hardware::CPU.arm?
+        # .whl is just a zip - extract and copy the package dir
+        system "unzip", "-o", Dir["*.whl"].first, "-d", "."
+        (libexec/"vendor/lib/python3.13/site-packages").install "ifcopenshell"
+      else
+        # github .zip's should have the correct dir layout
+        site_packages = venv_dir/"lib/python#{pyver}/site-packages"
+        (site_packages/"ifcopenshell").install Dir["*"]
+      end
     end
 
     # ifcopenshell dep
