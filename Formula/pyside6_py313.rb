@@ -44,13 +44,7 @@ class Pyside6Py313 < Formula
   depends_on "llvm"
   depends_on "numpy"
   depends_on "python@3.13"
-<<<<<<< Updated upstream
   depends_on "qt3d"
-||||||| Stash base
-  depends_on "qt"
-  depends_on "qt3d"
-=======
->>>>>>> Stashed changes
   depends_on "qtbase"
   depends_on "qtcharts"
   depends_on "qtconnectivity"
