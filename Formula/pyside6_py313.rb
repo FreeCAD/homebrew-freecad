@@ -288,12 +288,12 @@ class Pyside6Py313 < Formula
         $WD/QtWidgets/PySide6/QtWidgets/qwidget_wrapper.cpp
 
       # QtWebEngineCore: QWebEnginePage::FindFlag misresolved to QTextDocument::FindFlag
-      [-f "$WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebenginepage_wrapper.cpp" ] && \
+      [ -f "$WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebenginepage_wrapper.cpp" ] && \
       sedi 's/QTextDocument::FindFlag/QWebEnginePage::FindFlag/g' \
         $WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebenginepage_wrapper.cpp
 
       # QtWebEngineCore: QWebEngineUrlScheme::Flag misresolved to QCommandLineOption::Flag
-      [-f "$WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebengineurlscheme_wrapper.cpp" ] &&  \
+      [ -f "$WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebengineurlscheme_wrapper.cpp" ] &&  \
       sedi 's/QCommandLineOption::Flag/QWebEngineUrlScheme::Flag/g' \
         $WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebengineurlscheme_wrapper.cpp
 
