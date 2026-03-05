@@ -152,7 +152,6 @@ class Pyside6Py313 < Formula
                      "-L",
                      *cmake_args
 
-
     system "cmake", "--build", "build", "--target", "shiboken6"
     system "bash", "-c", "cmake --build build -- -k 0 || true"
 
@@ -162,28 +161,37 @@ class Pyside6Py313 < Formula
     system "bash", "-c", <<~SH
       WD=build/sources/pyside6/PySide6
 
+      # cross platform sed ie. macos and *nix
+      sedi() {
+        if [[ "$OSTYPE" == "darwin"* ]] then
+          sed -i '' "$@"
+        else
+          sed -i "$@"
+        fi
+      }
+
       # QtCore: QDirListing::IteratorFlag misresolved to QDirIterator::IteratorFlag
-      sed -i '' 's/QDirIterator::IteratorFlag/QDirListing::IteratorFlag/g' \
+      sedi 's/QDirIterator::IteratorFlag/QDirListing::IteratorFlag/g' \
         $WD/QtCore/PySide6/QtCore/qdirlisting_wrapper.cpp
 
       # QtCore: QStringConverterBase::Flag misresolved to QCommandLineOption::Flag
       for f in qstringconverterbase_state_wrapper.cpp qstringconverter_wrapper.cpp \
         qstringdecoder_wrapper.cpp qstringencoder_wrapper.cpp; do
         [ -f "$WD/QtCore/PySide6/QtCore/$f" ] && \
-        sed -i '' 's/QCommandLineOption::Flag/QStringConverterBase::Flag/g' \
+        sedi 's/QCommandLineOption::Flag/QStringConverterBase::Flag/g' \
           "$WD/QtCore/PySide6/QtCore/$f"
       done
 
       # QtGui: QShaderVersion::Flag misresolved to QCommandLineOption::Flag
-      sed -i '' 's/QCommandLineOption::Flag/QShaderVersion::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QShaderVersion::Flag/g' \
         $WD/QtGui/PySide6/QtGui/qshaderversion_wrapper.cpp
 
       # QtGui: QMatrix4x4::Flag misresolved to QCommandLineOption::Flag
-      sed -i '' 's/QCommandLineOption::Flag/QMatrix4x4::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QMatrix4x4::Flag/g' \
         $WD/QtGui/PySide6/QtGui/qmatrix4x4_wrapper.cpp
 
       # QtGui: QRhi::Flag misresolved to QCommandLineOption::Flag
-      sed -i '' 's/QCommandLineOption::Flag/QRhi::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QRhi::Flag/g' \
         $WD/QtGui/PySide6/QtGui/qrhi_wrapper.cpp
 
       # QtGui: Various QRhi and other classes with Flag misresolved to QCommandLineOption::Flag
@@ -197,96 +205,96 @@ class Pyside6Py313 < Formula
         "qtextoption_wrapper.cpp QTextOption"; do
         file=$(echo $pair | cut -d' ' -f1)
         cls=$(echo $pair | cut -d' ' -f2)
-        sed -i '' "s/QCommandLineOption::Flag/${cls}::Flag/g" \
+        sedi "s/QCommandLineOption::Flag/${cls}::Flag/g" \
           $WD/QtGui/PySide6/QtGui/$file
       done
 
       # QtQml: QQmlImageProviderBase::Flag misresolved to QCommandLineOption::Flag (cpp + header)
-      sed -i '' 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
         $WD/QtQml/PySide6/QtQml/qqmlimageproviderbase_wrapper.cpp
-      sed -i '' 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
         $WD/QtQml/PySide6/QtQml/qqmlimageproviderbase_wrapper.h
 
       # QtQuick: QQmlImageProviderBase::Flag (inherited) misresolved to QCommandLineOption::Flag (cpp + headers)
-      sed -i '' 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
         $WD/QtQuick/PySide6/QtQuick/qquickimageprovider_wrapper.cpp
-      sed -i '' 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
         $WD/QtQuick/PySide6/QtQuick/qquickimageprovider_wrapper.h
-      sed -i '' 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
         $WD/QtQuick/PySide6/QtQuick/qquickasyncimageprovider_wrapper.cpp
-      sed -i '' 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
         $WD/QtQuick/PySide6/QtQuick/qquickasyncimageprovider_wrapper.h
 
       # QtQuick: QQuickItem::Flag misresolved to QCommandLineOption::Flag
-      sed -i '' 's/QCommandLineOption::Flag/QQuickItem::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QQuickItem::Flag/g' \
         $WD/QtQuick/PySide6/QtQuick/qquickitem_wrapper.cpp
 
       # QtQuick: QQuickRenderTarget::Flag misresolved to QCommandLineOption::Flag
-      sed -i '' 's/QCommandLineOption::Flag/QQuickRenderTarget::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QQuickRenderTarget::Flag/g' \
         $WD/QtQuick/PySide6/QtQuick/qquickrendertarget_wrapper.cpp
 
       # QtQuick: QSGMaterial::Flag misresolved to QCommandLineOption::Flag
-      sed -i '' 's/QCommandLineOption::Flag/QSGMaterial::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QSGMaterial::Flag/g' \
         $WD/QtQuick/PySide6/QtQuick/qsgmaterial_wrapper.cpp
 
       # QtQuick: QSGMaterialShader::Flag misresolved to QCommandLineOption::Flag
-      sed -i '' 's/QCommandLineOption::Flag/QSGMaterialShader::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QSGMaterialShader::Flag/g' \
         $WD/QtQuick/PySide6/QtQuick/qsgmaterialshader_wrapper.cpp
 
       # QtQuick: QSGNode::Flag misresolved to QCommandLineOption::Flag
-      sed -i '' 's/QCommandLineOption::Flag/QSGNode::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QSGNode::Flag/g' \
         $WD/QtQuick/PySide6/QtQuick/qsgnode_wrapper.cpp
 
       # QtQuick: QSGSimpleTextureNode::TextureCoordinatesTransformFlag misresolved
-      sed -i '' 's/QSGImageNode::TextureCoordinatesTransformFlag/QSGSimpleTextureNode::TextureCoordinatesTransformFlag/g' \
+      sedi 's/QSGImageNode::TextureCoordinatesTransformFlag/QSGSimpleTextureNode::TextureCoordinatesTransformFlag/g' \
         $WD/QtQuick/PySide6/QtQuick/qsgsimpletexturenode_wrapper.cpp
 
       # QtNetwork: QLocalSocket::SocketOption misresolved to QLocalServer::SocketOption
-      sed -i '' 's/QLocalServer::SocketOption/QLocalSocket::SocketOption/g' \
+      sedi 's/QLocalServer::SocketOption/QLocalSocket::SocketOption/g' \
         $WD/QtNetwork/PySide6/QtNetwork/qlocalsocket_wrapper.cpp
 
       # QtWidgets: QTreeWidgetItemIterator::IteratorFlag misresolved to QDirIterator::IteratorFlag
-      sed -i '' 's/QDirIterator::IteratorFlag/QTreeWidgetItemIterator::IteratorFlag/g' \
+      sedi 's/QDirIterator::IteratorFlag/QTreeWidgetItemIterator::IteratorFlag/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qtreewidgetitemiterator_wrapper.cpp
 
       # QtWidgets: QFileDialog::Option misresolved to QAbstractFileIconProvider::Option
-      sed -i '' 's/QAbstractFileIconProvider::Option/QFileDialog::Option/g' \
+      sedi 's/QAbstractFileIconProvider::Option/QFileDialog::Option/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qfiledialog_wrapper.cpp
 
       # QtWidgets: QFileSystemModel::Option misresolved to QAbstractFileIconProvider::Option
-      sed -i '' 's/QAbstractFileIconProvider::Option/QFileSystemModel::Option/g' \
+      sedi 's/QAbstractFileIconProvider::Option/QFileSystemModel::Option/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qfilesystemmodel_wrapper.cpp
 
       # QtWidgets: QMessageBox::Option misresolved to QAbstractFileIconProvider::Option
-      sed -i '' 's/QAbstractFileIconProvider::Option/QMessageBox::Option/g' \
+      sedi 's/QAbstractFileIconProvider::Option/QMessageBox::Option/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.cpp
 
       # QtWidgets: QMessageBox::StandardButton misresolved to QDialogButtonBox::StandardButton (cpp + header)
-      # sed -i '' 's/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
+      # sedi 's/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
         # $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.cpp
-      # sed -i '' 's/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
+      # sedi 's/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
         # $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.h
 
       # Instead of blanket replacement, only fix the type declarations
-      sed -i '' '/QFlags<QDialogButtonBox::StandardButton>/s/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
+      sedi 's/QFlags<QDialogButtonBox::StandardButton>/s/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.cpp
-      sed -i '' '/QFlags<QDialogButtonBox::StandardButton>/s/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
+      sedi '/QFlags<QDialogButtonBox::StandardButton>/s/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.h
 
       # QtWidgets: QPinchGesture::ChangeFlag misresolved to QGraphicsEffect::ChangeFlag
-      sed -i '' 's/QGraphicsEffect::ChangeFlag/QPinchGesture::ChangeFlag/g' \
+      sedi 's/QGraphicsEffect::ChangeFlag/QPinchGesture::ChangeFlag/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qpinchgesture_wrapper.cpp
 
       # QtWidgets: QWidget::RenderFlag misresolved to QTextItem::RenderFlag
-      sed -i '' 's/QTextItem::RenderFlag/QWidget::RenderFlag/g' \
+      sedi 's/QTextItem::RenderFlag/QWidget::RenderFlag/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qwidget_wrapper.cpp
 
       # QtWebEngineCore: QWebEnginePage::FindFlag misresolved to QTextDocument::FindFlag
-      sed -i '' 's/QTextDocument::FindFlag/QWebEnginePage::FindFlag/g' \
+      sedi 's/QTextDocument::FindFlag/QWebEnginePage::FindFlag/g' \
         $WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebenginepage_wrapper.cpp
 
       # QtWebEngineCore: QWebEngineUrlScheme::Flag misresolved to QCommandLineOption::Flag
-      sed -i '' 's/QCommandLineOption::Flag/QWebEngineUrlScheme::Flag/g' \
+      sedi 's/QCommandLineOption::Flag/QWebEngineUrlScheme::Flag/g' \
         $WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebengineurlscheme_wrapper.cpp
     SH
 
