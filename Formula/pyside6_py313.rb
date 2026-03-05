@@ -126,6 +126,11 @@ class Pyside6Py313 < Formula
       s.gsub!(/^\s*if \(APPLE\).*?endif\(\)\n/m, "")
     end
 
+    # Fix NameError crash in .pyi generation when shiboken misresolves enum types
+    inreplace "sources/shiboken6/shibokenmodule/files.dir/shibokensupport/signature/parser.py",
+      "except AttributeError:",
+      "except (AttributeError, NameError):"
+
     puts "-------------------------------------------------"
     puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
     puts "PATH=#{ENV["PATH"]}"
