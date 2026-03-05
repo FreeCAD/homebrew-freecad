@@ -273,12 +273,6 @@ class Pyside6Py313 < Formula
       sedi 's/QAbstractFileIconProvider::Option/QMessageBox::Option/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.cpp
 
-      # QtWidgets: QMessageBox::StandardButton misresolved to QDialogButtonBox::StandardButton (cpp + header)
-      # sedi 's/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
-        # $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.cpp
-      # sedi 's/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
-        # $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.h
-
       # Instead of blanket replacement, only fix the type declarations
       sedi '/QFlags<QDialogButtonBox::StandardButton>/s/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.cpp
@@ -358,6 +352,9 @@ class Pyside6Py313 < Formula
 
       4. it seems pyside v6.10 changed the install layout directory
       structure, thus the need for an additional post install steps.
+
+      5. it seems pyside v6.10.2 can not be built against qt v6.10.2
+      without the above patching via sed
     EOS
   end
 
@@ -377,7 +374,13 @@ class Pyside6Py313 < Formula
       Widgets
       Xml
     ]
-    modules << "WebEngineCore" if OS.linux? || (DevelopmentTools.clang_build_version > 1200)
+
+    if OS.mac?
+      modules << "WebEngineCore" if DevelopmentTools.clang_build_version > 1200
+    elsif Hardware::CPU.intel?
+      modules << "WebEngineCore"
+    end
+
     modules.each { |mod| system python3, "-c", "import PySide6.Qt#{mod}" }
 
     pyincludes = shell_output("#{python3}-config --includes").chomp.split
@@ -406,6 +409,8 @@ class Pyside6Py313 < Formula
 
     shiboken_lib = if OS.mac?
       "shiboken6.cpython-313-darwin"
+    elsif Hardware::CPU.arm?
+      "shiboken6.cpython-313-aarch64-linux-gnu"
     else
       "shiboken6.cpython-313-x86_64-linux-gnu"
     end
