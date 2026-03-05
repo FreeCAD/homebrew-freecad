@@ -44,7 +44,6 @@ class Pyside6Py313 < Formula
   depends_on "llvm"
   depends_on "numpy"
   depends_on "python@3.13"
-  depends_on "qt3d"
   depends_on "qtbase"
   depends_on "qtcharts"
   depends_on "qtconnectivity"
@@ -163,7 +162,7 @@ class Pyside6Py313 < Formula
 
       # cross platform sed ie. macos and *nix
       sedi() {
-        if [[ "$OSTYPE" == "darwin"* ]] then
+        if [[ "$OSTYPE" == "darwin"* ]]; then
           sed -i '' "$@"
         else
           sed -i "$@"
@@ -276,7 +275,7 @@ class Pyside6Py313 < Formula
         # $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.h
 
       # Instead of blanket replacement, only fix the type declarations
-      sedi 's/QFlags<QDialogButtonBox::StandardButton>/s/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
+      sedi '/QFlags<QDialogButtonBox::StandardButton>/s/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.cpp
       sedi '/QFlags<QDialogButtonBox::StandardButton>/s/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
         $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.h
