@@ -36,7 +36,7 @@ class FcBundlePy313Qt6 < Formula
   resource "ifcopenshell" do
     if OS.mac? && Hardware::CPU.arm?
       url "https://github.com/IfcOpenShell/IfcOpenShell/releases/download/ifcopenshell-python-0.8.4/ifcopenshell-python-0.8.4-py313-macosm164.zip"
-      sha256 "7b5305ccf14282943cc9f0702088b66050ee92bbb85dceb3067dfe156033cbdb"
+      sha256 "a9015197e75e025ce8a35ab9f40e23ab58e2cf414db176a5ed7873bb82d5f3d0"
     elsif OS.mac?
       url "https://github.com/IfcOpenShell/IfcOpenShell/releases/download/ifcopenshell-python-0.8.4/ifcopenshell-python-0.8.4-py313-macos64.zip"
       sha256 "7edd7d0c5d234ae74934f4a9c81c9d2a02d376a42ebbe52a4a50dba62031c24a"
