@@ -31,6 +31,7 @@ class FcBundlePy313Qt6 < Formula
   depends_on "numpy"
   depends_on "pybind11" # reqd by pyyaml
   depends_on "webp" if OS.linux?
+  depends_on "zlib" if OS.linux?
 
   # NOTE: ipatch, https://docs.ifcopenshell.org/ifcopenshell-python/installation.html#zip-packages
   resource "ifcopenshell" do
