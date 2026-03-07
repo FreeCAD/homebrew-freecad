@@ -153,7 +153,8 @@ jobs:
 
           # debug output of response
           echo "API response: $RESPONSE"
-                                                                                                                                      # Check if any runner is self-hosted
+
+          # Check if any runner is self-hosted
           RUNNER_NAME=$(echo "$RESPONSE" | jq -r '.runners[] | select(.labels[]?.name == "self-hosted") | .name')
 
           if [ -n "$RUNNER_NAME" ]; then
@@ -206,18 +207,6 @@ jobs:
           
           echo "Disk space after cleanup:"
           df -h
-
-      # # Step to add Homebrew paths to GITHUB_ENV if using act locally
-      # - name: Set Homebrew environment variables for act
-      #   if: runner.os == 'Linux' && env.ACT == 'true'
-      #   run: |
-      #     #!/bin/bash
-      #     echo "Adding Homebrew paths to GITHUB_ENV"
-      #     { 
-      #       echo "PATH=/home/linuxbrew/.linuxbrew/sbin:/home/linuxbrew/.linuxbrew/bin:${PATH}" 
-      #       echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" 
-      #       echo "HOMEBREW_NO_ANALYTICS=1" 
-      #     } >> "$GITHUB_ENV"
 
       - name: print message about adding homebrew paths to GITHUB_ENV
         if: runner.os == 'Linux' && env.ACT == 'true'
@@ -300,6 +289,11 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           find "$(brew --cellar)" -name ".lock" -delete 2>/dev/null || true
+
+      - name: pre-install python versions to avoid cellar lock conflict
+        if: github.event_name == 'pull_request'
+        run: |
+          brew install --formula python@3.14 python@3.13 || true
 
       - name: build bottle using test-bot for current formula
         id: build-bottle
