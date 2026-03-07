@@ -303,6 +303,8 @@ jobs:
 
       - name: build bottle using test-bot for current formula
         id: build-bottle
+        env:
+          HOMEBREW_NO_INSTALL_FROM_API: 1
         # Check if the runner name is vmmojave or vmcatalina and add the flag if true
         # NOTE: ipatch, keep-old is not the droid you're looking for,
         # see: https://github.com/orgs/Homebrew/discussions/4935
