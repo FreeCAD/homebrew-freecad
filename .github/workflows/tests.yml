@@ -273,18 +273,10 @@ jobs:
             -e '/go@1.12/d' \
             "$(brew --repo homebrew/core)/style_exceptions/binary_bootstrap_formula_urls_allowlist.json"
 
-      - name: unset HOMEBREW_NO_INSTALL_FROM_API for linux runners -------------------
-      # NOTE: ipatch, env var required, see, https://github.com/orgs/Homebrew/discussions/4856
-        run: |
-          if [[ $RUNNER_OS == 'Linux' ]]; then
-            unset HOMEBREW_NO_INSTALL_FROM_API
-          fi
-
       # - name: print event name ----------------------------------------DEBUG
       #   run: |
           # echo "Event Name: ${{ github.event_name }}"
           # echo "Event Content: ${{ toJson(github.event) }}"
-
       - name: remove stale cellar locks
         if: github.event_name == 'pull_request'
         run: |
@@ -298,7 +290,10 @@ jobs:
       - name: build bottle using test-bot for current formula
         id: build-bottle
         env:
-          HOMEBREW_NO_INSTALL_FROM_API: 1
+          # NOTE: ipatch, env var required, see, https://github.com/orgs/Homebrew/discussions/4856
+          # TODO: only set this for github hosted linux runners
+          HOMEBREW_NO_INSTALL_FROM_API: ${{ runner.os != 'Linux' && '1' || '' }}
+
         # Check if the runner name is vmmojave or vmcatalina and add the flag if true
         # NOTE: ipatch, keep-old is not the droid you're looking for,
         # see: https://github.com/orgs/Homebrew/discussions/4935
