@@ -120,13 +120,8 @@ jobs:
       - name: Get portable Ruby version
         id: ruby-version
         run: |
-          for d in "$(brew --prefix)/Homebrew/Library/Homebrew/vendor/portable-ruby"/*/; do
-            dir_name=$(basename "$d")
-            if [ "$dir_name" != "current" ]; then
-              echo "version=$dir_name" >> "$GITHUB_OUTPUT"
-              break
-            fi
-          done
+          ruby_dir=$(basename "$(readlink -f "$(brew --prefix)/Homebrew/Library/Homebrew/vendor/portable-ruby/current")")
+          echo "version=$ruby_dir" >> "$GITHUB_OUTPUT"
 
       - name: Cache Homebrew Bundler RubyGems
         if: steps.set-last-run-status.outputs.last-run-status != 'success'
