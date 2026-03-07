@@ -117,14 +117,32 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
+      - name: Get portable Ruby version
+        id: ruby-version
+        run: |
+          for d in "$(brew --prefix)/Homebrew/Library/Homebrew/vendor/portable-ruby"/*/; do
+            dir_name=$(basename "$d")
+            if [ "$dir_name" != "current" ]; then
+              echo "version=$dir_name" >> "$GITHUB_OUTPUT"
+              break
+            fi
+          done
+
       - name: Cache Homebrew Bundler RubyGems
         if: steps.set-last-run-status.outputs.last-run-status != 'success'
         id: cache
         uses: actions/cache@v4.2.3
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
-          key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
-          restore-keys: ${{ runner.os }}-rubygems-
+          key: ${{ runner.os }}-ruby-${{ steps.ruby-version.outputs.version }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ runner.os }}-ruby-${{ steps.ruby-version.outputs.version }}-rubygems-
+
+      - name: clear stale homebrew vendor bundle
+        id: clear-stale-vendor-bundle
+        if: runner.os == 'Linux'
+        run: |
+          rm -rf "$(brew --prefix)/Homebrew/Library/Homebrew/vendor/bundle"
+          rm -rf "$(brew --prefix)/Homebrew/Library/Homebrew/vendor/portable-ruby/*/lib/ruby/gems/*/cache"
 
       - name: sanatize homebrew-core tap
         run: |
