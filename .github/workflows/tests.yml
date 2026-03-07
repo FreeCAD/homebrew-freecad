@@ -144,6 +144,10 @@ jobs:
           rm -rf "$(brew --prefix)/Homebrew/Library/Homebrew/vendor/bundle"
           rm -rf "$(brew --prefix)/Homebrew/Library/Homebrew/vendor/portable-ruby/*/lib/ruby/gems/*/cache"
 
+      - name: Install Homebrew Bundler RubyGems
+        if: runner.os == 'Linux'
+        run: brew install-bundler-gems
+
       - name: sanatize homebrew-core tap
         run: |
           brew update-reset "$(brew --repository homebrew/core)" || true
