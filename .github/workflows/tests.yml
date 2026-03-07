@@ -137,13 +137,6 @@ jobs:
           key: ${{ runner.os }}-ruby-${{ steps.ruby-version.outputs.version }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ runner.os }}-ruby-${{ steps.ruby-version.outputs.version }}-rubygems-
 
-      - name: clear stale homebrew vendor bundle
-        id: clear-stale-vendor-bundle
-        if: runner.os == 'Linux'
-        run: |
-          rm -rf "$(brew --prefix)/Homebrew/Library/Homebrew/vendor/bundle"
-          rm -rf "$(brew --prefix)/Homebrew/Library/Homebrew/vendor/portable-ruby/*/lib/ruby/gems/*/cache"
-
       - name: Install Homebrew Bundler RubyGems
         if: runner.os == 'Linux'
         run: brew install-bundler-gems
