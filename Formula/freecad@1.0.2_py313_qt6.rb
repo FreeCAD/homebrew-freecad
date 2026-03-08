@@ -90,7 +90,7 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "cmake" => :build
   depends_on "gcc" => :build
   depends_on "lld" => :build if OS.linux?
-  depends_on "ninja" => :build if OS.linux?
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "swig" => :build # gfortran req for FEM WB
   depends_on "boost"
@@ -126,12 +126,15 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "pybind11" # QT lts support
   depends_on "python@3.13"
   depends_on "qt"
+  depends_on "qtbase"
+  depends_on "qtsvg"
+  depends_on "qttools"
   depends_on "tbb"
   depends_on "vulkan-headers"
   depends_on "webp"
   depends_on "xerces-c"
   depends_on "yaml-cpp"
-  depends_on "zlib"
+  depends_on "zlib-ng-compat"
 
   # TODO: attempt to install without patch
   patch do
@@ -219,6 +222,9 @@ class FreecadAT102Py313Qt6 < Formula
     cmake_prefix_paths << Formula["pybind11"].prefix
     cmake_prefix_paths << Formula["pyside6_py313"].prefix
     cmake_prefix_paths << Formula["qt"].prefix
+    cmake_prefix_paths << Formula["qtbase"].prefix
+    cmake_prefix_paths << Formula["qtsvg"].prefix
+    cmake_prefix_paths << Formula["qttools"].prefix
     cmake_prefix_paths << Formula["swig"].prefix
     cmake_prefix_paths << Formula["tbb"].prefix
     cmake_prefix_paths << Formula["utf8cpp"].prefix
@@ -227,7 +233,7 @@ class FreecadAT102Py313Qt6 < Formula
     cmake_prefix_paths << Formula["xerces-c"].prefix
     cmake_prefix_paths << Formula["xz"].prefix
     cmake_prefix_paths << Formula["yaml-cpp"].prefix
-    cmake_prefix_paths << Formula["zlib"].prefix
+    cmake_prefix_paths << Formula["zlib-ng-compat"].prefix
 
     if OS.linux?
       cmake_prefix_paths << Formula["fontconfig"].prefix
@@ -296,7 +302,6 @@ class FreecadAT102Py313Qt6 < Formula
     # -D_Qt5UiTools_RELEASE_AGL_PATH=#{apl_frmwks}/AGL.framework
 
     if OS.linux?
-      ninja_bin = Formula["ninja"].opt_bin/"ninja"
       clang_cc = Formula["llvm"].opt_bin/"clang"
       clang_cxx = Formula["llvm"].opt_bin/"clang++"
       clang_ld = Formula["lld"].opt_bin/"lld"
@@ -313,10 +318,7 @@ class FreecadAT102Py313Qt6 < Formula
                            "-Wl,-rpath,#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current"
 
       args_linux_only = %W[
-        -GNinja
-        -DCMAKE_MAKE_PROGRAM=#{ninja_bin}
         -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
-        -DFREECAD_USE_EXTERNAL_KDL=1
         -DCMAKE_C_COMPILER=#{clang_cc}
         -DCMAKE_CXX_COMPILER=#{clang_cxx}
         -DCMAKE_LINKER=#{clang_ld}
@@ -326,11 +328,17 @@ class FreecadAT102Py313Qt6 < Formula
       ]
     end
 
+    ninja_bin = Formula["ninja"].opt_bin/"ninja"
+
     args = %W[
       -DHOMEBREW_PREFIX=#{hbp}
       -DCMAKE_PREFIX_PATH=#{cmake_prefix_path_string}
       -DCMAKE_INSTALL_PREFIX=#{prefix}
       -DCMAKE_VERBOSE_MAKEFILE=1
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
+      -GNinja
+      -DCMAKE_MAKE_PROGRAM=#{ninja_bin}
 
       -DPython_EXECUTABLE=#{ENV["PYTHON"]}
       -DPython_INCLUDE_DIRS=#{py_inc_dir}
@@ -341,8 +349,7 @@ class FreecadAT102Py313Qt6 < Formula
       -DPython3_LIBRARIES=#{py_lib_path}
 
       -DFREECAD_USE_PYBIND11=1
-      -DCMAKE_BUILD_TYPE=RelWithDebInfo
-
+      -DFREECAD_USE_EXTERNAL_KDL=1
       -DFREECAD_QT_VERSION=6
 
       -DCMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH=FALSE
