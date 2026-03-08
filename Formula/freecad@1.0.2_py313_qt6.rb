@@ -111,7 +111,7 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "hdf5"
   depends_on "icu4c"
   depends_on "libaec"
-  depends_on "libomp" if OS.linux?
+  depends_on "libomp"
   depends_on "libx11" if OS.linux?
   depends_on "llvm" if OS.linux?
   depends_on macos: :ventura
