@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileNotice: Part of the FreeCAD project.
-
 class Pyside2AT51515Py312 < Formula
   desc "Python bindings for Qt5 and greater"
   homepage "https://code.qt.io/cgit/pyside/pyside-setup.git/tree/README.pyside2.md?h=5.15.2"
@@ -24,7 +23,7 @@ class Pyside2AT51515Py312 < Formula
 
   # Requires various patches and cannot be built with `FORCE_LIMITED_API` with Python 3.12.
   # `qt@5` is also officially EOL on 2025-05-25.
-  disable! date: "2025-12-31", because: :versioned_formula
+  disable! date: "2026-12-31", because: :versioned_formula
 
   depends_on "cmake" => :build
   depends_on "freecad/freecad/numpy@2.1.1_py312"
@@ -70,22 +69,166 @@ class Pyside2AT51515Py312 < Formula
     sha256 "20d67f948eb95b11295faa82f3f758a0494c4c4611bc40c154e4ca6805afe6ec"
   end
 
-  # Apply Debian patches to support Clang >= v15 https://bugreports.qt.io/browse/PYSIDE-2268
+  # Apply Debian patches to fix shiboken2 type resolution with Clang >= 15
+  # https://bugreports.qt.io/browse/PYSIDE-2288
   patch do
-    url "https://github.com/FreeCAD/homebrew-freecad/raw/refs/heads/master/patches/pyside2_5.15.16-1.debian.tar.xz"
-    sha256 "3a4b596537c26bac8f94f92256f64f0e30f436f311af7e43197ba34fd13aa5f1"
+    url "https://deb.debian.org/debian/pool/main/p/pyside2/pyside2_5.15.16-3.1.debian.tar.xz"
+    sha256 "523d191e45b1a9720e8eb8ea66fd930f49ffad54df1295ca09efea8838257aa6"
     apply "patches/shiboken2-clang-Fix-clashes-between-type-name-and-enumera.patch",
-          "patches/shiboken2-clang-Fix-and-simplify-resolveType-helper.patch",
-          "patches/shiboken2-clang-Remove-typedef-expansion.patch",
-          "patches/shiboken2-clang-Fix-build-with-clang-16.patch",
-          "patches/shiboken2-clang-Record-scope-resolution-of-arguments-func.patch",
-          "patches/shiboken2-clang-Suppress-class-scope-look-up-for-paramete.patch",
-          "patches/shiboken2-clang-Write-scope-resolution-for-all-parameters.patch",
-          "patches/Modify-sendCommand-signatures.patch"
+      "patches/shiboken2-clang-Fix-and-simplify-resolveType-helper.patch",
+      "patches/shiboken2-clang-Remove-typedef-expansion.patch",
+      "patches/shiboken2-clang-Fix-build-with-clang-16.patch",
+      "patches/shiboken2-clang-Record-scope-resolution-of-arguments-func.patch",
+      "patches/shiboken2-clang-Suppress-class-scope-look-up-for-paramete.patch",
+      "patches/shiboken2-clang-Write-scope-resolution-for-all-parameters.patch"
+  end
+
+  patch do
+    url "https://salsa.debian.org/qt-kde-team/qt/pyside2/-/raw/46111b30f4b4f01bed7b55dc7cc9a800809b2cb4/debian/patches/Modify-sendCommand-signatures.patch"
+    sha256 "2f39461136a718a9f75bd94c1e71fc358764af25f68c650fd503c777e32ff302"
   end
 
   def python3
     "python3.12"
+  end
+
+  # Fix remaining shiboken2 enum type misresolutions in generated wrapper files.
+  #
+  # Even with the Debian PYSIDE-2288 patches applied to shiboken2's ApiExtractor,
+  # the code generator still misresolves certain enum types due to name collisions
+  # (e.g. multiple Qt classes defining "Type", "Flag", "Capability", etc.).
+  # The Debian patches filter out EnumValue/ConstantValueType entries but not full
+  # EnumType entries that share names across classes. This method applies targeted
+  # sed replacements to the generated C++ wrappers after shiboken runs.
+  def fix_shiboken2_enum_misresolutions(build_dir)
+    pyside2_dir = build_dir/"sources/pyside2/PySide2"
+
+    # Helper: apply replacements to wrapper .h and .cpp files
+
+    # Helper: apply broad scope replacement (fixes both QFlags<> types and default values)
+    fix_broad = lambda do |wrapper_path, wrong_class, right_class|
+      [".h", ".cpp"].each do |ext|
+        file = Pathname.new("#{wrapper_path}#{ext}")
+        next unless file.exist?
+
+        content = File.read(file)
+        content.gsub!("QFlags<#{wrong_class}::", "QFlags<#{right_class}::")
+        content.gsub!(/#{Regexp.escape(wrong_class)}::(\w+)/, "#{right_class}::\\1")
+        # Fix Python docstring type references if present
+        wrong_pymod = wrong_class.gsub("::", ".")
+        right_pymod = right_class.gsub("::", ".")
+        content.gsub!(wrong_pymod, right_pymod)
+        File.write(file, content)
+      end
+    end
+
+    ohai "Fixing shiboken2 enum misresolutions in generated wrappers"
+
+    # ── 1. QOpenGLShader::ShaderTypeBit → QEvent::Type ──
+    # All QEvent subclass constructors take a QEvent::Type parameter but shiboken
+    # resolves the unqualified "Type" to QOpenGLShader::ShaderTypeBit instead.
+    qtgui = pyside2_dir/"QtGui/PySide2/QtGui"
+    qtwidgets = pyside2_dir/"QtWidgets/PySide2/QtWidgets"
+
+    event_wrappers = %w[
+      qdragmoveevent_wrapper
+      qhoverevent_wrapper
+      qkeyevent_wrapper
+      qmouseevent_wrapper
+      qtabletevent_wrapper
+    ].map { |w| qtgui/w }
+
+    event_wrappers += %w[
+      qgraphicsscenecontextmenuevent_wrapper
+      qgraphicsscenedragdropevent_wrapper
+      qgraphicsscenehelpevent_wrapper
+      qgraphicsscenehoverevent_wrapper
+      qgraphicsscenemouseevent_wrapper
+      qgraphicsscenewheelevent_wrapper
+    ].map { |w| qtwidgets/w }
+
+    exts = [".h", ".cpp"]
+    event_wrappers.each do |w|
+      exts.each do |ext|
+        file = Pathname.new("#{w}#{ext}")
+        next unless file.exist?
+
+        content = File.read(file)
+        content.gsub!("::QFlags<QOpenGLShader::ShaderTypeBit>", "::QEvent::Type")
+        content.gsub!("QFlags<QOpenGLShader::ShaderTypeBit>", "QEvent::Type")
+        content.gsub!(/QOpenGLShader::(\w+)/, 'QEvent::\1')
+        content.gsub!("PySide2.QtGui.QOpenGLShader.ShaderType", "PySide2.QtCore.QEvent.Type")
+        File.write(file, content)
+      end
+    end
+
+    # ── 2. QNetworkConfigurationManager::Capability → QNetworkProxy::Capability ──
+    qtnetwork = pyside2_dir/"QtNetwork/PySide2/QtNetwork"
+    fix_broad.call(qtnetwork/"qnetworkproxy_wrapper",
+                   "QNetworkConfigurationManager", "QNetworkProxy")
+
+    # ── 3. QCommandLineOption::Flag → correct Flag enum per class ──
+    # "Flag" is defined by many Qt classes; shiboken picks QCommandLineOption::Flag.
+    {
+      (qtgui/"qtextoption_wrapper")                                            => "QTextOption",
+      (pyside2_dir/"QtMultimedia/PySide2/QtMultimedia/qmediaplayer_wrapper")   => "QMediaPlayer",
+      (pyside2_dir/"QtQml/PySide2/QtQml/qqmlimageproviderbase_wrapper")        => "QQmlImageProviderBase",
+      (pyside2_dir/"QtQuick/PySide2/QtQuick/qquickasyncimageprovider_wrapper") => "QQmlImageProviderBase",
+      (pyside2_dir/"QtQuick/PySide2/QtQuick/qquickimageprovider_wrapper")      => "QQmlImageProviderBase",
+      (pyside2_dir/"QtQuick/PySide2/QtQuick/qquickitem_wrapper")               => "QQuickItem",
+      (pyside2_dir/"QtQuick/PySide2/QtQuick/qsgnode_wrapper")                  => "QSGNode",
+    }.each do |wrapper, right_class|
+      fix_broad.call(wrapper, "QCommandLineOption", right_class)
+    end
+
+    # ── 4. QDirIterator::IteratorFlag → QTreeWidgetItemIterator::IteratorFlag ──
+    fix_broad.call(qtwidgets/"qtreewidgetitemiterator_wrapper",
+                   "QDirIterator", "QTreeWidgetItemIterator")
+
+    # ── 5. QGraphicsEffect::ChangeFlag → QPinchGesture::ChangeFlag ──
+    fix_broad.call(qtwidgets/"qpinchgesture_wrapper",
+                   "QGraphicsEffect", "QPinchGesture")
+
+    # ── 6. QAbstractItemModel::CheckIndexOption → correct Option enum per class ──
+    exts = [".h", ".cpp"]
+    {
+      (qtwidgets/"qfiledialog_wrapper")       => "QFileDialog",
+      (qtwidgets/"qfileiconprovider_wrapper") => "QFileIconProvider",
+      (qtwidgets/"qfilesystemmodel_wrapper")  => "QFileSystemModel",
+    }.each do |wrapper, right_class|
+      exts.each do |ext|
+        file = Pathname.new("#{wrapper}#{ext}")
+        next unless file.exist?
+
+        content = File.read(file)
+        content.gsub!("QAbstractItemModel::CheckIndexOption", "#{right_class}::Option")
+        content.gsub!(/QAbstractItemModel::(\w+)/, "#{right_class}::\\1")
+        content.gsub!("PySide2.QtCore.QAbstractItemModel.CheckIndexOption",
+          "PySide2.QtWidgets.#{right_class}.Option")
+        content.gsub!("PySide2.QtCore.QAbstractItemModel",
+          "PySide2.QtWidgets.#{right_class}")
+        File.write(file, content)
+      end
+    end
+
+    # ── 7. QDialogButtonBox::StandardButton → QMessageBox::StandardButton ──
+    fix_broad.call(qtwidgets/"qmessagebox_wrapper",
+                   "QDialogButtonBox", "QMessageBox")
+
+    # ── 8. QTextItem::RenderFlag → QWidget::RenderFlag ──
+    %w[qgraphicsview_wrapper qwidget_wrapper].each do |w|
+      fix_broad.call(qtwidgets/w, "QTextItem", "QWidget")
+    end
+
+    # ── 9. QQuickWindow::CreateTextureOption → QSGEngine::CreateTextureOption ──
+    fix_broad.call(pyside2_dir/"QtQuick/PySide2/QtQuick/qsgengine_wrapper",
+                   "QQuickWindow", "QSGEngine")
+
+    # ── 10. QItemSelectionModel::SelectionFlag → QAbstract3DGraph::SelectionFlag ──
+    fix_broad.call(
+      pyside2_dir/"QtDataVisualization/PySide2/QtDataVisualization/qtdatavisualization_qabstract3dgraph_wrapper",
+      "QItemSelectionModel", "QtDataVisualization::QAbstract3DGraph"
+    )
   end
 
   # NOTE: ipatch tarballs >= qt@5.15.3 require a c++17 compiler
@@ -113,7 +256,6 @@ class Pyside2AT51515Py312 < Formula
 
     # NOTE: ipatch build will fail if using `python3` cmake requires major+minor ie. `python3.10`
     py_exe = Formula["python@3.12"].opt_bin/"python3.12"
-
     py_lib = if OS.mac?
       Formula["python@3.12"].opt_lib/"libpython3.12.dylib"
     else
@@ -142,6 +284,21 @@ class Pyside2AT51515Py312 < Formula
       "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
       *cmake_args
 
+    # First build pass: shiboken2 generates wrapper code for each Qt module.
+    # Due to residual enum name collisions not covered by the Debian PYSIDE-2288
+    # patches, some generated wrappers will have wrong enum types. We use -k
+    # (keep going) so cmake/make generates wrappers for ALL modules before stopping,
+    # then apply targeted fixes and rebuild only the affected files.
+    begin
+      system "cmake", "--build", "build", "--", "-k"
+    rescue BuildError
+      nil
+    end
+
+    # Fix shiboken2 enum misresolutions in the generated wrapper files
+    fix_shiboken2_enum_misresolutions(buildpath/"build")
+
+    # Second build pass: recompile only the patched wrappers
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
   end
@@ -198,6 +355,7 @@ class Pyside2AT51515Py312 < Formula
       Widgets
       Xml
     ]
+
     modules << "WebEngineCore" if OS.linux? || (DevelopmentTools.clang_build_version > 1200)
     modules.each { |mod| system python3, "-c", "import PySide2.Qt#{mod}" }
 
@@ -222,7 +380,6 @@ class Pyside2AT51515Py312 < Formula
         return 0;
       }
     EOS
-
     shiboken_lib = if OS.mac?
       "shiboken2.cpython-312-darwin"
     else
@@ -235,6 +392,7 @@ class Pyside2AT51515Py312 < Formula
                     "-L#{Formula["gettext"].opt_lib}",
                     *pyincludes, *pylib, "-o", "test"
     system "./test"
+
     Language::Python.each_python(build) do |python, _version|
       system python, "-c", "from PySide2 import QtCore"
     end
