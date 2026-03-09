@@ -7,7 +7,7 @@ class VtkAT952Py312 < Formula
   url "https://www.vtk.org/files/release/9.5/VTK-9.5.2.tar.gz"
   sha256 "cee64b98d270ff7302daf1ef13458dff5d5ac1ecb45d47723835f7f7d562c989"
   license "BSD-3-Clause"
-  revision 2
+  revision 3
   head "https://gitlab.kitware.com/vtk/vtk.git", branch: "master"
 
   bottle do
@@ -112,6 +112,7 @@ class VtkAT952Py312 < Formula
       -DPython3_EXECUTABLE:FILEPATH=#{which(python)}
       -DVTK_GROUP_ENABLE_Qt:STRING=YES
       -DVTK_QT_VERSION:STRING=6
+      -DHDF5_IS_PARALLEL:BOOL=OFF
     ]
     # External gl2ps causes failure linking to macOS OpenGL.framework
     args << "-DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=ON" unless OS.mac?
