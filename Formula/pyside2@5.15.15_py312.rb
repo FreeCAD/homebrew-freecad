@@ -336,14 +336,15 @@ class Pyside2AT51515Py312 < Formula
   test do
     # NOTE: ipatch, the below resolve to something like, HOMEBREW_PREFIX/Cellar/formula/lib/python/site-packages
     ENV.append_path "PYTHONPATH", prefix/Language::Python.site_packages(python3)
+    py312 = Formula["python@3.12"].opt_bin/"python3.12"
 
     puts "--------------------------------------------------------"
     puts "PYTHON=#{ENV["PYTHON"]}"
     puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
     puts "--------------------------------------------------------"
 
-    system python3, "-c", "import PySide2"
-    system python3, "-c", "import shiboken2"
+    system py312, "-c", "import PySide2"
+    system py312, "-c", "import shiboken2"
 
     modules = %w[
       Core
@@ -356,11 +357,15 @@ class Pyside2AT51515Py312 < Formula
       Xml
     ]
 
-    modules << "WebEngineCore" if OS.linux? || (DevelopmentTools.clang_build_version > 1200)
-    modules.each { |mod| system python3, "-c", "import PySide2.Qt#{mod}" }
+    if File.exist?("#{Formula["qt@5"].opt_lib}/libQt5WebEngineCore.so.5") ||
+       File.exist?("#{Formula["qt@5"].opt_lib}/QtWebEngineCore.framework")
+      modules << "WebEngineCore"
+    end
 
-    pyincludes = shell_output("#{python3}-config --includes").chomp.split
-    pylib = shell_output("#{python3}-config --ldflags --embed").chomp.split
+    modules.each { |mod| system py312, "-c", "import PySide2.Qt#{mod}" }
+
+    pyincludes = shell_output("#{py312}-config --includes").chomp.split
+    pylib = shell_output("#{py312}-config --ldflags --embed").chomp.split
 
     if OS.linux?
       pyver = Language::Python.major_minor_version python3
@@ -383,7 +388,8 @@ class Pyside2AT51515Py312 < Formula
     shiboken_lib = if OS.mac?
       "shiboken2.cpython-312-darwin"
     else
-      "shiboken2.cpython-312-x86_64-linux-gnu"
+      arch = (Hardware::CPU.arch == :arm64) ? "aarch64" : "x86_64"
+      "shiboken2.cpython-312-#{arch}-linux-gnu"
     end
 
     system ENV.cxx, "-std=c++17", "test.cpp",
