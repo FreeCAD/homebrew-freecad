@@ -285,7 +285,7 @@ jobs:
       - name: pre-install python versions to avoid cellar lock conflict
         if: github.event_name == 'pull_request'
         run: |
-          brew install --formula python@3.14 python@3.13 || true
+          brew install --formula python@3.14 python@3.13 python@3.12 || true
 
       - name: build bottle using test-bot for current formula
         id: build-bottle
