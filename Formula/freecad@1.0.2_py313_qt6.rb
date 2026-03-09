@@ -121,7 +121,7 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "numpy"
   depends_on "openblas" if OS.linux?
   depends_on "opencascade"
-  depends_on "openmpi" if OS.linux?
+  depends_on "open-mpi" if OS.linux?
   depends_on "orocos-kdl"
   depends_on "pybind11" # QT lts support
   depends_on "python@3.13"
@@ -193,7 +193,6 @@ class FreecadAT102Py313Qt6 < Formula
 
     cmake_prefix_paths = []
     # cmake_prefix_paths << Formula["llvm"].prefix
-    # cmake_prefix_paths << Formula["open-mpi"].prefix
     cmake_prefix_paths << Formula["boost"].prefix
     cmake_prefix_paths << Formula["coin3d@4.0.7_py313_qt6"].prefix
     cmake_prefix_paths << Formula["cups"].prefix
@@ -243,7 +242,7 @@ class FreecadAT102Py313Qt6 < Formula
       cmake_prefix_paths << Formula["mesa"].prefix
       cmake_prefix_paths << Formula["mesa-glu"].prefix
       cmake_prefix_paths << Formula["openblas"].prefix
-      cmake_prefix_paths << Formula["openmpi"].prefix
+      cmake_prefix_paths << Formula["open-mpi"].prefix
     end
 
     cmake_prefix_path_string = cmake_prefix_paths.join(";")
