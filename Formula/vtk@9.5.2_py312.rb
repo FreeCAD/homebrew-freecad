@@ -71,9 +71,10 @@ class VtkAT952Py312 < Formula
     end
 
     python = "python3.12"
+    py312 = Formula["python@3.12"]
     qml_plugin_dir = lib/"qml/VTK.#{version.major_minor}"
     vtkmodules_dir = prefix/Language::Python.site_packages(python)/"vtkmodules"
-    rpaths = [rpath, rpath(source: qml_plugin_dir), rpath(source: vtkmodules_dir)]
+    rpaths = [rpath, rpath(source: qml_plugin_dir), rpath(source: vtkmodules_dir), py312.opt_lib.to_s]
 
     args = %W[
       -DBUILD_SHARED_LIBS:BOOL=ON
