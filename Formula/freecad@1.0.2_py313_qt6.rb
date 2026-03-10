@@ -119,9 +119,9 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "mesa-glu" if OS.linux?
   depends_on "nlohmann-json"
   depends_on "numpy"
+  depends_on "open-mpi" if OS.linux?
   depends_on "openblas" if OS.linux?
   depends_on "opencascade"
-  depends_on "open-mpi" if OS.linux?
   depends_on "orocos-kdl"
   depends_on "pybind11" # QT lts support
   depends_on "python@3.13"
