@@ -27,6 +27,8 @@ class NumpyAT1264Py310 < Formula
 
   keg_only :versioned_formula
 
+  disable! date: "2025-10-20", because: "newer versions of this formula exist"
+
   depends_on "cython" => :build
   depends_on "gcc" => :build # for gfortran
   depends_on "meson" => :build

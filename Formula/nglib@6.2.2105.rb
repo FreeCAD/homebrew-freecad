@@ -17,6 +17,8 @@ class NglibAT622105 < Formula
     sha256 cellar: :any, catalina: "1a37c920bc73229031752b0eaba90bd73963f41ae563591fd46d45a1dbf85e1e"
   end
 
+  disable! date: "2025-10-20", because: "newer versions of this formula exist"
+
   depends_on "cmake" => :build
   depends_on "freecad/freecad/opencascade@7.5.3"
 

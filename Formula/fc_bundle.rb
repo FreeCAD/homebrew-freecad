@@ -20,6 +20,8 @@ class FcBundle < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux: "e4727d08d25dd793c1b2460dd2e60eaa7be5fb82e9af4fdcb3b82044b35a2d6e"
   end
 
+  disable! date: "2025-10-20", because: "newer versions of this formula exist"
+
   depends_on "freecad/freecad/coin3d_py310"
   depends_on "freecad/freecad/numpy@1.26.4_py310"
   depends_on "freecad/freecad/pyside2@5.15.11_py310"

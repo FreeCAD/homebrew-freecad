@@ -30,6 +30,8 @@ class SwigAT402 < Formula
 
   keg_only :versioned_formula
 
+  disable! date: "2025-10-20", because: "newer versions of this formula exist"
+
   depends_on "pcre"
 
   uses_from_macos "ruby" => :test

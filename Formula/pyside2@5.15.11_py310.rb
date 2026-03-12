@@ -24,6 +24,8 @@ class Pyside2AT51511Py310 < Formula
 
   keg_only :versioned_formula
 
+  disable! date: "2025-10-20", because: "newer versions of this formula exist"
+
   depends_on "cmake" => :build
   depends_on "freecad/freecad/shiboken2@5.15.11_py310"
   depends_on "llvm@15" # Upstream issue ref: https://bugreports.qt.io/browse/PYSIDE-2268

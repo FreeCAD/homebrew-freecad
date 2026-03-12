@@ -18,6 +18,8 @@ class MedFileAT411 < Formula
 
   keg_only :versioned_formula
 
+  disable! date: "2025-10-20", because: "newer versions of this formula exist"
+
   depends_on "cmake" => :build
   depends_on "freecad/freecad/swig@4.1.1" => :build
   depends_on "python@3.11" => :build

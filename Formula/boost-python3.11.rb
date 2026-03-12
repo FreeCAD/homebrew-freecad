@@ -23,6 +23,8 @@ class BoostPython311 < Formula
 
   keg_only :versioned_formula
 
+  disable! date: "2025-10-20", because: "freecad formula now build against pybind11"
+
   depends_on "numpy" => :build
   depends_on "boost"
   depends_on "python@3.11"

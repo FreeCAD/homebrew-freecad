@@ -21,6 +21,8 @@ class Shiboken2AT51511 < Formula
 
   keg_only :versioned_formula
 
+  disable! date: "2025-10-20", because: "newer versions of this formula exist"
+
   depends_on "cmake" => :build
   depends_on "python@3.11" => :build
   depends_on "llvm"
