@@ -11,6 +11,8 @@ class NglibAT622104 < Formula
   revision 1
   head "https://github.com/ngsolve/netgen.git", branch: "master"
 
+  disable! date: "2025-10-20", because: "newer versions of this formula exist"
+
   depends_on "cmake" => :build
   depends_on "freecad/freecad/opencascade@7.5.3"
 

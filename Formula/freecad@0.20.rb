@@ -13,6 +13,8 @@ class FreecadAT020 < Formula
   option "with-cloud", "Build with CLOUD module"
   option "with-unsecured-cloud", "Build with self signed certificate support CLOUD module"
 
+  disable! date: "2025-10-20", because: "newer versions of this formula exist"
+
   depends_on "cmake" => :build
   depends_on "hdf5" => :build
   depends_on "pkg-config" => :build
