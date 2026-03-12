@@ -11,10 +11,11 @@ class MedFileAT500Py313 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any,                 arm64_tahoe:   "0ad452b5c117dcac22386bf026710edccaf220ba0abeecc277485b5f5d037604"
-    sha256 cellar: :any,                 arm64_sequoia: "4e2b5b776cd75ed32ae0e71f8616d17309962a022f6f04c0621f608f68f8ed01"
-    sha256 cellar: :any,                 arm64_sonoma:  "6c26ef494d959bb24fd004261f0cbf3c70663b3c56224f5cf4bbeffd45d16068"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "027fbe65bfc98febb7d1d82b28469cf2b48382ea86c041dc5ca4c9c10638b0c1"
+    sha256 cellar: :any,                 arm64_tahoe:   "6e39a36ec8198f661e676217eb13e3521dc99c511765aa6438b98e308b48119d"
+    sha256 cellar: :any,                 arm64_sequoia: "4ec2bd473e930e76c7e1af33601f453a6fdfbc3023473765286ef84b6f47c2ce"
+    sha256 cellar: :any,                 arm64_sonoma:  "d71941b6eb5c9548cc5074deed032c177baaa5c71b3cde341a7d5721746f23c1"
+    sha256 cellar: :any_skip_relocation, arm64_linux:   "590bb30c767d825ac0076cf86b8dec650ebdfd3dc8baf0a1a8c982a3331f20c5"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "31ade261a824ef5c268096099696c347522e809af1e489fdbad0c5b9de8d5f42"
   end
 
   keg_only :versioned_formula
