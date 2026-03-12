@@ -100,7 +100,7 @@ jobs:
 
       - name: Restore last run status
         id: restore-last-run-status
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v5.0.3
         with:
           path: |
             last-run-status
