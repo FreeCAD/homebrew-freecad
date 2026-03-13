@@ -5,7 +5,7 @@ class FreecadAT102Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
-  revision 1
+  revision 2
 
   # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
   # run `brew cleanup` when editing local patch files on each subsequent `brew install`
@@ -14,11 +14,11 @@ class FreecadAT102Py313Qt6 < Formula
     url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.2.tar.gz"
     sha256 "228ee52f00627c7d8fa61998179deb01865ece69390829feb1300228d24f7e9e"
 
-    # NOTE: ipatch, vtk >= 9.4 will break build of 1.0
-    # patch do
-    #   url "https://github.com/wwmayer/FreeCAD/commit/8934af10128f0bd2d0ffada946d1c93bc5d8869f.patch?full_index=1"
-    #   sha256 "1c4f0d32f0726a94ac607a44e1efbdc42a32f8fbd97a9ccd20151defda368f76"
-    # end
+    # fix build with netgen v6.2.2601 or newer
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/e595cc49f2655718f5e6202b8e3c4dde273bb692.patch?full_index=1"
+      sha256 "7d0192ed401f256597e40a4c287f18ff69a4f89cb84d1e7db92d89aa44b01178"
+    end
 
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/9fc9f20790799beb411e638f87a31b76a34d29e2/patches/freecad%401.0.2_py313_qt6-fix-bld-with-boost-v189.patch"
@@ -113,6 +113,7 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "freecad/freecad/coin3d@4.0.7_py313_qt6"
   depends_on "freecad/freecad/fc_bundle_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
+  depends_on "freecad/freecad/netgen@6.2.2601" # uses py313
   depends_on "freecad/freecad/pyside6_py313"
   depends_on "freecad/freecad/vtk@9.5.2_py313"
   depends_on "freeimage"
@@ -224,6 +225,7 @@ class FreecadAT102Py313Qt6 < Formula
     cmake_prefix_paths << Formula["libtiff"].prefix
     cmake_prefix_paths << Formula["lz4"].prefix
     cmake_prefix_paths << Formula["med-file@5.0.0_py313"].prefix
+    cmake_prefix_paths << Formula["netgen@6.2.2601"].prefix
     cmake_prefix_paths << Formula["nlohmann-json"].prefix
     cmake_prefix_paths << Formula["opencascade"].prefix
     cmake_prefix_paths << Formula["orocos-kdl"].prefix
@@ -280,8 +282,6 @@ class FreecadAT102Py313Qt6 < Formula
     # -DCMAKE_INSTALL_RPATH=#{rpath}
     # -DBUILD_DRAWING=1
     # -DBUILD_SMESH=1
-    # -DFREECAD_USE_EXTERNAL_KDL=1
-    # -DBUILD_FEM_NETGEN=0
     # -DFREECAD_USE_QTWEBMODULE=#{qtwebmodule}
     # -DCMAKE_EXE_LINKER_FLAGS="-v"
 
@@ -358,9 +358,10 @@ class FreecadAT102Py313Qt6 < Formula
       -DPython3_INCLUDE_DIRS=#{py_inc_dir}
       -DPython3_LIBRARIES=#{py_lib_path}
 
+      -DFREECAD_QT_VERSION=6
       -DFREECAD_USE_PYBIND11=1
       -DFREECAD_USE_EXTERNAL_KDL=1
-      -DFREECAD_QT_VERSION=6
+      -DBUILD_FEM_NETGEN=1
 
       -DCMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH=FALSE
       -DCMAKE_FIND_USE_CMAKE_SYSTEM_PATH=FALSE
