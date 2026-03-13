@@ -62,6 +62,21 @@ class NetgenAT622601 < Formula
     system "cmake", "--install", "build"
   end
 
+  def post_install
+    # explicitly set python version
+    python_version = "3.13"
+
+    # Unlink the existing .pth file to avoid reinstall issues
+    pth_file = lib/"python#{python_version}/netgen_py313.pth"
+    pth_file.unlink if pth_file.exist?
+
+    ohai "Creating .pth file for netgen module"
+    # write the .pth file to the site-packages directory
+    (lib/"python#{python_version}/netgen_py313.pth").write <<~PYTHON
+      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
+    PYTHON
+  end
+
   def caveats
     <<~EOS
       this is a versioned formula so it is NOT linked in HOMBREW_PREFIX by default
