@@ -8,9 +8,10 @@ class FcBundlePy313Qt6 < Formula
   url "file:///dev/null"
   # this version works with the freecad v1.0.2 release
   version "1.0.2"
+  sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  revision 1
 
   # sha of file:///dev/null
-  sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -73,6 +74,11 @@ class FcBundlePy313Qt6 < Formula
     sha256 "2ed4ecb28320a433db18a5bf029986aa8afcfd740745e78847e330d5d94922a9"
   end
 
+  resource "pynastran" do
+    url "https://github.com/SteveDoyle2/pyNastran/archive/refs/tags/v1.4.1.tar.gz"
+    sha256 "445c4cd0ead937206ea743c0e2f9f743261fbc10891e26ec948a755f6b825df3"
+  end
+
   # TODO: still probably need to add the pynastran to make the test suite happy
 
   def install
@@ -88,7 +94,7 @@ class FcBundlePy313Qt6 < Formula
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
     # setup and install lark ply six
-    %w[lark ply six].each do |pkg|
+    %w[lark ply six pynastran].each do |pkg|
       resource(pkg).stage do
         system venv_pip, "install", "."
       end
