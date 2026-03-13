@@ -57,6 +57,16 @@ class NetgenAT622601 < Formula
       -L
     ]
 
+    # NOTE: fix incompatiblities with newer versions of pybind11
+    inreplace "libsrc/meshing/python_mesh.cpp" do |s|
+      s.gsub! '"parentelements", [](Mesh & self)',
+        '"parentelements", py::cpp_function([](Mesh & self)'
+      s.gsub! '"parentsurfaceelements", [](Mesh & self)',
+        '"parentsurfaceelements", py::cpp_function([](Mesh & self)'
+      s.gsub! "}, py::keep_alive<0,1>())",
+        "}, py::keep_alive<0,1>()))"
+    end
+
     system "cmake", "-S", ".", "-B", "build", *args
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
