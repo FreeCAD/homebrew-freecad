@@ -5,6 +5,7 @@ class FreecadAT102Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
+  revision 1
 
   # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
   # run `brew cleanup` when editing local patch files on each subsequent `brew install`
@@ -108,6 +109,7 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "expat"
   depends_on "fmt"
   depends_on "fontconfig" if OS.linux?
+  depends_on "freecad/freecad/calculix@2.23"
   depends_on "freecad/freecad/coin3d@4.0.7_py313_qt6"
   depends_on "freecad/freecad/fc_bundle_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
@@ -202,6 +204,7 @@ class FreecadAT102Py313Qt6 < Formula
     cmake_prefix_paths = []
     # cmake_prefix_paths << Formula["llvm"].prefix
     cmake_prefix_paths << Formula["boost"].prefix
+    cmake_prefix_paths << Formula["calculix@2.23"].prefix
     cmake_prefix_paths << Formula["coin3d@4.0.7_py313_qt6"].prefix
     cmake_prefix_paths << Formula["cups"].prefix
     cmake_prefix_paths << Formula["double-conversion"].prefix
