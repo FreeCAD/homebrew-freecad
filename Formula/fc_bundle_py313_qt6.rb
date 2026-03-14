@@ -9,7 +9,7 @@ class FcBundlePy313Qt6 < Formula
   # this version works with the freecad v1.0.2 release
   version "1.0.2"
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 1
+  revision 2
 
   # sha of file:///dev/null
 
@@ -25,6 +25,7 @@ class FcBundlePy313Qt6 < Formula
   depends_on "pkgconf" => :build
   depends_on "freecad/freecad/coin3d@4.0.7_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
+  depends_on "freecad/freecad/netgen@6.2.2601"
   depends_on "freecad/freecad/pyside6_py313" # pyside includes the shiboken module as well
   depends_on "freecad/freecad/vtk@9.5.2_py313"
   depends_on "geos"
@@ -77,8 +78,6 @@ class FcBundlePy313Qt6 < Formula
     url "https://github.com/SteveDoyle2/pyNastran/archive/refs/tags/v1.4.1.tar.gz"
     sha256 "445c4cd0ead937206ea743c0e2f9f743261fbc10891e26ec948a755f6b825df3"
   end
-
-  # TODO: still probably need to add the pynastran to make the test suite happy
 
   def install
     # explicitly set python version
@@ -137,6 +136,8 @@ class FcBundlePy313Qt6 < Formula
       File.read("#{Formula["pyside6_py313"].opt_prefix}/lib/python#{pyver}/pyside6.pth").strip
     vtk_952_py313_pth_contents =
       File.read("#{Formula["vtk@9.5.2_py313"].opt_prefix}/lib/python#{pyver}/vtk_py313.pth").strip
+    netgen_pth_contents =
+      File.read("#{Formula["netgen@6.2.2601"].opt_prefix}/lib/python#{pyver}/netgen_py313.pth").strip
 
     site_packages = Language::Python.site_packages("python3.13")
     # {shiboken2_pth_contents}
@@ -145,6 +146,7 @@ class FcBundlePy313Qt6 < Formula
       #{coin3d_pth_contents}
       #{pyside6_pth_contents}
       #{vtk_952_py313_pth_contents}
+      #{netgen_pth_contents}
       #{venv_dir}/lib/python#{pyver}/site-packages
     RUBY
     (prefix/site_packages/"freecad-py-modules.pth").write pth_contents
