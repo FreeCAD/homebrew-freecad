@@ -301,6 +301,8 @@ class FreecadAT102Py313Qt6 < Formula
         -DOPENGL_glu_LIBRARY=#{apl_frmwks}/OpenGL.framework
         -DCOREFOUNDATION_LIBRARY=#{apl_frmwks}/CoreFoundation.framework
         -DCMAKE_IGNORE_PATH=#{hbp}/Cellar/qt@5;#{hbp}/opt/qt@5;
+
+        -DNetgen_DIR=#{Formula["netgen@6.2.2601"].opt_prefix}/Contents/Resources/CMake
       ]
     end
     # -DCMAKE_IGNORE_PATH=#{hbp}/lib;#{hbp}/include/QtCore;#{hbp}/Cellar/qt;
