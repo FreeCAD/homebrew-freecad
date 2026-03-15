@@ -148,8 +148,9 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "qtsvg"
   depends_on "qttools"
   depends_on "tbb"
+  depends_on "vtk"
   depends_on "vulkan-headers"
-  depends_on "webp"
+  depends_on "webp" # upstream homebrew-core vtk indirect link due to pcl
   depends_on "xerces-c"
   depends_on "yaml-cpp"
   depends_on "zlib-ng-compat"
