@@ -5,7 +5,7 @@ class FreecadAT102Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
-  revision 2
+  revision 3
 
   # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
   # run `brew cleanup` when editing local patch files on each subsequent `brew install`
@@ -13,6 +13,12 @@ class FreecadAT102Py313Qt6 < Formula
   stable do
     url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.2.tar.gz"
     sha256 "228ee52f00627c7d8fa61998179deb01865ece69390829feb1300228d24f7e9e"
+
+    # fix build with newer versions of PCL ie. >= 1.15
+    patch do
+      url "https://github.com/freecad/freecad/commit/d9e731ca94abc14808ebeed208617116f6d5ea4a.patch?full_index=1"
+      sha256 "e6d403d2a31333c5a5579cc43a921d4674e3880384a59d760fdd9e4d125aa1ee"
+    end
 
     # fix build with netgen v6.2.2601 or newer
     patch do
@@ -134,6 +140,7 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "openblas" if OS.linux?
   depends_on "opencascade"
   depends_on "orocos-kdl"
+  depends_on "pcl"
   depends_on "pybind11" # QT lts support
   depends_on "python@3.13"
   depends_on "qt"
@@ -141,8 +148,9 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "qtsvg"
   depends_on "qttools"
   depends_on "tbb"
+  depends_on "vtk"
   depends_on "vulkan-headers"
-  depends_on "webp"
+  depends_on "webp" # upstream homebrew-core vtk indirect link due to pcl
   depends_on "xerces-c"
   depends_on "yaml-cpp"
   depends_on "zlib-ng-compat"
@@ -229,6 +237,7 @@ class FreecadAT102Py313Qt6 < Formula
     cmake_prefix_paths << Formula["nlohmann-json"].prefix
     cmake_prefix_paths << Formula["opencascade"].prefix
     cmake_prefix_paths << Formula["orocos-kdl"].prefix
+    cmake_prefix_paths << Formula["pcl"].prefix
     cmake_prefix_paths << Formula["pkg-config"].prefix
     cmake_prefix_paths << Formula["pugixml"].prefix
     cmake_prefix_paths << Formula["pybind11"].prefix
@@ -364,6 +373,7 @@ class FreecadAT102Py313Qt6 < Formula
       -DFREECAD_USE_PYBIND11=1
       -DFREECAD_USE_EXTERNAL_KDL=1
       -DBUILD_FEM_NETGEN=1
+      -DFREECAD_USE_PCL=1
 
       -DCMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH=FALSE
       -DCMAKE_FIND_USE_CMAKE_SYSTEM_PATH=FALSE
