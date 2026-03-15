@@ -17,7 +17,7 @@ class FreecadAT102Py313Qt6 < Formula
     # fix build with newer versions of PCL ie. >= 1.15
     patch do
       url "https://github.com/freecad/freecad/commit/d9e731ca94abc14808ebeed208617116f6d5ea4a.patch?full_index=1"
-      sha256 "4448bcd93aac83ef8a610ad3d340c7bbbf22fe194b89fbfcaac262cfee63a9c0"
+      sha256 "e6d403d2a31333c5a5579cc43a921d4674e3880384a59d760fdd9e4d125aa1ee"
     end
 
     # fix build with netgen v6.2.2601 or newer
