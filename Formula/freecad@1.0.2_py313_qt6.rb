@@ -5,7 +5,9 @@ class FreecadAT102Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
-  revision 3
+  revision 4
+
+  PY_VER = "3.13".freeze
 
   # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
   # run `brew cleanup` when editing local patch files on each subsequent `brew install`
@@ -141,31 +143,24 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "opencascade"
   depends_on "orocos-kdl"
   depends_on "pcl"
-  depends_on "pybind11" # QT lts support
+  depends_on "pybind11"
   depends_on "python@3.13"
   depends_on "qt"
   depends_on "qtbase"
   depends_on "qtsvg"
   depends_on "qttools"
   depends_on "tbb"
-  depends_on "vtk"
+  depends_on "vtk" # upstream homebrew-core vtk indirect link due to pcl
   depends_on "vulkan-headers"
-  depends_on "webp" # upstream homebrew-core vtk indirect link due to pcl
+  depends_on "webp"
   depends_on "xerces-c"
   depends_on "yaml-cpp"
   depends_on "zlib-ng-compat"
 
   # TODO: attempt to install without patch
-  patch do
-    url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/a979a1011bb1d911c2c26db9b663b04862b8b950/patches/freecad%401.0.0_rc2_py312-fix-pyside-path-issue.patch"
-    sha256 "c312676f490a9850691cc47ced760849bd440d20f0fdbefcac42b613f5873a2f"
-  end
-
-  # NOTE: https://docs.brew.sh/Formula-Cookbook#handling-different-system-configurations
-  # patch for mojave with 10.15 SDK
-  # patch :p1 do
-  #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/a4b71def99b5fe907550729038752aaf6fa1b9bf/patches/freecad-0.20.1-macos-10.15-sdk.patch"
-  #   sha256 "ce9f4b2afb2c621274e74208a563616eeeee54369f295b6c5f6f4f3112923135"
+  # patch do
+  #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/a979a1011bb1d911c2c26db9b663b04862b8b950/patches/freecad%401.0.0_rc2_py312-fix-pyside-path-issue.patch"
+  #   sha256 "c312676f490a9850691cc47ced760849bd440d20f0fdbefcac42b613f5873a2f"
   # end
 
   def install
@@ -174,17 +169,17 @@ class FreecadAT102Py313Qt6 < Formula
     # NOTE: `which` cmd is not installed by default on every OS
     # ENV["PYTHON"] = which("python3.10")
     #------------
-    ENV["PYTHON"] = Formula["python@3.13"].opt_bin/"python3.13"
+    ENV["PYTHON"] = Formula["python@#{PY_VER}"].opt_bin/"python#{PY_VER}"
 
     # Get the Python includes directory without duplicates
-    py_inc_output = `python3.13-config --includes`
+    py_inc_output = `python#{PY_VER}-config --includes`
     py_inc_dirs = py_inc_output.scan(/-I([^\s]+)/).flatten.uniq
     py_inc_dir = py_inc_dirs.join(" ")
 
     py_lib_path = if OS.mac?
-      `python3.13-config --configdir`.strip + "/libpython3.13.dylib"
+        `python#{PY_VER}-config --configdir`.strip + "/libpython#{PY_VER}.dylib"
     else
-      `python3.13-config --configdir`.strip + "/libpython3.13.a"
+        `python#{PY_VER}-config --configdir`.strip + "/libpython#{PY_VER}.a"
     end
 
     puts "----------------------------------------------------"
@@ -424,6 +419,16 @@ class FreecadAT102Py313Qt6 < Formula
     args.concat(args_macos_only) if OS.mac?
     args.concat(args_linux_only) if OS.linux?
 
+    # populate version info lost from tarball ie. because not .git dir
+    # NOTE: ipatch, run the below 2 cmds in the git clone of the fc src dir
+    # 1. `git rev-parse --short 1.0.2` wcref
+    # 2. `git log -1 --format=%ci 1.0.2` wcdate
+    inreplace buildpath/"src/Build/Version.h.cmake" do |s|
+      s.gsub! "${PACKAGE_WCREF}", "256fc7eff3"
+      s.gsub! "${PACKAGE_WCDATE}", "2025-08-05T17:19:07-03:00"
+      s.gsub! "${PACKAGE_WCURL}", "https://github.com/FreeCAD/FreeCAD"
+    end
+
     system "cmake", *args, src_dir.to_s
     system "cmake", "--build", build_dir.to_s
     system "cmake", "--install", build_dir.to_s
@@ -453,7 +458,7 @@ class FreecadAT102Py313Qt6 < Formula
        https://github.com/FreeCAD/homebrew-freecad/issues/348#issuecomment-1248927545
 
     2. presently the freecad py module is NOT globally accessible, ie.
-       one cannot directly run `import freecad` from a python v3.12
+       one cannot directly run `import freecad` from a python v#{PY_VER}
        repl
     EOS
   end
