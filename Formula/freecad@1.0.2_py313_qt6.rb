@@ -144,7 +144,7 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "orocos-kdl"
   depends_on "pcl"
   depends_on "pybind11"
-  depends_on "python@#{PY_VER}"
+  depends_on "python@3.13"
   depends_on "qt"
   depends_on "qtbase"
   depends_on "qtsvg"
