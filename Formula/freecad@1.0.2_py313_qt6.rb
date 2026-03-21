@@ -177,9 +177,9 @@ class FreecadAT102Py313Qt6 < Formula
     py_inc_dir = py_inc_dirs.join(" ")
 
     py_lib_path = if OS.mac?
-        `python#{PY_VER}-config --configdir`.strip + "/libpython#{PY_VER}.dylib"
+      `python#{PY_VER}-config --configdir`.strip + "/libpython#{PY_VER}.dylib"
     else
-        `python#{PY_VER}-config --configdir`.strip + "/libpython#{PY_VER}.a"
+      `python#{PY_VER}-config --configdir`.strip + "/libpython#{PY_VER}.a"
     end
 
     puts "----------------------------------------------------"
