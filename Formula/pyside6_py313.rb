@@ -6,9 +6,9 @@ class Pyside6Py313 < Formula
 
   desc "Official Python bindings for Qt"
   homepage "https://wiki.qt.io/Qt_for_Python"
-  url "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.10.2-src/pyside-setup-everywhere-src-6.10.2.tar.xz"
-  mirror "https://cdimage.debian.org/mirror/qt.io/qtproject/official_releases/QtForPython/pyside6/PySide6-6.10.2-src/pyside-setup-everywhere-src-6.10.2.tar.xz"
-  sha256 "05eec38bb71bffff8860786e3c0766cc4b86affc72439bd246c54889bdcb7400"
+  url "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.11.0-src/pyside-setup-everywhere-src-6.11.0.tar.xz"
+  mirror "https://cdimage.debian.org/mirror/qt.io/qtproject/official_releases/QtForPython/pyside6/PySide6-6.11.0-src/pyside-setup-everywhere-src-6.11.0.tar.xz"
+  sha256 "48d5c44d7c3ed861055d5491486e6a220ef5006573cae01a5fae3fb69d786336"
   # NOTE: We omit some licenses even though they are in SPDX-License-Identifier or LICENSES/ directory:
   # 1. LicenseRef-Qt-Commercial is removed from "OR" options as non-free
   # 2. GFDL-1.3-no-invariants-only is only used by not installed docs, e.g. sources/{pyside6,shiboken6}/doc
@@ -18,6 +18,7 @@ class Pyside6Py313 < Formula
     { "GPL-3.0-only" => { with: "Qt-GPL-exception-1.0" } },
     { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] },
   ]
+  revision 1
 
   livecheck do
     url "https://download.qt.io/official_releases/QtForPython/pyside6/"
@@ -114,7 +115,7 @@ class Pyside6Py313 < Formula
       "${shiboken_include_dirs}:#{extra_include_dirs.join(":")}"
 
     # Avoid shim reference
-    inreplace "sources/shiboken6/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
+    inreplace "sources/shiboken6_generator/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
     cmake_args = std_cmake_args
 
@@ -140,13 +141,20 @@ class Pyside6Py313 < Formula
     puts "CMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}"
     puts "-------------------------------------------------"
 
+    # NOTE: ipatch, it appears Qt6CanvasPainter may have been introduced in qt v6.11
+    # ...and causes a build err on asahi linux ie. arm64
+    # NOWORK!
+    # if OS.linux? && Hardware::CPU.arm?
+    #   cmake_args << "-DQt6CanvasPainter_FOUND=FALSE"
+    # end
+
     system "cmake", "-S", ".", "-B", "build",
                      "-DCMAKE_INSTALL_RPATH=#{lib}",
                      "-DCMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}",
                      "-DBUILD_TESTS=OFF",
                      "-DBUILD_DOCS=ON",
-                     "-DNO_QT_TOOLS=no",
-                     "-DFORCE_LIMITED_API=no",
+                     "-DNO_QT_TOOLS=NO",
+                     "-DFORCE_LIMITED_API=NO",
                      "-DNUMPY_INCLUDE_DIR=#{numpy_inc_dir}",
                      "-DCMAKE_DISABLE_FIND_PACKAGE_Qt63DCore=TRUE",
                      "-DCMAKE_DISABLE_FIND_PACKAGE_Qt63DRender=TRUE",
@@ -175,6 +183,11 @@ class Pyside6Py313 < Formula
           sed -i "$@"
         fi
       }
+
+      # QtCanvasPainter: QWidget::RenderFlag misresolved to QTextItem::RenderFlag
+      [ -f "$WD/QtCanvasPainter/PySide6/QtCanvasPainter/qcanvaspainterwidget_wrapper.cpp" ] && \
+      sedi 's/QTextItem::RenderFlag/QWidget::RenderFlag/g' \
+        $WD/QtCanvasPainter/PySide6/QtCanvasPainter/qcanvaspainterwidget_wrapper.cpp
 
       # QtCore: QDirListing::IteratorFlag misresolved to QDirIterator::IteratorFlag
       sedi 's/QDirIterator::IteratorFlag/QDirListing::IteratorFlag/g' \
@@ -305,8 +318,17 @@ class Pyside6Py313 < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    # Ensure .py scripts installed in `bin` are executable
-    bin.glob("*.py").each { |f| f.chmod 0755 }
+    # Ensure .py helper scripts are installed to `libexec/bin`
+    %w[
+      requirements-android.txt deploy.py android_deploy.py
+      qtpy2cpp.py qml.py metaobjectdump.py project.py
+      qtpy2cpp_lib deploy_lib project_lib
+    ].each { |f| libexec.install bin/f if (bin/f).exist? }
+
+    # Fix shims references in shiboken6
+    # inreplace bin/"shiboken6" do |s|
+    #   s.gsub! "#{HOMEBREW_LIBRARY}/Homebrew/shims/mac/super/", ""
+    # end
 
     # fix rpath issues on macos with python packages / modules, same fix used in med
     if OS.mac?
