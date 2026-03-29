@@ -115,7 +115,7 @@ class Pyside6Py313 < Formula
       "${shiboken_include_dirs}:#{extra_include_dirs.join(":")}"
 
     # Avoid shim reference
-    # inreplace "sources/shiboken6/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
+    inreplace "sources/shiboken6_generator/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
     cmake_args = std_cmake_args
 
@@ -306,8 +306,17 @@ class Pyside6Py313 < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    # Ensure .py scripts installed in `bin` are executable
-    bin.glob("*.py").each { |f| f.chmod 0755 }
+    # Ensure .py helper scripts are installed to `libexec/bin`
+    %w[
+      requirements-android.txt deploy.py android_deploy.py
+      qtpy2cpp.py qml.py metaobjectdump.py project.py
+      qtpy2cpp_lib deploy_lib project_lib
+    ].each { |f| libexec.install bin/f if (bin/f).exist? }
+
+    # Fix shims references in shiboken6
+    # inreplace bin/"shiboken6" do |s|
+    #   s.gsub! "#{HOMEBREW_LIBRARY}/Homebrew/shims/mac/super/", ""
+    # end
 
     # fix rpath issues on macos with python packages / modules, same fix used in med
     if OS.mac?
