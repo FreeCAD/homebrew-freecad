@@ -141,6 +141,9 @@ class Pyside6Py313 < Formula
     puts "CMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}"
     puts "-------------------------------------------------"
 
+    # NOTE: ipatch, it appears Qt6CanvasPainter may have been introduced in qt v6.11
+    # ...and causes a build err on asahi linux ie. arm64
+
     system "cmake", "-S", ".", "-B", "build",
                      "-DCMAKE_INSTALL_RPATH=#{lib}",
                      "-DCMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}",
@@ -155,6 +158,7 @@ class Pyside6Py313 < Formula
                      "-DCMAKE_DISABLE_FIND_PACKAGE_Qt63DLogic=TRUE",
                      "-DCMAKE_DISABLE_FIND_PACKAGE_Qt63DAnimation=TRUE",
                      "-DCMAKE_DISABLE_FIND_PACKAGE_Qt63DExtras=TRUE",
+                     "-DCMAKE_DISABLE_FIND_PACKAGE=Qt6CanvasPainter",
                      "-G Ninja",
                      "-L",
                      *cmake_args
