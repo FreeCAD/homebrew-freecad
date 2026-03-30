@@ -117,9 +117,6 @@ class Coin3dAT408Py313Qt6 < Formula
       puts "CMAKE_PREFIX_PATH Datatype: #{ENV["CMAKE_PREFIX_PATH"].class}"
       puts "----------------------------------------------------"
 
-      # Allow setup.py to build with Qt6 as we saw some issues using CMake directly on Intel
-      inreplace "distutils_cmake/CMakeLists.txt", " NONE)", ")" # allow languages
-
       ENV.append "CXXFLAGS", "-std=c++17"
 
       qt = Formula["qt"]
