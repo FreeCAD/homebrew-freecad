@@ -88,6 +88,7 @@ class Coin3dAT408Py313Qt6 < Formula
                     "-DCOIN_BUILD_DOCUMENTATION=ON",
                     "-DCOIN_BUILD_DOCUMENTATION_MAN=ON",
                     "-DCMAKE_INSTALL_PREFIX=#{prefix}",
+                    "-DCMAKE_INSTALL_LIBDIR=lib",
                     "-L"
     puts "----------------------------------------------------"
     puts "CMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}"
