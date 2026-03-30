@@ -1,14 +1,15 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileNotice: Part of the FreeCAD project.
 
-class Coin3dAT407Py313Qt6 < Formula
+class Coin3dAT408Py313Qt6 < Formula
   desc "Open Inventor 2.1 API implementation (Coin) with Python bindings (Pivy)"
   homepage "https://coin3d.github.io/"
   license all_of: ["BSD-3-Clause", "ISC"]
+  revision 1
 
   stable do
-    url "https://github.com/coin3d/coin/releases/download/v4.0.7/coin-4.0.7-src.tar.gz"
-    sha256 "a01276052c31e84e4a069ee4452eab3b65a7d101a3fd7a09803be59125616270"
+    url "https://github.com/coin3d/coin/releases/download/v4.0.8/coin-4.0.8-src.tar.gz"
+    sha256 "aff6c7edf24cfb935edba46574ec5f83b543c47ff79e40c21fb92dc709b0f2c4"
 
     # We use the pre-release to support `pyside` and `python@3.12`.
     # This matches Arch Linux[^1] and Debian[^2] packages.
@@ -29,15 +30,6 @@ class Coin3dAT407Py313Qt6 < Formula
   livecheck do
     url "https://github.com/coin3d/coin/releases"
     regex(/^v?(\d+(?:\.\d+)+)$/i)
-  end
-
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 1
-    sha256 cellar: :any,                 arm64_tahoe:   "7aff9ad5246b9eb99c93f3a25dc3a2130ab503d274889459dde072a539a263e1"
-    sha256 cellar: :any,                 arm64_sequoia: "c7adb72de715aafe0316b60129ecd4bb8e30249c478529c83cb4f7c5b4b39c60"
-    sha256 cellar: :any,                 arm64_sonoma:  "d2e3668bd2f7b375c66751da6af10b638ccd45660514448b9d67721531769405"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "69d3e2e77f9e6768bd74364b748a18ec8d76637d6548eec9196769cf60ef9a03"
   end
 
   head do
