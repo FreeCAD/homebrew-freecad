@@ -143,14 +143,18 @@ class Pyside6Py313 < Formula
 
     # NOTE: ipatch, it appears Qt6CanvasPainter may have been introduced in qt v6.11
     # ...and causes a build err on asahi linux ie. arm64
+    # NOWORK!
+    # if OS.linux? && Hardware::CPU.arm?
+    #   cmake_args << "-DQt6CanvasPainter_FOUND=FALSE"
+    # end
 
     system "cmake", "-S", ".", "-B", "build",
                      "-DCMAKE_INSTALL_RPATH=#{lib}",
                      "-DCMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}",
                      "-DBUILD_TESTS=OFF",
                      "-DBUILD_DOCS=ON",
-                     "-DNO_QT_TOOLS=no",
-                     "-DFORCE_LIMITED_API=no",
+                     "-DNO_QT_TOOLS=NO",
+                     "-DFORCE_LIMITED_API=NO",
                      "-DNUMPY_INCLUDE_DIR=#{numpy_inc_dir}",
                      "-DCMAKE_DISABLE_FIND_PACKAGE_Qt63DCore=TRUE",
                      "-DCMAKE_DISABLE_FIND_PACKAGE_Qt63DRender=TRUE",
@@ -158,7 +162,6 @@ class Pyside6Py313 < Formula
                      "-DCMAKE_DISABLE_FIND_PACKAGE_Qt63DLogic=TRUE",
                      "-DCMAKE_DISABLE_FIND_PACKAGE_Qt63DAnimation=TRUE",
                      "-DCMAKE_DISABLE_FIND_PACKAGE_Qt63DExtras=TRUE",
-                     "-DCMAKE_DISABLE_FIND_PACKAGE=Qt6CanvasPainter",
                      "-G Ninja",
                      "-L",
                      *cmake_args
@@ -180,6 +183,11 @@ class Pyside6Py313 < Formula
           sed -i "$@"
         fi
       }
+
+      # QtCanvasPainter: QWidget::RenderFlag misresolved to QTextItem::RenderFlag
+      [ -f "$WD/QtCanvasPainter/PySide6/QtCanvasPainter/qcanvaspainterwidget_wrapper.cpp" ] && \
+      sedi 's/QTextItem::RenderFlag/QWidget::RenderFlag/g' \
+        $WD/QtCanvasPainter/PySide6/QtCanvasPainter/qcanvaspainterwidget_wrapper.cpp
 
       # QtCore: QDirListing::IteratorFlag misresolved to QDirIterator::IteratorFlag
       sedi 's/QDirIterator::IteratorFlag/QDirListing::IteratorFlag/g' \
