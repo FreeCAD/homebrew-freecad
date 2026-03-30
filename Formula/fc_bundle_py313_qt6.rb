@@ -9,7 +9,7 @@ class FcBundlePy313Qt6 < Formula
   # this version works with the freecad v1.0.2 release
   version "1.0.2"
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 2
+  revision 3
 
   # sha of file:///dev/null
 
@@ -23,7 +23,7 @@ class FcBundlePy313Qt6 < Formula
 
   depends_on "patchelf" => :build
   depends_on "pkgconf" => :build
-  depends_on "freecad/freecad/coin3d@4.0.7_py313_qt6"
+  depends_on "freecad/freecad/coin3d@4.0.8_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
   depends_on "freecad/freecad/netgen@6.2.2601"
   depends_on "freecad/freecad/pyside6_py313" # pyside includes the shiboken module as well
@@ -128,7 +128,7 @@ class FcBundlePy313Qt6 < Formula
     medfile_pth_contents =
       File.read("#{Formula["med-file@5.0.0_py313"].opt_prefix}/lib/python#{pyver}/medfile.pth").strip
     coin3d_pth_contents =
-      File.read("#{Formula["coin3d@4.0.7_py313_qt6"].opt_prefix}/lib/python#{pyver}/coin3d_py313_qt6-pivy.pth").strip
+      File.read("#{Formula["coin3d@4.0.8_py313_qt6"].opt_prefix}/lib/python#{pyver}/coin3d_py313_qt6-pivy.pth").strip
     # pybind11_pth_contents = File.read(
     # "#{Formula["pybind11"].opt_prefix}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
     # ).strip
