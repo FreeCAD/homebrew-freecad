@@ -17,8 +17,8 @@ class Coin3dAT408Py313Qt6 < Formula
     # [^1]: https://archlinux.org/packages/extra/x86_64/python-pivy/
     # [^2]: https://packages.debian.org/trixie/python3-pivy
     resource "pivy" do
-      url "https://github.com/coin3d/pivy/archive/refs/tags/0.6.10.tar.gz"
-      sha256 "7b409816c9fad84cf94f93659281f9dd2501d285eb2fc609e9401a3d004ce723"
+      url "https://github.com/coin3d/pivy/archive/refs/tags/0.6.11.tar.gz"
+      sha256 "78f79bd7d1ce7e8140ceba4b1220136ea1f14b4403b1e463c59fa892feed961e"
     end
 
     resource "soqt" do
