@@ -5,7 +5,7 @@ class FreecadAT102Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
-  revision 4
+  revision 5
 
   PY_VER = "3.13".freeze
 
@@ -15,6 +15,12 @@ class FreecadAT102Py313Qt6 < Formula
   stable do
     url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.2.tar.gz"
     sha256 "228ee52f00627c7d8fa61998179deb01865ece69390829feb1300228d24f7e9e"
+
+    # fix bld with qt v6.11
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
+      sha256 "0dc578332bb051d259d77773362f3d6e0daf7be9c764cc3e6d6adf29f4658a93"
+    end
 
     # fix build with newer versions of PCL ie. >= 1.15
     patch do
