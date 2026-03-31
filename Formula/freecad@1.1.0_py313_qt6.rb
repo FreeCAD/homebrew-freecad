@@ -55,7 +55,7 @@ class FreecadAT110Py313Qt6 < Formula
 
   head do
     url "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
-    
+
     # fix bld with qt v6.11
     patch do
       url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
