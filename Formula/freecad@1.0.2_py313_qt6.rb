@@ -19,7 +19,7 @@ class FreecadAT102Py313Qt6 < Formula
     # fix bld with qt v6.11
     patch do
       url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
-      sha256 "d7857d23e9c9227ab935085190be7330fc69872c4e1cf03d91c44116e0765f1f"
+      sha256 "0dc578332bb051d259d77773362f3d6e0daf7be9c764cc3e6d6adf29f4658a93"
     end
 
     # fix build with newer versions of PCL ie. >= 1.15
