@@ -18,6 +18,12 @@ class FreecadAT110Py313Qt6 < Formula
     url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.0/freecad_source_1.1.0.tar.gz"
     sha256 "3d041561aa129755eea51dfc0e1cdf43f2623ab06538e0860a91dbef1ae433d7"
 
+    # fix bld with boost v1.90 and newer llvm / clang
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/9fc346f4ed81f9a0960e9a1d1045583d7df57634.patch?full_index=1"
+      sha256 "84f846f72e1589875795f34fae3bd5a5f8f66e2f6073d27c66bb33f0e44dd2d6"
+    end
+
     # fix bld with qt v6.11
     patch do
       url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
