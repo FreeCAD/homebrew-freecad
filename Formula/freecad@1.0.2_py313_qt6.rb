@@ -16,6 +16,12 @@ class FreecadAT102Py313Qt6 < Formula
     url "https://github.com/FreeCAD/FreeCAD/archive/refs/tags/1.0.2.tar.gz"
     sha256 "228ee52f00627c7d8fa61998179deb01865ece69390829feb1300228d24f7e9e"
 
+    # fix bld with qt v6.11
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
+      sha256 "d7857d23e9c9227ab935085190be7330fc69872c4e1cf03d91c44116e0765f1f"
+    end
+
     # fix build with newer versions of PCL ie. >= 1.15
     patch do
       url "https://github.com/freecad/freecad/commit/d9e731ca94abc14808ebeed208617116f6d5ea4a.patch?full_index=1"
