@@ -5,7 +5,7 @@ class FreecadAT102Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
-  revision 4
+  revision 5
 
   PY_VER = "3.13".freeze
 
