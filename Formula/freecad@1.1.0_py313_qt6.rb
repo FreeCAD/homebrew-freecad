@@ -91,7 +91,7 @@ class FreecadAT110Py313Qt6 < Formula
   depends_on "fmt"
   depends_on "fontconfig" if OS.linux?
   depends_on "freecad/freecad/calculix@2.23"
-  depends_on "freecad/freecad/coin3d@4.0.7_py313_qt6"
+  depends_on "freecad/freecad/coin3d@4.0.8_py313_qt6"
   depends_on "freecad/freecad/fc_bundle_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
   depends_on "freecad/freecad/netgen@6.2.2601" # uses py313
@@ -177,7 +177,7 @@ class FreecadAT110Py313Qt6 < Formula
     # cmake_prefix_paths << Formula["llvm"].prefix
     cmake_prefix_paths << Formula["boost"].prefix
     cmake_prefix_paths << Formula["calculix@2.23"].prefix
-    cmake_prefix_paths << Formula["coin3d@4.0.7_py313_qt6"].prefix
+    cmake_prefix_paths << Formula["coin3d@4.0.8_py313_qt6"].prefix
     cmake_prefix_paths << Formula["cups"].prefix
     cmake_prefix_paths << Formula["double-conversion"].prefix
     cmake_prefix_paths << Formula["doxygen"].prefix
