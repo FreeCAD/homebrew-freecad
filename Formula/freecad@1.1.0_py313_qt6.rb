@@ -318,6 +318,8 @@ class FreecadAT110Py313Qt6 < Formula
         -DCMAKE_EXE_LINKER_FLAGS=#{linux_linker_flags}
         -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld
         -DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=lld
+        -DCMAKE_INSTALL_RPATH=#{hbp}/lib
+        -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
       ]
     end
 
@@ -349,6 +351,8 @@ class FreecadAT110Py313Qt6 < Formula
 
       -DCMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH=FALSE
       -DCMAKE_FIND_USE_CMAKE_SYSTEM_PATH=FALSE
+
+      -DCMAKE_IGNORE_PATH=#{hbp}/Cellar/qt@5;#{hbp}/opt/qt@5;/lib64;/usr/lib64;
 
       -L
     ]
