@@ -376,22 +376,6 @@ class FreecadAT110Py313Qt6 < Formula
     ENV.remove "HOMEBREW_INCLUDE_PATHS", Formula["qt@5"].opt_prefix/"include"
     ENV.remove "HOMEBREW_LIBRARY_PATHS", Formula["qt@5"].opt_prefix/"lib"
 
-    # NOTE: ipatch, do not make build dir a sub dir of the src dir
-    puts "current working directory: #{Dir.pwd}"
-    src_dir = Dir.pwd.to_s
-    parent_dir = File.expand_path("..", src_dir)
-    # make the build dir a peer of the src dir
-    build_dir = "#{parent_dir}/build"
-    # Create the build directory if it doesn't exist
-    mkdir_p(build_dir)
-    # Change the working directory to the build directory
-    # false positive: `warning: conflicting chdir during another chdir block`
-    Dir.chdir(build_dir)
-    puts "----------------------------------------------------"
-    puts Dir.pwd
-    puts "Buildpath is: #{buildpath}"
-    puts "----------------------------------------------------"
-
     # NOTE: resources have to be in the correct buildpath
     resource("googletest").stage(buildpath/"tests/lib")
     resource("msgsl").stage(buildpath/"src/3rdParty/GSL")
@@ -404,15 +388,28 @@ class FreecadAT110Py313Qt6 < Formula
     # NOTE: ipatch, run the below 2 cmds in the git clone of the fc src dir
     # 1. `git rev-parse --short 1.1.0` wcref
     # 2. `git log -1 --format=%ci 1.1.0` wcdate
-    inreplace "#{src_dir}/src/Build/Version.h.cmake" do |s|
+    inreplace buildpath/"src/Build/Version.h.cmake" do |s|
       s.gsub!(/^(#define FCRevision\s+").*(".*$)/, "\\1#{VERSION_COMMIT_REF}\\2")
       s.gsub!(/^(#define FCRevisionDate\s+").*(".*$)/, "\\1#{VERSION_COMMIT_DATE}\\2")
       s.gsub!(/^(#define FCRepositoryURL\s+").*(".*$)/, "\\1https://github.com/FreeCAD/FreeCAD\\2")
     end
 
-    system "cmake", *args, src_dir.to_s
-    system "cmake", "--build", build_dir.to_s
-    system "cmake", "--install", build_dir.to_s
+    # NOTE: ipatch, avoid in source builds
+    puts "current working directory: #{Dir.pwd}"
+    build_dir = buildpath/"build"
+    # Create the build directory if it doesn't exist
+    mkdir_p(build_dir)
+    # Change the working directory to the build directory
+    cd build_dir do
+      puts "----------------------------------------------------"
+      puts Dir.pwd
+      puts "Buildpath is: #{buildpath}"
+      puts "----------------------------------------------------"
+
+      system "cmake", *args, buildpath.to_s
+      system "cmake", "--build", "."
+      system "cmake", "--install", "."
+    end
   end
 
   def post_install
