@@ -18,10 +18,10 @@ class FreecadAT110Py313Qt6 < Formula
     url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.0/freecad_source_1.1.0.tar.gz"
     sha256 "3d041561aa129755eea51dfc0e1cdf43f2623ab06538e0860a91dbef1ae433d7"
 
-    # fix bld with boost v1.90 and newer llvm / clang
+    # fix bld with boost v1.90, ie. using convenient smart pointer to wrap coin node
     patch do
-      url "https://github.com/FreeCAD/FreeCAD/commit/9fc346f4ed81f9a0960e9a1d1045583d7df57634.patch?full_index=1"
-      sha256 "84f846f72e1589875795f34fae3bd5a5f8f66e2f6073d27c66bb33f0e44dd2d6"
+      url "https://github.com/FreeCAD/FreeCAD/commit/ee09d4e696aa530e100b840428ab9c358032c744.patch?full_index=1"
+      sha256 "f6a2cc422e1dfad03ecf3326e7a2f263a000ae19ba5b1697c59af7f286b826dd"
     end
 
     # fix bld with qt v6.11
@@ -353,7 +353,7 @@ class FreecadAT110Py313Qt6 < Formula
       -L
     ]
 
-    # TODO: probably require a seperate formula to post_install the freecad py module
+    # TODO: probably require a separate formula to post_install the freecad py module
     args << "-DINSTALL_TO_SITEPACKAGES=OFF"
 
     # NOTE: useful cmake debugging args
