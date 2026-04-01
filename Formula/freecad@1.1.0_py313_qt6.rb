@@ -315,8 +315,12 @@ class FreecadAT110Py313Qt6 < Formula
                            "-Wl,-rpath,#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current " \
                            "-fuse-ld=lld"
 
+      # NOTE: these keg-only formula thus their libs do not exist in #{hbp}/lib
       coin_lib = Formula["coin3d@4.0.8_py313_qt6"].opt_lib
+      libomp_lib = Formula["libomp"].opt_lib
       med_lib = Formula["med-file@5.0.0_py313"].opt_lib
+      netgen_lib = Formula["netgen@6.2.2601"].opt_lib
+      pyside6_lib = Formula["pyside6_py313"].opt_lib
 
       args_linux_only = %W[
         -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
@@ -328,7 +332,7 @@ class FreecadAT110Py313Qt6 < Formula
         -DCMAKE_EXE_LINKER_FLAGS=#{linux_linker_flags}
         -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld
         -DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=lld
-        -DCMAKE_INSTALL_RPATH=#{hbp}/lib;#{coin_lib};#{med_lib};#{Formula["libomp"].opt_lib}
+        -DCMAKE_INSTALL_RPATH=#{hbp}/lib;#{coin_lib};#{libomp_lib};#{med_lib};#{netgen_lib};#{pyside6_lib}
         -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
       ]
     end
