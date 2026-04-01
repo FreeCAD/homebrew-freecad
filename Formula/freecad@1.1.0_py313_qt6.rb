@@ -18,6 +18,13 @@ class FreecadAT110Py313Qt6 < Formula
     url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.0/freecad_source_1.1.0.tar.gz"
     sha256 "3d041561aa129755eea51dfc0e1cdf43f2623ab06538e0860a91dbef1ae433d7"
 
+    # fix bld with macos 26 and explicit template arugments
+    # https://github.com/FreeCAD/FreeCAD/issues/28983
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/7c57a764ccd8258fa6bc2b5dfbcead00976c0e94.patch?full_index=1"
+      sha256 "0a1a00cdbe96eac06ed757c69b23225632d036d97dd472410e04e8736bd6547d"
+    end
+
     # fix bld with boost v1.90, ie. using convenient smart pointer to wrap coin node
     patch do
       url "https://github.com/FreeCAD/FreeCAD/commit/ee09d4e696aa530e100b840428ab9c358032c744.patch?full_index=1"
