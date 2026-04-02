@@ -69,6 +69,13 @@ class FreecadAT110Py313Qt6 < Formula
   head do
     url "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
 
+    # fix bld with macos 26 and explicit template arugments
+    # https://github.com/FreeCAD/FreeCAD/issues/28983
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/7c57a764ccd8258fa6bc2b5dfbcead00976c0e94.patch?full_index=1"
+      sha256 "0a1a00cdbe96eac06ed757c69b23225632d036d97dd472410e04e8736bd6547d"
+    end
+
     # fix bld with qt v6.11
     patch do
       url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
@@ -91,11 +98,11 @@ class FreecadAT110Py313Qt6 < Formula
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
-  depends_on "gcc" => :build
+  depends_on "gcc" => :build # gfortran req for FEM WB
   depends_on "lld" => :build if OS.linux?
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
-  depends_on "swig" => :build # gfortran req for FEM WB
+  depends_on "swig" => :build
   depends_on "boost"
   depends_on "cups" # qt6
   depends_on "cython"
@@ -120,7 +127,7 @@ class FreecadAT110Py313Qt6 < Formula
   depends_on "libomp"
   depends_on "libx11" if OS.linux?
   depends_on "llvm" if OS.linux?
-  depends_on macos: :ventura
+  depends_on macos: :ventura # because qt v6
   depends_on "mesa" if OS.linux?
   depends_on "mesa-glu" if OS.linux?
   depends_on "nlohmann-json"
@@ -183,7 +190,6 @@ class FreecadAT110Py313Qt6 < Formula
     puts "rpath: #{rpath}"
 
     ENV.remove "PATH", Formula["qt@5"].opt_prefix/"bin"
-    # ENV.remove "PATH", Formula["pyqt"].opt_prefix/"bin"
     puts "PATH=#{ENV["PATH"]}"
 
     cmake_prefix_paths = []
@@ -262,7 +268,7 @@ class FreecadAT110Py313Qt6 < Formula
     # TODO: stub out the below cmake vars
     # -DCMAKE_OSX_SYSROOT=#{cmake_osx_sysroot}
     # -DCMAKE_CXX_FLAGS="-fuse-ld=lld"
-    # -DBUILD_ENABLE_CXX_STD=C++17
+    # -DBUILD_ENABLE_CXX_STD=C++17 # freecad v1.1.0 now reqs C++20
     # -DCMAKE_INSTALL_RPATH=#{prefix}/lib
     # -DCMAKE_INSTALL_RPATH=#{rpath}
     # -DBUILD_DRAWING=1
@@ -290,13 +296,6 @@ class FreecadAT110Py313Qt6 < Formula
         -DNetgen_DIR=#{Formula["netgen@6.2.2601"].opt_prefix}/Contents/Resources/CMake
       ]
     end
-    # -DCMAKE_IGNORE_PATH=#{hbp}/lib;#{hbp}/include/QtCore;#{hbp}/Cellar/qt;
-    # -D_Qt5UiTools_RELEASE_AppKit_PATH=#{apl_frmwks}/AppKit.framework
-    # -D_Qt5UiTools_RELEASE_Metal_PATH=#{apl_frmwks}/Metal.framework
-    # -D_Qt5UiTools_RELEASE_DiskArbitration_PATH=#{apl_frmwks}/DiskArbitration.framework
-    # -D_Qt5UiTools_RELEASE_IOKit_PATH=#{apl_frmwks}/IOKit.framework
-    # -D_Qt5UiTools_RELEASE_OpenGL_PATH=#{apl_frmwks}/OpenGL.framework
-    # -D_Qt5UiTools_RELEASE_AGL_PATH=#{apl_frmwks}/AGL.framework
 
     if OS.linux?
       clang_cc = Formula["llvm"].opt_bin/"clang"
@@ -315,7 +314,8 @@ class FreecadAT110Py313Qt6 < Formula
                            "-Wl,-rpath,#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current " \
                            "-fuse-ld=lld"
 
-      # NOTE: these keg-only formula thus their libs do not exist in #{hbp}/lib
+      # NOTE: these are keg-only formula thus their libs do not exist in #{hbp}/lib
+      # ... thus causing rpath issues on *nix based systems
       coin_lib = Formula["coin3d@4.0.8_py313_qt6"].opt_lib
       libomp_lib = Formula["libomp"].opt_lib
       med_lib = Formula["med-file@5.0.0_py313"].opt_lib
@@ -371,7 +371,7 @@ class FreecadAT110Py313Qt6 < Formula
       -L
     ]
 
-    # TODO: probably require a separate formula to post_install the freecad py module
+    # TODO: probably requires a separate formula to post_install the freecad py module
     args << "-DINSTALL_TO_SITEPACKAGES=OFF"
 
     # NOTE: useful cmake debugging args
@@ -379,11 +379,9 @@ class FreecadAT110Py313Qt6 < Formula
     # -L
 
     ENV.remove "PATH", Formula["pyside@2"].opt_prefix/"bin"
-    # ENV.remove "PATH", Formula["pyqt"].opt_prefix/"bin"
 
     ENV.remove "PKG_CONFIG_PATH", Formula["pyside@2"].opt_prefix/"lib/pkgconfig"
     ENV.remove "PKG_CONFIG_PATH", Formula["qt@5"].opt_prefix/"lib/pkgconfig"
-    # ENV.remove "PKG_CONFIG_PATH", Formula["qt"].opt_prefix/"lib/pkgconfig"
 
     ENV.remove "CMAKE_FRAMEWORK_PATH", Formula["qt@5"].opt_prefix/"Frameworks"
 
@@ -399,7 +397,7 @@ class FreecadAT110Py313Qt6 < Formula
     args.concat(args_linux_only) if OS.linux?
 
     # populate version info lost from tarball ie. because not .git dir
-    # NOTE: ipatch, run the below 2 cmds in the git clone of the fc src dir
+    # NOTE: run the below 2 cmds in the git clone of the fc src dir
     # 1. `git rev-parse --short 1.1.0` wcref
     # 2. `git log -1 --format=%ci 1.1.0` wcdate
     inreplace buildpath/"src/Build/Version.h.cmake" do |s|
@@ -408,7 +406,15 @@ class FreecadAT110Py313Qt6 < Formula
       s.gsub!(/^(#define FCRepositoryURL\s+").*(".*$)/, "\\1https://github.com/FreeCAD/FreeCAD\\2")
     end
 
-    # NOTE: ipatch, avoid in source builds
+    # NOTE: macos 14 does not fully support C++20 extension of CTAD
+    # ... https://developer.apple.com/xcode/cpp/
+    inreplace "src/Gui/StyleParameters/ParameterManager.h",
+          "    T defaultValue;\n};",
+          "    T defaultValue;\n};\n\n" \
+          "template<typename T>\n" \
+          "ParameterDefinition(const char*, T) -> ParameterDefinition<T>;"
+
+    # NOTE: avoid in source builds
     puts "current working directory: #{Dir.pwd}"
     build_dir = buildpath/"build"
     # Create the build directory if it doesn't exist
@@ -452,6 +458,10 @@ class FreecadAT110Py313Qt6 < Formula
     2. presently the freecad py module is NOT globally accessible, ie.
        one cannot directly run `import freecad` from a python v#{PY_VER}
        repl
+
+    3. if multiple versions of freecad are installed then the post install
+       step may fail, thus manual linking may be required to put this
+       version of freecad in #{HOMEBREW_PREFIX}/bin
     EOS
   end
 
