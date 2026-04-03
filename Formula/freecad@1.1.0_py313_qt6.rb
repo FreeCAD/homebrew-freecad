@@ -417,6 +417,28 @@ class FreecadAT110Py313Qt6 < Formula
           "static inline const Gui::StyleParameters::ParameterDefinition _name_ \\",
           "static inline const Gui::StyleParameters::ParameterDefinition<decltype(_defaultValue_)> _name_ \\"
 
+    inreplace buildpath/"src/Gui/StyleParameters/ParameterManager.h",
+            "    /// Numeric value of the length.\n    " \
+            "double value;",
+            "    /// Numeric value of the length.\n    " \
+            "double value;\n\n    " \
+            "Numeric() = default;\n    " \
+            "Numeric(double v, std::string u = \"\") " \
+            ": value(v), unit(std::move(u)) {}"
+
+    inreplace buildpath/"src/Mod/Import/App/dxf/ImpExpDxf.h",
+            "        // The raw geometric shape.\n        " \
+            "TopoDS_Shape shape;",
+            "        // The raw geometric shape.\n        " \
+            "TopoDS_Shape shape;\n\n        " \
+            "GeometryBuilder() = default;\n        " \
+            "explicit GeometryBuilder(const TopoDS_Shape& s, " \
+            "PrimitiveType t = PrimitiveType::None) : shape(s), type(t) {}"
+
+    inreplace buildpath/"src/Mod/Import/App/dxf/ImpExpDxf.h",
+            "GeometryBuilder(shape)",
+            "GeometryBuilder{shape}"
+
     # debug, verify fix applied
     puts "----------------------------------------------------"
     if File.read(buildpath/"src/Gui/StyleParameters/ParameterManager.h").include?("decltype(_defaultValue_)")
