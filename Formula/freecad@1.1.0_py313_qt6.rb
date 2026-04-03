@@ -275,6 +275,12 @@ class FreecadAT110Py313Qt6 < Formula
     # -DBUILD_SMESH=1
     # -DFREECAD_USE_QTWEBMODULE=#{qtwebmodule}
     # -DCMAKE_EXE_LINKER_FLAGS="-v"
+    # -DBUILD_WITH_CONDA:BOOL=OFF
+    # -DCCACHE_PROGRAM:FILEPATH=CCACHE_PROGRAM-NOTFOUND
+    # -DFREECAD_PARALLEL_COMPILE_JOBS:BOOL=OFF
+    # -DFREECAD_PARALLEL_LINK_JOBS:BOOL=OFF
+    # -DFREECAD_CREATE_MAC_APP:      -undefined-
+    # -DFREECAD_LIBPACK_USE:         -undefined-
 
     if OS.mac?
       arch = Hardware::CPU.arch.to_s
@@ -413,6 +419,15 @@ class FreecadAT110Py313Qt6 < Formula
           "    T defaultValue;\n};\n\n" \
           "template<typename T>\n" \
           "ParameterDefinition(const char*, T) -> ParameterDefinition<T>;"
+
+    # debug, verify fix applied
+    puts "----------------------------------------------------"
+    if File.read(buildpath/"src/Gui/StyleParameters/ParameterManager.h").include?("-> ParameterDefinition<T>")
+      puts "CTAD deduction guide: APPLIED"
+    else
+      puts "CTAD deduction guide: FAILED TO APPLY"
+    end
+    puts "----------------------------------------------------"
 
     # NOTE: avoid in source builds
     puts "current working directory: #{Dir.pwd}"
