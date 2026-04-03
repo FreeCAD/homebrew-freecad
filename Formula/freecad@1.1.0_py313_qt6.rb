@@ -413,18 +413,16 @@ class FreecadAT110Py313Qt6 < Formula
 
     # NOTE: macos 14 does not fully support C++20 extension of CTAD
     # ... https://developer.apple.com/xcode/cpp/
-    inreplace "src/Gui/StyleParameters/ParameterManager.h",
-          "    T defaultValue;\n};",
-          "    T defaultValue;\n};\n\n" \
-          "template<typename T>\n" \
-          "ParameterDefinition(const char*, T) -> ParameterDefinition<T>;"
+    inreplace buildpath/"src/Gui/StyleParameters/ParameterManager.h",
+          "static inline const Gui::StyleParameters::ParameterDefinition _name_ \\",
+          "static inline const Gui::StyleParameters::ParameterDefinition<decltype(_defaultValue_)> _name_ \\"
 
     # debug, verify fix applied
     puts "----------------------------------------------------"
-    if File.read(buildpath/"src/Gui/StyleParameters/ParameterManager.h").include?("-> ParameterDefinition<T>")
-      puts "CTAD deduction guide: APPLIED"
+    if File.read(buildpath/"src/Gui/StyleParameters/ParameterManager.h").include?("decltype(_defaultValue_)")
+      puts "CTAD decltype fix: APPLIED"
     else
-      puts "CTAD deduction guide: FAILED TO APPLY"
+      puts "CTAD decltype fix: FAILED TO APPLY"
     end
     puts "----------------------------------------------------"
 
