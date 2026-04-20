@@ -59,8 +59,8 @@ class FreecadAT111Py313Qt6 < Formula
   end
 
   PY_VER = "3.13".freeze
-  VERSION_COMMIT_REF = "34a9716668".freeze
-  VERSION_COMMIT_DATE = "2026-03-24 23:17:53 -0300".freeze
+  VERSION_COMMIT_REF = "0108fd4b48".freeze
+  VERSION_COMMIT_DATE = "2026-04-14 19:09:59 -0300".freeze
 
   # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
   # run `brew cleanup` when editing local patch files on each subsequent `brew install`
