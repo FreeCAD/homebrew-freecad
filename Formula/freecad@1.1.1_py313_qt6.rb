@@ -58,6 +58,14 @@ class FreecadAT111Py313Qt6 < Formula
     end
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, arm64_tahoe:   "b9359bd38ff7a362add8673e1e1a3ec88e369aee577d6b1f6eebb8f1c464eeb3"
+    sha256 cellar: :any, arm64_sequoia: "beb2ad834528714a6c83bb55856e6df30a2682fb66ccf83ac560e2e5d9577c0b"
+    sha256 cellar: :any, arm64_sonoma:  "1ca9dd701e734c632811a1192a4f5593cafcda13837c46f57417f0a0a6bb4981"
+    sha256               x86_64_linux:  "c97a74df02ca029f02ec10d0c080a9803a06cf5858f4178d2ed57a45444f5ce7"
+  end
+
   PY_VER = "3.13".freeze
   VERSION_COMMIT_REF = "0108fd4b48".freeze
   VERSION_COMMIT_DATE = "2026-04-14 19:09:59 -0300".freeze
