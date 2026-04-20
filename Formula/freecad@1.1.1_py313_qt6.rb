@@ -1,11 +1,10 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileNotice: Part of the FreeCAD project.
 
-class FreecadAT110Py313Qt6 < Formula
+class FreecadAT111Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
-  revision 1
 
   stable do
     url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.1/freecad_source_1.1.1.tar.gz"
@@ -57,14 +56,6 @@ class FreecadAT110Py313Qt6 < Formula
       url "https://github.com/microsoft/GSL/archive/refs/tags/v4.1.0.tar.gz"
       sha256 "0a227fc9c8e0bf25115f401b9a46c2a68cd28f299d24ab195284eb3f1d7794bd"
     end
-  end
-
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "6f66db6d62bf3a19d00d44b571aac59f66362ae66574c2f0ec18c72de1c787c1"
-    sha256 cellar: :any, arm64_sequoia: "bb108536dacaa54e07b450109845b9bfd3cf6bafd3f7c742f34f841ec4f4915f"
-    sha256 cellar: :any, arm64_sonoma:  "a35ae5e9e7cf83ba3422451393ca6956632be3250290efdc08fac42e11af8d6c"
-    sha256               x86_64_linux:  "941153e87519fc5d3ee0df9856197a3f8873c5a867b295b82eeb2a5472b877b4"
   end
 
   PY_VER = "3.13".freeze
