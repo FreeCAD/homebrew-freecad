@@ -8,8 +8,8 @@ class FreecadAT110Py313Qt6 < Formula
   revision 1
 
   stable do
-    url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.0/freecad_source_1.1.0.tar.gz"
-    sha256 "3d041561aa129755eea51dfc0e1cdf43f2623ab06538e0860a91dbef1ae433d7"
+    url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.1/freecad_source_1.1.1.tar.gz"
+    sha256 "c0e95d41415f1e73bfe2e0a0a28210f649b01ef531bbfed1ed15863950dc5381"
 
     # fix bld with macos 26 and explicit template arugments
     # https://github.com/FreeCAD/FreeCAD/issues/28983
