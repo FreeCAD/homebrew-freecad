@@ -17,12 +17,6 @@ class FreecadAT111Py313Qt6 < Formula
       sha256 "0a1a00cdbe96eac06ed757c69b23225632d036d97dd472410e04e8736bd6547d"
     end
 
-    # fix bld with boost v1.90, ie. using convenient smart pointer to wrap coin node
-    # patch do
-    #   url "https://github.com/FreeCAD/FreeCAD/commit/ee09d4e696aa530e100b840428ab9c358032c744.patch?full_index=1"
-    #   sha256 "9ec0134a86408d214ac09b0aa08ddd945cc85c0242edabc3cd2233c151a61639"
-    # end
-
     # fix bld with qt v6.11
     patch do
       url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
