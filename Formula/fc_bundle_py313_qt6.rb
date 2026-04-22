@@ -79,6 +79,12 @@ class FcBundlePy313Qt6 < Formula
     sha256 "445c4cd0ead937206ea743c0e2f9f743261fbc10891e26ec948a755f6b825df3"
   end
 
+  # NOTE: yaml is req'd by CAM wb on load
+  resource "pyyaml" do
+    url "https://files.pythonhosted.org/packages/05/8e/961c0007c59b8dd7729d542c61a4d537767a59645b82a0b521206e1e25c2/pyyaml-6.0.3.tar.gz"
+    sha256 "d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f"
+  end
+
   def install
     # explicitly set python version
     pyver = "3.13"
