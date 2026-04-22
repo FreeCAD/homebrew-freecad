@@ -7,19 +7,10 @@ class FcBundlePy313Qt6 < Formula
   # Dummy URL since no source is being downloaded
   url "file:///dev/null"
   # this version works with the freecad v1.0.2 release
-  version "1.0.2"
-  sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 3
-
+  version "1.1.1"
   # sha of file:///dev/null
-
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "44f0b0a3fd16a990eaee71bb26b37730e33380d74b4e2184116a1b15e4133c31"
-    sha256 cellar: :any, arm64_sequoia: "fafda6efd51edac12bd15e69e929e220031ea94e4cfb56ba866902e3b0ae2780"
-    sha256 cellar: :any, arm64_sonoma:  "07188ce9806fa5055bd2fa5ab67296546aecdeacb4eedc379075a34ca85ed7ac"
-    sha256               x86_64_linux:  "8aa0c43d31e16faaf3e87c2f6acacf9e047f91750a12b1fdfd74c1cb8e1823cd"
-  end
+  sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  revision 1
 
   depends_on "patchelf" => :build
   depends_on "pkgconf" => :build
@@ -79,6 +70,12 @@ class FcBundlePy313Qt6 < Formula
     sha256 "445c4cd0ead937206ea743c0e2f9f743261fbc10891e26ec948a755f6b825df3"
   end
 
+  # NOTE: yaml is req'd by CAM wb on load
+  resource "pyyaml" do
+    url "https://files.pythonhosted.org/packages/05/8e/961c0007c59b8dd7729d542c61a4d537767a59645b82a0b521206e1e25c2/pyyaml-6.0.3.tar.gz"
+    sha256 "d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f"
+  end
+
   def install
     # explicitly set python version
     pyver = "3.13"
@@ -92,7 +89,7 @@ class FcBundlePy313Qt6 < Formula
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
     # setup and install lark ply six
-    %w[lark ply six].each do |pkg|
+    %w[lark ply six pyyaml].each do |pkg|
       resource(pkg).stage do
         system venv_pip, "install", "."
       end
