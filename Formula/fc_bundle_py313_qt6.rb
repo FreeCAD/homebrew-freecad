@@ -7,19 +7,10 @@ class FcBundlePy313Qt6 < Formula
   # Dummy URL since no source is being downloaded
   url "file:///dev/null"
   # this version works with the freecad v1.0.2 release
-  version "1.0.2"
-  sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 3
-
+  version "1.1.1"
   # sha of file:///dev/null
-
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "44f0b0a3fd16a990eaee71bb26b37730e33380d74b4e2184116a1b15e4133c31"
-    sha256 cellar: :any, arm64_sequoia: "fafda6efd51edac12bd15e69e929e220031ea94e4cfb56ba866902e3b0ae2780"
-    sha256 cellar: :any, arm64_sonoma:  "07188ce9806fa5055bd2fa5ab67296546aecdeacb4eedc379075a34ca85ed7ac"
-    sha256               x86_64_linux:  "8aa0c43d31e16faaf3e87c2f6acacf9e047f91750a12b1fdfd74c1cb8e1823cd"
-  end
+  sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  revision 1
 
   depends_on "patchelf" => :build
   depends_on "pkgconf" => :build
