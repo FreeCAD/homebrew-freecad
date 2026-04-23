@@ -10,7 +10,7 @@ class FcBundlePy313Qt6 < Formula
   version "1.1.1"
   # sha of file:///dev/null
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 1
+  revision 2
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -84,6 +84,12 @@ class FcBundlePy313Qt6 < Formula
     sha256 "d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f"
   end
 
+  # NOTE: typing-extensions is req'd by BIM/Arch wb test suite
+  resource "typing-extensions" do
+    url "https://files.pythonhosted.org/packages/72/94/1a15dd82efb362ac84269196e94cf00f187f7ed21c242792a923cdb1c61f/typing_extensions-4.15.0.tar.gz"
+    sha256 "0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466"
+  end
+
   def install
     # explicitly set python version
     pyver = "3.13"
@@ -97,7 +103,7 @@ class FcBundlePy313Qt6 < Formula
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
     # setup and install lark ply six
-    %w[lark ply six pyyaml].each do |pkg|
+    %w[lark ply six pyyaml typing-extensions].each do |pkg|
       resource(pkg).stage do
         system venv_pip, "install", "."
       end
