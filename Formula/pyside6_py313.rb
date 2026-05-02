@@ -18,7 +18,7 @@ class Pyside6Py313 < Formula
     { "GPL-3.0-only" => { with: "Qt-GPL-exception-1.0" } },
     { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] },
   ]
-  revision 1
+  revision 2
 
   livecheck do
     url "https://download.qt.io/official_releases/QtForPython/pyside6/"
@@ -43,10 +43,11 @@ class Pyside6Py313 < Formula
   depends_on xcode: :build
   depends_on "pkgconf" => :test
 
-  depends_on "llvm"
+  depends_on "llvm@21"
   depends_on "numpy"
   depends_on "python@3.13"
   depends_on "qtbase"
+  depends_on "qtcanvaspainter"
   depends_on "qtcharts"
   depends_on "qtconnectivity"
   depends_on "qtdatavis3d"
@@ -84,6 +85,7 @@ class Pyside6Py313 < Formula
 
   on_linux do
     depends_on "gettext" => :test
+    depends_on "llvm" # added because ubuntu 22.04 ci runner failed linkage step
     depends_on "mesa" # req for linking against -lintl
     # TODO: Add dependencies on all Linux when `qtwebengine` is bottled on arm64 Linux
     on_intel do
@@ -102,6 +104,18 @@ class Pyside6Py313 < Formula
   end
 
   def install
+    ENV["CLANG_INSTALL_DIR"] = ENV["LLVM_INSTALL_DIR"] = Formula["llvm@21"].opt_prefix
+
+    ENV.append_path "PYTHONPATH", buildpath/"build/sources"
+
+    if OS.linux?
+      # Workaround to search versioned LLVM path before HOMEBREW_PREFIX/lib
+      ENV.append "LDFLAGS", "-Wl,-rpath,#{rpath(target: Formula["llvm@21"].opt_lib)}"
+      inreplace "sources/shiboken6/cmake/ShibokenHelpers.cmake",
+                'list(APPEND path_dirs "${libclang_lib_dir}")',
+                'list(PREPEND path_dirs "${libclang_lib_dir}")'
+    end
+
     ENV.append_path "PYTHONPATH", buildpath/"build/sources"
 
     extra_include_dirs = [Formula["qt"].opt_include]
@@ -113,10 +127,13 @@ class Pyside6Py313 < Formula
       "${shiboken_include_dirs}",
       "${shiboken_include_dirs}:#{extra_include_dirs.join(":")}"
 
+    # Install python scripts into pkgshare rather than bin
+    inreplace "sources/pyside-tools/CMakeLists.txt", "DESTINATION bin", "DESTINATION #{pkgshare}"
+
     # Avoid shim reference
     inreplace "sources/shiboken6_generator/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
-    cmake_args = std_cmake_args
+    shiboken6_module = prefix/Language::Python.site_packages(python3)/"shiboken6"
 
     ENV.prepend_path "CMAKE_PREFIX_PATH", Formula["python@3.13"].opt_prefix
 
@@ -127,11 +144,6 @@ class Pyside6Py313 < Formula
     inreplace "sources/pyside-tools/CMakeLists.txt" do |s|
       s.gsub!(/^\s*if \(APPLE\).*?endif\(\)\n/m, "")
     end
-
-    # Fix NameError crash in .pyi generation when shiboken misresolves enum types
-    inreplace "sources/shiboken6/shibokenmodule/files.dir/shibokensupport/signature/parser.py",
-      "except AttributeError:",
-      "except (AttributeError, NameError):"
 
     puts "-------------------------------------------------"
     puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
@@ -147,7 +159,10 @@ class Pyside6Py313 < Formula
     #   cmake_args << "-DQt6CanvasPainter_FOUND=FALSE"
     # end
 
+    cmake_args = std_cmake_args
+
     system "cmake", "-S", ".", "-B", "build",
+                     "-DCMAKE_MODULE_LINKER_FLAGS=-Wl,-rpath,#{rpath(source: shiboken6_module)}",
                      "-DCMAKE_INSTALL_RPATH=#{lib}",
                      "-DCMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}",
                      "-DBUILD_TESTS=OFF",
@@ -165,164 +180,15 @@ class Pyside6Py313 < Formula
                      "-L",
                      *cmake_args
 
-    system "cmake", "--build", "build", "--target", "shiboken6"
-    system "bash", "-c", "cmake --build build -- -k 0 || true"
-
-    # Fix shiboken enum misresolutions in generated wrappers
-    # (upstream PySide6 bug with Qt 6.10.2: shiboken non-deterministically
-    # resolves enums to wrong classes when multiple classes share enum names)
-    system "bash", "-c", <<~SH
-      WD=build/sources/pyside6/PySide6
-
-      # cross platform sed ie. macos and *nix
-      sedi() {
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-          sed -i '' "$@"
-        else
-          sed -i "$@"
-        fi
-      }
-
-      # QtCanvasPainter: QWidget::RenderFlag misresolved to QTextItem::RenderFlag
-      [ -f "$WD/QtCanvasPainter/PySide6/QtCanvasPainter/qcanvaspainterwidget_wrapper.cpp" ] && \
-      sedi 's/QTextItem::RenderFlag/QWidget::RenderFlag/g' \
-        $WD/QtCanvasPainter/PySide6/QtCanvasPainter/qcanvaspainterwidget_wrapper.cpp
-
-      # QtCore: QDirListing::IteratorFlag misresolved to QDirIterator::IteratorFlag
-      sedi 's/QDirIterator::IteratorFlag/QDirListing::IteratorFlag/g' \
-        $WD/QtCore/PySide6/QtCore/qdirlisting_wrapper.cpp
-
-      # QtCore: QStringConverterBase::Flag misresolved to QCommandLineOption::Flag
-      for f in qstringconverterbase_state_wrapper.cpp qstringconverter_wrapper.cpp \
-        qstringdecoder_wrapper.cpp qstringencoder_wrapper.cpp; do
-        [ -f "$WD/QtCore/PySide6/QtCore/$f" ] && \
-        sedi 's/QCommandLineOption::Flag/QStringConverterBase::Flag/g' \
-          "$WD/QtCore/PySide6/QtCore/$f"
-      done
-
-      # QtGui: QShaderVersion::Flag misresolved to QCommandLineOption::Flag
-      sedi 's/QCommandLineOption::Flag/QShaderVersion::Flag/g' \
-        $WD/QtGui/PySide6/QtGui/qshaderversion_wrapper.cpp
-
-      # QtGui: QMatrix4x4::Flag misresolved to QCommandLineOption::Flag
-      sedi 's/QCommandLineOption::Flag/QMatrix4x4::Flag/g' \
-        $WD/QtGui/PySide6/QtGui/qmatrix4x4_wrapper.cpp
-
-      # QtGui: QRhi::Flag misresolved to QCommandLineOption::Flag
-      sedi 's/QCommandLineOption::Flag/QRhi::Flag/g' \
-        $WD/QtGui/PySide6/QtGui/qrhi_wrapper.cpp
-
-      # QtGui: Various QRhi and other classes with Flag misresolved to QCommandLineOption::Flag
-      for pair in \
-        "qrhicomputepipeline_wrapper.cpp QRhiComputePipeline" \
-        "qrhigraphicspipeline_wrapper.cpp QRhiGraphicsPipeline" \
-        "qrhirenderbuffer_wrapper.cpp QRhiRenderBuffer" \
-        "qrhiswapchain_wrapper.cpp QRhiSwapChain" \
-        "qrhitexture_wrapper.cpp QRhiTexture" \
-        "qrhitexturerendertarget_wrapper.cpp QRhiTextureRenderTarget" \
-        "qtextoption_wrapper.cpp QTextOption"; do
-        file=$(echo $pair | cut -d' ' -f1)
-        cls=$(echo $pair | cut -d' ' -f2)
-        sedi "s/QCommandLineOption::Flag/${cls}::Flag/g" \
-          $WD/QtGui/PySide6/QtGui/$file
-      done
-
-      # QtQml: QQmlImageProviderBase::Flag misresolved to QCommandLineOption::Flag (cpp + header)
-      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
-        $WD/QtQml/PySide6/QtQml/qqmlimageproviderbase_wrapper.cpp
-      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
-        $WD/QtQml/PySide6/QtQml/qqmlimageproviderbase_wrapper.h
-
-      # QtQuick: QQmlImageProviderBase::Flag (inherited) misresolved to QCommandLineOption::Flag (cpp + headers)
-      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
-        $WD/QtQuick/PySide6/QtQuick/qquickimageprovider_wrapper.cpp
-      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
-        $WD/QtQuick/PySide6/QtQuick/qquickimageprovider_wrapper.h
-      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
-        $WD/QtQuick/PySide6/QtQuick/qquickasyncimageprovider_wrapper.cpp
-      sedi 's/QCommandLineOption::Flag/QQmlImageProviderBase::Flag/g' \
-        $WD/QtQuick/PySide6/QtQuick/qquickasyncimageprovider_wrapper.h
-
-      # QtQuick: QQuickItem::Flag misresolved to QCommandLineOption::Flag
-      sedi 's/QCommandLineOption::Flag/QQuickItem::Flag/g' \
-        $WD/QtQuick/PySide6/QtQuick/qquickitem_wrapper.cpp
-
-      # QtQuick: QQuickRenderTarget::Flag misresolved to QCommandLineOption::Flag
-      sedi 's/QCommandLineOption::Flag/QQuickRenderTarget::Flag/g' \
-        $WD/QtQuick/PySide6/QtQuick/qquickrendertarget_wrapper.cpp
-
-      # QtQuick: QSGMaterial::Flag misresolved to QCommandLineOption::Flag
-      sedi 's/QCommandLineOption::Flag/QSGMaterial::Flag/g' \
-        $WD/QtQuick/PySide6/QtQuick/qsgmaterial_wrapper.cpp
-
-      # QtQuick: QSGMaterialShader::Flag misresolved to QCommandLineOption::Flag
-      sedi 's/QCommandLineOption::Flag/QSGMaterialShader::Flag/g' \
-        $WD/QtQuick/PySide6/QtQuick/qsgmaterialshader_wrapper.cpp
-
-      # QtQuick: QSGNode::Flag misresolved to QCommandLineOption::Flag
-      sedi 's/QCommandLineOption::Flag/QSGNode::Flag/g' \
-        $WD/QtQuick/PySide6/QtQuick/qsgnode_wrapper.cpp
-
-      # QtQuick: QSGSimpleTextureNode::TextureCoordinatesTransformFlag misresolved
-      sedi 's/QSGImageNode::TextureCoordinatesTransformFlag/QSGSimpleTextureNode::TextureCoordinatesTransformFlag/g' \
-        $WD/QtQuick/PySide6/QtQuick/qsgsimpletexturenode_wrapper.cpp
-
-      # QtNetwork: QLocalSocket::SocketOption misresolved to QLocalServer::SocketOption
-      sedi 's/QLocalServer::SocketOption/QLocalSocket::SocketOption/g' \
-        $WD/QtNetwork/PySide6/QtNetwork/qlocalsocket_wrapper.cpp
-
-      # QtWidgets: QTreeWidgetItemIterator::IteratorFlag misresolved to QDirIterator::IteratorFlag
-      sedi 's/QDirIterator::IteratorFlag/QTreeWidgetItemIterator::IteratorFlag/g' \
-        $WD/QtWidgets/PySide6/QtWidgets/qtreewidgetitemiterator_wrapper.cpp
-
-      # QtWidgets: QFileDialog::Option misresolved to QAbstractFileIconProvider::Option
-      sedi 's/QAbstractFileIconProvider::Option/QFileDialog::Option/g' \
-        $WD/QtWidgets/PySide6/QtWidgets/qfiledialog_wrapper.cpp
-
-      # QtWidgets: QFileSystemModel::Option misresolved to QAbstractFileIconProvider::Option
-      sedi 's/QAbstractFileIconProvider::Option/QFileSystemModel::Option/g' \
-        $WD/QtWidgets/PySide6/QtWidgets/qfilesystemmodel_wrapper.cpp
-
-      # QtWidgets: QMessageBox::Option misresolved to QAbstractFileIconProvider::Option
-      sedi 's/QAbstractFileIconProvider::Option/QMessageBox::Option/g' \
-        $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.cpp
-
-      # Instead of blanket replacement, only fix the type declarations
-      sedi '/QFlags<QDialogButtonBox::StandardButton>/s/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
-        $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.cpp
-      sedi '/QFlags<QDialogButtonBox::StandardButton>/s/QDialogButtonBox::StandardButton/QMessageBox::StandardButton/g' \
-        $WD/QtWidgets/PySide6/QtWidgets/qmessagebox_wrapper.h
-
-      # QtWidgets: QPinchGesture::ChangeFlag misresolved to QGraphicsEffect::ChangeFlag
-      sedi 's/QGraphicsEffect::ChangeFlag/QPinchGesture::ChangeFlag/g' \
-        $WD/QtWidgets/PySide6/QtWidgets/qpinchgesture_wrapper.cpp
-
-      # QtWidgets: QWidget::RenderFlag misresolved to QTextItem::RenderFlag
-      sedi 's/QTextItem::RenderFlag/QWidget::RenderFlag/g' \
-        $WD/QtWidgets/PySide6/QtWidgets/qwidget_wrapper.cpp
-
-      # QtWebEngineCore: QWebEnginePage::FindFlag misresolved to QTextDocument::FindFlag
-      [ -f "$WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebenginepage_wrapper.cpp" ] && \
-      sedi 's/QTextDocument::FindFlag/QWebEnginePage::FindFlag/g' \
-        $WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebenginepage_wrapper.cpp
-
-      # QtWebEngineCore: QWebEngineUrlScheme::Flag misresolved to QCommandLineOption::Flag
-      [ -f "$WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebengineurlscheme_wrapper.cpp" ] &&  \
-      sedi 's/QCommandLineOption::Flag/QWebEngineUrlScheme::Flag/g' \
-        $WD/QtWebEngineCore/PySide6/QtWebEngineCore/qwebengineurlscheme_wrapper.cpp
-
-      true
-    SH
-
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
     # Ensure .py helper scripts are installed to `libexec/bin`
-    %w[
-      requirements-android.txt deploy.py android_deploy.py
-      qtpy2cpp.py qml.py metaobjectdump.py project.py
-      qtpy2cpp_lib deploy_lib project_lib
-    ].each { |f| libexec.install bin/f if (bin/f).exist? }
+    # %w[
+    #   requirements-android.txt deploy.py android_deploy.py
+    #   qtpy2cpp.py qml.py metaobjectdump.py project.py
+    #   qtpy2cpp_lib deploy_lib project_lib
+    # ].each { |f| libexec.install bin/f if (bin/f).exist? }
 
     # Fix shims references in shiboken6
     # inreplace bin/"shiboken6" do |s|
@@ -365,19 +231,22 @@ class Pyside6Py313 < Formula
     <<-EOS
       1. this a versioned formula designed to work the homebrew-freecad tap
       and differs from the upstream formula by not enabling the
-      PY_LIMITED_API
+      PY_LIMITED_API on macOS
 
-      2. this formula can not be installed while theupstream
+      2. this formula can not be installed while the upstream
       homebrew-core version of pyside, ie. pyside@6 is linked
 
       3. if a newer verison pyside is released ie. 6.8 the qt major minor
       version must match, ie. qt 6.7.x can not build pyside 6.8.x
 
       4. it seems pyside v6.10 changed the install layout directory
-      structure, thus the need for an additional post install steps.
+      structure, thus the need for additional post install steps.
 
       5. it seems pyside v6.10.2 can not be built against qt v6.10.2
-      without the above patching via sed
+      without the above patching via sed (right now)
+
+      6. the arch package is useful for referencing to stay updated
+      https://gitlab.archlinux.org/archlinux/packaging/packages/pyside6
     EOS
   end
 
