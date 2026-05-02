@@ -85,6 +85,7 @@ class Pyside6Py313 < Formula
 
   on_linux do
     depends_on "gettext" => :test
+    depends_on "llvm" # added because ubuntu 22.04 ci runner failed linkage step
     depends_on "mesa" # req for linking against -lintl
     # TODO: Add dependencies on all Linux when `qtwebengine` is bottled on arm64 Linux
     on_intel do
