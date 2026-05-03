@@ -27,11 +27,11 @@ class Pyside6Py313 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any,                 arm64_tahoe:   "76bc4b3cb17cb297f4594e425054e72c0757d2206a4df3600145dc3385655b34"
-    sha256 cellar: :any,                 arm64_sequoia: "b6d71703933249dd0528d904adcc2822404dd5503f10e1811d80091abda178eb"
-    sha256 cellar: :any,                 arm64_sonoma:  "94b433fe5ac4673642b029fa573904627b0f293bb679d589326768ccc2f5d96b"
-    sha256 cellar: :any_skip_relocation, arm64_linux:   "319062b07dc9840f29d5d16880f0910913f03f105cd2ce50c5fb80b5fcaea8f4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "9d39f9441343f207cb18fae4e94ec02b551b66337d443d2e7d41196bfd1aaf59"
+    sha256                               arm64_tahoe:   "2dce9bdbf05fe452e0207880add877b672144505d39a460c9760e8b298d55335"
+    sha256                               arm64_sequoia: "2b3252bdd94b6e5a37cc5e44b1d7949b138889835b5ee988aaad095ddfd35daa"
+    sha256                               arm64_sonoma:  "8a09df166aa482b554b38c0b735776404242f86bcc40e189d45f0108fe0f623c"
+    sha256 cellar: :any_skip_relocation, arm64_linux:   "46cdb45dbec9aa4ff302bd5399f78abb8eedda7b813ef2ffb2e9e013cfc2663b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "68bbf434751ddb2e25fc03352fb69e03d912a2139985f95f256134b9f5db0bca"
   end
 
   keg_only :versioned_formula
