@@ -391,9 +391,6 @@ class FreecadAT111Py313Qt6 < Formula
     # --trace
     # -L
 
-    ENV.remove "PATH", Formula["pyside@2"].opt_prefix/"bin"
-
-    ENV.remove "PKG_CONFIG_PATH", Formula["pyside@2"].opt_prefix/"lib/pkgconfig"
     ENV.remove "PKG_CONFIG_PATH", Formula["qt@5"].opt_prefix/"lib/pkgconfig"
 
     ENV.remove "CMAKE_FRAMEWORK_PATH", Formula["qt@5"].opt_prefix/"Frameworks"
