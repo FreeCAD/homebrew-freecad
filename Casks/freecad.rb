@@ -21,7 +21,7 @@ cask "freecad" do
   end
 
   conflicts_with cask: "homebrew/homebrew-cask/freecad"
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   # rename bundle to avoid other installations
   app "FreeCAD.app", target: "FreeCAD_1.0.2-#{arch}_release.app"
