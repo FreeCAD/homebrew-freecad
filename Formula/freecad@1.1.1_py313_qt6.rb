@@ -110,6 +110,7 @@ class FreecadAT111Py313Qt6 < Formula
   depends_on "cython"
   depends_on "doxygen"
   depends_on "expat"
+  depends_on "flann"
   depends_on "fmt"
   depends_on "fontconfig" if OS.linux?
   depends_on "freecad/freecad/calculix@2.23"
@@ -204,6 +205,7 @@ class FreecadAT111Py313Qt6 < Formula
     cmake_prefix_paths << Formula["doxygen"].prefix
     cmake_prefix_paths << Formula["eigen"].prefix
     cmake_prefix_paths << Formula["expat"].prefix
+    cmake_prefix_paths << Formula["flann"].prefix
     cmake_prefix_paths << Formula["fmt"].prefix
     cmake_prefix_paths << Formula["freeimage"].prefix
     cmake_prefix_paths << Formula["freetype"].prefix
@@ -344,6 +346,9 @@ class FreecadAT111Py313Qt6 < Formula
 
     ninja_bin = Formula["ninja"].opt_bin/"ninja"
 
+    # NOTE: when build with PCL enabled recent versions of pcl have updated to "imported targets"
+    ENV.append "CXXFLAGS", "-isystem #{Formula["flann"].include}"
+
     args = %W[
       -DHOMEBREW_PREFIX=#{hbp}
       -DCMAKE_PREFIX_PATH=#{cmake_prefix_path_string}
@@ -366,9 +371,10 @@ class FreecadAT111Py313Qt6 < Formula
       -DFREECAD_USE_PYBIND11:BOOL=ON
       -DFREECAD_USE_EXTERNAL_KDL:BOOL=ON
       -DBUILD_FEM_NETGEN=:BOOL=ON
-      -DFREECAD_USE_PCL:BOOL=ON
       -DFREECAD_LIBPACK_USE:BOOL=OFF
       -DBUILD_WITH_CONDA:BOOL=OFF
+
+      -DFREECAD_USE_PCL:BOOL=ON
 
       -DCMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH=FALSE
       -DCMAKE_FIND_USE_CMAKE_SYSTEM_PATH=FALSE
@@ -385,9 +391,6 @@ class FreecadAT111Py313Qt6 < Formula
     # --trace
     # -L
 
-    ENV.remove "PATH", Formula["pyside@2"].opt_prefix/"bin"
-
-    ENV.remove "PKG_CONFIG_PATH", Formula["pyside@2"].opt_prefix/"lib/pkgconfig"
     ENV.remove "PKG_CONFIG_PATH", Formula["qt@5"].opt_prefix/"lib/pkgconfig"
 
     ENV.remove "CMAKE_FRAMEWORK_PATH", Formula["qt@5"].opt_prefix/"Frameworks"
