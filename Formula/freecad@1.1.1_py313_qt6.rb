@@ -505,7 +505,6 @@ class FreecadAT111Py313Qt6 < Formula
   end
 
   test do
-    # NOTE: make test more robust and accurate
-    system "true"
+    system bin/"FreeCADCmd", "-t", "0"
   end
 end
