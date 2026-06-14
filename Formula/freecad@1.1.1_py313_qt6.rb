@@ -10,6 +10,12 @@ class FreecadAT111Py313Qt6 < Formula
     url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.1/freecad_source_1.1.1.tar.gz"
     sha256 "c0e95d41415f1e73bfe2e0a0a28210f649b01ef531bbfed1ed15863950dc5381"
 
+    # fix bld with pyside 6.11
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/1c599a2248.patch?full_index=1"
+      sha256 "e4895af708867eb45b4195f3e40eb330108a8fa8081aee5e2e17ff01f06d9f86"
+    end
+
     # fix bld with macos 26 and explicit template arugments
     # https://github.com/FreeCAD/FreeCAD/issues/28983
     patch do
