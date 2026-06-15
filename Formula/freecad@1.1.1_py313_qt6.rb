@@ -10,6 +10,12 @@ class FreecadAT111Py313Qt6 < Formula
     url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.1/freecad_source_1.1.1.tar.gz"
     sha256 "c0e95d41415f1e73bfe2e0a0a28210f649b01ef531bbfed1ed15863950dc5381"
 
+    # fix bld with cam/path wb failing test in test module, ie. test 46/47
+    patch do
+      url "https://github.com/FreeCAD/homebrew-freecad/commit/e65fa785e44f21337c91cd80fc42ea0d5909a8f4.patch?full_index=1"
+      sha256 "0638459a47f997fbf007d709321e1230011ed98cd8216616c8bffceb588e3ac5"
+    end
+
     # fix bld with pyside 6.11
     patch do
       url "https://github.com/FreeCAD/FreeCAD/commit/1c599a2248.patch?full_index=1"
