@@ -12,8 +12,8 @@ class FreecadAT111Py313Qt6 < Formula
 
     # fix bld with cam/path wb failing test in test module, ie. test 46/47
     patch do
-      url "https://github.com/FreeCAD/homebrew-freecad/commit/e65fa785e44f21337c91cd80fc42ea0d5909a8f4.patch?full_index=1"
-      sha256 "0638459a47f997fbf007d709321e1230011ed98cd8216616c8bffceb588e3ac5"
+      url "https://github.com/FreeCAD/homebrew-freecad/commit/4b04a4bdb5b8211f329316aacc5bdd28b357054e.patch?full_index=1"
+      sha256 "a8ff8e724f560053fe102b80a0802f1fcde355d9e3d081c846a9c05e9a6b1aca"
     end
 
     # fix bld with pyside 6.11
