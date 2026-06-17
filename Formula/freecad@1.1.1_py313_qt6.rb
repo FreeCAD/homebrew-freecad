@@ -485,6 +485,14 @@ class FreecadAT111Py313Qt6 < Formula
 
   def post_install
     ohai "the value of prefix = #{prefix}"
+
+    # mac bundle drops FreeCAD's PySide shim in MacOS/; FreeCAD's sys.path
+    # expects it in Ext/ (as on Linux). Relocate so `import PySide` resolves.
+    if OS.mac?
+      (prefix/"Ext/PySide").dirname.mkpath
+      mv prefix/"MacOS/PySide", prefix/"Ext/PySide"
+    end
+
     if OS.mac?
       ln_s "#{prefix}/MacOS/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
       ln_s "#{prefix}/MacOS/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
@@ -517,6 +525,7 @@ class FreecadAT111Py313Qt6 < Formula
   end
 
   test do
-    system bin/"FreeCADCmd", "-t", "0"
+    freecadcmd = OS.mac? ? prefix/"MacOS/FreeCADCmd" : bin/"FreeCADCmd"
+    system freecadcmd, "-t", "0"
   end
 end
