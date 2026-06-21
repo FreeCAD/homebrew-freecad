@@ -6,8 +6,8 @@ class Pyside6Py313 < Formula
 
   desc "Official Python bindings for Qt"
   homepage "https://wiki.qt.io/Qt_for_Python"
-  url "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.11.0-src/pyside-setup-everywhere-src-6.11.0.tar.xz"
-  mirror "https://cdimage.debian.org/mirror/qt.io/qtproject/official_releases/QtForPython/pyside6/PySide6-6.11.0-src/pyside-setup-everywhere-src-6.11.0.tar.xz"
+  url "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.11.1-src/pyside-setup-everywhere-src-6.11.1.tar.xz"
+  mirror "https://cdimage.debian.org/mirror/qt.io/qtproject/official_releases/QtForPython/pyside6/PySide6-6.11.1-src/pyside-setup-everywhere-src-6.11.1.tar.xz"
   sha256 "48d5c44d7c3ed861055d5491486e6a220ef5006573cae01a5fae3fb69d786336"
   # NOTE: We omit some licenses even though they are in SPDX-License-Identifier or LICENSES/ directory:
   # 1. LicenseRef-Qt-Commercial is removed from "OR" options as non-free
@@ -18,7 +18,7 @@ class Pyside6Py313 < Formula
     { "GPL-3.0-only" => { with: "Qt-GPL-exception-1.0" } },
     { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] },
   ]
-  revision 2
+  revision 3
 
   livecheck do
     url "https://download.qt.io/official_releases/QtForPython/pyside6/"
@@ -242,10 +242,7 @@ class Pyside6Py313 < Formula
       4. it seems pyside v6.10 changed the install layout directory
       structure, thus the need for additional post install steps.
 
-      5. it seems pyside v6.10.2 can not be built against qt v6.10.2
-      without the above patching via sed (right now)
-
-      6. the arch package is useful for referencing to stay updated
+      5. the arch package is useful for referencing to stay updated
       https://gitlab.archlinux.org/archlinux/packaging/packages/pyside6
     EOS
   end
