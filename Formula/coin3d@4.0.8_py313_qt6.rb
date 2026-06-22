@@ -5,7 +5,7 @@ class Coin3dAT408Py313Qt6 < Formula
   desc "Open Inventor 2.1 API implementation (Coin) with Python bindings (Pivy)"
   homepage "https://coin3d.github.io/"
   license all_of: ["BSD-3-Clause", "ISC"]
-  revision 1
+  revision 2
 
   stable do
     url "https://github.com/coin3d/coin/releases/download/v4.0.8/coin-4.0.8-src.tar.gz"
