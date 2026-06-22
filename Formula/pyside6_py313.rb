@@ -27,11 +27,9 @@ class Pyside6Py313 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256                               arm64_tahoe:   "2dce9bdbf05fe452e0207880add877b672144505d39a460c9760e8b298d55335"
-    sha256                               arm64_sequoia: "2b3252bdd94b6e5a37cc5e44b1d7949b138889835b5ee988aaad095ddfd35daa"
-    sha256                               arm64_sonoma:  "8a09df166aa482b554b38c0b735776404242f86bcc40e189d45f0108fe0f623c"
-    sha256 cellar: :any_skip_relocation, arm64_linux:   "46cdb45dbec9aa4ff302bd5399f78abb8eedda7b813ef2ffb2e9e013cfc2663b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "68bbf434751ddb2e25fc03352fb69e03d912a2139985f95f256134b9f5db0bca"
+    sha256 arm64_tahoe:   "17cb7974cc71fe5662cd7e77d0cc66a30d61856cca2989e89a7edb9e9ef10389"
+    sha256 arm64_sequoia: "bb7face7bfb2d59a31209d425dc134f91ad4ecafe59ffd6389ca0782cae80291"
+    sha256 arm64_sonoma:  "32c7dcbb6bb2118357448d0ecf9cb5b47eadf5728a383a32aec0dd65aef6cc3b"
   end
 
   keg_only :versioned_formula
