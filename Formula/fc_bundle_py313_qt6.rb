@@ -14,9 +14,9 @@ class FcBundlePy313Qt6 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "932ab188291c47c43573550f44a3fc1512cc92109cca2d7b4439dacdb369f5ba"
-    sha256 cellar: :any, arm64_sequoia: "61a45469d6db93ca3a7831844fa94aceabd8e328bec088ec0d96a12338ca61f6"
-    sha256 cellar: :any, arm64_sonoma:  "6f0b76b20c8c3a2fa449f7488bbdae1084b4d5b40aceefeadbb6b8445e249e49"
+    sha256 cellar: :any, arm64_tahoe:   "ac076fa3b4daed2bc434b79ea131626598ddc86d34536a73665cdc8510ab95c5"
+    sha256 cellar: :any, arm64_sequoia: "d547ed5d27b3bc9c1906f4f446c0c6a8b8966b3732027be3e4a446ff79cf2dd9"
+    sha256 cellar: :any, arm64_sonoma:  "1937fce3c1f0f0c99325c37fbf69034238c69a7fbdbd36b2434cc542eb4345cb"
   end
 
   depends_on "patchelf" => :build
