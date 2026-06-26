@@ -126,8 +126,8 @@ class FcBundlePy313Qt6 < Formula
 
     # ifcopenshell dep
     resource("shapely").stage do
-      ENV.prepend_path "PKG_CONFIG_PATH", Formula["geos"].opt_lib/"pkgconfig"
-      ENV.prepend_path "PKG_CONFIG_PATH", Formula["freecad/freecad/numpy@2.1.1_py312"].opt_lib/"pkgconfig"
+      ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("geos")/"pkgconfig"
+      ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("freecad/freecad/numpy@2.1.1_py312")/"pkgconfig"
       system venv_pip, "install", "."
     end
 
@@ -136,18 +136,18 @@ class FcBundlePy313Qt6 < Formula
     # File.read("#{Formula["shiboken2@5.15.11"].opt_prefix}/lib/python#{pyver}/site-packages/shiboken2.pth").strip
 
     medfile_pth_contents =
-      File.read("#{Formula["med-file@5.0.0_py313"].opt_prefix}/lib/python#{pyver}/medfile.pth").strip
+      File.read("#{formula_opt_prefix("med-file@5.0.0_py313")}/lib/python#{pyver}/medfile.pth").strip
     coin3d_pth_contents =
-      File.read("#{Formula["coin3d@4.0.8_py313_qt6"].opt_prefix}/lib/python#{pyver}/coin3d_py313_qt6-pivy.pth").strip
+      File.read("#{formula_opt_prefix("coin3d@4.0.8_py313_qt6")}/lib/python#{pyver}/coin3d_py313_qt6-pivy.pth").strip
     # pybind11_pth_contents = File.read(
     # "#{Formula["pybind11"].opt_prefix}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
     # ).strip
     pyside6_pth_contents =
-      File.read("#{Formula["pyside6_py313"].opt_prefix}/lib/python#{pyver}/pyside6.pth").strip
+      File.read("#{formula_opt_prefix("pyside6_py313")}/lib/python#{pyver}/pyside6.pth").strip
     vtk_952_py313_pth_contents =
-      File.read("#{Formula["vtk@9.5.2_py313"].opt_prefix}/lib/python#{pyver}/vtk_py313.pth").strip
+      File.read("#{formula_opt_prefix("vtk@9.5.2_py313")}/lib/python#{pyver}/vtk_py313.pth").strip
     netgen_pth_contents =
-      File.read("#{Formula["netgen@6.2.2601"].opt_prefix}/lib/python#{pyver}/netgen_py313.pth").strip
+      File.read("#{formula_opt_prefix("netgen@6.2.2601")}/lib/python#{pyver}/netgen_py313.pth").strip
 
     site_packages = Language::Python.site_packages("python3.13")
     # {shiboken2_pth_contents}

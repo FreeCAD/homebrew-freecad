@@ -86,14 +86,14 @@ class FreecadAT0201 < Formula
   def install
     # NOTE: ordered loosely by cmake checks
     hbp = HOMEBREW_PREFIX
-    pth_xercesc = Formula["xerces-c"].opt_prefix
-    pth_occ = Formula["opencascade"].opt_prefix
-    pth_hdf5 = Formula["hdf5"].opt_prefix
-    pth_coin = Formula["coin3d"].opt_prefix
+    pth_xercesc = formula_opt_prefix("xerces-c")
+    pth_occ = formula_opt_prefix("opencascade")
+    pth_hdf5 = formula_opt_prefix("hdf5")
+    pth_coin = formula_opt_prefix("coin3d")
     pth_pyside2 = "#{Formula["#{@tap}/pyside2@5.15.5"].prefix}/lib/cmake/PySide2-5.15.5"
-    pth_qt5 = Formula["qt@5"].opt_prefix
-    pth_vtk = Formula["vtk"].opt_prefix
-    pth_med = Formula["freecad/freecad/med-file"].opt_prefix
+    pth_qt5 = formula_opt_prefix("qt@5")
+    pth_vtk = formula_opt_prefix("vtk")
+    pth_med = formula_opt_prefix("freecad/freecad/med-file")
 
     cmake_prefix_paths = "\""
     cmake_prefix_paths << "#{pth_xercesc};"
@@ -135,18 +135,18 @@ class FreecadAT0201 < Formula
     args << "-DALLOW_SELF_SIGNED_CERTIFICATE=1" if build.with? "unsecured-cloud"
 
     ENV.prepend_path "PATH", Formula["shiboken2@5.15.5"].prefix/"bin"
-    ENV.prepend_path "PATH", Formula["python@3.10"].opt_prefix/"bin"
+    ENV.prepend_path "PATH", formula_opt_prefix("python@3.10")/"bin"
 
-    ENV.remove "PATH", Formula["pyside@2"].opt_prefix/"bin"
+    ENV.remove "PATH", formula_opt_prefix("pyside@2")/"bin"
     # ENV.remove "PATH", Formula["python@3.9"].opt_prefix/"bin"
 
     # for reasons i dont understand pyside@2 is sneaking into the cmake_prefix_path
     ENV.remove "CMAKE_PREFIX_PATH", Formula["pyside@2"].prefix
-    ENV.remove "PKG_CONFIG_PATH", Formula["pyside@2"].opt_prefix/"lib/pkgconfig"
+    ENV.remove "PKG_CONFIG_PATH", formula_opt_prefix("pyside@2")/"lib/pkgconfig"
 
     # NOTE: ipatch, required for successful build
-    ENV.prepend_path "PYTHONPATH", Formula["shiboken2@5.15.5"].opt_prefix/Language::Python.site_packages(python3)
-    ENV.prepend_path "PYTHONPATH", Formula["pyside2@5.15.5"].opt_prefix/Language::Python.site_packages(python3)
+    ENV.prepend_path "PYTHONPATH", formula_opt_prefix("shiboken2@5.15.5")/Language::Python.site_packages(python3)
+    ENV.prepend_path "PYTHONPATH", formula_opt_prefix("pyside2@5.15.5")/Language::Python.site_packages(python3)
 
     # TODO: ipatch, do not make build dir a sub dir of the src dir
     mkdir "Build" do

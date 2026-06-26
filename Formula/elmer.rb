@@ -30,12 +30,12 @@ class Elmer < Formula
   depends_on "xerces-c"
 
   def install
-    qwt_inc_dir = "#{Formula["#{@tap}/qwtelmer"].opt_prefix}/lib/qwt.framework/Versions/Current/Headers;"
+    qwt_inc_dir = "#{formula_opt_prefix("#{@tap}/qwtelmer")}/lib/qwt.framework/Versions/Current/Headers;"
 
     prefix_paths = []
-    prefix_paths << Formula["qt@5"].opt_prefix
+    prefix_paths << formula_opt_prefix("qt@5")
     # prefix_paths << (Formula["vtk@8.2"].opt_prefix/"lib/cmake;")
-    prefix_paths << Formula["#{@tap}/opencascade@7.5.3"].opt_prefix
+    prefix_paths << formula_opt_prefix("#{@tap}/opencascade@7.5.3")
 
     # cmake_cflags = ""
     # cmake_cflags << ('" -F' + Formula["#{@tap}/qwtelmer"].opt_prefix+"/lib/" + ' -framework qwt"')
@@ -43,8 +43,8 @@ class Elmer < Formula
     gcc_major_ver = Formula["gcc"].any_installed_version.major
     # ENV["CC"] = Formula["gcc"].opt_bin/"gcc-#{gcc_major_ver}"
     # ENV["CXX"] = Formula["gcc"].opt_bin/"g++-#{gcc_major_ver}"
-    ENV["CMAKE_C_COMPILER"] = Formula["gcc"].opt_bin/"gcc-#{gcc_major_ver}"
-    ENV["CMAKE_CXX_COMPILER"] = Formula["gcc"].opt_bin/"gcc-#{gcc_major_ver}"
+    ENV["CMAKE_C_COMPILER"] = formula_opt_bin("gcc")/"gcc-#{gcc_major_ver}"
+    ENV["CMAKE_CXX_COMPILER"] = formula_opt_bin("gcc")/"gcc-#{gcc_major_ver}"
 
     # NOTE: elmer cmake files specifically look for a gcc-10 binary
 

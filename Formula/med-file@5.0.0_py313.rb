@@ -58,9 +58,9 @@ class MedFileAT500Py313 < Formula
     gcc_version = gcc_formula.version.to_s.split(".").first
 
     # use gcc, g++, and gfrontran to build formula
-    ENV["CC"] = Formula["gcc"].opt_bin/"gcc-#{gcc_version}"
-    ENV["CXX"] = Formula["gcc"].opt_bin/"g++-#{gcc_version}"
-    ENV["FC"] = Formula["gcc"].opt_bin/"gfortran-#{gcc_version}"
+    ENV["CC"] = formula_opt_bin("gcc")/"gcc-#{gcc_version}"
+    ENV["CXX"] = formula_opt_bin("gcc")/"g++-#{gcc_version}"
+    ENV["FC"] = formula_opt_bin("gcc")/"gfortran-#{gcc_version}"
 
     # work around Xcode.app >= v15
     ENV.append "LDFLAGS", "-Wl,-ld_classic" if DevelopmentTools.clang_build_version >= 1500
@@ -71,7 +71,7 @@ class MedFileAT500Py313 < Formula
       "-DCMAKE_INSTALL_LIBDIR",
     ]
 
-    ENV["PYTHON"] = Formula["python@3.13"].opt_bin/"python3.13"
+    ENV["PYTHON"] = formula_opt_bin("python@3.13")/"python3.13"
 
     python_exe = ENV["PYTHON"]
     # Get the Python includes directory without duplicates
@@ -97,7 +97,7 @@ class MedFileAT500Py313 < Formula
       -DPYTHON_EXECUTABLE=#{python_exe}
       -DPYTHON_INCLUDE_DIR=#{py_inc_dir}
       -DPYTHON_LIBRARY=#{py_lib_path}
-      -DCMAKE_PREFIX_PATH=#{Formula["hdf5"].opt_prefix};#{Formula["gcc"].opt_prefix};
+      -DCMAKE_PREFIX_PATH=#{formula_opt_prefix("hdf5")};#{formula_opt_prefix("gcc")};
       -DCMAKE_INSTALL_RPATH=#{rpath}
       -DMEDFILE_BUILD_TESTS=0
       -DCMAKE_C_STANDARD=17

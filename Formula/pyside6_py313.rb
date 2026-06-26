@@ -102,13 +102,13 @@ class Pyside6Py313 < Formula
   end
 
   def install
-    ENV["CLANG_INSTALL_DIR"] = ENV["LLVM_INSTALL_DIR"] = Formula["llvm@21"].opt_prefix
+    ENV["CLANG_INSTALL_DIR"] = ENV["LLVM_INSTALL_DIR"] = formula_opt_prefix("llvm@21")
 
     ENV.append_path "PYTHONPATH", buildpath/"build/sources"
 
     if OS.linux?
       # Workaround to search versioned LLVM path before HOMEBREW_PREFIX/lib
-      ENV.append "LDFLAGS", "-Wl,-rpath,#{rpath(target: Formula["llvm@21"].opt_lib)}"
+      ENV.append "LDFLAGS", "-Wl,-rpath,#{rpath(target: formula_opt_lib("llvm@21"))}"
       inreplace "sources/shiboken6/cmake/ShibokenHelpers.cmake",
                 'list(APPEND path_dirs "${libclang_lib_dir}")',
                 'list(PREPEND path_dirs "${libclang_lib_dir}")'
@@ -116,9 +116,9 @@ class Pyside6Py313 < Formula
 
     ENV.append_path "PYTHONPATH", buildpath/"build/sources"
 
-    extra_include_dirs = [Formula["qt"].opt_include]
-    extra_include_dirs << Formula["mesa"].opt_include if OS.linux?
-    extra_include_dirs << [Formula["qttools"].opt_include]
+    extra_include_dirs = [formula_opt_include("qt")]
+    extra_include_dirs << formula_opt_include("mesa") if OS.linux?
+    extra_include_dirs << [formula_opt_include("qttools")]
 
     # upstream issue: https://bugreports.qt.io/browse/PYSIDE-1684
     inreplace "sources/pyside6/cmake/Macros/PySideModules.cmake",
@@ -133,10 +133,10 @@ class Pyside6Py313 < Formula
 
     shiboken6_module = prefix/Language::Python.site_packages(python3)/"shiboken6"
 
-    ENV.prepend_path "CMAKE_PREFIX_PATH", Formula["python@3.13"].opt_prefix
+    ENV.prepend_path "CMAKE_PREFIX_PATH", formula_opt_prefix("python@3.13")
 
     # setup numpy include dir
-    numpy_inc_dir = Formula["numpy"].opt_prefix/"lib/python3.13/site-packages/numpy/_core/include"
+    numpy_inc_dir = formula_opt_prefix("numpy")/"lib/python3.13/site-packages/numpy/_core/include"
 
     # Remove Assistant/Designer/Linguist - not provided by the qt formula
     inreplace "sources/pyside-tools/CMakeLists.txt" do |s|
@@ -276,7 +276,7 @@ class Pyside6Py313 < Formula
     if OS.linux?
       pyver = Language::Python.major_minor_version python3
       pylib += %W[
-        -Wl,-rpath,#{Formula["python@#{pyver}"].opt_lib}
+        -Wl,-rpath,#{formula_opt_lib("python@#{pyver}")}
         -Wl,-rpath,#{lib}
       ]
     end
@@ -305,7 +305,7 @@ class Pyside6Py313 < Formula
     system ENV.cxx, "-std=c++17", "test.cpp",
                     "-I#{shiboken_include}",
                     "-L#{lib}", "-l#{shiboken_lib}",
-                    "-L#{Formula["gettext"].opt_lib}",
+                    "-L#{formula_opt_lib("gettext")}",
                     *pyincludes, *pylib, "-o", "test"
     system "./test"
   end

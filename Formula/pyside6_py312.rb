@@ -56,8 +56,8 @@ class Pyside6Py312 < Formula
   def install
     ENV.append_path "PYTHONPATH", buildpath/"build/sources"
 
-    extra_include_dirs = [Formula["qt"].opt_include]
-    extra_include_dirs << Formula["mesa"].opt_include if OS.linux?
+    extra_include_dirs = [formula_opt_include("qt")]
+    extra_include_dirs << formula_opt_include("mesa") if OS.linux?
 
     # upstream issue: https://bugreports.qt.io/browse/PYSIDE-1684
     inreplace "sources/pyside6/cmake/Macros/PySideModules.cmake",
@@ -79,10 +79,10 @@ class Pyside6Py312 < Formula
 
     cmake_args = std_cmake_args
 
-    ENV.prepend_path "CMAKE_PREFIX_PATH", Formula["python@3.12"].opt_prefix
+    ENV.prepend_path "CMAKE_PREFIX_PATH", formula_opt_prefix("python@3.12")
 
     # setup numpy include dir
-    numpy_inc_dir = Formula["numpy@2.1.1_py312"].opt_prefix/"lib/python3.12/site-packages/numpy/_core/include"
+    numpy_inc_dir = formula_opt_prefix("numpy@2.1.1_py312")/"lib/python3.12/site-packages/numpy/_core/include"
 
     puts "-------------------------------------------------"
     puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
@@ -158,7 +158,7 @@ class Pyside6Py312 < Formula
     if OS.linux?
       pyver = Language::Python.major_minor_version python3
       pylib += %W[
-        -Wl,-rpath,#{Formula["python@#{pyver}"].opt_lib}
+        -Wl,-rpath,#{formula_opt_lib("python@#{pyver}")}
         -Wl,-rpath,#{lib}
       ]
     end
@@ -183,7 +183,7 @@ class Pyside6Py312 < Formula
     system ENV.cxx, "-std=c++17", "test.cpp",
                     "-I#{include}/shiboken6",
                     "-L#{lib}", "-l#{shiboken_lib}",
-                    "-L#{Formula["gettext"].opt_lib}",
+                    "-L#{formula_opt_lib("gettext")}",
                     *pyincludes, *pylib, "-o", "test"
     system "./test"
   end

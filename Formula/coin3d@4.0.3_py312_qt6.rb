@@ -114,7 +114,7 @@ class Coin3dAT403Py312Qt6 < Formula
     # NOTE: ipatch, it seems SOQT is optional dep for pivy thus build soqt first
     resource("pivy").stage do
       ENV.append_path "CMAKE_PREFIX_PATH", prefix.to_s
-      ENV.append_path "CMAKE_PREFIX_PATH", Formula["python-setuptools"].opt_prefix
+      ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_prefix("python-setuptools")
 
       puts "----------------------------------------------------"
       puts "CMAKE_PREFIX_PATH=#{ENV["CMAKE_PREFIX_PATH"]}"
@@ -155,7 +155,7 @@ class Coin3dAT403Py312Qt6 < Formula
 
   test do
     # NOTE: required because formula is keg_only
-    coin3d_py312_include = Formula["coin3d@4.0.3_py312_qt6"].opt_include
+    coin3d_py312_include = formula_opt_include("coin3d@4.0.3_py312_qt6")
 
     (testpath/"test.cpp").write <<~EOS
       #include <Inventor/SoDB.h>
@@ -169,18 +169,18 @@ class Coin3dAT403Py312Qt6 < Formula
     opengl_flags = if OS.mac?
       ["-Wl,-framework,OpenGL"]
     else
-      ["-L#{Formula["mesa"].opt_lib}", "-lGL"]
+      ["-L#{formula_opt_lib("mesa")}", "-lGL"]
     end
 
     system ENV.cc, "test.cpp", "-L#{lib}", "-lCoin", *opengl_flags, "-o", "test", "-I#{coin3d_py312_include}"
     system "./test"
 
-    ENV.append_path "PYTHONPATH", Formula["coin3d@4.0.3_py312_qt6"].opt_prefix/Language::Python.site_packages(python3)
-    ENV.append_path "PYTHONPATH", Formula["pyside6_py312"].opt_prefix/Language::Python.site_packages(python3)
+    ENV.append_path "PYTHONPATH", formula_opt_prefix("coin3d@4.0.3_py312_qt6")/Language::Python.site_packages(python3)
+    ENV.append_path "PYTHONPATH", formula_opt_prefix("pyside6_py312")/Language::Python.site_packages(python3)
     # Set QT_QPA_PLATFORM to minimal to avoid error:
     # "This application failed to start because no Qt platform plugin could be initialized."
     ENV["QT_QPA_PLATFORM"] = "minimal" if OS.linux? || ENV["HOMEBREW_GITHUB_ACTIONS"]
-    system Formula["python@3.12"].opt_bin/"python3.12", "-c", <<~EOS
+    system formula_opt_bin("python@3.12")/"python3.12", "-c", <<~EOS
       import shiboken6
       from pivy.sogui import SoGui
       assert SoGui.init("test") is not None

@@ -53,13 +53,13 @@ class FcBundle < Formula
     # File.read("#{Formula["shiboken2@5.15.11"].opt_prefix}/lib/python#{pyver}/site-packages/shiboken2.pth").strip
 
     pyside2_pth_contents =
-      File.read("#{Formula["pyside2@5.15.11_py310"].opt_prefix}/lib/python#{pyver}/pyside2.pth").strip
+      File.read("#{formula_opt_prefix("pyside2@5.15.11_py310")}/lib/python#{pyver}/pyside2.pth").strip
 
     coin3d_pivy_pth_contents =
-      File.read("#{Formula["coin3d_py310"].opt_prefix}/lib/python#{pyver}/coin3d_py310-pivy.pth").strip
+      File.read("#{formula_opt_prefix("coin3d_py310")}/lib/python#{pyver}/coin3d_py310-pivy.pth").strip
 
     numpy_pth_contents =
-      File.read("#{Formula["numpy@1.26.4_py310"].opt_prefix}/lib/python#{pyver}/numpy.pth").strip
+      File.read("#{formula_opt_prefix("numpy@1.26.4_py310")}/lib/python#{pyver}/numpy.pth").strip
 
     site_packages = Language::Python.site_packages("python3.10")
     # {shiboken2_pth_contents}

@@ -32,7 +32,7 @@ class Qwtelmer < Formula
     spec << "-arm64" if Hardware::CPU.arm?
     args << spec
 
-    qt5 = Formula["qt@5"].opt_prefix
+    qt5 = formula_opt_prefix("qt@5")
     system "#{qt5}/bin/qmake", *args
     system "make"
     system "make", "install"
@@ -49,10 +49,10 @@ class Qwtelmer < Formula
     system ENV.cxx, "test.cpp", "-o", "out",
       "-std=c++11",
       "-framework", "qwt", "-framework", "QtCore",
-      "-F#{lib}", "-F#{Formula["qt@5"].opt_lib}",
+      "-F#{lib}", "-F#{formula_opt_lib("qt@5")}",
       "-I#{lib}/qwt.framework/Headers",
-      "-I#{Formula["qt@5"].opt_lib}/QtCore.framework/Versions/5/Headers",
-      "-I#{Formula["qt@5"].opt_lib}/QtGui.framework/Versions/5/Headers"
+      "-I#{formula_opt_lib("qt@5")}/QtCore.framework/Versions/5/Headers",
+      "-I#{formula_opt_lib("qt@5")}/QtGui.framework/Versions/5/Headers"
     system "./out"
   end
 end

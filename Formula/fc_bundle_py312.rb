@@ -103,8 +103,8 @@ class FcBundlePy312 < Formula
 
     # ifcopenshell dep
     resource("shapely").stage do
-      ENV.prepend_path "PKG_CONFIG_PATH", Formula["geos"].opt_lib/"pkgconfig"
-      ENV.prepend_path "PKG_CONFIG_PATH", Formula["freecad/freecad/numpy@2.1.1_py312"].opt_lib/"pkgconfig"
+      ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("geos")/"pkgconfig"
+      ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("freecad/freecad/numpy@2.1.1_py312")/"pkgconfig"
       system venv_pip, "install", "."
     end
 
@@ -122,8 +122,8 @@ class FcBundlePy312 < Formula
 
       # Set MPLSETUPCFG to point to the custom config
       ENV["MPLSETUPCFG"] = buildpath/"mplsetup.cfg"
-      ENV.prepend_path "PKG_CONFIG_PATH", Formula["freetype"].opt_lib/"pkgconfig"
-      ENV.prepend_path "PKG_CONFIG_PATH", Formula["webp"].opt_lib/"pkgconfig"
+      ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("freetype")/"pkgconfig"
+      ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("webp")/"pkgconfig"
 
       # Install matplotlib within the virtual environment
       system venv_pip, "install", "."
@@ -149,19 +149,19 @@ class FcBundlePy312 < Formula
     # File.read("#{Formula["shiboken2@5.15.11"].opt_prefix}/lib/python#{pyver}/site-packages/shiboken2.pth").strip
 
     coin3d_pivy_pth_contents =
-      File.read("#{Formula["coin3d@4.0.3_py312"].opt_prefix}/lib/python#{pyver}/coin3d_py312-pivy.pth").strip
+      File.read("#{formula_opt_prefix("coin3d@4.0.3_py312")}/lib/python#{pyver}/coin3d_py312-pivy.pth").strip
     medfile_pth_contents =
-      File.read("#{Formula["med-file@4.1.1_py312"].opt_prefix}/lib/python#{pyver}/medfile.pth").strip
+      File.read("#{formula_opt_prefix("med-file@4.1.1_py312")}/lib/python#{pyver}/medfile.pth").strip
     numpy_pth_contents =
-      File.read("#{Formula["numpy@2.1.1_py312"].opt_prefix}/lib/python#{pyver}/numpy.pth").strip
+      File.read("#{formula_opt_prefix("numpy@2.1.1_py312")}/lib/python#{pyver}/numpy.pth").strip
     pybind11_pth_contents =
       File.read(
-        "#{Formula["pybind11_py312"].opt_prefix}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
+        "#{formula_opt_prefix("pybind11_py312")}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
       ).strip
     pyside2_pth_contents =
-      File.read("#{Formula["pyside2@5.15.15_py312"].opt_prefix}/lib/python#{pyver}/pyside2.pth").strip
+      File.read("#{formula_opt_prefix("pyside2@5.15.15_py312")}/lib/python#{pyver}/pyside2.pth").strip
     vtk_pth_contents =
-      File.read("#{Formula["vtk@9.5.2_py312"].opt_prefix}/lib/python#{pyver}/vtk_py312.pth").strip
+      File.read("#{formula_opt_prefix("vtk@9.5.2_py312")}/lib/python#{pyver}/vtk_py312.pth").strip
 
     site_packages = Language::Python.site_packages("python3.12")
     # {shiboken2_pth_contents}

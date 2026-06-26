@@ -61,27 +61,27 @@ class Pyside2AT51511Py310 < Formula
     else
       # Add missing include dirs on Linux.
       # upstream issue: https://bugreports.qt.io/browse/PYSIDE-1684
-      extra_include_dirs = [Formula["mesa"].opt_include, Formula["libxcb"].opt_include]
+      extra_include_dirs = [formula_opt_include("mesa"), formula_opt_include("libxcb")]
       inreplace "sources/pyside2/cmake/Macros/PySideModules.cmake",
                 "--include-paths=${shiboken_include_dirs}",
                 "--include-paths=${shiboken_include_dirs}:#{extra_include_dirs.join(":")}"
 
       # Add rpath to qt@5 because it is keg-only.
-      [lib, Formula["qt@5"].opt_lib]
+      [lib, formula_opt_lib("qt@5")]
     end
 
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm@15"].opt_lib
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_lib("llvm@15")
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_lib("qt@5")
 
     cmake_args = std_cmake_args
 
     # NOTE: ipatch build will fail if using `python3` cmake requires major+minor ie. `python3.10`
-    py_exe = Formula["python@3.10"].opt_bin/"python3.10"
+    py_exe = formula_opt_bin("python@3.10")/"python3.10"
 
     py_lib = if OS.mac?
-      Formula["python@3.10"].opt_lib/"libpython3.10.dylib"
+      formula_opt_lib("python@3.10")/"libpython3.10.dylib"
     else
-      Formula["python@3.10"].opt_lib/"libpython3.10.so"
+      formula_opt_lib("python@3.10")/"libpython3.10.so"
     end
 
     cmake_args << "-DPYTHON_EXECUTABLE=#{py_exe}"
@@ -93,8 +93,8 @@ class Pyside2AT51511Py310 < Formula
     system "cmake", "-S", ".", "-B", "build",
       "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
       "-DFORCE_LIMITED_API=NO",
-      "-DLLVM_CONFIG=#{Formula["llvm@15"].opt_bin}/llvm-config",
-      "-DCMAKE_LIBRARY_PATH=#{Formula["llvm@15"].opt_lib}",
+      "-DLLVM_CONFIG=#{formula_opt_bin("llvm@15")}/llvm-config",
+      "-DCMAKE_LIBRARY_PATH=#{formula_opt_lib("llvm@15")}",
       "-L",
       *cmake_args
 

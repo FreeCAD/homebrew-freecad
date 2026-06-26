@@ -242,27 +242,27 @@ class Pyside2AT51515Py312 < Formula
     else
       # Add missing include dirs on Linux.
       # upstream issue: https://bugreports.qt.io/browse/PYSIDE-1684
-      extra_include_dirs = [Formula["mesa"].opt_include, Formula["libxcb"].opt_include]
+      extra_include_dirs = [formula_opt_include("mesa"), formula_opt_include("libxcb")]
       inreplace "sources/pyside2/cmake/Macros/PySideModules.cmake",
                 "--include-paths=${shiboken_include_dirs}",
                 "--include-paths=${shiboken_include_dirs}:#{extra_include_dirs.join(":")}"
 
       # Add rpath to qt@5 because it is keg-only.
-      [lib, Formula["qt@5"].opt_lib]
+      [lib, formula_opt_lib("qt@5")]
     end
 
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm"].opt_prefix
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_prefix
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["freecad/freecad/numpy@2.1.1_py312"].opt_prefix
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_prefix("llvm")
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_prefix("qt@5")
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_prefix("freecad/freecad/numpy@2.1.1_py312")
 
     cmake_args = std_cmake_args
 
     # NOTE: ipatch build will fail if using `python3` cmake requires major+minor ie. `python3.10`
-    py_exe = Formula["python@3.12"].opt_bin/"python3.12"
+    py_exe = formula_opt_bin("python@3.12")/"python3.12"
     py_lib = if OS.mac?
-      Formula["python@3.12"].opt_lib/"libpython3.12.dylib"
+      formula_opt_lib("python@3.12")/"libpython3.12.dylib"
     else
-      Formula["python@3.12"].opt_lib/"libpython3.12.so"
+      formula_opt_lib("python@3.12")/"libpython3.12.so"
     end
 
     cmake_args << "-DPYTHON_EXECUTABLE=#{py_exe}"
@@ -271,7 +271,7 @@ class Pyside2AT51515Py312 < Formula
     # Avoid shim reference.
     inreplace "sources/shiboken2/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
-    ENV.prepend_path "PYTHONPATH", Formula["numpy@2.1.1_py312"].opt_prefix/Language::Python.site_packages(py_exe)
+    ENV.prepend_path "PYTHONPATH", formula_opt_prefix("numpy@2.1.1_py312")/Language::Python.site_packages(py_exe)
 
     puts "-------------------------------------------------"
     puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
@@ -281,8 +281,8 @@ class Pyside2AT51515Py312 < Formula
     system "cmake", "-S", ".", "-B", "build",
       "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
       "-DFORCE_LIMITED_API=NO",
-      "-DLLVM_CONFIG=#{Formula["llvm"].opt_bin}/llvm-config",
-      "-DCMAKE_LIBRARY_PATH=#{Formula["llvm"].opt_lib}",
+      "-DLLVM_CONFIG=#{formula_opt_bin("llvm")}/llvm-config",
+      "-DCMAKE_LIBRARY_PATH=#{formula_opt_lib("llvm")}",
       "-L",
       "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
       *cmake_args
@@ -339,7 +339,7 @@ class Pyside2AT51515Py312 < Formula
   test do
     # NOTE: ipatch, the below resolve to something like, HOMEBREW_PREFIX/Cellar/formula/lib/python/site-packages
     ENV.append_path "PYTHONPATH", prefix/Language::Python.site_packages(python3)
-    py312 = Formula["python@3.12"].opt_bin/"python3.12"
+    py312 = formula_opt_bin("python@3.12")/"python3.12"
 
     puts "--------------------------------------------------------"
     puts "PYTHON=#{ENV["PYTHON"]}"
@@ -360,8 +360,8 @@ class Pyside2AT51515Py312 < Formula
       Xml
     ]
 
-    if File.exist?("#{Formula["qt@5"].opt_lib}/libQt5WebEngineCore.so.5") ||
-       File.exist?("#{Formula["qt@5"].opt_lib}/QtWebEngineCore.framework")
+    if File.exist?("#{formula_opt_lib("qt@5")}/libQt5WebEngineCore.so.5") ||
+       File.exist?("#{formula_opt_lib("qt@5")}/QtWebEngineCore.framework")
       modules << "WebEngineCore"
     end
 
@@ -373,7 +373,7 @@ class Pyside2AT51515Py312 < Formula
     if OS.linux?
       pyver = Language::Python.major_minor_version python3
       pylib += %W[
-        -Wl,-rpath,#{Formula["python@#{pyver}"].opt_lib}
+        -Wl,-rpath,#{formula_opt_lib("python@#{pyver}")}
         -Wl,-rpath,#{lib}
       ]
     end
@@ -398,7 +398,7 @@ class Pyside2AT51515Py312 < Formula
     system ENV.cxx, "-std=c++17", "test.cpp",
                     "-I#{include}/shiboken2",
                     "-L#{lib}", "-l#{shiboken_lib}",
-                    "-L#{Formula["gettext"].opt_lib}",
+                    "-L#{formula_opt_lib("gettext")}",
                     *pyincludes, *pylib, "-o", "test"
     system "./test"
 
