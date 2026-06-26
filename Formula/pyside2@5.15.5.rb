@@ -34,14 +34,14 @@ class Pyside2AT5155 < Formula
 
     # Add out of tree build because one of its deps, shiboken, itself needs an
     # out of tree build in shiboken@5.15.5.rb.
-    pyhome = `#{Formula["python@3.10"].opt_bin}/python3.10-config --prefix`.chomp
+    pyhome = `#{formula_opt_bin("python@3.10")}/python3.10-config --prefix`.chomp
     py_library = "#{pyhome}/lib/libpython3.10.dylib"
     py_include = "#{pyhome}/include/python3.10"
 
     mkdir "macbuild#{version}" do
       ENV.append "CXXFLAGS", "-std=c++17"
 
-      pth_qt5 = Formula["qt@5"].opt_prefix
+      pth_qt5 = formula_opt_prefix("qt@5")
 
       cmake_prefix_paths = "\""
       cmake_prefix_paths << "#{pth_qt5};"

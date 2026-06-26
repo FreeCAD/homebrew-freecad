@@ -63,13 +63,13 @@ class Pyside2AT51511 < Formula
     else
       # Add missing include dirs on Linux.
       # upstream issue: https://bugreports.qt.io/browse/PYSIDE-1684
-      extra_include_dirs = [Formula["mesa"].opt_include, Formula["libxcb"].opt_include]
+      extra_include_dirs = [formula_opt_include("mesa"), formula_opt_include("libxcb")]
       inreplace "sources/pyside2/cmake/Macros/PySideModules.cmake",
                 "--include-paths=${shiboken_include_dirs}",
                 "--include-paths=${shiboken_include_dirs}:#{extra_include_dirs.join(":")}"
 
       # Add rpath to qt@5 because it is keg-only.
-      [lib, Formula["qt@5"].opt_lib]
+      [lib, formula_opt_lib("qt@5")]
     end
 
     # Avoid shim reference.
@@ -78,18 +78,18 @@ class Pyside2AT51511 < Formula
     cmake_args = std_cmake_args
 
     if MacOS.version > :catalina
-      python_executable = Formula["python@3.11"].opt_bin/"python3"
+      python_executable = formula_opt_bin("python@3.11")/"python3"
       cmake_args << "-DPYTHON_EXECUTABLE=#{python_executable}"
     end
 
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm@15"].opt_lib
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_lib("llvm@15")
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_lib("qt@5")
 
     system "cmake", "-S", ".", "-B", "build",
       "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
       "-DFORCE_LIMITED_API=NO",
-      "-DLLVM_CONFIG=#{Formula["llvm@15"].opt_bin}/llvm-config",
-      "-DCMAKE_LIBRARY_PATH=#{Formula["llvm@15"].opt_lib}",
+      "-DLLVM_CONFIG=#{formula_opt_bin("llvm@15")}/llvm-config",
+      "-DCMAKE_LIBRARY_PATH=#{formula_opt_lib("llvm@15")}",
       "-L",
       *cmake_args
 

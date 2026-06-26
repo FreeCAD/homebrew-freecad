@@ -138,7 +138,7 @@ class FreecadAT0202Py310 < Formula
     #
     # NOTE: `which` cmd is not installed by default on some OSes
     # ENV["PYTHON"] = which("python3.10")
-    ENV["PYTHON"] = Formula["python@3.10"].opt_bin/"python3.10"
+    ENV["PYTHON"] = formula_opt_bin("python@3.10")/"python3.10"
 
     # Get the Python includes directory without duplicates
     py_inc_output = `python3.10-config --includes`
@@ -171,8 +171,8 @@ class FreecadAT0202Py310 < Formula
     puts "prefix: #{prefix}"
     puts "rpath: #{rpath}"
 
-    ENV.remove "PATH", Formula["qt"].opt_prefix/"bin"
-    ENV.remove "PATH", Formula["pyqt"].opt_prefix/"bin"
+    ENV.remove "PATH", formula_opt_prefix("qt")/"bin"
+    ENV.remove "PATH", formula_opt_prefix("pyqt")/"bin"
     puts "PATH=#{ENV["PATH"]}"
     puts "--------------------------------------------"
 
@@ -271,12 +271,12 @@ class FreecadAT0202Py310 < Formula
     end
 
     if OS.linux?
-      ninja_bin = Formula["ninja"].opt_bin/"ninja"
-      clang_cc = Formula["llvm"].opt_bin/"clang"
-      clang_cxx = Formula["llvm"].opt_bin/"clang++"
-      clang_ld = Formula["llvm"].opt_bin/"lld"
-      clang_ar = Formula["llvm"].opt_bin/"llvm-ar"
-      openglu_inc_dir = Formula["mesa"].opt_include
+      ninja_bin = formula_opt_bin("ninja")/"ninja"
+      clang_cc = formula_opt_bin("llvm")/"clang"
+      clang_cxx = formula_opt_bin("llvm")/"clang++"
+      clang_ld = formula_opt_bin("llvm")/"lld"
+      clang_ar = formula_opt_bin("llvm")/"llvm-ar"
+      openglu_inc_dir = formula_opt_include("mesa")
 
       puts "----------------------------------------------------"
       puts openglu_inc_dir
@@ -315,14 +315,14 @@ class FreecadAT0202Py310 < Formula
     # --trace
     # -L
 
-    ENV.remove "PATH", Formula["pyside@2"].opt_prefix/"bin"
-    ENV.remove "PATH", Formula["qt"].opt_prefix/"bin"
-    ENV.remove "PATH", Formula["pyqt"].opt_prefix/"bin"
+    ENV.remove "PATH", formula_opt_prefix("pyside@2")/"bin"
+    ENV.remove "PATH", formula_opt_prefix("qt")/"bin"
+    ENV.remove "PATH", formula_opt_prefix("pyqt")/"bin"
 
-    ENV.remove "PKG_CONFIG_PATH", Formula["pyside@2"].opt_prefix/"lib/pkgconfig"
-    ENV.remove "PKG_CONFIG_PATH", Formula["qt"].opt_prefix/"lib/pkgconfig"
+    ENV.remove "PKG_CONFIG_PATH", formula_opt_prefix("pyside@2")/"lib/pkgconfig"
+    ENV.remove "PKG_CONFIG_PATH", formula_opt_prefix("qt")/"lib/pkgconfig"
 
-    ENV.remove "CMAKE_FRAMEWORK_PATH", Formula["qt"].opt_prefix/"Frameworks"
+    ENV.remove "CMAKE_FRAMEWORK_PATH", formula_opt_prefix("qt")/"Frameworks"
 
     # TODO: ipatch, below cause audit exceptions, ie. `brew style freecad/freecad`
     # ENV.remove "PATH", Formula["python@3.12"].opt_prefix/"bin"

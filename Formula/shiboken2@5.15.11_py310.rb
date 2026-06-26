@@ -46,19 +46,19 @@ class Shiboken2AT51511Py310 < Formula
       [rpath, rpath(source: shiboken2_module)]
     end
 
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["llvm@15"].opt_lib
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["freecad/freecad/numpy@1.26.4_py310"].opt_lib
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_lib("qt@5")
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_lib("llvm@15")
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_lib("freecad/freecad/numpy@1.26.4_py310")
 
     cmake_args = std_cmake_args
 
     # NOTE: ipatch, build will fail if using `python3` cmake requires major+minor ie. `python3.10`
-    py_exe = Formula["python@3.10"].opt_bin/"python3.10"
+    py_exe = formula_opt_bin("python@3.10")/"python3.10"
 
     py_lib = if OS.mac?
-      Formula["python@3.10"].opt_lib/"libpython3.10.dylib"
+      formula_opt_lib("python@3.10")/"libpython3.10.dylib"
     else
-      Formula["python@3.10"].opt_lib/"libpython3.10.so"
+      formula_opt_lib("python@3.10")/"libpython3.10.so"
     end
 
     cmake_args << "-DPYTHON_EXECUTABLE=#{py_exe}"
@@ -73,8 +73,8 @@ class Shiboken2AT51511Py310 < Formula
 
     system "cmake", "-S", "./sources/shiboken2", "-B", "build",
       "-DFORCE_LIMITED_API=no",
-      "-DLLVM_CONFIG=#{Formula["llvm@15"].opt_bin}/llvm-config",
-      "-DCMAKE_LIBRARY_PATH=#{Formula["llvm@15"].opt_lib}",
+      "-DLLVM_CONFIG=#{formula_opt_bin("llvm@15")}/llvm-config",
+      "-DCMAKE_LIBRARY_PATH=#{formula_opt_lib("llvm@15")}",
       "-L",
       *cmake_args
 

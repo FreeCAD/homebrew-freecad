@@ -88,7 +88,7 @@ class CalculixAT223 < Formula
         "--with-blas=-L#{openblas.opt_lib} -lopenblas",
         "--with-lapack=-L#{openblas.opt_lib} -lopenblas",
         "--disable-mpi",
-        "F77=#{Formula["gcc"].opt_bin}/gfortran"
+        "F77=#{formula_opt_bin("gcc")}/gfortran"
       system "make"
       system "make", "install"
     end
@@ -127,7 +127,7 @@ class CalculixAT223 < Formula
       inreplace "Makefile" do |s|
         # Fix compiler
         s.gsub!(/^CC=.*$/, "CC=#{ENV.cc}")
-        s.gsub!(/^FC=.*$/, "FC=#{Formula["gcc"].opt_bin}/gfortran")
+        s.gsub!(/^FC=.*$/, "FC=#{formula_opt_bin("gcc")}/gfortran")
 
         # Fix CFLAGS - add platform-specific warning flags
         # macOS clang needs -Wno-error=return-mismatch for return type issues

@@ -166,7 +166,7 @@ class FreecadAT110Py313Qt6 < Formula
     # NOTE: `which` cmd is not installed by default on every OS
     # ENV["PYTHON"] = which("python3.10")
     #------------
-    ENV["PYTHON"] = Formula["python@#{PY_VER}"].opt_bin/"python#{PY_VER}"
+    ENV["PYTHON"] = formula_opt_bin("python@#{PY_VER}")/"python#{PY_VER}"
 
     # Get the Python includes directory without duplicates
     py_inc_output = `python#{PY_VER}-config --includes`
@@ -198,7 +198,7 @@ class FreecadAT110Py313Qt6 < Formula
     puts "prefix: #{prefix}"
     puts "rpath: #{rpath}"
 
-    ENV.remove "PATH", Formula["qt@5"].opt_prefix/"bin"
+    ENV.remove "PATH", formula_opt_prefix("qt@5")/"bin"
     puts "PATH=#{ENV["PATH"]}"
 
     cmake_prefix_paths = []
@@ -305,17 +305,17 @@ class FreecadAT110Py313Qt6 < Formula
         -DCOREFOUNDATION_LIBRARY=#{apl_frmwks}/CoreFoundation.framework
         -DCMAKE_IGNORE_PATH=#{hbp}/Cellar/qt@5;#{hbp}/opt/qt@5;
 
-        -DNetgen_DIR=#{Formula["netgen@6.2.2601"].opt_prefix}/Contents/Resources/CMake
+        -DNetgen_DIR=#{formula_opt_prefix("netgen@6.2.2601")}/Contents/Resources/CMake
       ]
     end
 
     if OS.linux?
-      clang_cc = Formula["llvm"].opt_bin/"clang"
-      clang_cxx = Formula["llvm"].opt_bin/"clang++"
-      clang_ld = Formula["lld"].opt_bin/"lld"
-      clang_ar = Formula["llvm"].opt_bin/"llvm-ar"
+      clang_cc = formula_opt_bin("llvm")/"clang"
+      clang_cxx = formula_opt_bin("llvm")/"clang++"
+      clang_ld = formula_opt_bin("lld")/"lld"
+      clang_ar = formula_opt_bin("llvm")/"llvm-ar"
 
-      openglu_inc_dir = Formula["mesa-glu"].opt_include
+      openglu_inc_dir = formula_opt_include("mesa-glu")
 
       puts "----------------------------------------------------"
       puts openglu_inc_dir
@@ -328,11 +328,11 @@ class FreecadAT110Py313Qt6 < Formula
 
       # NOTE: these are keg-only formula thus their libs do not exist in #{hbp}/lib
       # ... thus causing rpath issues on *nix based systems
-      coin_lib = Formula["coin3d@4.0.8_py313_qt6"].opt_lib
-      libomp_lib = Formula["libomp"].opt_lib
-      med_lib = Formula["med-file@5.0.0_py313"].opt_lib
-      netgen_lib = Formula["netgen@6.2.2601"].opt_lib
-      pyside6_lib = Formula["pyside6_py313"].opt_lib
+      coin_lib = formula_opt_lib("coin3d@4.0.8_py313_qt6")
+      libomp_lib = formula_opt_lib("libomp")
+      med_lib = formula_opt_lib("med-file@5.0.0_py313")
+      netgen_lib = formula_opt_lib("netgen@6.2.2601")
+      pyside6_lib = formula_opt_lib("pyside6_py313")
 
       args_linux_only = %W[
         -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
@@ -349,7 +349,7 @@ class FreecadAT110Py313Qt6 < Formula
       ]
     end
 
-    ninja_bin = Formula["ninja"].opt_bin/"ninja"
+    ninja_bin = formula_opt_bin("ninja")/"ninja"
 
     args = %W[
       -DHOMEBREW_PREFIX=#{hbp}
@@ -392,15 +392,15 @@ class FreecadAT110Py313Qt6 < Formula
     # --trace
     # -L
 
-    ENV.remove "PATH", Formula["pyside@2"].opt_prefix/"bin"
+    ENV.remove "PATH", formula_opt_prefix("pyside@2")/"bin"
 
-    ENV.remove "PKG_CONFIG_PATH", Formula["pyside@2"].opt_prefix/"lib/pkgconfig"
-    ENV.remove "PKG_CONFIG_PATH", Formula["qt@5"].opt_prefix/"lib/pkgconfig"
+    ENV.remove "PKG_CONFIG_PATH", formula_opt_prefix("pyside@2")/"lib/pkgconfig"
+    ENV.remove "PKG_CONFIG_PATH", formula_opt_prefix("qt@5")/"lib/pkgconfig"
 
-    ENV.remove "CMAKE_FRAMEWORK_PATH", Formula["qt@5"].opt_prefix/"Frameworks"
+    ENV.remove "CMAKE_FRAMEWORK_PATH", formula_opt_prefix("qt@5")/"Frameworks"
 
-    ENV.remove "HOMEBREW_INCLUDE_PATHS", Formula["qt@5"].opt_prefix/"include"
-    ENV.remove "HOMEBREW_LIBRARY_PATHS", Formula["qt@5"].opt_prefix/"lib"
+    ENV.remove "HOMEBREW_INCLUDE_PATHS", formula_opt_prefix("qt@5")/"include"
+    ENV.remove "HOMEBREW_LIBRARY_PATHS", formula_opt_prefix("qt@5")/"lib"
 
     # NOTE: resources have to be in the correct buildpath
     resource("googletest").stage(buildpath/"tests/lib")

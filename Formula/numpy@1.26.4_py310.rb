@@ -73,7 +73,7 @@ class NumpyAT1264Py310 < Formula
 
     # Prepend the installation path of mesonpy to PYTHONPATH
     ENV.prepend_path "PYTHONPATH", libexec/"lib/python3.10/site-packages"
-    ENV.prepend_path "PATH", Formula["cython"].opt_libexec/"bin"
+    ENV.prepend_path "PATH", formula_opt_libexec("cython")/"bin"
 
     # NOTE: https://stackoverflow.com/a/69869531/708807
     if OS.mac?
@@ -86,7 +86,7 @@ class NumpyAT1264Py310 < Formula
     end
 
     site_packages = Language::Python.site_packages(python3)
-    ENV.prepend_path "PYTHONPATH", Formula["cython"].opt_libexec/site_packages
+    ENV.prepend_path "PYTHONPATH", formula_opt_libexec("cython")/site_packages
 
     if OS.mac?
       ENV["NPY_LAPACK_ORDER"] = "accelerate"
@@ -131,9 +131,9 @@ class NumpyAT1264Py310 < Formula
   end
 
   test do
-    ENV.append_path "PYTHONPATH", Formula["numpy@1.26.4_py310"].opt_prefix/Language::Python.site_packages(python3)
+    ENV.append_path "PYTHONPATH", formula_opt_prefix("numpy@1.26.4_py310")/Language::Python.site_packages(python3)
 
-    system Formula["python@3.10"].opt_bin/"python3.10", "-c", <<~EOS
+    system formula_opt_bin("python@3.10")/"python3.10", "-c", <<~EOS
       import numpy as np
       t = np.ones((3,3), int)
       assert t.sum() == 9

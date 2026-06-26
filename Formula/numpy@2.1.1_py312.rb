@@ -85,11 +85,11 @@ class NumpyAT211Py312 < Formula
   end
 
   test do
-    python3 = Formula["python@3.12"].opt_bin/"python3.12"
+    python3 = formula_opt_bin("python@3.12")/"python3.12"
 
-    ENV.append_path "PYTHONPATH", Formula["numpy@2.1.1_py312"].opt_prefix/Language::Python.site_packages(python3)
+    ENV.append_path "PYTHONPATH", formula_opt_prefix("numpy@2.1.1_py312")/Language::Python.site_packages(python3)
 
-    system Formula["python@3.12"].opt_bin/"python3.12", "-c", <<~EOS
+    system formula_opt_bin("python@3.12")/"python3.12", "-c", <<~EOS
       import numpy as np
       t = np.ones((3,3), int)
       assert t.sum() == 9

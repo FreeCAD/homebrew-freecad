@@ -59,7 +59,7 @@ class BoostPython311 < Formula
     py_prefix = if OS.mac?
       Formula["python@#{pyver}"].opt_frameworks/"Python.framework/Versions"/pyver
     else
-      Formula["python@#{pyver}"].opt_prefix
+      formula_opt_prefix("python@#{pyver}")
     end
 
     # Force boost to compile with the desired compiler

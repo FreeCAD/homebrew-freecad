@@ -45,7 +45,7 @@ class Pybind11Py310 < Formula
     system "cmake", "--install", "build"
 
     # Install Python package too
-    python_exe = Formula["python@3.10"].opt_bin/python3
+    python_exe = formula_opt_bin("python@3.10")/python3
     system python_exe, "-m", "pip", "install", *std_pip_args(prefix: libexec), "."
 
     site_packages = Language::Python.site_packages(python_exe)
@@ -69,9 +69,9 @@ class Pybind11Py310 < Formula
 
   test do
     # NOTE: required env vars due to formula being keg-only
-    ENV.append_path "PATH", Formula["pybind11_py310"].opt_bin
-    ENV.append_path "PYTHONPATH", "#{Formula["pybind11_py310"].opt_libexec}/lib/python3.10/site-packages"
-    ENV.append_path "LD_LIBRARY_PATH", Formula["pybind11_py310"].opt_lib
+    ENV.append_path "PATH", formula_opt_bin("pybind11_py310")
+    ENV.append_path "PYTHONPATH", "#{formula_opt_libexec("pybind11_py310")}/lib/python3.10/site-packages"
+    ENV.append_path "LD_LIBRARY_PATH", formula_opt_lib("pybind11_py310")
 
     (testpath/"example.cpp").write <<~EOS
       #include <pybind11/pybind11.h>
@@ -91,13 +91,13 @@ class Pybind11Py310 < Formula
       example.add(1,2)
     EOS
 
-    python_exe = "#{Formula["python@3.10"].opt_bin}/python3.10"
-    python_config = "#{Formula["python@3.10"].opt_bin}/python3.10-config"
+    python_exe = "#{formula_opt_bin("python@3.10")}/python3.10"
+    python_config = "#{formula_opt_bin("python@3.10")}/python3.10-config"
     pyversion = Language::Python.major_minor_version(python_exe)
 
     # NOTE: ci will fail with trailing `pybind11` in below but not locally
-    pybind11_include = Formula["pybind11_py310"].opt_include
-    gettext_lib = Formula["gettext"].opt_lib
+    pybind11_include = formula_opt_include("pybind11_py310")
+    gettext_lib = formula_opt_lib("gettext")
     python_flags = Utils.safe_popen_read(
       python_config,
       "--cflags",
@@ -110,7 +110,7 @@ class Pybind11Py310 < Formula
 
     test_module = shell_output("#{python_exe} -m pybind11 --includes")
     # Use assert_match method correctly to check if the output includes the expected string
-    expected_module_path = "#{Formula["pybind11_py310"].opt_libexec}/lib/python3.10/site-packages/pybind11/include"
+    expected_module_path = "#{formula_opt_libexec("pybind11_py310")}/lib/python3.10/site-packages/pybind11/include"
     assert_match expected_module_path, test_module
 
     test_script = shell_output("#{bin}/pybind11-config-#{pyversion} --includes")

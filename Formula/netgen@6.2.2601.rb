@@ -30,10 +30,10 @@ class NetgenAT622601 < Formula
   depends_on "zlib-ng-compat"
 
   def install
-    ENV["CC"] = Formula["llvm"].opt_bin/"clang"
-    ENV["CXX"] = Formula["llvm"].opt_bin/"clang++"
+    ENV["CC"] = formula_opt_bin("llvm")/"clang"
+    ENV["CXX"] = formula_opt_bin("llvm")/"clang++"
 
-    python3 = Formula["python@3.13"].opt_bin/"python3.13"
+    python3 = formula_opt_bin("python@3.13")/"python3.13"
 
     ENV["PYTHON"] = python3.to_s
 
@@ -97,8 +97,8 @@ class NetgenAT622601 < Formula
   end
 
   test do
-    ENV["CC"] = Formula["llvm"].opt_bin/"clang"
-    ENV["CXX"] = Formula["llvm"].opt_bin/"clang++"
+    ENV["CC"] = formula_opt_bin("llvm")/"clang"
+    ENV["CXX"] = formula_opt_bin("llvm")/"clang++"
 
     puts "-----------------------------------------------"
     puts "prefix = #{prefix}"

@@ -51,16 +51,16 @@ class FcBundlePy312Qt6 < Formula
     # File.read("#{Formula["shiboken2@5.15.11"].opt_prefix}/lib/python#{pyver}/site-packages/shiboken2.pth").strip
 
     coin3d_pivy_pth_contents =
-      File.read("#{Formula["coin3d@4.0.3_py312_qt6"].opt_prefix}/lib/python#{pyver}/coin3d_py312_qt6-pivy.pth").strip
+      File.read("#{formula_opt_prefix("coin3d@4.0.3_py312_qt6")}/lib/python#{pyver}/coin3d_py312_qt6-pivy.pth").strip
     medfile_pth_contents =
-      File.read("#{Formula["med-file@4.1.1_py312"].opt_prefix}/lib/python#{pyver}/medfile.pth").strip
+      File.read("#{formula_opt_prefix("med-file@4.1.1_py312")}/lib/python#{pyver}/medfile.pth").strip
     numpy_pth_contents =
-      File.read("#{Formula["numpy@2.1.1_py312"].opt_prefix}/lib/python#{pyver}/numpy.pth").strip
+      File.read("#{formula_opt_prefix("numpy@2.1.1_py312")}/lib/python#{pyver}/numpy.pth").strip
     pybind11_pth_contents = File.read(
-      "#{Formula["pybind11_py312"].opt_prefix}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
+      "#{formula_opt_prefix("pybind11_py312")}/lib/python#{pyver}/site-packages/homebrew-pybind11.pth",
     ).strip
     pyside6_pth_contents =
-      File.read("#{Formula["pyside6_py312"].opt_prefix}/lib/python#{pyver}/pyside6.pth").strip
+      File.read("#{formula_opt_prefix("pyside6_py312")}/lib/python#{pyver}/pyside6.pth").strip
 
     site_packages = Language::Python.site_packages("python3.12")
     # {shiboken2_pth_contents}

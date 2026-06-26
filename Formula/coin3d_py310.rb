@@ -97,7 +97,7 @@ class Coin3dPy310 < Formula
 
   test do
     # NOTE: required because formula is keg_only
-    coin3d_py310_include = Formula["coin3d_py310"].opt_include
+    coin3d_py310_include = formula_opt_include("coin3d_py310")
 
     (testpath/"test.cpp").write <<~EOS
       #include <Inventor/SoDB.h>
@@ -111,18 +111,18 @@ class Coin3dPy310 < Formula
     opengl_flags = if OS.mac?
       ["-Wl,-framework,OpenGL"]
     else
-      ["-L#{Formula["mesa"].opt_lib}", "-lGL"]
+      ["-L#{formula_opt_lib("mesa")}", "-lGL"]
     end
 
     system ENV.cc, "test.cpp", "-L#{lib}", "-lCoin", *opengl_flags, "-o", "test", "-I#{coin3d_py310_include}"
     system "./test"
 
-    ENV.append_path "PYTHONPATH", Formula["coin3d_py310"].opt_prefix/Language::Python.site_packages(python3)
-    ENV.append_path "PYTHONPATH", Formula["pyside2@5.15.11_py310"].opt_prefix/Language::Python.site_packages(python3)
+    ENV.append_path "PYTHONPATH", formula_opt_prefix("coin3d_py310")/Language::Python.site_packages(python3)
+    ENV.append_path "PYTHONPATH", formula_opt_prefix("pyside2@5.15.11_py310")/Language::Python.site_packages(python3)
     # Set QT_QPA_PLATFORM to minimal to avoid error:
     # "This application failed to start because no Qt platform plugin could be initialized."
     ENV["QT_QPA_PLATFORM"] = "minimal" if OS.linux? && ENV["HOMEBREW_GITHUB_ACTIONS"]
-    system Formula["python@3.10"].opt_bin/"python3.10", "-c", <<~EOS
+    system formula_opt_bin("python@3.10")/"python3.10", "-c", <<~EOS
       import shiboken2
       from pivy.sogui import SoGui
       assert SoGui.init("test") is not None

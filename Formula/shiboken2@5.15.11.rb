@@ -34,7 +34,7 @@ class Shiboken2AT51511 < Formula
   uses_from_macos "libxslt"
 
   def python3
-    Formula["python@3.11"].opt_bin/"python3"
+    formula_opt_bin("python@3.11")/"python3"
   end
 
   def pythons
@@ -48,14 +48,14 @@ class Shiboken2AT51511 < Formula
       [rpath, rpath(source: shiboken2_module)]
     end
 
-    ENV["LLVM_INSTALL_DIR"] = Formula["llvm"].opt_prefix
+    ENV["LLVM_INSTALL_DIR"] = formula_opt_prefix("llvm")
 
-    ENV.append_path "CMAKE_PREFIX_PATH", Formula["qt@5"].opt_lib
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_lib("qt@5")
 
     cmake_args = std_cmake_args
 
     if MacOS.version > :catalina
-      python_executable = Formula["python@3.11"].opt_bin/"python3"
+      python_executable = formula_opt_bin("python@3.11")/"python3"
       cmake_args << "-DPYTHON_EXECUTABLE=#{python_executable}"
     end
 

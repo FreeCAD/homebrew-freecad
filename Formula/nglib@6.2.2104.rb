@@ -18,7 +18,7 @@ class NglibAT622104 < Formula
 
   def install
     # NOTE: occ@7.5.3 does not require being linked but still contains a dir in the HOMEBREW_PREFIX/opt
-    occ_path = (Formula["#{@tap}/opencascade@7.5.3"].opt_include/"opencascade").to_s
+    occ_path = (formula_opt_include("#{@tap}/opencascade@7.5.3")/"opencascade").to_s
 
     args = std_cmake_args + %W[
       -DUSE_PYTHON=OFF
