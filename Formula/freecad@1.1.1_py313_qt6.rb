@@ -10,6 +10,18 @@ class FreecadAT111Py313Qt6 < Formula
     url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.1/freecad_source_1.1.1.tar.gz"
     sha256 "c0e95d41415f1e73bfe2e0a0a28210f649b01ef531bbfed1ed15863950dc5381"
 
+    # fix bld with cam/path wb failing test in test module, ie. test 46/47
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/75d7aeadfc17a28e7830342bce876fd51cf84d79/patches/freecad%401.1.1_py313_qt6-fix-cam-failing-tests.patch?full_index=1"
+      sha256 "0e4821678fa2dc0468a88af0528cf8e6fbf96e9c56aff6ea9937ec043745d3b3"
+    end
+
+    # fix bld with pyside 6.11
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/1c599a2248.patch?full_index=1"
+      sha256 "e4895af708867eb45b4195f3e40eb330108a8fa8081aee5e2e17ff01f06d9f86"
+    end
+
     # fix bld with macos 26 and explicit template arugments
     # https://github.com/FreeCAD/FreeCAD/issues/28983
     patch do
@@ -473,6 +485,14 @@ class FreecadAT111Py313Qt6 < Formula
 
   def post_install
     ohai "the value of prefix = #{prefix}"
+
+    # mac bundle drops FreeCAD's PySide shim in MacOS/; FreeCAD's sys.path
+    # expects it in Ext/ (as on Linux). Relocate so `import PySide` resolves.
+    if OS.mac?
+      (prefix/"Ext/PySide").dirname.mkpath
+      mv prefix/"MacOS/PySide", prefix/"Ext/PySide"
+    end
+
     if OS.mac?
       ln_s "#{prefix}/MacOS/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
       ln_s "#{prefix}/MacOS/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
@@ -505,7 +525,12 @@ class FreecadAT111Py313Qt6 < Formula
   end
 
   test do
-    # NOTE: make test more robust and accurate
-    system "true"
+    freecadcmd = OS.mac? ? prefix/"MacOS/FreeCADCmd" : bin/"FreeCADCmd"
+    with_env(HOME:            testpath,
+             XDG_CONFIG_HOME: "#{testpath}/config",
+             XDG_CACHE_HOME:  "#{testpath}/cache",
+             XDG_DATA_HOME:   "#{testpath}/data") do
+      system freecadcmd, "-t", "0"
+    end
   end
 end
