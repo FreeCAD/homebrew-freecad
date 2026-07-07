@@ -108,7 +108,7 @@ class FcBundlePy313Qt6 < Formula
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
     # setup and install lark ply six
-    %w[lark ply six pyyaml typing-extensions].each do |pkg|
+    %w[defusedxml lark ply pyymal six typing-extensions].each do |pkg|
       resource(pkg).stage do
         system venv_pip, "install", "."
       end
