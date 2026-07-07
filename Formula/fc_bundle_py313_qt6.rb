@@ -95,6 +95,8 @@ class FcBundlePy313Qt6 < Formula
     sha256 "0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466"
   end
 
+  fails_with :gcc
+
   def install
     # explicitly set python version
     pyver = "3.13"
@@ -108,7 +110,7 @@ class FcBundlePy313Qt6 < Formula
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
     # setup and install lark ply six
-    %w[defusedxml lark ply pyymal six typing-extensions].each do |pkg|
+    %w[defusedxml lark ply pyyaml six typing-extensions].each do |pkg|
       resource(pkg).stage do
         system venv_pip, "install", "."
       end
