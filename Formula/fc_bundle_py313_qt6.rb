@@ -10,7 +10,7 @@ class FcBundlePy313Qt6 < Formula
   version "1.1.1"
   # sha of file:///dev/null
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 4
+  revision 5
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -29,7 +29,7 @@ class FcBundlePy313Qt6 < Formula
   depends_on "geos"
   depends_on "libyaml"
   depends_on "numpy"
-  depends_on "pybind11" # reqd by pyyaml
+  depends_on "pybind11" # req'd by pyyaml
   depends_on "webp" if OS.linux?
   depends_on "zlib-ng-compat" if OS.linux?
 
@@ -50,6 +50,12 @@ class FcBundlePy313Qt6 < Formula
     end
   end
 
+  # NOTE: addon-manager now requires this python module / package
+  resource "defusedxml" do
+    url "https://files.pythonhosted.org/packages/0f/d5/c66da9b79e5bdb124974bfe172b4daf3c984ebd9c2a06e2b8a4dc7331c72/defusedxml-0.7.1.tar.gz"
+    sha256 "1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"
+  end
+
   # NOTE: newer versions of the BIM wb require lark
   resource "lark" do
     url "https://files.pythonhosted.org/packages/da/34/28fff3ab31ccff1fd4f6c7c7b0ceb2b6968d8ea4950663eadcb5720591a0/lark-1.3.1.tar.gz"
@@ -61,17 +67,6 @@ class FcBundlePy313Qt6 < Formula
     sha256 "00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3"
   end
 
-  # NOTE: it appears it has been several years since the six pypi package has been updated
-  resource "six" do
-    url "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz"
-    sha256 "1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"
-  end
-
-  resource "shapely" do
-    url "https://files.pythonhosted.org/packages/4d/bc/0989043118a27cccb4e906a46b7565ce36ca7b57f5a18b78f4f1b0f72d9d/shapely-2.1.2.tar.gz"
-    sha256 "2ed4ecb28320a433db18a5bf029986aa8afcfd740745e78847e330d5d94922a9"
-  end
-
   resource "pynastran" do
     url "https://github.com/SteveDoyle2/pyNastran/archive/refs/tags/v1.4.1.tar.gz"
     sha256 "445c4cd0ead937206ea743c0e2f9f743261fbc10891e26ec948a755f6b825df3"
@@ -81,6 +76,17 @@ class FcBundlePy313Qt6 < Formula
   resource "pyyaml" do
     url "https://files.pythonhosted.org/packages/05/8e/961c0007c59b8dd7729d542c61a4d537767a59645b82a0b521206e1e25c2/pyyaml-6.0.3.tar.gz"
     sha256 "d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f"
+  end
+
+  resource "shapely" do
+    url "https://files.pythonhosted.org/packages/4d/bc/0989043118a27cccb4e906a46b7565ce36ca7b57f5a18b78f4f1b0f72d9d/shapely-2.1.2.tar.gz"
+    sha256 "2ed4ecb28320a433db18a5bf029986aa8afcfd740745e78847e330d5d94922a9"
+  end
+
+  # NOTE: it appears it has been several years since the six pypi package has been updated
+  resource "six" do
+    url "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz"
+    sha256 "1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"
   end
 
   # NOTE: typing-extensions is req'd by BIM/Arch wb test suite
