@@ -34,6 +34,8 @@ class FcBundlePy313Qt6 < Formula
   depends_on "zlib-ng-compat" if OS.linux?
 
   # NOTE: ipatch, https://docs.ifcopenshell.org/ifcopenshell-python/installation.html#zip-packages
+  fails_with :gcc
+
   resource "ifcopenshell" do
     if OS.mac? && Hardware::CPU.arm?
       url "https://github.com/IfcOpenShell/IfcOpenShell/releases/download/ifcopenshell-python-0.8.4/ifcopenshell-python-0.8.4-py313-macosm164.zip"
@@ -94,8 +96,6 @@ class FcBundlePy313Qt6 < Formula
     url "https://files.pythonhosted.org/packages/72/94/1a15dd82efb362ac84269196e94cf00f187f7ed21c242792a923cdb1c61f/typing_extensions-4.15.0.tar.gz"
     sha256 "0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466"
   end
-
-  fails_with :gcc
 
   def install
     # explicitly set python version
