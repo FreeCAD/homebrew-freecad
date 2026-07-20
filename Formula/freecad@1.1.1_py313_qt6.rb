@@ -526,10 +526,11 @@ class FreecadAT111Py313Qt6 < Formula
 
   test do
     freecadcmd = OS.mac? ? prefix/"MacOS/FreeCADCmd" : bin/"FreeCADCmd"
-    with_env(HOME:            testpath,
-             XDG_CONFIG_HOME: "#{testpath}/config",
-             XDG_CACHE_HOME:  "#{testpath}/cache",
-             XDG_DATA_HOME:   "#{testpath}/data") do
+    with_env(
+             "FREECAD_USER_HOME" => testpath.to_s,
+             "FREECAD_USER_DATA" => testpath.to_s,
+             "FREECAD_USER_TEMP" => testpath.to_s,
+    ) do
       system freecadcmd, "-t", "0"
     end
   end
