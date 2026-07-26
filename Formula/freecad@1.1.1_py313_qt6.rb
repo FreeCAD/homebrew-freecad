@@ -387,6 +387,7 @@ class FreecadAT111Py313Qt6 < Formula
       -DBUILD_WITH_CONDA:BOOL=OFF
 
       -DFREECAD_USE_PCL:BOOL=ON
+      -DVTK_DIR=#{formula_opt_lib("freecad/freecad/vtk@9.5.2_py313")}/cmake/vtk-9.5
 
       -DCMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH=FALSE
       -DCMAKE_FIND_USE_CMAKE_SYSTEM_PATH=FALSE
