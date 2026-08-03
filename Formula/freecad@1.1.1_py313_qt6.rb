@@ -340,6 +340,7 @@ class FreecadAT111Py313Qt6 < Formula
       med_lib = formula_opt_lib("med-file@5.0.0_py313")
       netgen_lib = formula_opt_lib("netgen@6.2.2601")
       pyside6_lib = formula_opt_lib("pyside6_py313")
+      vtk_lib = formula_opt_lib("vtk@9.5.2_py313")
 
       args_linux_only = %W[
         -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
@@ -351,7 +352,7 @@ class FreecadAT111Py313Qt6 < Formula
         -DCMAKE_EXE_LINKER_FLAGS=#{linux_linker_flags}
         -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld
         -DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=lld
-        -DCMAKE_INSTALL_RPATH=#{hbp}/lib;#{coin_lib};#{libomp_lib};#{med_lib};#{netgen_lib};#{pyside6_lib}
+        -DCMAKE_INSTALL_RPATH=#{hbp}/lib;#{coin_lib};#{libomp_lib};#{med_lib};#{netgen_lib};#{pyside6_lib};#{vtk_lib}
         -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
       ]
     end
@@ -396,6 +397,15 @@ class FreecadAT111Py313Qt6 < Formula
 
       -L
     ]
+
+    # NOTE: ipatch, the required vars were required to get cmake to configure freecad on ubuntu 22.04
+    if OS.linux? && File.exist?("/etc/os-release") &&
+        File.read("/etc/os-release").include?('VERSION_ID="22.04"')
+      qt_module_prefixes = %w[qtsvg qttools].map { |f| Formula[f].opt_prefix }
+      args << "-DQT_ADDITIONAL_PACKAGES_PREFIX_PATH=#{qt_module_prefixes.join(";")}"
+    end
+
+    args << "--debug-find-pkg=VTK"
 
     # TODO: probably requires a separate formula to post_install the freecad py module
     args << "-DINSTALL_TO_SITEPACKAGES=OFF"
