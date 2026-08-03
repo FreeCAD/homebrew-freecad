@@ -400,8 +400,8 @@ class FreecadAT111Py313Qt6 < Formula
 
     # NOTE: ipatch, the required vars were required to get cmake to configure freecad on ubuntu 22.04
     if OS.linux? && File.exist?("/etc/os-release") &&
-        File.read("/etc/os-release").include?('VERSION_ID="22.04"')
-      qt_module_prefixes = %w[qtsvg qttools].map { |f| Formula[f].opt_prefix }
+       File.read("/etc/os-release").include?('VERSION_ID="22.04"')
+      qt_module_prefixes = %w[qtsvg qttools qtbase].map { |f| formula_opt_prefix(f) }
       args << "-DQT_ADDITIONAL_PACKAGES_PREFIX_PATH=#{qt_module_prefixes.join(";")}"
     end
 
