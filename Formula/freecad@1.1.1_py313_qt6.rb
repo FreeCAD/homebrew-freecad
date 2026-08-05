@@ -537,12 +537,19 @@ class FreecadAT111Py313Qt6 < Formula
 
   test do
     freecadcmd = OS.mac? ? prefix/"MacOS/FreeCADCmd" : bin/"FreeCADCmd"
-    with_env(
-      "FREECAD_USER_HOME" => testpath.to_s,
-      "FREECAD_USER_DATA" => testpath.to_s,
-      "FREECAD_USER_TEMP" => testpath.to_s,
-    ) do
-      system freecadcmd, "-t", "0"
+    if OS.mac?
+      # macos only honors FREECAD_USER_HOME, sort of an upstream bug that should be fixed
+      with_env("FREECAD_USER_HOME" => testpath.to_s) do
+        system freecadcmd, "-t", "0"
+      end
+    else
+      with_env(
+        "FREECAD_USER_HOME" => testpath.to_s,
+        "FREECAD_USER_DATA" => testpath.to_s,
+        "FREECAD_USER_TEMP" => testpath.to_s,
+      ) do
+        system freecadcmd, "-t", "0"
+      end
     end
   end
 end
