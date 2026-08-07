@@ -281,7 +281,7 @@ class FreecadAT111Py313Qt6 < Formula
       cmake_ld = "/Library/Developer/CommandLineTools/usr/bin/ld"
     end
 
-    # TODO: stub out the below cmake vars
+    # NOTE: the below cmake vars can be stubbed out ie. set
     # -DCMAKE_OSX_SYSROOT=#{cmake_osx_sysroot}
     # -DCMAKE_CXX_FLAGS="-fuse-ld=lld"
     # -DBUILD_ENABLE_CXX_STD=C++17 # freecad v1.1.0 now reqs C++20
@@ -362,6 +362,9 @@ class FreecadAT111Py313Qt6 < Formula
     # NOTE: when build with PCL enabled recent versions of pcl have updated to "imported targets"
     ENV.append "CXXFLAGS", "-isystem #{Formula["flann"].include}"
 
+    # NOTE: tbb circa aug 2026 is giving missing header error ie. blocked_range.h
+    ENV.append "CXXFLAGS", "-isystem #{Formula["tbb"].include}"
+
     args = %W[
       -DHOMEBREW_PREFIX=#{hbp}
       -DCMAKE_PREFIX_PATH=#{cmake_prefix_path_string}
@@ -398,7 +401,7 @@ class FreecadAT111Py313Qt6 < Formula
       -L
     ]
 
-    # NOTE: ipatch, the required vars were required to get cmake to configure freecad on ubuntu 22.04
+    # NOTE: ipatch, the below vars were required to get cmake to configure freecad on ubuntu 22.04
     if OS.linux? && File.exist?("/etc/os-release") &&
        File.read("/etc/os-release").include?('VERSION_ID="22.04"')
       qt_module_prefixes = %w[qtsvg qttools qtbase].map { |f| formula_opt_prefix(f) }
