@@ -538,8 +538,16 @@ class FreecadAT111Py313Qt6 < Formula
   test do
     freecadcmd = OS.mac? ? prefix/"MacOS/FreeCADCmd" : bin/"FreeCADCmd"
     if OS.mac?
+      require "fileutils"
+      # getCustomPaths() drops FREECAD_USER_HOME if the dir doesn't already exist
+      # brew test chdirs into a bare testpath, so pre-create it.
+      mkdir_p [
+        testpath/"Library/Application Support/FreeCAD",
+        testpath/"Library/Preferences/FreeCAD",
+        testpath/"Library/Caches/FreeCAD",
+      ]
       # macos only honors FREECAD_USER_HOME, sort of an upstream bug that should be fixed
-      with_env("FREECAD_USER_HOME" => testpath.to_s) do
+      with_env("FREECAD_USER_HOME" => testpath.to_s, "TMPDIR" => testpath.to_s) do
         system freecadcmd, "-t", "0"
       end
     else
