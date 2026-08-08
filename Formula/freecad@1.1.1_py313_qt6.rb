@@ -331,6 +331,7 @@ class FreecadAT111Py313Qt6 < Formula
       # NOTE: ipatch, linker req because, https://github.com/FreeCAD/homebrew-freecad/issues/546
       linux_linker_flags = "-L#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current " \
                            "-Wl,-rpath,#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current " \
+                           "-L#{formula_opt_lib("tbb")} -ltbb " \
                            "-fuse-ld=lld"
 
       # NOTE: these are keg-only formula thus their libs do not exist in #{hbp}/lib
@@ -541,7 +542,6 @@ class FreecadAT111Py313Qt6 < Formula
   test do
     freecadcmd = OS.mac? ? prefix/"MacOS/FreeCADCmd" : bin/"FreeCADCmd"
     if OS.mac?
-      require "fileutils"
       # getCustomPaths() drops FREECAD_USER_HOME if the dir doesn't already exist
       # brew test chdirs into a bare testpath, so pre-create it.
       mkdir_p [
