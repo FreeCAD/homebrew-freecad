@@ -116,10 +116,11 @@ class FcBundlePy313Qt6 < Formula
 
     venv_dir = libexec/"vendor"
 
-    # NOTE: the below env vars req'd so matplotlib can be built with LTO
+    # NOTE: the below env vars, AR and RANLIB req'd so matplotlib can be built with LTO
     if OS.linux?
       ENV["AR"] = "#{formula_opt_bin("llvm")}/llvm-ar"
       ENV["RANLIB"] = "#{formula_opt_bin("llvm")}/llvm-ranlib"
+      ENV.prepend_path "PKG_CONFIG_PATH", "#{formula_opt_lib("zlib-ng-compat")}/pkgconfig"
     end
 
     # Create a virtual environment
@@ -156,6 +157,22 @@ class FcBundlePy313Qt6 < Formula
       ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("geos")/"pkgconfig"
       ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("freecad/freecad/numpy@2.1.1_py312")/"pkgconfig"
       system venv_pip, "install", "."
+    end
+
+    # Fix RPATH on prebuilt-wheel .so files so they resolve zlib via
+    # Homebrew's zlib-ng-compat instead of the system libz.so.1
+    # (manylinux wheels intentionally exclude libz from their bundled libs)
+    if OS.linux?
+      zlib_lib = formula_opt_lib("zlib-ng-compat").to_s
+      Dir[venv_dir/"lib/python#{pyver}/site-packages/**/*.so*"].each do |so|
+        next if File.symlink?(so)
+
+        existing_rpath = Utils.safe_popen_read("patchelf", "--print-rpath", so).strip
+        next if existing_rpath.split(":").include?(zlib_lib)
+
+        new_rpath = [zlib_lib, existing_rpath].reject(&:empty?).join(":")
+        system "patchelf", "--set-rpath", new_rpath, so
+      end
     end
 
     # Example: Read the contents of the .pth file into a variable
