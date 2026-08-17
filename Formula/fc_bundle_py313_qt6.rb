@@ -10,7 +10,7 @@ class FcBundlePy313Qt6 < Formula
   version "1.1.1"
   # sha of file:///dev/null
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 7
+  revision 8
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -23,6 +23,7 @@ class FcBundlePy313Qt6 < Formula
 
   depends_on "patchelf" => :build
   depends_on "pkgconf" => :build
+  depends_on "ffmpeg"
   depends_on "freecad/freecad/coin3d@4.0.8_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
   depends_on "freecad/freecad/netgen@6.2.2601"
@@ -54,6 +55,11 @@ class FcBundlePy313Qt6 < Formula
     end
   end
 
+  resource "av" do
+    url "https://github.com/PyAV-Org/PyAV/releases/download/v18.1.0/av-18.1.0.tar.gz"
+    sha256 "47bfc286e1bc9de7ab4681fc2b575cd2460a66919d31ffe1bd5aa54fae531a28"
+  end
+
   # NOTE: addon-manager now requires this python module / package
   resource "defusedxml" do
     url "https://files.pythonhosted.org/packages/0f/d5/c66da9b79e5bdb124974bfe172b4daf3c984ebd9c2a06e2b8a4dc7331c72/defusedxml-0.7.1.tar.gz"
@@ -64,6 +70,11 @@ class FcBundlePy313Qt6 < Formula
   resource "lark" do
     url "https://files.pythonhosted.org/packages/da/34/28fff3ab31ccff1fd4f6c7c7b0ceb2b6968d8ea4950663eadcb5720591a0/lark-1.3.1.tar.gz"
     sha256 "b426a7a6d6d53189d318f2b6236ab5d6429eaf09259f1ca33eb716eed10d2905"
+  end
+
+  resource "matplotlib" do
+    url "https://github.com/matplotlib/matplotlib/archive/refs/tags/v3.11.1.tar.gz"
+    sha256 "b8a1eae79e86021624b43484bd07cb318ee83aa5f4ed4c3044dcfdcea63b07fe"
   end
 
   resource "ply" do
@@ -105,6 +116,13 @@ class FcBundlePy313Qt6 < Formula
 
     venv_dir = libexec/"vendor"
 
+    # NOTE: the below env vars, AR and RANLIB req'd so matplotlib can be built with LTO
+    if OS.linux?
+      ENV["AR"] = "#{formula_opt_bin("llvm")}/llvm-ar"
+      ENV["RANLIB"] = "#{formula_opt_bin("llvm")}/llvm-ranlib"
+      ENV.prepend_path "PKG_CONFIG_PATH", "#{formula_opt_lib("zlib-ng-compat")}/pkgconfig"
+    end
+
     # Create a virtual environment
     system "python3.13", "-m", "venv", venv_dir
     venv_pip = venv_dir/"bin/pip"
@@ -112,7 +130,7 @@ class FcBundlePy313Qt6 < Formula
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
     # setup and install lark ply six
-    %w[defusedxml lark ply pyyaml six typing-extensions].each do |pkg|
+    %w[av defusedxml matplotlib lark ply pyyaml six typing-extensions].each do |pkg|
       resource(pkg).stage do
         system venv_pip, "install", "."
       end
@@ -139,6 +157,22 @@ class FcBundlePy313Qt6 < Formula
       ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("geos")/"pkgconfig"
       ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("freecad/freecad/numpy@2.1.1_py312")/"pkgconfig"
       system venv_pip, "install", "."
+    end
+
+    # Fix RPATH on prebuilt-wheel .so files so they resolve zlib via
+    # Homebrew's zlib-ng-compat instead of the system libz.so.1
+    # (manylinux wheels intentionally exclude libz from their bundled libs)
+    if OS.linux?
+      zlib_lib = formula_opt_lib("zlib-ng-compat").to_s
+      Dir[venv_dir/"lib/python#{pyver}/site-packages/**/*.so*"].each do |so|
+        next if File.symlink?(so)
+
+        existing_rpath = Utils.safe_popen_read("patchelf", "--print-rpath", so).strip
+        next if existing_rpath.split(":").include?(zlib_lib)
+
+        new_rpath = [zlib_lib, existing_rpath].reject(&:empty?).join(":")
+        system "patchelf", "--set-rpath", new_rpath, so
+      end
     end
 
     # Example: Read the contents of the .pth file into a variable
