@@ -116,9 +116,11 @@ class FcBundlePy313Qt6 < Formula
 
     venv_dir = libexec/"vendor"
 
-    # NOTE: the below env vars to be passed so matplotlib can be built with LTO
-    ENV["AR"] = "#{formula_opt_bin("llvm")}/llvm-ar"
-    ENV["RANLIB"] = "#{formula_opt_bin("llvm")}/llvm-ranlib"
+    # NOTE: the below env vars req'd so matplotlib can be built with LTO
+    if OS.linux?
+      ENV["AR"] = "#{formula_opt_bin("llvm")}/llvm-ar"
+      ENV["RANLIB"] = "#{formula_opt_bin("llvm")}/llvm-ranlib"
+    end
 
     # Create a virtual environment
     system "python3.13", "-m", "venv", venv_dir
