@@ -10,7 +10,7 @@ class FcBundlePy313Qt6 < Formula
   version "1.1.1"
   # sha of file:///dev/null
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 7
+  revision 8
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -54,6 +54,11 @@ class FcBundlePy313Qt6 < Formula
     end
   end
 
+  resource "av" do
+    url "https://github.com/PyAV-Org/PyAV/releases/download/v18.1.0/av-18.1.0.tar.gz"
+    sha256 "47bfc286e1bc9de7ab4681fc2b575cd2460a66919d31ffe1bd5aa54fae531a28"
+  end
+
   # NOTE: addon-manager now requires this python module / package
   resource "defusedxml" do
     url "https://files.pythonhosted.org/packages/0f/d5/c66da9b79e5bdb124974bfe172b4daf3c984ebd9c2a06e2b8a4dc7331c72/defusedxml-0.7.1.tar.gz"
@@ -64,6 +69,11 @@ class FcBundlePy313Qt6 < Formula
   resource "lark" do
     url "https://files.pythonhosted.org/packages/da/34/28fff3ab31ccff1fd4f6c7c7b0ceb2b6968d8ea4950663eadcb5720591a0/lark-1.3.1.tar.gz"
     sha256 "b426a7a6d6d53189d318f2b6236ab5d6429eaf09259f1ca33eb716eed10d2905"
+  end
+
+  resource "matplotlib" do
+    url "https://github.com/matplotlib/matplotlib/archive/refs/tags/v3.11.1.tar.gz"
+    sha256 "b8a1eae79e86021624b43484bd07cb318ee83aa5f4ed4c3044dcfdcea63b07fe"
   end
 
   resource "ply" do
@@ -105,6 +115,10 @@ class FcBundlePy313Qt6 < Formula
 
     venv_dir = libexec/"vendor"
 
+    # NOTE: the below env vars to be passed so matplotlib can be built with LTO
+    ENV["AR"] = "#{formula_opt_bin("llvm")}/llvm-ar"
+    ENV["RANLIB"] = "#{formula_opt_bin("llvm")}/llvm-ranlib"
+
     # Create a virtual environment
     system "python3.13", "-m", "venv", venv_dir
     venv_pip = venv_dir/"bin/pip"
@@ -112,7 +126,7 @@ class FcBundlePy313Qt6 < Formula
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
     # setup and install lark ply six
-    %w[defusedxml lark ply pyyaml six typing-extensions].each do |pkg|
+    %w[av defusedxml matplotlib lark ply pyyaml six typing-extensions].each do |pkg|
       resource(pkg).stage do
         system venv_pip, "install", "."
       end
