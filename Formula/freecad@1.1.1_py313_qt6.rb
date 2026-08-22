@@ -503,7 +503,7 @@ class FreecadAT111Py313Qt6 < Formula
 
     # mac bundle drops FreeCAD's PySide shim in MacOS/; FreeCAD's sys.path
     # expects it in Ext/ (as on Linux). Relocate so `import PySide` resolves.
-    if OS.mac?
+    if OS.mac? && (prefix/"MacOS/PySide").exist?
       (prefix/"Ext/PySide").dirname.mkpath
       mv prefix/"MacOS/PySide", prefix/"Ext/PySide"
     end
@@ -542,14 +542,19 @@ class FreecadAT111Py313Qt6 < Formula
   test do
     freecadcmd = OS.mac? ? prefix/"MacOS/FreeCADCmd" : bin/"FreeCADCmd"
     if OS.mac?
-      # getCustomPaths() drops FREECAD_USER_HOME if the dir doesn't already exist
-      # brew test chdirs into a bare testpath, so pre-create it.
-      mkdir_p [
-        testpath/"Library/Application Support/FreeCAD",
-        testpath/"Library/Preferences/FreeCAD",
-        testpath/"Library/Caches/FreeCAD",
-      ]
-      # macos only honors FREECAD_USER_HOME, sort of an upstream bug that should be fixed
+      # FreeCAD's App::ApplicationDirectories::configurePaths() calls
+      # create_directories() on NSHomeDirectory()-derived paths during
+      # initConfig(). NSHomeDirectory() resolves via getpwuid(), so neither
+      # $HOME nor FREECAD_USER_HOME/_USER_DATA/_USER_TEMP redirect it, and a
+      # filesystem_error there escapes to main() -- FreeCAD then reports only
+      # "Unknown runtime error occurred while initializing FreeCAD".
+      #
+      # Homebrew sandboxes build, test and postinstall on macOS, so those
+      # directories cannot be created from this formula. CI pre-creates them
+      # (see the "Pre-create FreeCAD state dirs" step in tests.yml).
+      # Running `brew test` locally on a machine that has never run FreeCAD
+      # will fail until upstream stops treating that failure as fatal.
+      # TODO: file an upstream issue, and possibly a PR that fixes the issue.
       with_env("FREECAD_USER_HOME" => testpath.to_s, "TMPDIR" => testpath.to_s) do
         system freecadcmd, "-t", "0"
       end
