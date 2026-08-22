@@ -10,6 +10,18 @@ class FreecadAT111Py313Qt6 < Formula
     url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.1/freecad_source_1.1.1.tar.gz"
     sha256 "c0e95d41415f1e73bfe2e0a0a28210f649b01ef531bbfed1ed15863950dc5381"
 
+    # fix bld with cam/path wb failing test in test module, ie. test 46/47
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/75d7aeadfc17a28e7830342bce876fd51cf84d79/patches/freecad%401.1.1_py313_qt6-fix-cam-failing-tests.patch?full_index=1"
+      sha256 "0e4821678fa2dc0468a88af0528cf8e6fbf96e9c56aff6ea9937ec043745d3b3"
+    end
+
+    # fix bld with pyside 6.11
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/1c599a2248.patch?full_index=1"
+      sha256 "e4895af708867eb45b4195f3e40eb330108a8fa8081aee5e2e17ff01f06d9f86"
+    end
+
     # fix bld with macos 26 and explicit template arugments
     # https://github.com/FreeCAD/FreeCAD/issues/28983
     patch do
@@ -269,7 +281,7 @@ class FreecadAT111Py313Qt6 < Formula
       cmake_ld = "/Library/Developer/CommandLineTools/usr/bin/ld"
     end
 
-    # TODO: stub out the below cmake vars
+    # NOTE: the below cmake vars can be stubbed out ie. set
     # -DCMAKE_OSX_SYSROOT=#{cmake_osx_sysroot}
     # -DCMAKE_CXX_FLAGS="-fuse-ld=lld"
     # -DBUILD_ENABLE_CXX_STD=C++17 # freecad v1.1.0 now reqs C++20
@@ -319,6 +331,7 @@ class FreecadAT111Py313Qt6 < Formula
       # NOTE: ipatch, linker req because, https://github.com/FreeCAD/homebrew-freecad/issues/546
       linux_linker_flags = "-L#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current " \
                            "-Wl,-rpath,#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current " \
+                           "-L#{formula_opt_lib("tbb")} -ltbb " \
                            "-fuse-ld=lld"
 
       # NOTE: these are keg-only formula thus their libs do not exist in #{hbp}/lib
@@ -328,6 +341,7 @@ class FreecadAT111Py313Qt6 < Formula
       med_lib = formula_opt_lib("med-file@5.0.0_py313")
       netgen_lib = formula_opt_lib("netgen@6.2.2601")
       pyside6_lib = formula_opt_lib("pyside6_py313")
+      vtk_lib = formula_opt_lib("vtk@9.5.2_py313")
 
       args_linux_only = %W[
         -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
@@ -339,7 +353,7 @@ class FreecadAT111Py313Qt6 < Formula
         -DCMAKE_EXE_LINKER_FLAGS=#{linux_linker_flags}
         -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld
         -DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=lld
-        -DCMAKE_INSTALL_RPATH=#{hbp}/lib;#{coin_lib};#{libomp_lib};#{med_lib};#{netgen_lib};#{pyside6_lib}
+        -DCMAKE_INSTALL_RPATH=#{hbp}/lib;#{coin_lib};#{libomp_lib};#{med_lib};#{netgen_lib};#{pyside6_lib};#{vtk_lib}
         -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
       ]
     end
@@ -348,6 +362,9 @@ class FreecadAT111Py313Qt6 < Formula
 
     # NOTE: when build with PCL enabled recent versions of pcl have updated to "imported targets"
     ENV.append "CXXFLAGS", "-isystem #{Formula["flann"].include}"
+
+    # NOTE: tbb circa aug 2026 is giving missing header error ie. blocked_range.h
+    ENV.append "CXXFLAGS", "-isystem #{Formula["tbb"].include}"
 
     args = %W[
       -DHOMEBREW_PREFIX=#{hbp}
@@ -375,6 +392,7 @@ class FreecadAT111Py313Qt6 < Formula
       -DBUILD_WITH_CONDA:BOOL=OFF
 
       -DFREECAD_USE_PCL:BOOL=ON
+      -DVTK_DIR=#{formula_opt_lib("freecad/freecad/vtk@9.5.2_py313")}/cmake/vtk-9.5
 
       -DCMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH=FALSE
       -DCMAKE_FIND_USE_CMAKE_SYSTEM_PATH=FALSE
@@ -383,6 +401,15 @@ class FreecadAT111Py313Qt6 < Formula
 
       -L
     ]
+
+    # NOTE: ipatch, the below vars were required to get cmake to configure freecad on ubuntu 22.04
+    if OS.linux? && File.exist?("/etc/os-release") &&
+       File.read("/etc/os-release").include?('VERSION_ID="22.04"')
+      qt_module_prefixes = %w[qtsvg qttools qtbase].map { |f| formula_opt_prefix(f) }
+      args << "-DQT_ADDITIONAL_PACKAGES_PREFIX_PATH=#{qt_module_prefixes.join(";")}"
+    end
+
+    args << "--debug-find-pkg=VTK"
 
     # TODO: probably requires a separate formula to post_install the freecad py module
     args << "-DINSTALL_TO_SITEPACKAGES=OFF"
@@ -473,6 +500,14 @@ class FreecadAT111Py313Qt6 < Formula
 
   def post_install
     ohai "the value of prefix = #{prefix}"
+
+    # mac bundle drops FreeCAD's PySide shim in MacOS/; FreeCAD's sys.path
+    # expects it in Ext/ (as on Linux). Relocate so `import PySide` resolves.
+    if OS.mac?
+      (prefix/"Ext/PySide").dirname.mkpath
+      mv prefix/"MacOS/PySide", prefix/"Ext/PySide"
+    end
+
     if OS.mac?
       ln_s "#{prefix}/MacOS/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
       ln_s "#{prefix}/MacOS/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
@@ -505,7 +540,27 @@ class FreecadAT111Py313Qt6 < Formula
   end
 
   test do
-    # NOTE: make test more robust and accurate
-    system "true"
+    freecadcmd = OS.mac? ? prefix/"MacOS/FreeCADCmd" : bin/"FreeCADCmd"
+    if OS.mac?
+      # getCustomPaths() drops FREECAD_USER_HOME if the dir doesn't already exist
+      # brew test chdirs into a bare testpath, so pre-create it.
+      mkdir_p [
+        testpath/"Library/Application Support/FreeCAD",
+        testpath/"Library/Preferences/FreeCAD",
+        testpath/"Library/Caches/FreeCAD",
+      ]
+      # macos only honors FREECAD_USER_HOME, sort of an upstream bug that should be fixed
+      with_env("FREECAD_USER_HOME" => testpath.to_s, "TMPDIR" => testpath.to_s) do
+        system freecadcmd, "-t", "0"
+      end
+    else
+      with_env(
+        "FREECAD_USER_HOME" => testpath.to_s,
+        "FREECAD_USER_DATA" => testpath.to_s,
+        "FREECAD_USER_TEMP" => testpath.to_s,
+      ) do
+        system freecadcmd, "-t", "0"
+      end
+    end
   end
 end
