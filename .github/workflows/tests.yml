@@ -289,6 +289,23 @@ jobs:
         run: |
           brew install --formula python@3.14 python@3.13 python@3.12 || true
 
+      - name: pre-create FreeCAD dirs on macos to allow test suite to run
+        if: runner.os == 'macOS'
+        run: |
+          # FreeCAD's App::ApplicationDirectories::configurePaths() calls
+          # create_directories() on NSHomeDirectory()-derived paths during
+          # initConfig(). It ignores $HOME/FREECAD_USER_HOME, and the
+          # resulting filesystem_error escapes to main(), so any FreeCADCmd
+          # invocation aborts. Homebrew sandboxes build, test, and postinstall
+          # on macOS, so this cannot be done from the formula.
+          # TODO: file an upstream issue, ie. https://github.com/freecad/freecad/issues
+          # NOTE: the below variable will have to be defined / set more robustly
+          # due to new version scheme in the next freecad release ie. freecad v26.x
+          V=v1-1
+          mkdir -p ~/Library/Caches/FreeCAD/$V \
+                   ~/Library/Preferences/FreeCAD/$V \
+                   ~/Library/"Application Support"/FreeCAD/$V
+
       - name: build bottle using test-bot for current formula
         id: build-bottle
         env:
