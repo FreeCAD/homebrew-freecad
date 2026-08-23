@@ -142,7 +142,6 @@ class FreecadAT111Py313Qt6 < Formula
   depends_on "libomp"
   depends_on "libx11" if OS.linux?
   depends_on "llvm" if OS.linux?
-  depends_on macos: :ventura # because qt v6
   depends_on "mesa" if OS.linux?
   depends_on "mesa-glu" if OS.linux?
   depends_on "nlohmann-json"
@@ -159,12 +158,15 @@ class FreecadAT111Py313Qt6 < Formula
   depends_on "qtsvg"
   depends_on "qttools"
   depends_on "tbb"
-  depends_on "vtk" # upstream homebrew-core vtk indirect link due to pcl
+  depends_on "vtk"
   depends_on "vulkan-headers"
   depends_on "webp"
   depends_on "xerces-c"
   depends_on "yaml-cpp"
   depends_on "zlib-ng-compat"
+  on_macos do
+    depends_on macos: :ventura # because qt v6
+  end
 
   def install
     hbp = HOMEBREW_PREFIX
