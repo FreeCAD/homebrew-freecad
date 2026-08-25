@@ -23,10 +23,10 @@ class FreecadAT113Py313Qt6 < Formula
     #---
 
     # fix bld with cam/path wb failing test in test module, ie. test 46/47
-    # patch do
-    #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/75d7aeadfc17a28e7830342bce876fd51cf84d79/patches/freecad%401.1.1_py313_qt6-fix-cam-failing-tests.patch?full_index=1"
-    #   sha256 "0e4821678fa2dc0468a88af0528cf8e6fbf96e9c56aff6ea9937ec043745d3b3"
-    # end
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/75d7aeadfc17a28e7830342bce876fd51cf84d79/patches/freecad%401.1.1_py313_qt6-fix-cam-failing-tests.patch?full_index=1"
+      sha256 "0e4821678fa2dc0468a88af0528cf8e6fbf96e9c56aff6ea9937ec043745d3b3"
+    end
 
     # fix bld with macos 26 and explicit template arugments
     # https://github.com/FreeCAD/FreeCAD/issues/28983
@@ -59,6 +59,12 @@ class FreecadAT113Py313Qt6 < Formula
 
   head do
     url "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
+
+    # fix bld with cam/path wb failing test in test module, ie. test 46/47
+    patch do
+      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/75d7aeadfc17a28e7830342bce876fd51cf84d79/patches/freecad%401.1.1_py313_qt6-fix-cam-failing-tests.patch?full_index=1"
+      sha256 "0e4821678fa2dc0468a88af0528cf8e6fbf96e9c56aff6ea9937ec043745d3b3"
+    end
 
     # fix bld with macos 26 and explicit template arugments
     # https://github.com/FreeCAD/FreeCAD/issues/28983
