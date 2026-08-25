@@ -6,9 +6,17 @@ class FreecadAT113Py313Qt6 < Formula
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
 
+  PY_VER = "3.13".freeze
+  VERSION_COMMIT_REF = "145529fe74".freeze
+  VERSION_COMMIT_DATE = "2026-07-25 00:52:02 -0400".freeze
+
   stable do
     url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/freecad_source_1.1.3.tar.gz"
     sha256 "4813a5cd12be05253cd40cc1dc3995b1aaa1aa06f7dfbc15c7ffa99c1c3903b7"
+
+    # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
+    # run `brew cleanup` when editing local patch files on each subsequent `brew install`
+    #---
 
     # fix bld with cam/path wb failing test in test module, ie. test 46/47
     # patch do
@@ -45,7 +53,7 @@ class FreecadAT113Py313Qt6 < Formula
     #     url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/0e3bdef3b239a1f81e07bf774ae799819f3cea90/patches/freecad%401.0.0_py312-linuxbrew-fix-missing-headers.patch"
     #     sha256 "7c7e0376e676096d32bbf05e23ab10556e50ef54effff7777d325bda490dde11"
     #   end
-    end
+    # end
 
     # NOTE: ipatch, building rc2 >= tags of freecad require resource blocks due to the use of git submodules
     resource "ondselsolver" do
@@ -62,25 +70,12 @@ class FreecadAT113Py313Qt6 < Formula
       url "https://github.com/microsoft/GSL/archive/refs/tags/v4.1.0.tar.gz"
       sha256 "0a227fc9c8e0bf25115f401b9a46c2a68cd28f299d24ab195284eb3f1d7794bd"
     end
+
+    resource "addonmanager" do
+      url "https://github.com/freecad/addonmanager/archive/937b6877239dc78ef59eeefe8099e5f14243eda1.tar.gz"
+      sha256 "70b2fa7f3c58c0ea5be830de90d33369670ee6658f13aeb7684f1ea478528178"
+    end
   end
-
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    rebuild 2
-    sha256 cellar: :any, arm64_tahoe:   "34a8ba1f7cbb38493b658b08c45ff6cd81ee68eb91b4dcd907da4bcd2f511d64"
-    sha256 cellar: :any, arm64_sequoia: "3673828df08b287d0d0ff8efe2f243a6f5297e8073f40f7a2e9cf2e2568f0e36"
-    sha256 cellar: :any, arm64_sonoma:  "da36bb6702cd9c1b95f89052d5afad33cd30133a79f65c1588505f704fc24ebc"
-    sha256               arm64_linux:   "a58e96f815133cc9357c5c34653c423b5118e49cead32542bd437018a8d9b901"
-    sha256               x86_64_linux:  "7835b68259528a53b6eaad1c7e004edd96f31c8241393e7034c7fc133ffd3da4"
-  end
-
-  PY_VER = "3.13".freeze
-  VERSION_COMMIT_REF = "0108fd4b48".freeze
-  VERSION_COMMIT_DATE = "2026-04-14 19:09:59 -0300".freeze
-
-  # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
-  # run `brew cleanup` when editing local patch files on each subsequent `brew install`
-  #---
 
   head do
     url "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
@@ -93,10 +88,10 @@ class FreecadAT113Py313Qt6 < Formula
     end
 
     # fix bld with qt v6.11
-    patch do
-      url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
-      sha256 "0dc578332bb051d259d77773362f3d6e0daf7be9c764cc3e6d6adf29f4658a93"
-    end
+    # patch do
+    #   url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
+    #   sha256 "0dc578332bb051d259d77773362f3d6e0daf7be9c764cc3e6d6adf29f4658a93"
+    # end
 
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/1fde4f693950d77e8617c08921d50c1aba3f0a56/patches/freecad-0.20.2-cmake-find-xercesc.patch"
@@ -194,7 +189,7 @@ class FreecadAT113Py313Qt6 < Formula
     puts "PYTHON_INCLUDE_DIR=#{py_inc_dir}"
     puts "PYTHON_LIBRARY=#{py_lib_path}"
 
-    # NOTE: apple's clang & clang++ don not provide batteries for open-mpi
+    # NOTE: apple's clang & clang++ do not provide batteries for open-mpi
     # NOTE: when setting the compilers to brews' llvm, set the cmake_ar linker as well
     # ENV["CC"] = Formula["llvm"].opt_bin/"clang"
     # ENV["CXX"] = Formula["llvm"].opt_bin/"clang++"
@@ -413,9 +408,8 @@ class FreecadAT113Py313Qt6 < Formula
       args << "-DQT_ADDITIONAL_PACKAGES_PREFIX_PATH=#{qt_module_prefixes.join(";")}"
     end
 
-    args << "--debug-find-pkg=VTK"
-
     # TODO: probably requires a separate formula to post_install the freecad py module
+    #...or some sort of post install step
     args << "-DINSTALL_TO_SITEPACKAGES=OFF"
 
     # NOTE: useful cmake debugging args
@@ -433,14 +427,15 @@ class FreecadAT113Py313Qt6 < Formula
     resource("googletest").stage(buildpath/"tests/lib")
     resource("msgsl").stage(buildpath/"src/3rdParty/GSL")
     resource("ondselsolver").stage(buildpath/"src/3rdParty/OndselSolver")
+    resource("addonmanager").stage(buildpath/"src/3rdParty/AddonManager")
 
     args.concat(args_macos_only) if OS.mac?
     args.concat(args_linux_only) if OS.linux?
 
     # populate version info lost from tarball ie. because not .git dir
     # NOTE: run the below 2 cmds in the git clone of the fc src dir
-    # 1. `git rev-parse --short 1.1.0` wcref
-    # 2. `git log -1 --format=%ci 1.1.0` wcdate
+    # 1. `git rev-parse --short 1.1.3` wcref
+    # 2. `git log -1 --format=%ci 1.1.3` wcdate
     inreplace buildpath/"src/Build/Version.h.cmake" do |s|
       s.gsub!(/^(#define FCRevision\s+").*(".*$)/, "\\1#{VERSION_COMMIT_REF}\\2")
       s.gsub!(/^(#define FCRevisionDate\s+").*(".*$)/, "\\1#{VERSION_COMMIT_DATE}\\2")
