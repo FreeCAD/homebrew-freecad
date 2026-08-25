@@ -409,7 +409,7 @@ class FreecadAT113Py313Qt6 < Formula
     end
 
     # TODO: probably requires a separate formula to post_install the freecad py module
-    #...or some sort of post install step
+    # ...or some sort of post install step
     args << "-DINSTALL_TO_SITEPACKAGES=OFF"
 
     # NOTE: useful cmake debugging args
