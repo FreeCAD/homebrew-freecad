@@ -48,13 +48,6 @@ class FreecadAT113Py313Qt6 < Formula
     #   sha256 "adb30f5d723672d1d54db4a236bce8a85e9bc9d0667ef88a7360e4cae1bb27c9"
     # end
 
-    # patch do
-    #   on_linux do
-    #     url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/0e3bdef3b239a1f81e07bf774ae799819f3cea90/patches/freecad%401.0.0_py312-linuxbrew-fix-missing-headers.patch"
-    #     sha256 "7c7e0376e676096d32bbf05e23ab10556e50ef54effff7777d325bda490dde11"
-    #   end
-    # end
-
     # NOTE: ipatch, building rc2 >= tags of freecad require resource blocks due to the use of git submodules
     resource "ondselsolver" do
       url "https://github.com/FreeCAD/OndselSolver/archive/30e9b64e8bf881d438d4b88834f9ba3674865418.tar.gz"
@@ -96,13 +89,6 @@ class FreecadAT113Py313Qt6 < Formula
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/1fde4f693950d77e8617c08921d50c1aba3f0a56/patches/freecad-0.20.2-cmake-find-xercesc.patch"
       sha256 "adb30f5d723672d1d54db4a236bce8a85e9bc9d0667ef88a7360e4cae1bb27c9"
-    end
-
-    patch do
-      on_linux do
-        url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/0e3bdef3b239a1f81e07bf774ae799819f3cea90/patches/freecad%401.0.0_py312-linuxbrew-fix-missing-headers.patch"
-        sha256 "7c7e0376e676096d32bbf05e23ab10556e50ef54effff7777d325bda490dde11"
-      end
     end
   end
 
