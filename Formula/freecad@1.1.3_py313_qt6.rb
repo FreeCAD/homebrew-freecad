@@ -1,26 +1,26 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileNotice: Part of the FreeCAD project.
 
-class FreecadAT111Py313Qt6 < Formula
+class FreecadAT113Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
 
   stable do
-    url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.1/freecad_source_1.1.1.tar.gz"
-    sha256 "c0e95d41415f1e73bfe2e0a0a28210f649b01ef531bbfed1ed15863950dc5381"
+    url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/freecad_source_1.1.3.tar.gz"
+    sha256 "4813a5cd12be05253cd40cc1dc3995b1aaa1aa06f7dfbc15c7ffa99c1c3903b7"
 
     # fix bld with cam/path wb failing test in test module, ie. test 46/47
-    patch do
-      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/75d7aeadfc17a28e7830342bce876fd51cf84d79/patches/freecad%401.1.1_py313_qt6-fix-cam-failing-tests.patch?full_index=1"
-      sha256 "0e4821678fa2dc0468a88af0528cf8e6fbf96e9c56aff6ea9937ec043745d3b3"
-    end
+    # patch do
+    #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/75d7aeadfc17a28e7830342bce876fd51cf84d79/patches/freecad%401.1.1_py313_qt6-fix-cam-failing-tests.patch?full_index=1"
+    #   sha256 "0e4821678fa2dc0468a88af0528cf8e6fbf96e9c56aff6ea9937ec043745d3b3"
+    # end
 
     # fix bld with pyside 6.11
-    patch do
-      url "https://github.com/FreeCAD/FreeCAD/commit/1c599a2248.patch?full_index=1"
-      sha256 "e4895af708867eb45b4195f3e40eb330108a8fa8081aee5e2e17ff01f06d9f86"
-    end
+    # patch do
+    #   url "https://github.com/FreeCAD/FreeCAD/commit/1c599a2248.patch?full_index=1"
+    #   sha256 "e4895af708867eb45b4195f3e40eb330108a8fa8081aee5e2e17ff01f06d9f86"
+    # end
 
     # fix bld with macos 26 and explicit template arugments
     # https://github.com/FreeCAD/FreeCAD/issues/28983
@@ -30,21 +30,21 @@ class FreecadAT111Py313Qt6 < Formula
     end
 
     # fix bld with qt v6.11
-    patch do
-      url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
-      sha256 "0dc578332bb051d259d77773362f3d6e0daf7be9c764cc3e6d6adf29f4658a93"
-    end
+    # patch do
+    #   url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
+    #   sha256 "0dc578332bb051d259d77773362f3d6e0daf7be9c764cc3e6d6adf29f4658a93"
+    # end
 
-    patch do
-      url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/1fde4f693950d77e8617c08921d50c1aba3f0a56/patches/freecad-0.20.2-cmake-find-xercesc.patch"
-      sha256 "adb30f5d723672d1d54db4a236bce8a85e9bc9d0667ef88a7360e4cae1bb27c9"
-    end
+    # patch do
+    #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/1fde4f693950d77e8617c08921d50c1aba3f0a56/patches/freecad-0.20.2-cmake-find-xercesc.patch"
+    #   sha256 "adb30f5d723672d1d54db4a236bce8a85e9bc9d0667ef88a7360e4cae1bb27c9"
+    # end
 
-    patch do
-      on_linux do
-        url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/0e3bdef3b239a1f81e07bf774ae799819f3cea90/patches/freecad%401.0.0_py312-linuxbrew-fix-missing-headers.patch"
-        sha256 "7c7e0376e676096d32bbf05e23ab10556e50ef54effff7777d325bda490dde11"
-      end
+    # patch do
+    #   on_linux do
+    #     url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/0e3bdef3b239a1f81e07bf774ae799819f3cea90/patches/freecad%401.0.0_py312-linuxbrew-fix-missing-headers.patch"
+    #     sha256 "7c7e0376e676096d32bbf05e23ab10556e50ef54effff7777d325bda490dde11"
+    #   end
     end
 
     # NOTE: ipatch, building rc2 >= tags of freecad require resource blocks due to the use of git submodules
