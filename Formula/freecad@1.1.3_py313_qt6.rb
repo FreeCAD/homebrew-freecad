@@ -6,6 +6,10 @@ class FreecadAT113Py313Qt6 < Formula
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
 
+  # populate version info lost from tarball ie. because not .git dir
+  # NOTE: run the below 2 cmds in the git clone of the fc src dir
+  # 1. `git rev-parse --short 1.1.3` wcref
+  # 2. `git log -1 --format=%ci 1.1.3` wcdate
   PY_VER = "3.13".freeze
   VERSION_COMMIT_REF = "145529fe74".freeze
   VERSION_COMMIT_DATE = "2026-07-25 00:52:02 -0400".freeze
@@ -24,28 +28,11 @@ class FreecadAT113Py313Qt6 < Formula
     #   sha256 "0e4821678fa2dc0468a88af0528cf8e6fbf96e9c56aff6ea9937ec043745d3b3"
     # end
 
-    # fix bld with pyside 6.11
-    # patch do
-    #   url "https://github.com/FreeCAD/FreeCAD/commit/1c599a2248.patch?full_index=1"
-    #   sha256 "e4895af708867eb45b4195f3e40eb330108a8fa8081aee5e2e17ff01f06d9f86"
-    # end
-
     # fix bld with macos 26 and explicit template arugments
     # https://github.com/FreeCAD/FreeCAD/issues/28983
     # patch do
     #   url "https://github.com/FreeCAD/FreeCAD/commit/7c57a764ccd8258fa6bc2b5dfbcead00976c0e94.patch?full_index=1"
     #   sha256 "0a1a00cdbe96eac06ed757c69b23225632d036d97dd472410e04e8736bd6547d"
-    # end
-
-    # fix bld with qt v6.11
-    # patch do
-    #   url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
-    #   sha256 "0dc578332bb051d259d77773362f3d6e0daf7be9c764cc3e6d6adf29f4658a93"
-    # end
-
-    # patch do
-    #   url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/1fde4f693950d77e8617c08921d50c1aba3f0a56/patches/freecad-0.20.2-cmake-find-xercesc.patch"
-    #   sha256 "adb30f5d723672d1d54db4a236bce8a85e9bc9d0667ef88a7360e4cae1bb27c9"
     # end
 
     # NOTE: ipatch, building rc2 >= tags of freecad require resource blocks due to the use of git submodules
@@ -79,12 +66,6 @@ class FreecadAT113Py313Qt6 < Formula
       url "https://github.com/FreeCAD/FreeCAD/commit/7c57a764ccd8258fa6bc2b5dfbcead00976c0e94.patch?full_index=1"
       sha256 "0a1a00cdbe96eac06ed757c69b23225632d036d97dd472410e04e8736bd6547d"
     end
-
-    # fix bld with qt v6.11
-    # patch do
-    #   url "https://github.com/FreeCAD/FreeCAD/commit/3afc58c6be7a6441e91bf474755edf78880beb1f.patch?full_index=1"
-    #   sha256 "0dc578332bb051d259d77773362f3d6e0daf7be9c764cc3e6d6adf29f4658a93"
-    # end
 
     patch do
       url "https://raw.githubusercontent.com/FreeCAD/homebrew-freecad/1fde4f693950d77e8617c08921d50c1aba3f0a56/patches/freecad-0.20.2-cmake-find-xercesc.patch"
@@ -345,6 +326,9 @@ class FreecadAT113Py313Qt6 < Formula
 
     ninja_bin = formula_opt_bin("ninja")/"ninja"
 
+    # bld err w/ 1.1.3 tarball due to SoFCOffscreenRenderer.cpp
+    ENV.append "CXXFLAGS", "-isystem #{Formula["mesa-glu"].include}"
+
     # NOTE: when build with PCL enabled recent versions of pcl have updated to "imported targets"
     ENV.append "CXXFLAGS", "-isystem #{Formula["flann"].include}"
 
@@ -418,10 +402,6 @@ class FreecadAT113Py313Qt6 < Formula
     args.concat(args_macos_only) if OS.mac?
     args.concat(args_linux_only) if OS.linux?
 
-    # populate version info lost from tarball ie. because not .git dir
-    # NOTE: run the below 2 cmds in the git clone of the fc src dir
-    # 1. `git rev-parse --short 1.1.3` wcref
-    # 2. `git log -1 --format=%ci 1.1.3` wcdate
     inreplace buildpath/"src/Build/Version.h.cmake" do |s|
       s.gsub!(/^(#define FCRevision\s+").*(".*$)/, "\\1#{VERSION_COMMIT_REF}\\2")
       s.gsub!(/^(#define FCRevisionDate\s+").*(".*$)/, "\\1#{VERSION_COMMIT_DATE}\\2")
