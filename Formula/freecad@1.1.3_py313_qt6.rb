@@ -6,6 +6,15 @@ class FreecadAT113Py313Qt6 < Formula
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, arm64_tahoe:   "7b3dfce7b133a9f68e57b1bc633bd07c58329c659b13416417af33118bcc8fb0"
+    sha256 cellar: :any, arm64_sequoia: "a861cf79a83fe9b9832091f3ace76b2e5d64418a2609242bc7fbfe3ceb4ad9b9"
+    sha256 cellar: :any, arm64_sonoma:  "0fe29cc647f26c739425c3cd01cac7454e0f7415a5c37e4dce67a0f9f0b77b96"
+    sha256               arm64_linux:   "5a4ec2946d48ba4bf3a08bb6bfdce28a4dd52d57f0860e17a1754e847c8c88b3"
+    sha256               x86_64_linux:  "aa7c257dc2a7e517572e6b588c3c205a05171aab45b17047571ebf76c85a5080"
+  end
+
   # populate version info lost from tarball ie. because not .git dir
   # NOTE: run the below 2 cmds in the git clone of the fc src dir
   # 1. `git rev-parse --short 1.1.3` wcref
