@@ -30,10 +30,10 @@ class FreecadAT113Py313Qt6 < Formula
 
     # fix bld with macos 26 and explicit template arugments
     # https://github.com/FreeCAD/FreeCAD/issues/28983
-    # patch do
-    #   url "https://github.com/FreeCAD/FreeCAD/commit/7c57a764ccd8258fa6bc2b5dfbcead00976c0e94.patch?full_index=1"
-    #   sha256 "0a1a00cdbe96eac06ed757c69b23225632d036d97dd472410e04e8736bd6547d"
-    # end
+    patch do
+      url "https://github.com/FreeCAD/FreeCAD/commit/7c57a764ccd8258fa6bc2b5dfbcead00976c0e94.patch?full_index=1"
+      sha256 "0a1a00cdbe96eac06ed757c69b23225632d036d97dd472410e04e8736bd6547d"
+    end
 
     # NOTE: ipatch, building rc2 >= tags of freecad require resource blocks due to the use of git submodules
     resource "ondselsolver" do
