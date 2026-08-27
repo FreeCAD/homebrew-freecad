@@ -10,7 +10,7 @@ class FcBundlePy313Qt6 < Formula
   version "1.1.1"
   # sha of file:///dev/null
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 8
+  revision 9
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -77,6 +77,13 @@ class FcBundlePy313Qt6 < Formula
     sha256 "b8a1eae79e86021624b43484bd07cb318ee83aa5f4ed4c3044dcfdcea63b07fe"
   end
 
+  # NOTE: added due to issue, https://github.com/freecad/homebrew-freecad/issues/854
+  # Last tagged release (2023.01.11) predates scikit-build-core 1.0
+  resource "opencamlib" do
+    url "https://github.com/aewallin/opencamlib.git",
+      revisison: "95b036fe28ce6d77c97b98e5fbc337904ae49560"
+  end
+
   resource "ply" do
     url "https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz"
     sha256 "00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3"
@@ -134,6 +141,14 @@ class FcBundlePy313Qt6 < Formula
       resource(pkg).stage do
         system venv_pip, "install", "."
       end
+    end
+
+    # opencamlib's pyproject.toml still uses the pre-0.10 scikit-build-core key
+    # names (cmake.verbose et al), which 1.0 turned into hard errors. Pin the
+    # build backend to the last series that accepts them.
+    resource("opencamlib").stage do
+      inreplace "pyproject.toml", /["']scikit-build-core[^"']*["']/, '"scikit-build-core<1.0"'
+      system venv_pip, "install", "."
     end
 
     resource("pynastran").stage do
