@@ -10,7 +10,7 @@ class FcBundlePy313Qt6 < Formula
   version "1.1.1"
   # sha of file:///dev/null
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 8
+  revision 9
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -23,16 +23,22 @@ class FcBundlePy313Qt6 < Formula
 
   depends_on "patchelf" => :build
   depends_on "pkgconf" => :build
+  depends_on "boost"
   depends_on "ffmpeg"
+  depends_on "freecad/freecad/boost-python3@1.92_py313"
   depends_on "freecad/freecad/coin3d@4.0.8_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
   depends_on "freecad/freecad/netgen@6.2.2601"
   depends_on "freecad/freecad/pyside6_py313" # pyside includes the shiboken module as well
   depends_on "freecad/freecad/vtk@9.5.2_py313"
+  depends_on "freetype" # req'd by matplotlib
   depends_on "geos"
+  depends_on "libomp"
   depends_on "libyaml"
+  depends_on "llvm" if OS.linux?
   depends_on "numpy"
   depends_on "pybind11" # req'd by pyyaml
+  depends_on "qhull" # req'd by matplotlib
   depends_on "webp" if OS.linux?
   depends_on "zlib-ng-compat" if OS.linux?
 
@@ -75,6 +81,13 @@ class FcBundlePy313Qt6 < Formula
   resource "matplotlib" do
     url "https://github.com/matplotlib/matplotlib/archive/refs/tags/v3.11.1.tar.gz"
     sha256 "b8a1eae79e86021624b43484bd07cb318ee83aa5f4ed4c3044dcfdcea63b07fe"
+  end
+
+  # NOTE: added due to issue, https://github.com/freecad/homebrew-freecad/issues/854
+  # Last tagged release (2023.01.11) predates scikit-build-core 1.0
+  resource "opencamlib" do
+    url "https://github.com/aewallin/opencamlib.git",
+      revision: "95b036fe28ce6d77c97b98e5fbc337904ae49560"
   end
 
   resource "ply" do
@@ -130,10 +143,30 @@ class FcBundlePy313Qt6 < Formula
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
     # setup and install lark ply six
-    %w[av defusedxml matplotlib lark ply pyyaml six typing-extensions].each do |pkg|
+    %w[av defusedxml lark ply pyyaml six typing-extensions].each do |pkg|
       resource(pkg).stage do
         system venv_pip, "install", "."
       end
+    end
+
+    resource("matplotlib").stage do
+      # NOTE: added the below because matplotlib vendors harfbuzz can not use brew provided
+      ENV["CXXFLAGS"] = "#{ENV["CXXFLAGS"]} -DHB_NO_PRAGMA_GCC_DIAGNOSTIC_ERROR"
+      system venv_pip, "install", ".",
+        "--config-settings=setup-args=-Dsystem-freetype=true",
+        "--config-settings=setup-args=-Dsystem-qhull=true"
+    end
+
+    # opencamlib's pyproject.toml still uses the pre-0.10 scikit-build-core key
+    # names (cmake.verbose et al), which 1.0 turned into hard errors. Pin the
+    # build backend to the last series that accepts them.
+    resource("opencamlib").stage do
+      inreplace "pyproject.toml", /["']scikit-build-core[^"']*["']/, '"scikit-build-core<1.0"'
+      if OS.linux?
+        # NOTE: another possible fix, use `-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF`
+        ENV.prepend_path "PATH", formula_opt_bin("llvm")
+      end
+      system venv_pip, "install", "."
     end
 
     resource("pynastran").stage do
@@ -173,6 +206,21 @@ class FcBundlePy313Qt6 < Formula
         new_rpath = [zlib_lib, existing_rpath].reject(&:empty?).join(":")
         system "patchelf", "--set-rpath", new_rpath, so
       end
+
+      # fix rpath related issues with opencamlib
+      omp_lib = Dir[
+        formula_opt_lib("llvm")/"libomp.so",
+        formula_opt_lib("llvm")/"*/libomp.so",
+      ].first
+      odie "libomp.so not found under llvm" if omp_lib.nil?
+      omp_dir = File.dirname(omp_lib)
+
+      ocl_so = Dir[venv_dir/"lib/python#{pyver}/site-packages/opencamlib/ocl*.so"].first
+      if ocl_so
+        existing = Utils.safe_popen_read("patchelf", "--print-rpath", ocl_so).strip
+        new_rpath = [omp_dir, existing].reject(&:empty?).join(":")
+        system "patchelf", "--set-rpath", new_rpath, ocl_so
+      end
     end
 
     # Example: Read the contents of the .pth file into a variable
@@ -209,7 +257,7 @@ class FcBundlePy313Qt6 < Formula
   def caveats
     <<-EOS
     this formula is required to get necessary python runtime deps
-    working with freecad ie. freecad@1.0.2_py313_qt6
+    working with freecad ie. freecad@1.1.3_py313_qt6
     EOS
   end
 
