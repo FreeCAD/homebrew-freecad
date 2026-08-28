@@ -149,13 +149,9 @@ class FcBundlePy313Qt6 < Formula
     # build backend to the last series that accepts them.
     resource("opencamlib").stage do
       inreplace "pyproject.toml", /["']scikit-build-core[^"']*["']/, '"scikit-build-core<1.0"'
-      # args = []
       if OS.linux?
-        ENV["AR"] = "#{formula_opt_bin("llvm")}/llvm-ar"
-        ENV["RANLIB"] = "#{formula_opt_bin("llvm")}/llvm-ranlib"
         # NOTE: another possible fix, use `-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF`
-        # args << "--config-settings=cmake.define.CMAKE_AR=#{formula_opt_bin("llvm")}/llvm-ar"
-        # args << "--config-settings=cmake.define.CMAKE_RANLIB=#{formula_opt_bin("llvm")}/llvm-ranlib"
+        ENV.prepend_path "PATH", formula_opt_bin("llvm")
       end
       system venv_pip, "install", "."
     end
@@ -233,7 +229,7 @@ class FcBundlePy313Qt6 < Formula
   def caveats
     <<-EOS
     this formula is required to get necessary python runtime deps
-    working with freecad ie. freecad@1.0.2_py313_qt6
+    working with freecad ie. freecad@1.1.3_py313_qt6
     EOS
   end
 
