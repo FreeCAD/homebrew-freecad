@@ -9,6 +9,15 @@ class BoostPython3AT192Py313 < Formula
   livecheck do
     formula "boost"
   end
+
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, arm64_tahoe:   "e82fd2b9b770b4c774aeb679070e9a4bae082421b426b6340a1aa0d9ca20cc95"
+    sha256 cellar: :any, arm64_sequoia: "45f1fa23ac28ba5091f93461ee23d9fa6ac536ce622b61c4f7d6e0e7e170a327"
+    sha256 cellar: :any, arm64_sonoma:  "9fee1388e95f5fd03feeaf1ed5f8e42189159686b38fa0d84b62db76f9d51c6e"
+    sha256 cellar: :any, arm64_linux:   "28eabe25d39390f469af8802b769ad51f0e4c7e75d80fe3382ed296e34b92ebc"
+    sha256 cellar: :any, x86_64_linux:  "324f45e48a0052b09164f151e0dc14763ed73f19537d0255f711a5ba27d85a42"
+  end
   keg_only :versioned_formula
   depends_on "numpy" => :build
   depends_on "boost"
