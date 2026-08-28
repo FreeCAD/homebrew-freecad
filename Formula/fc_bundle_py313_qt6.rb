@@ -82,7 +82,7 @@ class FcBundlePy313Qt6 < Formula
   # Last tagged release (2023.01.11) predates scikit-build-core 1.0
   resource "opencamlib" do
     url "https://github.com/aewallin/opencamlib.git",
-      revisison: "95b036fe28ce6d77c97b98e5fbc337904ae49560"
+      revision: "95b036fe28ce6d77c97b98e5fbc337904ae49560"
   end
 
   resource "ply" do
