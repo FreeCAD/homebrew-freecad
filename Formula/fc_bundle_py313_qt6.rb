@@ -32,6 +32,7 @@ class FcBundlePy313Qt6 < Formula
   depends_on "freecad/freecad/vtk@9.5.2_py313"
   depends_on "geos"
   depends_on "libyaml"
+  depends_on "llvm" if OS.linux?
   depends_on "numpy"
   depends_on "pybind11" # req'd by pyyaml
   depends_on "webp" if OS.linux?
@@ -192,6 +193,18 @@ class FcBundlePy313Qt6 < Formula
 
         new_rpath = [zlib_lib, existing_rpath].reject(&:empty?).join(":")
         system "patchelf", "--set-rpath", new_rpath, so
+      end
+
+      # fix rpath related issues with opencamlib
+      omp_dir = Dir[formula_opt_lib("llvm")/"*/libomp.so"].first
+      odie "libomp.so not found under llvm" if omp_dir.nil?
+      omp_dir = File.dirname(omp_dir)
+
+      ocl_so = Dir[venv_dir/"lib/python#{pyver}/site-packages/opencamlib/ocl*.so"].first
+      if ocl_so
+        existing = Utils.safe_popen_read("patchelf", "--print-rpath", ocl_so).strip
+        new_rpath = [omp_dir, existing].reject(&:empty?).join(":")
+        system "patchelf", "--set-rpath", new_rpath, ocl_so
       end
     end
 
