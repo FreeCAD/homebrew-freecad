@@ -162,7 +162,8 @@ class VtkAT952Py313 < Formula
       }
     CPP
 
-    system "cmake", ".", "-DCMAKE_BUILD_TYPE=RelWithDebInfo", "-DCMAKE_VERBOSE_MAKEFILE=ON", "-DVTK_DIR=#{vtk_dir}"
+    system "cmake", "-S", ".", "-B", ".", "-DCMAKE_BUILD_TYPE=RelWithDebInfo", "-DCMAKE_VERBOSE_MAKEFILE=ON",
+"-DVTK_DIR=#{vtk_dir}"
     system "make"
     system "./Distance2BetweenPoints"
 

@@ -27,7 +27,7 @@ class Ondselsolver < Formula
     cd buildpath do
       build_dir = File.join(Dir.pwd, "build")
       mkdir build_dir do
-        system "cmake", "..", "-L", *std_cmake_args
+        system "cmake", "-S", "..", "-B", ".", "-L", *std_cmake_args
         system "cmake", "--build", build_dir.to_s
         system "cmake", "--install", build_dir.to_s
       end
