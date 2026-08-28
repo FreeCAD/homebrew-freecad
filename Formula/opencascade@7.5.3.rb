@@ -41,7 +41,7 @@ class OpencascadeAT753 < Formula
 
   def install
     tcltk = Formula["tcl-tk"]
-    system "cmake", ".",
+    system "cmake", "-S", ".", "-B", ".",
                     "-DUSE_FREEIMAGE=ON",
                     "-DUSE_RAPIDJSON=ON",
                     "-DUSE_TBB=ON",

@@ -23,7 +23,7 @@ class OpencascadeAT750 < Formula
   depends_on "tbb"
 
   def install
-    system "cmake", ".",
+    system "cmake", "-S", ".", "-B", ".",
                     "-DUSE_FREEIMAGE=ON",
                     "-DUSE_RAPIDJSON=ON",
                     "-DUSE_TBB=ON",
