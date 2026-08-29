@@ -23,6 +23,7 @@ class FcBundlePy313Qt6 < Formula
 
   depends_on "patchelf" => :build
   depends_on "pkgconf" => :build
+  depends_on "boost"
   depends_on "ffmpeg"
   depends_on "freecad/freecad/boost-python3@1.92_py313"
   depends_on "freecad/freecad/coin3d@4.0.8_py313_qt6"
