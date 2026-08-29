@@ -6,6 +6,7 @@ class BoostPython3AT192Py313 < Formula
   license "BSL-1.0"
   compatibility_version 2
   head "https://github.com/boostorg/boost.git", branch: "master"
+
   livecheck do
     formula "boost"
   end
@@ -18,10 +19,13 @@ class BoostPython3AT192Py313 < Formula
     sha256 cellar: :any, arm64_linux:   "28eabe25d39390f469af8802b769ad51f0e4c7e75d80fe3382ed296e34b92ebc"
     sha256 cellar: :any, x86_64_linux:  "324f45e48a0052b09164f151e0dc14763ed73f19537d0255f711a5ba27d85a42"
   end
+
   keg_only :versioned_formula
+
   depends_on "numpy" => :build
   depends_on "boost"
   depends_on "python@3.13"
+
   def python3
     "python3.13"
   end
@@ -43,9 +47,11 @@ class BoostPython3AT192Py313 < Formula
     # handling using ENV.cxx14. Using "cxxflags" and "linkflags" still works.
     args << "cxxflags=-std=c++14"
     args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++" if ENV.compiler == :clang
+
     # Avoid linkage to boost container and graph modules
     # Issue ref: https://github.com/boostorg/boost/issues/985
     args << "linkflags=-Wl,-dead_strip_dylibs" if OS.mac?
+
     # disable python detection in bootstrap.sh; it guesses the wrong include
     # directory for Python 3 headers, so we configure python manually in
     # user-config.jam below.
@@ -56,6 +62,7 @@ class BoostPython3AT192Py313 < Formula
     else
       formula_opt_prefix("python@#{pyver}")
     end
+
     # Force boost to compile with the desired compiler
     (buildpath/"user-config.jam").write <<~EOS
       using #{OS.mac? ? "darwin" : "gcc"} : : #{ENV.cxx} ;
@@ -64,24 +71,37 @@ class BoostPython3AT192Py313 < Formula
                    : #{py_prefix}/include/python#{pyver}
                    : #{py_prefix}/lib ;
     EOS
+
     system "./bootstrap.sh", "--prefix=#{prefix}",
       "--libdir=#{lib}",
       "--with-libraries=python",
       "--with-python=#{python3}",
       "--with-python-root=#{py_prefix}"
+
     system "./b2", "--build-dir=build-python3",
       "--stagedir=stage-python3",
       "--libdir=install-python3/lib",
       "--prefix=install-python3",
       "python=#{pyver}",
       *args
+
     lib.install buildpath.glob("install-python3/lib/*{python,numpy}*")
     (lib/"cmake").install buildpath.glob("install-python3/lib/cmake/*{python,numpy}*")
+
     # Fix the path to headers installed in `boost` formula
     cmake_configs = lib.glob("cmake/boost_{python,numpy}*/boost_{python,numpy}-config.cmake")
     inreplace cmake_configs, '(_BOOST_INCLUDEDIR "${_BOOST_CMAKEDIR}/../../include/" ABSOLUTE)',
       "(_BOOST_INCLUDEDIR \"#{formula_opt_include("boost")}/\" ABSOLUTE)"
+
+    # `boost_python-config.cmake` includes BoostDetectToolset by a path relative
+    # to its own directory, which only resolves when this formula and `boost`
+    # link into the same prefix. This formula is keg-only, so point at the
+    # `boost` keg directly.
+    inreplace cmake_configs,
+      "${CMAKE_CURRENT_LIST_DIR}/../BoostDetectToolset-#{version}.cmake",
+      "#{formula_opt_lib("boost")}/cmake/BoostDetectToolset-#{version}.cmake"
   end
+
   test do
     (testpath/"hello.cpp").write <<~CPP
       #include <boost/python.hpp>
