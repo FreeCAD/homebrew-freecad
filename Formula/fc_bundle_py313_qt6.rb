@@ -153,7 +153,7 @@ class FcBundlePy313Qt6 < Formula
       ENV["CXXFLAGS"] = "#{ENV["CXXFLAGS"]} -DHB_NO_PRAGMA_GCC_DIAGNOSTIC_ERROR"
       system venv_pip, "install", ".",
         "--config-settings=setup-args=-Dsystem-freetype=true",
-        "--config-settings=setup-args=-Dsystem-qhull=true",
+        "--config-settings=setup-args=-Dsystem-qhull=true"
     end
 
     # opencamlib's pyproject.toml still uses the pre-0.10 scikit-build-core key
