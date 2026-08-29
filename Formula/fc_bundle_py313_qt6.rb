@@ -23,6 +23,7 @@ class FcBundlePy313Qt6 < Formula
 
   depends_on "patchelf" => :build
   depends_on "pkgconf" => :build
+  depends_on "freetype" # req'd by matplotlib
   depends_on "ffmpeg"
   depends_on "freecad/freecad/boost-python3@1.92_py313"
   depends_on "freecad/freecad/coin3d@4.0.8_py313_qt6"
@@ -31,10 +32,12 @@ class FcBundlePy313Qt6 < Formula
   depends_on "freecad/freecad/pyside6_py313" # pyside includes the shiboken module as well
   depends_on "freecad/freecad/vtk@9.5.2_py313"
   depends_on "geos"
+  depends_on "libomp" if OS.linux?
   depends_on "libyaml"
   depends_on "llvm" if OS.linux?
   depends_on "numpy"
   depends_on "pybind11" # req'd by pyyaml
+  depends_on "qhull" # req'd by matplotlib
   depends_on "webp" if OS.linux?
   depends_on "zlib-ng-compat" if OS.linux?
 
@@ -139,10 +142,18 @@ class FcBundlePy313Qt6 < Formula
     # Install the six module using pip in the virtual environment
     # certain freecad workbenches require the python six module
     # setup and install lark ply six
-    %w[av defusedxml matplotlib lark ply pyyaml six typing-extensions].each do |pkg|
+    %w[av defusedxml lark ply pyyaml six typing-extensions].each do |pkg|
       resource(pkg).stage do
         system venv_pip, "install", "."
       end
+    end
+
+    resource("matplotlib").stage do
+      # NOTE: added the below because matplotlib vendors harfbuzz can not use brew provided
+      ENV["CXXFLAGS"] = "#{ENV["CXXFLAGS"]} -DHB_NO_PRAGMA_GCC_DIAGNOSTIC_ERROR"
+      system venv_pip, "install", ".",
+        "--config-settings=setup-args=-Dsystem-freetype=true",
+        "--config-settings=setup-args=-Dsystem-qhull=true",
     end
 
     # opencamlib's pyproject.toml still uses the pre-0.10 scikit-build-core key
