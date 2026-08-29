@@ -23,7 +23,6 @@ class FcBundlePy313Qt6 < Formula
 
   depends_on "patchelf" => :build
   depends_on "pkgconf" => :build
-  depends_on "freetype" # req'd by matplotlib
   depends_on "ffmpeg"
   depends_on "freecad/freecad/boost-python3@1.92_py313"
   depends_on "freecad/freecad/coin3d@4.0.8_py313_qt6"
@@ -31,6 +30,7 @@ class FcBundlePy313Qt6 < Formula
   depends_on "freecad/freecad/netgen@6.2.2601"
   depends_on "freecad/freecad/pyside6_py313" # pyside includes the shiboken module as well
   depends_on "freecad/freecad/vtk@9.5.2_py313"
+  depends_on "freetype" # req'd by matplotlib
   depends_on "geos"
   depends_on "libomp" if OS.linux?
   depends_on "libyaml"
@@ -207,9 +207,12 @@ class FcBundlePy313Qt6 < Formula
       end
 
       # fix rpath related issues with opencamlib
-      omp_dir = Dir[formula_opt_lib("llvm")/"*/libomp.so"].first
-      odie "libomp.so not found under llvm" if omp_dir.nil?
-      omp_dir = File.dirname(omp_dir)
+      omp_lib = Dir[
+        formula_opt_lib("llvm")/"libomp.so",
+        formula_opt_lib("llvm")/"*/libomp.so",
+      ].first
+      odie "libomp.so not found under llvm" if omp_lib.nil?
+      omp_dir = File.dirname(omp_lib)
 
       ocl_so = Dir[venv_dir/"lib/python#{pyver}/site-packages/opencamlib/ocl*.so"].first
       if ocl_so
