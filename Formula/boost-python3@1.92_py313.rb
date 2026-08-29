@@ -13,11 +13,12 @@ class BoostPython3AT192Py313 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "e82fd2b9b770b4c774aeb679070e9a4bae082421b426b6340a1aa0d9ca20cc95"
-    sha256 cellar: :any, arm64_sequoia: "45f1fa23ac28ba5091f93461ee23d9fa6ac536ce622b61c4f7d6e0e7e170a327"
-    sha256 cellar: :any, arm64_sonoma:  "9fee1388e95f5fd03feeaf1ed5f8e42189159686b38fa0d84b62db76f9d51c6e"
-    sha256 cellar: :any, arm64_linux:   "28eabe25d39390f469af8802b769ad51f0e4c7e75d80fe3382ed296e34b92ebc"
-    sha256 cellar: :any, x86_64_linux:  "324f45e48a0052b09164f151e0dc14763ed73f19537d0255f711a5ba27d85a42"
+    rebuild 1
+    sha256 cellar: :any, arm64_tahoe:   "5bb422a0544f91dc6e61f17f0f7f226956dda1f3e5bc50455e948bcb0ef15844"
+    sha256 cellar: :any, arm64_sequoia: "1ec04797ff9945c059399d030010ee7db8709dc3a74fd50f7924f074ed8d0979"
+    sha256 cellar: :any, arm64_sonoma:  "03dbccb99a96a945fbb8a337ddf6514b974dd788cd994ffe14f49098cf270d3e"
+    sha256 cellar: :any, arm64_linux:   "218020e13b8a1ae89892c7c10a0495a3e70b7ea1a803c3b0f58b3fb5d0c683c9"
+    sha256 cellar: :any, x86_64_linux:  "14f169d82d3def95004ede0a3ffb9f255a4030a4036c2067c0fb5ab2d0425856"
   end
 
   keg_only :versioned_formula
