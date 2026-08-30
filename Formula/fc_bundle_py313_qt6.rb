@@ -33,7 +33,7 @@ class FcBundlePy313Qt6 < Formula
   depends_on "freecad/freecad/vtk@9.5.2_py313"
   depends_on "freetype" # req'd by matplotlib
   depends_on "geos"
-  depends_on "libomp" if OS.linux?
+  depends_on "libomp"
   depends_on "libyaml"
   depends_on "llvm" if OS.linux?
   depends_on "numpy"
