@@ -10,8 +10,7 @@ cask "freecad" do
   sha256 "54c729600f1faacf715c6a350472eb34a846db49e3620086d3b72773728b3aca"
 
   # https://github.com/FreeCAD/homebrew-freecad/releases/download/1.0.2/FreeCAD_1.0.2-homebrew-macOS-x86_64-py312.dmg
-  url "https://github.com/freecad/homebrew-freecad/releases/download/#{version}/FreeCAD_#{version.major_minor_patch}-homebrew-macOS-#{arch}-py312.dmg",
-      verified: "github.com/freecad/homebrew-freecad/"
+  url "https://github.com/freecad/homebrew-freecad/releases/download/#{version}/FreeCAD_#{version.major_minor_patch}-homebrew-macOS-#{arch}-py312.dmg"
   name "FreeCAD"
   desc "3D parametric modler"
   homepage "https://freecad.org/"

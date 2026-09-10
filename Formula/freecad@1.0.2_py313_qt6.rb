@@ -139,7 +139,6 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "libomp"
   depends_on "libx11" if OS.linux?
   depends_on "llvm" if OS.linux?
-  depends_on macos: :ventura
   depends_on "mesa" if OS.linux?
   depends_on "mesa-glu" if OS.linux?
   depends_on "nlohmann-json"
@@ -162,6 +161,9 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "xerces-c"
   depends_on "yaml-cpp"
   depends_on "zlib-ng-compat"
+  on_macos do
+    depends_on macos: :ventura # because qt v6
+  end
 
   # TODO: attempt to install without patch
   # patch do
