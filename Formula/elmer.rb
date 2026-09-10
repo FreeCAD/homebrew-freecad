@@ -65,7 +65,7 @@ class Elmer < Formula
     end
   end
 
-  def post_install; end
+  def post_install_steps; end
 
   def caveats
     <<-EOS

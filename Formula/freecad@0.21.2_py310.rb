@@ -343,7 +343,7 @@ class FreecadAT0212Py310 < Formula
     system "cmake", "--install", build_dir.to_s
   end
 
-  def post_install
+  def post_install_steps
     if OS.mac?
       ohai "the value of prefix = #{prefix}"
       freecad_path = Pathname.new("#{prefix}/MacOS/FreeCAD")

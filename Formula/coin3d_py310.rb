@@ -71,7 +71,7 @@ class Coin3dPy310 < Formula
     end
   end
 
-  def post_install
+  def post_install_steps
     # explicitly set python version
     python_version = "3.10"
 

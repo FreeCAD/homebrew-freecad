@@ -306,7 +306,7 @@ class Pyside2AT51515Py312 < Formula
     system "cmake", "--install", "build"
   end
 
-  def post_install
+  def post_install_steps
     # explicitly set python version
     python_version = "3.12"
 

@@ -122,7 +122,7 @@ class MedFileAT500Py313 < Formula
     end
   end
 
-  def post_install
+  def post_install_steps
     # explicitly set python version
     py_ver = "3.13"
 
