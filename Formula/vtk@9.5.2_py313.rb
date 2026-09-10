@@ -68,7 +68,7 @@ class VtkAT952Py313 < Formula
       ENV.remove "HOMEBREW_DEPENDENCIES", "expat"
     end
 
-    python = "python3.13"
+    python = python3
     qml_plugin_dir = lib/"qml/VTK.#{version.major_minor}"
     vtkmodules_dir = prefix/Language::Python.site_packages(python)/"vtkmodules"
     rpaths = [rpath, rpath(source: qml_plugin_dir), rpath(source: vtkmodules_dir)]
@@ -122,7 +122,7 @@ class VtkAT952Py313 < Formula
     system "cmake", "--install", "build"
   end
 
-  def post_install
+  def post_install_steps
     # explicitly set python version
     python_version = "3.13"
 

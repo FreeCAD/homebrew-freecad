@@ -478,7 +478,7 @@ class FreecadAT113Py313Qt6 < Formula
     end
   end
 
-  def post_install
+  def post_install_steps
     ohai "the value of prefix = #{prefix}"
 
     # mac bundle drops FreeCAD's PySide shim in MacOS/; FreeCAD's sys.path

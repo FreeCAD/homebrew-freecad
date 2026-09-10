@@ -71,7 +71,7 @@ class VtkAT952Py312 < Formula
       ENV.remove "HOMEBREW_DEPENDENCIES", "expat"
     end
 
-    python = "python3.12"
+    python = python3
     py312 = Formula["python@3.12"]
     qml_plugin_dir = lib/"qml/VTK.#{version.major_minor}"
     vtkmodules_dir = prefix/Language::Python.site_packages(python)/"vtkmodules"
@@ -125,7 +125,7 @@ class VtkAT952Py312 < Formula
     system "cmake", "--install", "build"
   end
 
-  def post_install
+  def post_install_steps
     # explicitly set python version
     python_version = "3.12"
 
