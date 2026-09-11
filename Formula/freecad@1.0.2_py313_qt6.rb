@@ -442,14 +442,19 @@ class FreecadAT102Py313Qt6 < Formula
     system "cmake", "--install", build_dir.to_s
   end
 
-  def post_install_steps
-    ohai "the value of prefix = #{prefix}"
-    if OS.mac?
-      ln_s "#{prefix}/MacOS/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
-      ln_s "#{prefix}/MacOS/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
-    elsif OS.linux?
-      ln_s "#{bin}/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
-      ln_s "#{bin}/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
+  post_install_steps do
+    on_macos do
+      symlink "MacOS/FreeCAD", "bin/freecad",
+              source_base: :prefix, target_base: :homebrew_prefix, overwrite: true
+      symlink "MacOS/FreeCADCmd", "bin/freecadcmd",
+              source_base: :prefix, target_base: :homebrew_prefix, overwrite: true
+    end
+
+    on_linux do
+      symlink "FreeCAD", "bin/freecad",
+              source_base: :bin, target_base: :homebrew_prefix, overwrite: true
+      symlink "FreeCADCmd", "bin/freecadcmd",
+              source_base: :bin, target_base: :homebrew_prefix, overwrite: true
     end
   end
 

@@ -205,26 +205,19 @@ class Pyside6Py313 < Formula
     end
   end
 
-  def post_install_steps
-    # explicitly set python version
-    python_version = "3.13"
+  post_install_steps do
+    write_file "python3.13/pyside6.pth",
+               "import site; site.addsitedir('{{opt_prefix}}/lib/python3.13/site-packages/')",
+               append_newline: true, base: :lib
 
-    # Unlink the existing .pth file to avoid reinstall issues
-    pth_file = lib/"python#{python_version}/pyside6.pth"
-    pth_file.unlink if pth_file.exist?
-
-    ohai "Creating .pth file for pyside6 module"
-    # write the .pth file to the parent dir of site-packages
-    (lib/"python#{python_version}/pyside6.pth").write <<~EOS
-      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
-    EOS
-
-    cd prefix do
-      ln_s Pathname.new("share/PySide6/typesystems"), "typesystems" unless File.exist?("typesystems")
-      ln_s Pathname.new("share/PySide6/glue"), "glue" unless File.exist?("glue")
-      ln_s Pathname.new("include/shiboken6"), "shiboken6" unless File.exist?("shiboken6")
-      ln_s Pathname.new("include/PySide6"), "PySide6" unless File.exist?("PySide6")
-    end
+    symlink "share/PySide6/typesystems", "typesystems",
+            source_base: :prefix, target_base: :prefix
+    symlink "share/PySide6/glue", "glue",
+            source_base: :prefix, target_base: :prefix
+    symlink "include/shiboken6", "shiboken6",
+            source_base: :prefix, target_base: :prefix
+    symlink "include/PySide6", "PySide6",
+            source_base: :prefix, target_base: :prefix
   end
 
   def caveats

@@ -106,19 +106,10 @@ class Pyside6Py312 < Formula
     system "cmake", "--install", "build"
   end
 
-  def post_install_steps
-    # explicitly set python version
-    python_version = "3.12"
-
-    # Unlink the existing .pth file to avoid reinstall issues
-    pth_file = lib/"python#{python_version}/pyside6.pth"
-    pth_file.unlink if pth_file.exist?
-
-    ohai "Creating .pth file for pyside6 module"
-    # write the .pth file to the parent dir of site-packages
-    (lib/"python#{python_version}/pyside6.pth").write <<~EOS
-      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
-    EOS
+  post_install_steps do
+    write_file "python3.12/pyside6.pth",
+               "import site; site.addsitedir('{{opt_prefix}}/lib/python3.12/site-packages/')",
+               append_newline: true, base: :lib
   end
 
   def caveats

@@ -74,19 +74,10 @@ class NetgenAT622601 < Formula
     system "cmake", "--install", "build"
   end
 
-  def post_install_steps
-    # explicitly set python version
-    python_version = "3.13"
-
-    # Unlink the existing .pth file to avoid reinstall issues
-    pth_file = lib/"python#{python_version}/netgen_py313.pth"
-    pth_file.unlink if pth_file.exist?
-
-    ohai "Creating .pth file for netgen module"
-    # write the .pth file to the site-packages directory
-    (lib/"python#{python_version}/netgen_py313.pth").write <<~PYTHON
-      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
-    PYTHON
+  post_install_steps do
+    write_file "python3.13/netgen_py313.pth",
+               "import site; site.addsitedir('{{opt_prefix}}/lib/python3.13/site-packages/')",
+               append_newline: true, base: :lib
   end
 
   def caveats

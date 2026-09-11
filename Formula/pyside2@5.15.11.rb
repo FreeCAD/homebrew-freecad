@@ -97,19 +97,10 @@ class Pyside2AT51511 < Formula
     system "cmake", "--install", "build"
   end
 
-  def post_install_steps
-    # explicitly set python version
-    python_version = "3.11"
-
-    # Unlink the existing .pth file to avoid reinstall issues
-    pth_file = lib/"python#{python_version}/site-packages/pyside2.pth"
-    pth_file.unlink if pth_file.exist?
-
-    ohai "Creating .pth file for pyside2 module"
-    # write the .pth file to the site-packages directory
-    (lib/"python#{python_version}/site-packages/pyside2.pth").write <<~EOS
-      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
-    EOS
+  post_install_steps do
+    write_file "python3.11/site-packages/pyside2.pth",
+               "import site; site.addsitedir('{{opt_prefix}}/lib/python3.11/site-packages/')",
+               append_newline: true, base: :lib
   end
 
   def caveats
