@@ -343,25 +343,19 @@ class FreecadAT0212Py310 < Formula
     system "cmake", "--install", build_dir.to_s
   end
 
-  def post_install_steps
-    if OS.mac?
-      ohai "the value of prefix = #{prefix}"
-      freecad_path = Pathname.new("#{prefix}/MacOS/FreeCAD")
-      freecadcmd_path = Pathname.new("#{prefix}/MacOS/FreeCADCmd")
+  post_install_steps do
+    on_macos do
+      symlink "MacOS/FreeCAD", "bin/freecad",
+              source_base: :prefix, target_base: :homebrew_prefix, overwrite: true
+      symlink "MacOS/FreeCADCmd", "bin/freecadcmd",
+              source_base: :prefix, target_base: :homebrew_prefix, overwrite: true
+    end
 
-      ln_s freecad_path.relative_path_from(Pathname.new("#{HOMEBREW_PREFIX}/bin")), "#{HOMEBREW_PREFIX}/bin/freecad",
-force: true
-      ln_s freecadcmd_path.relative_path_from(Pathname.new("#{HOMEBREW_PREFIX}/bin")),
-"#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
-    elsif OS.linux?
-      ohai "the value of prefix = #{prefix}"
-      freecad_path = Pathname.new("#{bin}/FreeCAD")
-      freecadcmd_path = Pathname.new("#{bin}/FreeCADCmd")
-
-      ln_s freecad_path.relative_path_from(Pathname.new("#{HOMEBREW_PREFIX}/bin")), "#{HOMEBREW_PREFIX}/bin/freecad",
-force: true
-      ln_s freecadcmd_path.relative_path_from(Pathname.new("#{HOMEBREW_PREFIX}/bin")),
-"#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
+    on_linux do
+      symlink "FreeCAD", "bin/freecad",
+              source_base: :bin, target_base: :homebrew_prefix, overwrite: true
+      symlink "FreeCADCmd", "bin/freecadcmd",
+              source_base: :bin, target_base: :homebrew_prefix, overwrite: true
     end
   end
 

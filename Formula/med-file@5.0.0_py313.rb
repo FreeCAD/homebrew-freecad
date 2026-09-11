@@ -122,29 +122,14 @@ class MedFileAT500Py313 < Formula
     end
   end
 
-  def post_install_steps
-    # explicitly set python version
-    py_ver = "3.13"
-
-    python_dir = Dir["#{lib}/python."].first
-    if python_dir && File.directory?(python_dir)
-      mv(python_dir, "#{lib}/python#{py_ver}")
-    else
-      opoo "Directory #{lib}/python. does not exist."
+  post_install_steps do
+    if_path_exists "lib/python.", base: :lib do
+      move "python.", "python3.13", source_base: :lib, target_base: :lib
     end
 
-    correct_py_dir = Dir["#{lib}/python#{py_ver}"].first
-    ohai "Directory #{lib}/python#{py_ver} does exist." if correct_py_dir && File.directory?(correct_py_dir)
-
-    # Unlink the existing .pth file to avoid reinstall issues
-    pth_file = lib/"python#{py_ver}/medfile.pth"
-    pth_file.unlink if pth_file.exist?
-
-    ohai "Creating .pth file for medfile python module"
-    # write the .pth file to the parent dir of site-packages
-    (lib/"python#{py_ver}/medfile.pth").write <<~EOS
-      import site; site.addsitedir('#{lib}/python#{py_ver}/site-packages/')
-    EOS
+    write_file "lib/python3.13/medfile.pth",
+      "import site; site.addsitedir('{{opt_prefix}}/lib/python3.13/site-packages/')",
+      append_newline: true, base: :lib
   end
 
   def caveats

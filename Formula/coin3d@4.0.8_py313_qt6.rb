@@ -149,19 +149,10 @@ class Coin3dAT408Py313Qt6 < Formula
     end
   end
 
-  def post_install_steps
-    # explicitly set python version
-    python_version = "3.13"
-
-    # Unlink the existing .pth file to avoid reinstall issues
-    pth_file = lib/"python#{python_version}/coin3d_py313_qt6-pivy.pth"
-    pth_file.unlink if pth_file.exist?
-
-    ohai "Creating .pth file for pivy module"
-    # write the .pth file to the site-packages directory
-    (lib/"python#{python_version}/coin3d_py313_qt6-pivy.pth").write <<~PYTHON
-      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
-    PYTHON
+  post_install_steps do
+    write_file "python3.13/coin3d_py313_qt6-pivy.pth",
+      "import site; site.addsitedir('{{opt_prefix}}/lib/python3.13/site-packages/')",
+      append_newline: true, base: :lib
   end
 
   def caveats

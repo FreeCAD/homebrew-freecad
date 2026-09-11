@@ -104,19 +104,10 @@ class NumpyAT1264Py310 < Formula
     end
   end
 
-  def post_install_steps
-    # explicitly set python version
-    python_version = "3.10"
-
-    # Unlink the existing .pth file to avoid reinstall issues
-    pth_file = lib/"python#{python_version}/numpy.pth"
-    pth_file.unlink if pth_file.exist?
-
-    ohai "Creating .pth file for numpy@1.26.4_py310 module"
-    # write the .pth file to the parent dir of site-packages
-    (lib/"python#{python_version}/numpy.pth").write <<~EOS
-      import site; site.addsitedir('#{lib}/python#{python_version}/site-packages/')
-    EOS
+  post_install_steps do
+    write_file "python3.10/numpy.pth",
+               "import site; site.addsitedir('{{opt_prefix}}/lib/python3.10/site-packages/')",
+               append_newline: true, base: :lib
   end
 
   def caveats

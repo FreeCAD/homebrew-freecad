@@ -502,22 +502,23 @@ class FreecadAT111Py313Qt6 < Formula
     end
   end
 
-  def post_install_steps
-    ohai "the value of prefix = #{prefix}"
+  post_install_steps do
+    on_macos do
+      if_path_exists "MacOS/PySide", base: :prefix do
+        move "MacOS/PySide", "Ext/PySide", source_base: :prefix, target_base: :prefix
+      end
 
-    # mac bundle drops FreeCAD's PySide shim in MacOS/; FreeCAD's sys.path
-    # expects it in Ext/ (as on Linux). Relocate so `import PySide` resolves.
-    if OS.mac? && (prefix/"MacOS/PySide").exist?
-      (prefix/"Ext/PySide").dirname.mkpath
-      mv prefix/"MacOS/PySide", prefix/"Ext/PySide"
+      symlink "MacOS/FreeCAD", "bin/freecad",
+              source_base: :prefix, target_base: :homebrew_prefix, overwrite: true
+      symlink "MacOS/FreeCADCmd", "bin/freecadcmd",
+              source_base: :prefix, target_base: :homebrew_prefix, overwrite: true
     end
 
-    if OS.mac?
-      ln_s "#{prefix}/MacOS/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
-      ln_s "#{prefix}/MacOS/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
-    elsif OS.linux?
-      ln_s "#{bin}/FreeCAD", "#{HOMEBREW_PREFIX}/bin/freecad", force: true
-      ln_s "#{bin}/FreeCADCmd", "#{HOMEBREW_PREFIX}/bin/freecadcmd", force: true
+    on_linux do
+      symlink "FreeCAD", "bin/freecad",
+              source_base: :bin, target_base: :homebrew_prefix, overwrite: true
+      symlink "FreeCADCmd", "bin/freecadcmd",
+              source_base: :bin, target_base: :homebrew_prefix, overwrite: true
     end
   end
 
