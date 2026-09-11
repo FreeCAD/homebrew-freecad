@@ -7,7 +7,7 @@ class MedFileAT500Py313 < Formula
   url "https://github.com/chennes/med/archive/refs/tags/v5.0.0.tar.gz"
   sha256 "8701f142087b87e8b74958fd0432498eadf28011b20ad05cf56bf911be081888"
   license "GPL-3.0-only"
-  revision 2
+  revision 3
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -35,6 +35,12 @@ class MedFileAT500Py313 < Formula
   patch do
     url "https://src.fedoraproject.org/rpms/med/raw/rawhide/f/med-swig-4.3.0.patch"
     sha256 "b8c7d5eb2500fd1d66d215b571f5b9488ae8171e0b6fa80a29e2255ee5d713a5"
+  end
+
+  # NOTE: fix build with swig v4.5
+  patch do
+    url "https://src.fedoraproject.org/rpms/med/raw/rawhide/f/med-swig45.patch"
+    sha256 "9b747759466789de0c6e658b20bd9f5f87ef1bdfbbefb5cb8601d870e25b0243"
   end
 
   patch do
