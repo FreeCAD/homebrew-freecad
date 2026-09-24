@@ -3,13 +3,16 @@
 <!-- NOTE: ipatch, recently rubocop started styling this file, the below code example causes a styling error  -->
 ```shell
 brew style freecad/freecad/[NAME_OF_FORMULA_FILE]
+brew readall --aliases --os=all --arch=all freecad/freecad
 ```
 
-**output** from running above command should _output_ something similiar to the below
+**output** from running above `style` command should _output_ something similiar to the below
 
 ```
 1 file inspected, no offenses detected
 ```
+
+**output** from running `brew readall ...` should produce no errors with 0 output.
 
 - [ ] Have you ensured your commit passed audit checks, ie.
 
