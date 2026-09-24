@@ -11,25 +11,25 @@
 
 <!-- freecad logo -->
 <img src="https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Gui/Icons/freecad.svg" width="48" alt="freecad logo">
-</div>
 
 <!-- add a little spacing -->
 <br />
-
-**FreeCAD** is a Free (as in Libre) multiplatform Open Source Parametric 3D CAD software.<br />
-**Homebrew** is a MacOSX Package Manager.
+<br />
+<strong>Homebrew</strong> is a MacOS & Linux Package Manager. <br />
+<strong>FreeCAD</strong> is a Free (as in Libre) multiplatform Open Source Parametric 3D CAD & CAM software.<br />
+</div>
 
 ## Overview
 
-The primary and frequent use case for this formula is for developers to conveniently install all the required FreeCAD dependencies to support FreeCAD development.
+The primary and frequent use case for these formula are for developers to conveniently install all the required FreeCAD dependencies to support FreeCAD development.
 
-#### NOTE: If you are looking for the current macOS builds, please download the latest build from [GitHub](https://github.com/FreeCAD/FreeCAD/releases)
-
-> Alternatively there are versions of FreeCAD & friends built using conda, there are a weekly releases published [**here**](https://github.com/FreeCAD/FreeCAD-Bundle/releases/tag/weekly-builds)
+> [!NOTE]
+> If you are looking for the current MacOS builds, please download the latest build from [GitHub](https://github.com/FreeCAD/FreeCAD/releases) <br />
+> Alternatively there are a weekly releases of FreeCAD & friends built using conda,  [**here**](https://github.com/FreeCAD/FreeCAD-Bundle/releases/tag/weekly-builds)
 
 ## Prerequisites
 
-Install [homebrew](http://brew.sh)
+- Install [homebrew](http://brew.sh)
 
 ## Installing FreeCAD dependencies (FreeCAD developers)
 
@@ -46,26 +46,23 @@ By default, freecad is installed as a binary to be launched from a CLI. ~~To als
 
 ## Building The Current Release Version of FreeCAD
 
+> [!NOTE]
 > due to multiple freecad formula being setup from various taps, ie. **homebrew-cask** it's better to explicitly reference the freecad formula from this tap
 
 ```sh
 brew tap freecad/freecad
-brew install freecad/freecad/freecad
+brew install --formula freecad/freecad/freecad
 ```
 
 ## Building HEAD Version of FreeCAD
 
 ```sh
-brew install --HEAD freecad/freecad/freecad
+brew install --HEAD --formula freecad/freecad/freecad
 ```
 
 ## Continuous Integration Support
 
-the formula in this tap are tested with homebrew test-bot using the workflow files defined within this repo.
-
-~~The Travis CI system uses this freecad formula to build and test FreeCAD every time~~
-~~a change is made to the FreeCAD/FreeCAD repo meaning that the formula is very well~~
-~~tested itself.~~
+The formula in this tap are tested with homebrew test-bot using the workflow files defined within this repo.
 
 ## Contributing 🤝
 
@@ -146,8 +143,8 @@ that should allow the 0.20.1 release to build and run against python 3.11
 
 <a id="todos"></a>
 
-- [ ] presently i can not get the 0.21.2 freecad release to build using the upstream homebrew-core opencascade at v7.8.x
-- [ ] publish bottles for older versions of macos ie. ~~mojave~~ & high sierra, there is an active discussion about the topic [here][lnk4]
+- [x] **not planned** ~~presently i can not get the 0.21.2 freecad release to build using the upstream homebrew-core opencascade at v7.8.x~~
+- [x] **not planned** ~~publish bottles for older versions of macos ie. ~~mojave~~ & high sierra, there is an active discussion about the topic~~ [here][lnk4]
 
 [lnk4]: <https://github.com/Homebrew/discussions/discussions/2340>
 
