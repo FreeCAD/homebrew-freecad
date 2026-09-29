@@ -1,4 +1,4 @@
-class Opencascade < Formula
+class OpencascadeAT801 < Formula
   desc "3D modeling and numerical simulation software for CAD/CAM/CAE"
   homepage "https://dev.opencascade.org/"
   url "https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V7_9_3.tar.gz"
