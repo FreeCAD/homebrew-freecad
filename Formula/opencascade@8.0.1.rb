@@ -18,6 +18,14 @@ class OpencascadeAT801 < Formula
     end
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, arm64_tahoe:   "7bbf92c4ffa8b67460bf770a999245ee92f12d7850271ec5f111ad95cc53ce46"
+    sha256 cellar: :any, arm64_sequoia: "13b87ebbef1ff457045cbe24870904aaf84d256c6cdc695a611681d46b51a99f"
+    sha256 cellar: :any, arm64_linux:   "d6d064da8247cc720c90597d8e94b718953466b37ed8230cfc81c27f3f930e04"
+    sha256 cellar: :any, x86_64_linux:  "09b74132ddf03f9643c4d4ac41427b2f23683515b3ecced3856f0d6aaa54383f"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => [:build, :test]
