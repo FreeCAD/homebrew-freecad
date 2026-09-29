@@ -23,6 +23,7 @@ class OpencascadeAT801 < Formula
   depends_on "cmake" => [:build, :test]
   depends_on "doxygen" => :build
   depends_on "rapidjson" => :build
+  depends_on "llvm" => :test
   depends_on "fontconfig"
   depends_on "freetype"
   depends_on "tbb"
@@ -115,7 +116,8 @@ class OpencascadeAT801 < Formula
     # Make sure hardcoded library name references in our CMake config files are valid.
     (testpath/"CMakeLists.txt").write <<~CMAKE
       cmake_minimum_required(VERSION 4.0)
-      set(CMAKE_CXX_STANDARD 11)
+      set(CMAKE_CXX_STANDARD 17)
+      set(CMAKE_CXX_STANDARD_REQUIRED ON)
       project(test LANGUAGES CXX)
       find_package(OpenCASCADE REQUIRED)
       add_executable(test main.cpp)
@@ -134,7 +136,14 @@ class OpencascadeAT801 < Formula
       }
     CPP
 
-    system "cmake", "-S", ".", "-B", "build"
+    cmake_args = []
+    cmake_args << "-DOpenCASCADE_DIR=#{lib}/cmake/opencascade"
+    # brewed gcc can't locate crt files (Scrt1.o) when Homebrew lives in a non-default prefix
+    unless Homebrew.default_prefix?
+      cmake_args << "-DCMAKE_CXX_COMPILER=#{formula_opt_bin("llvm")}/clang++"
+    end
+
+    system "cmake", "-S", ".", "-B", "build", *cmake_args
     system "cmake", "--build", "build"
     ENV.append_path "LD_LIBRARY_PATH", lib if OS.linux?
     assert_equal "OCCT Version: #{version}", shell_output("./build/test").chomp
