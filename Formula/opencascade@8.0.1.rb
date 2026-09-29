@@ -1,8 +1,8 @@
 class OpencascadeAT801 < Formula
   desc "3D modeling and numerical simulation software for CAD/CAM/CAE"
   homepage "https://dev.opencascade.org/"
-  url "https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V7_9_3.tar.gz"
-  sha256 "5ecf094ec6b12d5413dfb851d8c3590c354058aee556e32e408bdfbf8c357d57"
+  url "https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V8.0.1.tar.gz"
+  sha256 "6297cc55a1720523a437c54d07dc16b9da8c5f5ab5800da3c6ebded568d53c18"
   license "LGPL-2.1-only"
 
   # The first-party download page (https://dev.opencascade.org/release)
@@ -18,15 +18,7 @@ class OpencascadeAT801 < Formula
     end
   end
 
-  bottle do
-    rebuild 1
-    sha256 cellar: :any, arm64_tahoe:   "7f142d6d6e9e14e95f63a4d44251930ceddbe1a1e105187a6c7afe0d3bc4c2c9"
-    sha256 cellar: :any, arm64_sequoia: "ae642e896bd65bb440b1a27392d917dd459512a81d3ef75431cff5287ad2fafd"
-    sha256 cellar: :any, arm64_sonoma:  "406660387186268f468a229c1b911d3579c7a001cff117cfdf4f56d5690230f4"
-    sha256 cellar: :any, sonoma:        "83ac6a62d80fa2e56d28ebf48aa9abadc832f69232e75e7c9c3d789122f8776c"
-    sha256 cellar: :any, arm64_linux:   "dc913ed6e8b8e4d1bd217d9687fc439eccb10b1377303d192563851719c32cfa"
-    sha256 cellar: :any, x86_64_linux:  "5139ef26e7b86024f68541d005a1681810690098fb303b47a37b8de0f58f4299"
-  end
+  keg_only :versioned_formula
 
   depends_on "cmake" => [:build, :test]
   depends_on "doxygen" => :build
