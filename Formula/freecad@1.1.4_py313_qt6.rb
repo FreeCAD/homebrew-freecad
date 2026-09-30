@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileNotice: Part of the FreeCAD project.
 
-class FreecadAT113Py313Qt6 < Formula
+class FreecadAT114Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
@@ -12,11 +12,11 @@ class FreecadAT113Py313Qt6 < Formula
   # 2. `git log -1 --format=%ci 1.1.3` wcdate
   PY_VER = "3.13".freeze
   VERSION_COMMIT_REF = "145529fe74".freeze
-  VERSION_COMMIT_DATE = "2026-07-25 00:52:02 -0400".freeze
+  VERSION_COMMIT_DATE = "2026-09-28 08:46:34 -0500".freeze
 
   stable do
-    url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/freecad_source_1.1.3.tar.gz"
-    sha256 "4813a5cd12be05253cd40cc1dc3995b1aaa1aa06f7dfbc15c7ffa99c1c3903b7"
+    url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.4/freecad_source_1.1.4.tar.gz"
+    sha256 "674f2c42dc060b71c8b052c70b04a9a995dde6cb868fe568615d3ff3f2717748"
 
     # NOTE: ipatch, ie. local patch `url "file:///#{HOMEBREW_PREFIX}/Library/Taps/freecad/homebrew-freecad/patches/`
     # run `brew cleanup` when editing local patch files on each subsequent `brew install`
@@ -55,15 +55,6 @@ class FreecadAT113Py313Qt6 < Formula
       url "https://github.com/freecad/addonmanager/archive/937b6877239dc78ef59eeefe8099e5f14243eda1.tar.gz"
       sha256 "70b2fa7f3c58c0ea5be830de90d33369670ee6658f13aeb7684f1ea478528178"
     end
-  end
-
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "7b3dfce7b133a9f68e57b1bc633bd07c58329c659b13416417af33118bcc8fb0"
-    sha256 cellar: :any, arm64_sequoia: "a861cf79a83fe9b9832091f3ace76b2e5d64418a2609242bc7fbfe3ceb4ad9b9"
-    sha256 cellar: :any, arm64_sonoma:  "0fe29cc647f26c739425c3cd01cac7454e0f7415a5c37e4dce67a0f9f0b77b96"
-    sha256               arm64_linux:   "5a4ec2946d48ba4bf3a08bb6bfdce28a4dd52d57f0860e17a1754e847c8c88b3"
-    sha256               x86_64_linux:  "aa7c257dc2a7e517572e6b588c3c205a05171aab45b17047571ebf76c85a5080"
   end
 
   head do
@@ -265,7 +256,6 @@ class FreecadAT113Py313Qt6 < Formula
     # NOTE: the below cmake vars can be stubbed out ie. set
     # -DCMAKE_OSX_SYSROOT=#{cmake_osx_sysroot}
     # -DCMAKE_CXX_FLAGS="-fuse-ld=lld"
-    # -DBUILD_ENABLE_CXX_STD=C++17 # freecad v1.1.0 now reqs C++20
     # -DCMAKE_INSTALL_RPATH=#{prefix}/lib
     # -DCMAKE_INSTALL_RPATH=#{rpath}
     # -DBUILD_DRAWING=1
@@ -356,6 +346,8 @@ class FreecadAT113Py313Qt6 < Formula
       -DCMAKE_INSTALL_PREFIX=#{prefix}
       -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
       -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
+      -DBUILD_ENABLE_CXX_STD=20
 
       -GNinja
       -DCMAKE_MAKE_PROGRAM=#{ninja_bin}
