@@ -7,7 +7,7 @@ class MedFileAT500Py313 < Formula
   url "https://github.com/chennes/med/archive/refs/tags/v5.0.0.tar.gz"
   sha256 "8701f142087b87e8b74958fd0432498eadf28011b20ad05cf56bf911be081888"
   license "GPL-3.0-only"
-  revision 3
+  revision 4
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -129,11 +129,11 @@ class MedFileAT500Py313 < Formula
   end
 
   post_install_steps do
-    if_path_exists "lib/python.", base: :lib do
+    if_path_exists "python.", base: :lib do
       move "python.", "python3.13", source_base: :lib, target_base: :lib
     end
 
-    write_file "lib/python3.13/medfile.pth",
+    write_file "python3.13/medfile.pth",
       "import site; site.addsitedir('{{opt_prefix}}/lib/python3.13/site-packages/')",
       append_newline: true, base: :lib
   end
