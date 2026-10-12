@@ -36,7 +36,7 @@ jobs:
           # - macos-14-large
           - macos-26
           - macos-15
-          - macos-15-intel
+          # - macos-15-intel # NOTE: upstream homebrew no longer builds req'd bottles on this platform
           - macos-14
           # NOTE: deprecated circa nov 4 2025
           # - macos-13
