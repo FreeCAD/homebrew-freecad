@@ -6,9 +6,9 @@ class Pyside6Py313 < Formula
 
   desc "Official Python bindings for Qt"
   homepage "https://wiki.qt.io/Qt_for_Python"
-  url "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.11.1-src/pyside-setup-everywhere-src-6.11.1.tar.xz"
-  mirror "https://cdimage.debian.org/mirror/qt.io/qtproject/official_releases/QtForPython/pyside6/PySide6-6.11.1-src/pyside-setup-everywhere-src-6.11.1.tar.xz"
-  sha256 "6ffd9835bb0dd2c56f061d62f1616bb1707cfc0202b80e3165d6be087f3965e2"
+  url "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.12.0-src/pyside-setup-everywhere-src-6.12.0.tar.xz"
+  mirror "https://cdimage.debian.org/mirror/qt.io/qtproject/official_releases/QtForPython/pyside6/PySide6-6.12.0-src/pyside-setup-everywhere-src-6.12.0.tar.xz"
+  sha256 "099c1a597cf33c1b000e11cf68a0b82d216fb802bf81726efc720394f10c7751"
   # NOTE: We omit some licenses even though they are in SPDX-License-Identifier or LICENSES/ directory:
   # 1. LicenseRef-Qt-Commercial is removed from "OR" options as non-free
   # 2. GFDL-1.3-no-invariants-only is only used by not installed docs, e.g. sources/{pyside6,shiboken6}/doc
@@ -18,20 +18,11 @@ class Pyside6Py313 < Formula
     { "GPL-3.0-only" => { with: "Qt-GPL-exception-1.0" } },
     { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] },
   ]
-  revision 4
+  revision 5
 
   livecheck do
     url "https://download.qt.io/official_releases/QtForPython/pyside6/"
     regex(%r{href=.*?PySide6[._-]v?(\d+(?:\.\d+)+)-src/}i)
-  end
-
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256               arm64_tahoe:   "12bd78527af372cb5eacf5ca03c8975239b159897649f5839935fc48127cd005"
-    sha256               arm64_sequoia: "d6bda1f24c8327b54c35763ad49948eb7568f0a0b3803f7ef5b8ae7991bea7ae"
-    sha256               arm64_sonoma:  "7ff4aa95f10a04a45b7066954cb17a725f22a48f46874f64ad8c5880d11724fa"
-    sha256 cellar: :any, arm64_linux:   "516101a48444ea72df81076618465bdc4fcda50ac776977222677c838c678b0c"
-    sha256 cellar: :any, x86_64_linux:  "9580457c70fa80ec31f005b505d2a5cd19508186e984ed95a5d07458a91d905d"
   end
 
   keg_only :versioned_formula
@@ -43,8 +34,8 @@ class Pyside6Py313 < Formula
   depends_on xcode: :build
   depends_on "pkgconf" => :test
 
-  depends_on "llvm@21"
-  depends_on "numpy"
+  depends_on "freecad/freecad/numpy@2.5.4_py313"
+  depends_on "llvm"
   depends_on "python@3.13"
   depends_on "qtbase"
   depends_on "qtcanvaspainter"
@@ -104,19 +95,17 @@ class Pyside6Py313 < Formula
   end
 
   def install
-    ENV["CLANG_INSTALL_DIR"] = ENV["LLVM_INSTALL_DIR"] = formula_opt_prefix("llvm@21")
+    ENV["CLANG_INSTALL_DIR"] = ENV["LLVM_INSTALL_DIR"] = formula_opt_prefix("llvm")
 
     ENV.append_path "PYTHONPATH", buildpath/"build/sources"
 
     if OS.linux?
       # Workaround to search versioned LLVM path before HOMEBREW_PREFIX/lib
-      ENV.append "LDFLAGS", "-Wl,-rpath,#{rpath(target: formula_opt_lib("llvm@21"))}"
+      ENV.append "LDFLAGS", "-Wl,-rpath,#{rpath(target: formula_opt_lib("llvm"))}"
       inreplace "sources/shiboken6/cmake/ShibokenHelpers.cmake",
                 'list(APPEND path_dirs "${libclang_lib_dir}")',
                 'list(PREPEND path_dirs "${libclang_lib_dir}")'
     end
-
-    ENV.append_path "PYTHONPATH", buildpath/"build/sources"
 
     extra_include_dirs = [formula_opt_include("qt")]
     extra_include_dirs << formula_opt_include("mesa") if OS.linux?
@@ -138,7 +127,7 @@ class Pyside6Py313 < Formula
     ENV.prepend_path "CMAKE_PREFIX_PATH", formula_opt_prefix("python@3.13")
 
     # setup numpy include dir
-    numpy_inc_dir = formula_opt_prefix("numpy")/"lib/python3.13/site-packages/numpy/_core/include"
+    numpy_inc_dir = formula_opt_prefix("numpy@2.5.4_py313")/"lib/python3.13/site-packages/numpy/_core/include"
 
     # Remove Assistant/Designer/Linguist - not provided by the qt formula
     inreplace "sources/pyside-tools/CMakeLists.txt" do |s|
@@ -287,7 +276,13 @@ class Pyside6Py313 < Formula
       }
     CPP
 
-    shiboken_include = prefix/"shiboken6/include"
+    # NOTE: pyside v6.12 changed the path layout for shiboken.h
+    # ╰─λ find $bp -name shiboken.h
+    # /home/capin/homebrew/Cellar/pyside/6.12.0_1/include/shiboken6/shiboken.h
+    # /home/capin/homebrew/Cellar/pyside2@5.15.15_py312/5.15.15_1/include/shiboken2/shiboken.h
+    # /home/capin/homebrew/Cellar/pyside6_py313/6.11.1_4/shiboken6/include/shiboken.h
+    # /home/capin/homebrew/Cellar/pyside6_py313/6.12.0_5/include/shiboken6/shiboken.h
+    shiboken_include = include/"shiboken6"
 
     shiboken_lib = if OS.mac?
       "shiboken6.cpython-313-darwin"
