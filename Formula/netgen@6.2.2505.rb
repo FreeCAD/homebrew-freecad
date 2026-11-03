@@ -5,7 +5,8 @@ class NetgenAT622505 < Formula
   desc "C++ Library of NETGEN's tetrahedral mesh generator"
   homepage "https://github.com/ngsolve/netgen"
   url "https://github.com/ngsolve/netgen.git",
-    tag: "v6.2.2505"
+    tag:      "v6.2.2505",
+    revision: "418937209e9ec747471e57a7bafea0bc6ad15df3"
   license "LGPL-2.1-only"
   head "https://github.com/ngsolve/netgen.git", branch: "master"
 
@@ -66,6 +67,11 @@ class NetgenAT622505 < Formula
     <<~EOS
       this is a versioned formula so it is NOT linked in HOMBREW_PREFIX by default
       running brew test netgen currently fails with gcc if built with llvm
+
+      use the below command to get the revision hash for tag'd release, ie.
+
+      $ `git ls-remote --tags https://github.com/ngsolve/netgen.git 'v6.2.2601*'
+
     EOS
   end
 

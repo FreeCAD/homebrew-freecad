@@ -5,7 +5,8 @@ class NetgenAT622601 < Formula
   desc "C++ Library of NETGEN's tetrahedral mesh generator"
   homepage "https://github.com/ngsolve/netgen"
   url "https://github.com/ngsolve/netgen.git",
-    tag: "v6.2.2601"
+    tag:      "v6.2.2601",
+    revision: "246352cf45534475117cedacbcb48eb15c21ed6a"
   license "LGPL-2.1-only"
   revision 1
   head "https://github.com/ngsolve/netgen.git", branch: "master"
