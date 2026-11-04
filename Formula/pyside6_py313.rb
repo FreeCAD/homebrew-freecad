@@ -34,8 +34,8 @@ class Pyside6Py313 < Formula
   depends_on xcode: :build
   depends_on "pkgconf" => :test
 
+  depends_on "freecad/freecad/numpy@2.5.4_py313"
   depends_on "llvm"
-  depends_on "numpy"
   depends_on "python@3.13"
   depends_on "qtbase"
   depends_on "qtcanvaspainter"
@@ -127,7 +127,7 @@ class Pyside6Py313 < Formula
     ENV.prepend_path "CMAKE_PREFIX_PATH", formula_opt_prefix("python@3.13")
 
     # setup numpy include dir
-    numpy_inc_dir = formula_opt_prefix("numpy")/"lib/python3.13/site-packages/numpy/_core/include"
+    numpy_inc_dir = formula_opt_prefix("numpy@2.5.4_py313")/"lib/python3.13/site-packages/numpy/_core/include"
 
     # Remove Assistant/Designer/Linguist - not provided by the qt formula
     inreplace "sources/pyside-tools/CMakeLists.txt" do |s|
