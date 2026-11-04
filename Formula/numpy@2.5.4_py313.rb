@@ -9,6 +9,14 @@ class NumpyAT254Py313 < Formula
   compatibility_version 1
   head "https://github.com/numpy/numpy.git", branch: "main"
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, arm64_tahoe:   "2fbc2cb8efb9d524aff73854b5604706564b5a240953abbbd1d4ee1d855f446f"
+    sha256 cellar: :any, arm64_sequoia: "58ca758a45bb05a4dbfbf38ee1cc6948e5d2b6dba09b77a291ca1e781efaa8ab"
+    sha256 cellar: :any, arm64_linux:   "77266ca99f60e789bb52f23bd86c57761df3cada186255df1979fb85e3ac0570"
+    sha256 cellar: :any, x86_64_linux:  "5bb6abfcd5d6802b72d46e9c36088757932147ba92303ec8c1718cf23f2acc10"
+  end
+
   keg_only :versioned_formula
 
   depends_on "gcc" => :build # for gfortran
