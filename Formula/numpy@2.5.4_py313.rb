@@ -22,9 +22,9 @@ class NumpyAT254Py313 < Formula
   end
 
   def pythons
-    deps.map(&:to_formula)
-        .select { |f| f.name.start_with?("python@") }
-        .sort_by(&:version) # so scripts like `bin/f2py` use newest python
+    deps.select { |dep| dep.name.start_with?("python@") }
+        .map(&:to_formula)
+        .sort_by(&:version)
   end
 
   def install
