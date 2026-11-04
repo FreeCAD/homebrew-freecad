@@ -38,7 +38,7 @@ class NumpyAT254Py313 < Formula
 
   def caveats
     <<~EOS
-      To run `f2py`, you may need to `brew install #{pythons.last}`
+      To run `f2py`, you may need to `brew install python@3.13`
     EOS
   end
 
