@@ -38,13 +38,11 @@ jobs:
           - macos-15
           # - macos-15-intel # NOTE: upstream homebrew no longer builds req'd bottles on this platform
           - macos-14
-          # NOTE: deprecated circa nov 4 2025
-          # - macos-13
           # NOTE: homebrew has since deprecated ubuntu-22.04 ie. no compat
           - ubuntu-24.04
           - ubuntu-24.04-arm
-          # - self-hosted-catalinavm
           # - self-hosted-bigsurvm
+          # - self-hosted-catalinavm
           # - self-hosted-mojavevm
           # - self-hosted-ubuntu-22.04
       # NOTE: ipatch, all three self hosted runners (vms) are hosted on same computer
@@ -101,7 +99,7 @@ jobs:
 
       - name: Restore last run status
         id: restore-last-run-status
-        uses: actions/cache@v5.0.3
+        uses: actions/cache@v5.0.5
         with:
           path: |
             last-run-status
@@ -116,8 +114,7 @@ jobs:
 
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@main
-
+        uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c # 2026.07.10.1
       - name: Get portable Ruby version
         id: ruby-version
         run: |
@@ -127,7 +124,7 @@ jobs:
       - name: Cache Homebrew Bundler RubyGems
         if: steps.set-last-run-status.outputs.last-run-status != 'success'
         id: cache
-        uses: actions/cache@v5.0.3
+        uses: actions/cache@v5.0.5
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ runner.os }}-ruby-${{ steps.ruby-version.outputs.version }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
@@ -179,7 +176,7 @@ jobs:
           fi
 
       - name: free up disk space on github hosted ubuntu runner
-        if: matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-24.04'
         # if: ${{ !contains(matrix.os, 'self-hosted-ubuntu-22.04') }}
         run: |
           echo "Disk space before cleanup:"
