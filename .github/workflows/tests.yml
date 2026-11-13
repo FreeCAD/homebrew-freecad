@@ -339,13 +339,12 @@ jobs:
       #   if: ${{ failure() }}
       #   uses: mxschmitt/action-tmate@v3      
 
-      - name: debug with lhotari/action-upterm
+      - name: setup upterm session, and debug workflow run
         id: debug-workflow-run
         if: ${{ failure() && !env.ACT }} # skip during local actions testing using `act`
-        # NOTE: ipatch, issue with macos runners circa oct 2024
-        # uses: lhotari/action-upterm@v1
+        # NOTE: lhotari/action-upterm has been archived by the maintainer
+        uses: ownenthereal/action-upterm@v2.8.1
         #-------
-        uses: owenthereal/action-upterm@v1
         with:
           # limit ssh access to user who triggered the workflow
           limit-access-to-actor: true
@@ -357,8 +356,6 @@ jobs:
       # see: https://github.com/actions/upload-artifact/issues/478
         id: upload-bottle-artifacts
         if: always() && github.event_name == 'pull_request'
-        # uses: actions/upload-artifact@v4.3.3
-        # uses: actions/upload-artifact@v3.1.3
         uses: actions/upload-artifact@v7.0.0
         with:
           name: bottles_${{ matrix.os }}
