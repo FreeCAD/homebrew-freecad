@@ -339,11 +339,11 @@ jobs:
       #   if: ${{ failure() }}
       #   uses: mxschmitt/action-tmate@v3      
 
-      - name: setup upterm session, and debug workflow run
+      - name: setup upterm session to debug workflow run
         id: debug-workflow-run
         if: ${{ failure() && !env.ACT }} # skip during local actions testing using `act`
         # NOTE: lhotari/action-upterm has been archived by the maintainer
-        uses: owenthereal/action-upterm@v2.8.1
+        uses: owenthereal/action-upterm@v2
         #-------
         with:
           # limit ssh access to user who triggered the workflow
