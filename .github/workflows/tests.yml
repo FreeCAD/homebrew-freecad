@@ -254,6 +254,10 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
 
+      - name: trust freecad tap
+        id: trust-freecad-tap
+        run: brew trust freecad/freecad
+
       - name: check for catalina vm and set homebrew-core repo to specific commit
       # NOTE: ipatch, attempt to set homebrew-core repo to specific commit for catalina bottling
         if: runner.name == 'vmcatalina'
