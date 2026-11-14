@@ -262,7 +262,6 @@ class FcBundlePy313Qt6 < Formula
   end
 
   test do
-    # TODO: i think a more sane test is importing the python modules
     # Check if the expected site-packages file exists
     site_packages_file = prefix/"lib/python3.13/site-packages/freecad-py-modules.pth"
     if site_packages_file.exist?
