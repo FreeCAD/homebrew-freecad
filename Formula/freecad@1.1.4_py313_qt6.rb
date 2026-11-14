@@ -107,7 +107,7 @@ class FreecadAT114Py313Qt6 < Formula
   depends_on "glew"
   depends_on "hdf5"
   depends_on "icu4c"
-  depends_on "icu4c@78" # because macos-15 bld err
+  depends_on "icu4c@79" # because macos-15 bld err
   depends_on "libaec"
   depends_on "libomp"
   depends_on "libx11" if OS.linux?
