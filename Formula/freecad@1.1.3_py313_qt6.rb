@@ -116,7 +116,7 @@ class FreecadAT113Py313Qt6 < Formula
   depends_on "glew"
   depends_on "hdf5"
   depends_on "icu4c"
-  depends_on "icu4c@78" # because macos-15 bld err
+  depends_on "icu4c@79" # because macos-15 bld err
   depends_on "libaec"
   depends_on "libomp"
   depends_on "libx11" if OS.linux?
@@ -422,6 +422,12 @@ class FreecadAT113Py313Qt6 < Formula
       s.gsub!(/^(#define FCRevisionDate\s+").*(".*$)/, "\\1#{VERSION_COMMIT_DATE}\\2")
       s.gsub!(/^(#define FCRepositoryURL\s+").*(".*$)/, "\\1https://github.com/FreeCAD/FreeCAD\\2")
     end
+
+    # NOTE: recent pyside v6.{11,12}.x versions changed headers around
+    # PySide6 moved PySide::PyObjectWrapper out of signalmanager.h into pyobjectwrapper.h
+    inreplace "src/Gui/PythonWrapper.cpp",
+      "# include <signalmanager.h>",
+      "# include <signalmanager.h>\n# if __has_include(<pyobjectwrapper.h>)\n#  include <pyobjectwrapper.h>\n# endif"
 
     # NOTE: macos 14 does not fully support C++20 extension of CTAD
     # ... https://developer.apple.com/xcode/cpp/
