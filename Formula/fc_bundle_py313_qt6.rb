@@ -270,5 +270,6 @@ class FcBundlePy313Qt6 < Formula
     else
       onoe "Test: Error - freecad-py-modules.pth file not found"
     end
+    system "python3.13", "-c", "import shiboken 6, PySide6, pivy, vtk, netgen"
   end
 end
