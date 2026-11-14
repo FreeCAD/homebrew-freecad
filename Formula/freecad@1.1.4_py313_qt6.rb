@@ -415,6 +415,12 @@ class FreecadAT114Py313Qt6 < Formula
       s.gsub!(/^(#define FCRepositoryURL\s+").*(".*$)/, "\\1https://github.com/FreeCAD/FreeCAD\\2")
     end
 
+    # NOTE: recent pyside v6.{11,12}.x versions changed headers around
+    # PySide6 moved PySide::PyObjectWrapper out of signalmanager.h into pyobjectwrapper.h
+    inreplace "src/Gui/PythonWrapper.cpp",
+      "# include <signalmanager.h>",
+      "# include <signalmanager.h>\n# if __has_include(<pyobjectwrapper.h>)\n#  include <pyobjectwrapper.h>\n# endif"
+
     # NOTE: macos 14 does not fully support C++20 extension of CTAD
     # ... https://developer.apple.com/xcode/cpp/
     inreplace buildpath/"src/Gui/StyleParameters/ParameterManager.h",
