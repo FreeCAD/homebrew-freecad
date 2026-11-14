@@ -10,7 +10,7 @@ class FcBundlePy313Qt6 < Formula
   version "1.1.1"
   # sha of file:///dev/null
   sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  revision 9
+  revision 10
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
@@ -29,6 +29,7 @@ class FcBundlePy313Qt6 < Formula
   depends_on "freecad/freecad/coin3d@4.0.8_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
   depends_on "freecad/freecad/netgen@6.2.2601"
+  depends_on "freecad/freecad/numpy@2.5.4_py313"
   depends_on "freecad/freecad/pyside6_py313" # pyside includes the shiboken module as well
   depends_on "freecad/freecad/vtk@9.5.2_py313"
   depends_on "freetype" # req'd by matplotlib
@@ -36,7 +37,6 @@ class FcBundlePy313Qt6 < Formula
   depends_on "libomp"
   depends_on "libyaml"
   depends_on "llvm" if OS.linux?
-  depends_on "numpy"
   depends_on "pybind11" # req'd by pyyaml
   depends_on "qhull" # req'd by matplotlib
   depends_on "webp" if OS.linux?
@@ -188,7 +188,7 @@ class FcBundlePy313Qt6 < Formula
     # ifcopenshell dep
     resource("shapely").stage do
       ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("geos")/"pkgconfig"
-      ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("freecad/freecad/numpy@2.1.1_py312")/"pkgconfig"
+      ENV.prepend_path "PKG_CONFIG_PATH", formula_opt_lib("freecad/freecad/numpy@2.5.4_py313")/"pkgconfig"
       system venv_pip, "install", "."
     end
 
@@ -262,7 +262,6 @@ class FcBundlePy313Qt6 < Formula
   end
 
   test do
-    # TODO: i think a more sane test is importing the python modules
     # Check if the expected site-packages file exists
     site_packages_file = prefix/"lib/python3.13/site-packages/freecad-py-modules.pth"
     if site_packages_file.exist?
@@ -270,5 +269,6 @@ class FcBundlePy313Qt6 < Formula
     else
       onoe "Test: Error - freecad-py-modules.pth file not found"
     end
+    system "python3.13", "-c", "import shiboken6, PySide6, pivy, vtk, netgen"
   end
 end
