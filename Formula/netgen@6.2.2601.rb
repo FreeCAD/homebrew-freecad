@@ -13,11 +13,10 @@ class NetgenAT622601 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "713538c20aad1dce7e43cc8040ae290c4b737db9346d96a69fce6447b2662b41"
-    sha256 cellar: :any, arm64_sequoia: "b81d49fa00d255eacbc4b99b29fa006b27b382f69f3f4465148df72efec34ab6"
-    sha256 cellar: :any, arm64_sonoma:  "d42c8dc70cf8a888b99727f9bc799c75b7e33cff8a69ac1180180eb8f94caaff"
-    sha256               arm64_linux:   "7c34583c5b60ad0f547c6ccdda20de7619650ca15e113ec096882ccb1e239b8e"
-    sha256               x86_64_linux:  "f4cf2ee2f4b0f69c3459c43a75802a76a1e04f71e1fb1e4a93cb030ea8faaeec"
+    sha256 cellar: :any, arm64_tahoe:   "0a80c639d3913adc3ef30fa1e9dfd32feeceb4df5a160686bdf9cda598dd2067"
+    sha256 cellar: :any, arm64_sequoia: "bfd3ceb60eb98f3e3c233bb45057415c4c8b60eba836823225aa70323fad9563"
+    sha256               arm64_linux:   "aacc8a5ec991acb631769cc077db39225f7b1740b8a3fa27b1d059e835b3821a"
+    sha256               x86_64_linux:  "96eeef99e963e1ec27429b5d6a8dd818ad7b8a6d61c237e78d8733e592e19527"
   end
 
   keg_only :versioned_formula
