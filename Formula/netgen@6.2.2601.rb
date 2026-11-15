@@ -8,7 +8,7 @@ class NetgenAT622601 < Formula
     tag:      "v6.2.2601",
     revision: "246352cf45534475117cedacbcb48eb15c21ed6a"
   license "LGPL-2.1-only"
-  revision 1
+  revision 2
   head "https://github.com/ngsolve/netgen.git", branch: "master"
 
   bottle do
@@ -76,9 +76,17 @@ class NetgenAT622601 < Formula
   end
 
   post_install_steps do
-    write_file "python3.13/netgen_py313.pth",
-               "import site; site.addsitedir('{{opt_prefix}}/lib/python3.13/site-packages/')",
-               append_newline: true, base: :lib
+    on_macos do
+      write_file "python3.13/netgen_py313.pth",
+        "import site; site.addsitedir('{{opt_prefix}}/Contents/Resources/lib/python3.13/site-packages/')",
+        append_newline: true, base: :lib
+    end
+
+    on_linux do
+      write_file "python3.13/netgen_py313.pth",
+        "import site; site.addsitedir('{{opt_prefix}}/lib/python3.13/site-packages/')",
+        append_newline: true, base: :lib
+    end
   end
 
   def caveats
