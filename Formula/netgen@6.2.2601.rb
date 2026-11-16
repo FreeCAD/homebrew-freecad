@@ -143,7 +143,11 @@ class NetgenAT622601 < Formula
     end
     system "./test"
 
+    py_site = Language::Python.site_packages("python3.13")
+    ng_site = OS.mac? ? opt_prefix/"Contents/Resources"/py_site : opt_prefix/py_site
+
     ENV.prepend_path "PYTHONPATH", formula_opt_prefix("freecad/freecad/numpy@2.5.4_py313")/Language::Python.site_packages("python3.13")
-    system "python3.13", "-c", "import netgen"
+    ENV.prepend_path "PYTHONPATH", ng_site
+    system "python3.13", "-c", "import netgen, pyngcore; print(netgen.__file__)"
   end
 end
