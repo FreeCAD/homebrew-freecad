@@ -8,15 +8,12 @@ class NetgenAT622601 < Formula
     tag:      "v6.2.2601",
     revision: "246352cf45534475117cedacbcb48eb15c21ed6a"
   license "LGPL-2.1-only"
-  revision 2
+  revision 3
   head "https://github.com/ngsolve/netgen.git", branch: "master"
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "0a80c639d3913adc3ef30fa1e9dfd32feeceb4df5a160686bdf9cda598dd2067"
-    sha256 cellar: :any, arm64_sequoia: "bfd3ceb60eb98f3e3c233bb45057415c4c8b60eba836823225aa70323fad9563"
-    sha256               arm64_linux:   "aacc8a5ec991acb631769cc077db39225f7b1740b8a3fa27b1d059e835b3821a"
-    sha256               x86_64_linux:  "96eeef99e963e1ec27429b5d6a8dd818ad7b8a6d61c237e78d8733e592e19527"
+    sha256 x86_64_linux: "a5b41202c8011a4f30cac61f932285a549b26cf30b18132db2e06c7162d7bbd0"
   end
 
   keg_only :versioned_formula
@@ -24,8 +21,8 @@ class NetgenAT622601 < Formula
   depends_on "cmake" => :build
   depends_on "llvm" => [:build, :test]
   depends_on "ninja" => :build
+  depends_on "freecad/freecad/numpy@2.5.4_py313"
   depends_on "opencascade"
-  depends_on "pybind11"
   depends_on "python@3.13"
   depends_on "zlib-ng-compat"
 
@@ -42,6 +39,14 @@ class NetgenAT622601 < Formula
     py_inc_dirs = py_inc_output.scan(/-I([^\s]+)/).flatten.uniq
     py_inc_dir = py_inc_dirs.join(" ")
 
+    # NOTE: libnglib picked up HOMEBREW_PREFIX/include/pybind11 (pybind11 internals v12)
+    # while pyngcore/libngpy used the vendored 3.0.1 (v11) -> separate type registries ->
+    # "could not convert default argument 'comm: ngcore::NgMPI_Comm'". Force the vendored
+    # headers first; -I in CXXFLAGS is searched before any -I/-isystem CMake adds later.
+    ENV.prepend "CXXFLAGS", "-I#{buildpath}/external_dependencies/pybind11/include"
+
+    zlib = formula_opt_prefix("zlib-ng-compat")
+
     puts "----------------------------------------------------"
     puts "PYTHON=#{ENV["PYTHON"]}"
     puts "----------------------------------------------------"
@@ -51,13 +56,19 @@ class NetgenAT622601 < Formula
       -DUSE_PYTHON=ON
       -DPython3_EXECUTABLE=#{python3}
       -DPython3_INCLUDE_DIR=#{py_inc_dir}
+      -DZLIB_ROOT=#{zlib}
+      -DZLIB_INCLUDE_DIR=#{zlib}/include
+      -DZLIB_LIBRARY=#{zlib}/lib/#{shared_library("libz")}
       -DUSE_GUI=OFF
       -DUSE_OCC=ON
       -DUSE_SUPERBUILD=OFF
       -DBUILD_FOR_CONDA=OFF
+      -DUSE_NATIVE_ARCH=OFF
       -G Ninja
       -L
     ]
+
+    ENV.append "CXXFLAGS", "-DPYBIND11_DETAILED_ERROR_MESSAGES"
 
     # NOTE: fix incompatiblities with newer versions of pybind11
     inreplace "libsrc/meshing/python_mesh.cpp" do |s|
@@ -92,6 +103,9 @@ class NetgenAT622601 < Formula
     <<~EOS
       this is a versioned formula so it is NOT linked in HOMBREW_PREFIX by default
       running brew test netgen currently fails with gcc if built with llvm
+
+      netgen ships pybind11 v3.0.1 with the tarball release as an external dep
+      use the provided pybind11 with tarball and NOT upstream homebrew-core's pybind11
     EOS
   end
 
@@ -128,5 +142,12 @@ class NetgenAT622601 < Formula
       system ENV.cxx, "test.cpp", "-I#{ng_include}", "-L#{ng_lib}", "-lnglib", "-o", "test"
     end
     system "./test"
+
+    py_site = Language::Python.site_packages("python3.13")
+    ng_site = OS.mac? ? opt_prefix/"Contents/Resources"/py_site : opt_prefix/py_site
+
+    ENV.prepend_path "PYTHONPATH", formula_opt_prefix("freecad/freecad/numpy@2.5.4_py313")/Language::Python.site_packages("python3.13")
+    ENV.prepend_path "PYTHONPATH", ng_site
+    system "python3.13", "-c", "import netgen, pyngcore; print(netgen.__file__)"
   end
 end
