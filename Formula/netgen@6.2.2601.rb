@@ -143,7 +143,5 @@ class NetgenAT622601 < Formula
       system ENV.cxx, "test.cpp", "-I#{ng_include}", "-L#{ng_lib}", "-lnglib", "-o", "test"
     end
     system "./test"
-
-
   end
 end
