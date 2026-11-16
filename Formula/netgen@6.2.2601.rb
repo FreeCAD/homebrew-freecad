@@ -13,7 +13,10 @@ class NetgenAT622601 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 x86_64_linux: "a5b41202c8011a4f30cac61f932285a549b26cf30b18132db2e06c7162d7bbd0"
+    sha256 cellar: :any, arm64_tahoe:   "23232163c7f1ec690377f9f0fae223be01bc5dd51a1ab3b3f6e87059313bdd5a"
+    sha256 cellar: :any, arm64_sequoia: "08d3835ee6a93c352e13342e1452dcb0efee94c8d39691d71a45799109e23970"
+    sha256               arm64_linux:   "c02b2fec3ed3f8b6a77e7017dd7a4b012753d5ded2b1e821040118ba49b5e9b4"
+    sha256               x86_64_linux:  "2e06860ac2abc541a4bdca0c7897604aa02163648cdf51eff102abe2e613f3a2"
   end
 
   keg_only :versioned_formula
