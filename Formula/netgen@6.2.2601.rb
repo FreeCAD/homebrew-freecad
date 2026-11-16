@@ -8,7 +8,7 @@ class NetgenAT622601 < Formula
     tag:      "v6.2.2601",
     revision: "246352cf45534475117cedacbcb48eb15c21ed6a"
   license "LGPL-2.1-only"
-  revision 2
+  revision 3
   head "https://github.com/ngsolve/netgen.git", branch: "master"
 
   bottle do
@@ -25,7 +25,6 @@ class NetgenAT622601 < Formula
   depends_on "llvm" => [:build, :test]
   depends_on "ninja" => :build
   depends_on "opencascade"
-  depends_on "pybind11"
   depends_on "python@3.13"
   depends_on "zlib-ng-compat"
 
@@ -42,6 +41,14 @@ class NetgenAT622601 < Formula
     py_inc_dirs = py_inc_output.scan(/-I([^\s]+)/).flatten.uniq
     py_inc_dir = py_inc_dirs.join(" ")
 
+    # NOTE: libnglib picked up HOMEBREW_PREFIX/include/pybind11 (pybind11 internals v12)
+    # while pyngcore/libngpy used the vendored 3.0.1 (v11) -> separate type registries ->
+    # "could not convert default argument 'comm: ngcore::NgMPI_Comm'". Force the vendored
+    # headers first; -I in CXXFLAGS is searched before any -I/-isystem CMake adds later.
+    ENV.prepend "CXXFLAGS", "-I#{buildpath}/external_dependencies/pybind11/include"
+
+    zlib = formula_opt_prefix("zlib-ng-compat")
+
     puts "----------------------------------------------------"
     puts "PYTHON=#{ENV["PYTHON"]}"
     puts "----------------------------------------------------"
@@ -51,6 +58,9 @@ class NetgenAT622601 < Formula
       -DUSE_PYTHON=ON
       -DPython3_EXECUTABLE=#{python3}
       -DPython3_INCLUDE_DIR=#{py_inc_dir}
+      -DZLIB_ROOT=#{zlib}
+      -DZLIB_INCLUDE_DIR=#{zlib}/include
+      -DZLIB_LIBRARY=#{zlib}/lib/#{shared_library("libz")}
       -DUSE_GUI=OFF
       -DUSE_OCC=ON
       -DUSE_SUPERBUILD=OFF
@@ -58,6 +68,8 @@ class NetgenAT622601 < Formula
       -G Ninja
       -L
     ]
+
+    ENV.append "CXXFLAGS", "-DPYBIND11_DETAILED_ERROR_MESSAGES"
 
     # NOTE: fix incompatiblities with newer versions of pybind11
     inreplace "libsrc/meshing/python_mesh.cpp" do |s|
@@ -92,6 +104,9 @@ class NetgenAT622601 < Formula
     <<~EOS
       this is a versioned formula so it is NOT linked in HOMBREW_PREFIX by default
       running brew test netgen currently fails with gcc if built with llvm
+
+      netgen ships pybind11 v3.0.1 with the tarball release as an external dep
+      use the provided pybind11 with tarball and NOT upstream homebrew-core's pybind11
     EOS
   end
 
@@ -128,5 +143,7 @@ class NetgenAT622601 < Formula
       system ENV.cxx, "test.cpp", "-I#{ng_include}", "-L#{ng_lib}", "-lnglib", "-o", "test"
     end
     system "./test"
+
+
   end
 end
