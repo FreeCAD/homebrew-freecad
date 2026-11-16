@@ -13,10 +13,7 @@ class NetgenAT622601 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "0a80c639d3913adc3ef30fa1e9dfd32feeceb4df5a160686bdf9cda598dd2067"
-    sha256 cellar: :any, arm64_sequoia: "bfd3ceb60eb98f3e3c233bb45057415c4c8b60eba836823225aa70323fad9563"
-    sha256               arm64_linux:   "aacc8a5ec991acb631769cc077db39225f7b1740b8a3fa27b1d059e835b3821a"
-    sha256               x86_64_linux:  "96eeef99e963e1ec27429b5d6a8dd818ad7b8a6d61c237e78d8733e592e19527"
+    sha256 x86_64_linux: "a5b41202c8011a4f30cac61f932285a549b26cf30b18132db2e06c7162d7bbd0"
   end
 
   keg_only :versioned_formula
@@ -24,6 +21,7 @@ class NetgenAT622601 < Formula
   depends_on "cmake" => :build
   depends_on "llvm" => [:build, :test]
   depends_on "ninja" => :build
+  depends_on "freecad/freecad/numpy@2.5.4_py313"
   depends_on "opencascade"
   depends_on "python@3.13"
   depends_on "zlib-ng-compat"
@@ -65,6 +63,7 @@ class NetgenAT622601 < Formula
       -DUSE_OCC=ON
       -DUSE_SUPERBUILD=OFF
       -DBUILD_FOR_CONDA=OFF
+      -DUSE_NATIVE_ARCH=OFF
       -G Ninja
       -L
     ]
@@ -144,6 +143,7 @@ class NetgenAT622601 < Formula
     end
     system "./test"
 
+    ENV.prepend_path "PYTHONPATH", formula_opt_prefix("freecad/freecad/numpy@2.5.4_py313")/Language::Python.site_packages("python3.13")
     system "python3.13", "-c", "import netgen"
   end
 end
