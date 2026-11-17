@@ -59,11 +59,11 @@ class FreecadAT113Py313Qt6 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "7b3dfce7b133a9f68e57b1bc633bd07c58329c659b13416417af33118bcc8fb0"
-    sha256 cellar: :any, arm64_sequoia: "a861cf79a83fe9b9832091f3ace76b2e5d64418a2609242bc7fbfe3ceb4ad9b9"
-    sha256 cellar: :any, arm64_sonoma:  "0fe29cc647f26c739425c3cd01cac7454e0f7415a5c37e4dce67a0f9f0b77b96"
-    sha256               arm64_linux:   "5a4ec2946d48ba4bf3a08bb6bfdce28a4dd52d57f0860e17a1754e847c8c88b3"
-    sha256               x86_64_linux:  "aa7c257dc2a7e517572e6b588c3c205a05171aab45b17047571ebf76c85a5080"
+    rebuild 1
+    sha256 cellar: :any, arm64_tahoe:   "a04d8d1222dff0d72d5cb48d42c4443c98ff10e205f95d0b06592c7e89698d79"
+    sha256 cellar: :any, arm64_sequoia: "9bc5f6e5c06ff8bee52be1b1e4b1e0a926b06181afd226597687f0ec63e0dd81"
+    sha256               arm64_linux:   "18e8c37fd0eeeb3c2d93d80bcdc25283fa1c07973b191a1d20b702a1c3dff9db"
+    sha256               x86_64_linux:  "d048b424249efd3e95e5b478d941a5876acea7cc07d948d1bb1ddaca0d951fac"
   end
 
   head do
