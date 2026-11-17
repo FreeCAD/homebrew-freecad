@@ -6,22 +6,6 @@ class FreecadAT114Py313Qt6 < Formula
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
 
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "9ac9614e88952fbe3a11a90a5a61f2393d3557136b6b48535834a3295f79b47e"
-    sha256 cellar: :any, arm64_sequoia: "9adf362fcf3277b5c5a8a5dcb6fc2aadd10c686c7a87f7a8d5281614692fed16"
-    sha256               arm64_linux:   "c248677c6106e97a33b25aef1dedeca07d0d9a3102e8adadf79cf186c55443c6"
-    sha256               x86_64_linux:  "fb7dae9874c1cf6e28ff32c86cb09c6f1fdabf2d0e067bbebb208f20a1085b56"
-  end
-
-  # populate version info lost from tarball ie. because not .git dir
-  # NOTE: run the below 2 cmds in the git clone of the fc src dir
-  # 1. `git rev-parse --short 1.1.3` wcref
-  # 2. `git log -1 --format=%ci 1.1.3` wcdate
-  PY_VER = "3.13".freeze
-  VERSION_COMMIT_REF = "145529fe74".freeze
-  VERSION_COMMIT_DATE = "2026-09-28 08:46:34 -0500".freeze
-
   stable do
     url "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.4/freecad_source_1.1.4.tar.gz"
     sha256 "674f2c42dc060b71c8b052c70b04a9a995dde6cb868fe568615d3ff3f2717748"
@@ -64,6 +48,22 @@ class FreecadAT114Py313Qt6 < Formula
       sha256 "70b2fa7f3c58c0ea5be830de90d33369670ee6658f13aeb7684f1ea478528178"
     end
   end
+
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    sha256 cellar: :any, arm64_tahoe:   "9ac9614e88952fbe3a11a90a5a61f2393d3557136b6b48535834a3295f79b47e"
+    sha256 cellar: :any, arm64_sequoia: "9adf362fcf3277b5c5a8a5dcb6fc2aadd10c686c7a87f7a8d5281614692fed16"
+    sha256               arm64_linux:   "c248677c6106e97a33b25aef1dedeca07d0d9a3102e8adadf79cf186c55443c6"
+    sha256               x86_64_linux:  "fb7dae9874c1cf6e28ff32c86cb09c6f1fdabf2d0e067bbebb208f20a1085b56"
+  end
+
+  # populate version info lost from tarball ie. because not .git dir
+  # NOTE: run the below 2 cmds in the git clone of the fc src dir
+  # 1. `git rev-parse --short 1.1.3` wcref
+  # 2. `git log -1 --format=%ci 1.1.3` wcdate
+  PY_VER = "3.13".freeze
+  VERSION_COMMIT_REF = "145529fe74".freeze
+  VERSION_COMMIT_DATE = "2026-09-28 08:46:34 -0500".freeze
 
   head do
     url "https://github.com/freecad/FreeCAD.git", branch: "main", shallow: false
