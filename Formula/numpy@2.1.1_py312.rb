@@ -24,6 +24,8 @@ class NumpyAT211Py312 < Formula
 
   keg_only :versioned_formula
 
+  disable! date: "2026-12-31", because: :versioned_formula
+
   depends_on "gcc" => :build # for gfortran
   depends_on "meson" => :build
   depends_on "ninja" => :build
@@ -36,12 +38,6 @@ class NumpyAT211Py312 < Formula
 
   fails_with gcc: "5"
 
-  def pythons
-    deps.map(&:to_formula)
-        .select { |f| f.name.start_with?("python@") }
-        .sort_by(&:version) # so scripts like `bin/f2py` use newest python
-  end
-
   def install
     # Fix build failure on macOS Sequoia/Tahoe with Xcode 16+ (missing std::ptrdiff_t)
     if OS.mac? && MacOS.version >= :sequoia
@@ -49,6 +45,10 @@ class NumpyAT211Py312 < Formula
         /^#include <type_traits>/,
         "#include <type_traits>\n#include <cstddef>"
     end
+
+    pythons = deps.map(&:to_formula)
+                  .select { |f| f.name.start_with?("python@") }
+                  .sort_by(&:version) # so scripts like `bin/f2py` use newest python
 
     pythons.each do |python|
       python3 = python.opt_libexec/"bin/python"

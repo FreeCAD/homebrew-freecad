@@ -95,18 +95,79 @@ class Pyside2AT51515Py312 < Formula
     "python3.12"
   end
 
-  # Fix remaining shiboken2 enum type misresolutions in generated wrapper files.
-  #
-  # Even with the Debian PYSIDE-2288 patches applied to shiboken2's ApiExtractor,
-  # the code generator still misresolves certain enum types due to name collisions
-  # (e.g. multiple Qt classes defining "Type", "Flag", "Capability", etc.).
-  # The Debian patches filter out EnumValue/ConstantValueType entries but not full
-  # EnumType entries that share names across classes. This method applies targeted
-  # sed replacements to the generated C++ wrappers after shiboken runs.
-  def fix_shiboken2_enum_misresolutions(build_dir)
-    pyside2_dir = build_dir/"sources/pyside2/PySide2"
+  # NOTE: ipatch tarballs >= qt@5.15.3 require a c++17 compiler
+  def install
+    rpaths = if OS.mac?
+      pyside2_module = prefix/Language::Python.site_packages(python3)/"PySide2"
+      [rpath, rpath(source: pyside2_module)]
+    else
+      # Add missing include dirs on Linux.
+      # upstream issue: https://bugreports.qt.io/browse/PYSIDE-1684
+      extra_include_dirs = [formula_opt_include("mesa"), formula_opt_include("libxcb")]
+      inreplace "sources/pyside2/cmake/Macros/PySideModules.cmake",
+                "--include-paths=${shiboken_include_dirs}",
+                "--include-paths=${shiboken_include_dirs}:#{extra_include_dirs.join(":")}"
 
-    # Helper: apply replacements to wrapper .h and .cpp files
+      # Add rpath to qt@5 because it is keg-only.
+      [lib, formula_opt_lib("qt@5")]
+    end
+
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_prefix("llvm")
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_prefix("qt@5")
+    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_prefix("freecad/freecad/numpy@2.1.1_py312")
+
+    cmake_args = std_cmake_args
+
+    # NOTE: ipatch build will fail if using `python3` cmake requires major+minor ie. `python3.10`
+    py_exe = formula_opt_bin("python@3.12")/"python3.12"
+    py_lib = if OS.mac?
+      formula_opt_lib("python@3.12")/"libpython3.12.dylib"
+    else
+      formula_opt_lib("python@3.12")/"libpython3.12.so"
+    end
+
+    cmake_args << "-DPYTHON_EXECUTABLE=#{py_exe}"
+    cmake_args << "-DPYTHON_LIBRARY=#{py_lib}"
+
+    # Avoid shim reference.
+    inreplace "sources/shiboken2/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
+
+    ENV.prepend_path "PYTHONPATH", formula_opt_prefix("numpy@2.1.1_py312")/Language::Python.site_packages(py_exe)
+
+    puts "-------------------------------------------------"
+    puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
+    puts "CFLAGS=#{ENV["CFLAGS"]}"
+    puts "-------------------------------------------------"
+
+    system "cmake", "-S", ".", "-B", "build",
+      "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
+      "-DFORCE_LIMITED_API=NO",
+      "-DLLVM_CONFIG=#{formula_opt_bin("llvm")}/llvm-config",
+      "-DCMAKE_LIBRARY_PATH=#{formula_opt_lib("llvm")}",
+      "-L",
+      "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+      *cmake_args
+
+    # First build pass: shiboken2 generates wrapper code for each Qt module.
+    # Due to residual enum name collisions not covered by the Debian PYSIDE-2288
+    # patches, some generated wrappers will have wrong enum types. We use -k
+    # (keep going) so cmake/make generates wrappers for ALL modules before stopping,
+    # then apply targeted fixes and rebuild only the affected files.
+    begin
+      system "cmake", "--build", "build", "--", "-k"
+    rescue BuildError
+      nil
+    end
+
+    # Fix remaining shiboken2 enum type misresolutions in the generated wrapper files.
+    #
+    # Even with the Debian PYSIDE-2288 patches applied to shiboken2's ApiExtractor,
+    # the code generator still misresolves certain enum types due to name collisions
+    # (e.g. multiple Qt classes defining "Type", "Flag", "Capability", etc.).
+    # The Debian patches filter out EnumValue/ConstantValueType entries but not full
+    # EnumType entries that share names across classes, so apply targeted
+    # sed replacements to the generated C++ wrappers after shiboken runs.
+    pyside2_dir = buildpath/"build/sources/pyside2/PySide2"
 
     # Helper: apply broad scope replacement (fixes both QFlags<> types and default values)
     fix_broad = lambda do |wrapper_path, wrong_class, right_class|
@@ -193,7 +254,6 @@ class Pyside2AT51515Py312 < Formula
                    "QGraphicsEffect", "QPinchGesture")
 
     # ── 6. QAbstractItemModel::CheckIndexOption → correct Option enum per class ──
-    exts = [".h", ".cpp"]
     {
       (qtwidgets/"qfiledialog_wrapper")       => "QFileDialog",
       (qtwidgets/"qfileiconprovider_wrapper") => "QFileIconProvider",
@@ -232,74 +292,6 @@ class Pyside2AT51515Py312 < Formula
       pyside2_dir/"QtDataVisualization/PySide2/QtDataVisualization/qtdatavisualization_qabstract3dgraph_wrapper",
       "QItemSelectionModel", "QtDataVisualization::QAbstract3DGraph"
     )
-  end
-
-  # NOTE: ipatch tarballs >= qt@5.15.3 require a c++17 compiler
-  def install
-    rpaths = if OS.mac?
-      pyside2_module = prefix/Language::Python.site_packages(python3)/"PySide2"
-      [rpath, rpath(source: pyside2_module)]
-    else
-      # Add missing include dirs on Linux.
-      # upstream issue: https://bugreports.qt.io/browse/PYSIDE-1684
-      extra_include_dirs = [formula_opt_include("mesa"), formula_opt_include("libxcb")]
-      inreplace "sources/pyside2/cmake/Macros/PySideModules.cmake",
-                "--include-paths=${shiboken_include_dirs}",
-                "--include-paths=${shiboken_include_dirs}:#{extra_include_dirs.join(":")}"
-
-      # Add rpath to qt@5 because it is keg-only.
-      [lib, formula_opt_lib("qt@5")]
-    end
-
-    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_prefix("llvm")
-    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_prefix("qt@5")
-    ENV.append_path "CMAKE_PREFIX_PATH", formula_opt_prefix("freecad/freecad/numpy@2.1.1_py312")
-
-    cmake_args = std_cmake_args
-
-    # NOTE: ipatch build will fail if using `python3` cmake requires major+minor ie. `python3.10`
-    py_exe = formula_opt_bin("python@3.12")/"python3.12"
-    py_lib = if OS.mac?
-      formula_opt_lib("python@3.12")/"libpython3.12.dylib"
-    else
-      formula_opt_lib("python@3.12")/"libpython3.12.so"
-    end
-
-    cmake_args << "-DPYTHON_EXECUTABLE=#{py_exe}"
-    cmake_args << "-DPYTHON_LIBRARY=#{py_lib}"
-
-    # Avoid shim reference.
-    inreplace "sources/shiboken2/ApiExtractor/CMakeLists.txt", "${CMAKE_CXX_COMPILER}", ENV.cxx
-
-    ENV.prepend_path "PYTHONPATH", formula_opt_prefix("numpy@2.1.1_py312")/Language::Python.site_packages(py_exe)
-
-    puts "-------------------------------------------------"
-    puts "PYTHONPATH=#{ENV["PYTHONPATH"]}"
-    puts "CFLAGS=#{ENV["CFLAGS"]}"
-    puts "-------------------------------------------------"
-
-    system "cmake", "-S", ".", "-B", "build",
-      "-DCMAKE_INSTALL_RPATH=#{rpaths.join(";")}",
-      "-DFORCE_LIMITED_API=NO",
-      "-DLLVM_CONFIG=#{formula_opt_bin("llvm")}/llvm-config",
-      "-DCMAKE_LIBRARY_PATH=#{formula_opt_lib("llvm")}",
-      "-L",
-      "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
-      *cmake_args
-
-    # First build pass: shiboken2 generates wrapper code for each Qt module.
-    # Due to residual enum name collisions not covered by the Debian PYSIDE-2288
-    # patches, some generated wrappers will have wrong enum types. We use -k
-    # (keep going) so cmake/make generates wrappers for ALL modules before stopping,
-    # then apply targeted fixes and rebuild only the affected files.
-    begin
-      system "cmake", "--build", "build", "--", "-k"
-    rescue BuildError
-      nil
-    end
-
-    # Fix shiboken2 enum misresolutions in the generated wrapper files
-    fix_shiboken2_enum_misresolutions(buildpath/"build")
 
     # Second build pass: recompile only the patched wrappers
     system "cmake", "--build", "build"
