@@ -11,6 +11,14 @@ class NetgenAT622601 < Formula
   revision 3
   head "https://github.com/ngsolve/netgen.git", branch: "master"
 
+  livecheck do
+    url :stable
+    regex(/^v?(\d+(?:[._]\d+)+(?:p\d+)?)$/i)
+    strategy :git do |tags, regex|
+      tags.filter_map { |tag| tag[regex, 1]&.tr("_", ".") }
+    end
+  end
+
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
     sha256 cellar: :any, arm64_tahoe:   "23232163c7f1ec690377f9f0fae223be01bc5dd51a1ab3b3f6e87059313bdd5a"
