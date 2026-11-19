@@ -114,7 +114,6 @@ class FreecadAT114Py313Qt6 < Formula
   depends_on "freetype"
   depends_on "glew"
   depends_on "hdf5"
-  depends_on "icu4c"
   depends_on "icu4c@79" # because macos-15 bld err
   depends_on "libaec"
   depends_on "libomp"
@@ -203,7 +202,7 @@ class FreecadAT114Py313Qt6 < Formula
     cmake_prefix_paths << Formula["freetype"].prefix
     cmake_prefix_paths << Formula["glew"].prefix
     cmake_prefix_paths << Formula["hdf5"].prefix
-    cmake_prefix_paths << Formula["icu4c"].prefix
+    cmake_prefix_paths << Formula["icu4c@79"].prefix
     cmake_prefix_paths << Formula["libjpeg-turbo"].prefix
     cmake_prefix_paths << Formula["libaec"].prefix
     cmake_prefix_paths << Formula["libomp"].prefix
@@ -315,12 +314,13 @@ class FreecadAT114Py313Qt6 < Formula
 
       # NOTE: these are keg-only formula thus their libs do not exist in #{hbp}/lib
       # ... thus causing rpath issues on *nix based systems
-      coin_lib = formula_opt_lib("coin3d@4.0.8_py313_qt6")
-      libomp_lib = formula_opt_lib("libomp")
-      med_lib = formula_opt_lib("med-file@5.0.0_py313")
-      netgen_lib = formula_opt_lib("netgen@6.2.2601")
-      pyside6_lib = formula_opt_lib("pyside6_py313")
-      vtk_lib = formula_opt_lib("vtk@9.5.2_py313")
+      keg_only_libs = deps.reject(&:build?)
+                          .map(&:to_formula)
+                          .select(&:keg_only?)
+                          .map(&:opt_lib)
+                          .select(&:directory?)
+
+      install_rpath = [hbp/"lib", *keg_only_libs].join(";")
 
       args_linux_only = %W[
         -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
@@ -332,7 +332,7 @@ class FreecadAT114Py313Qt6 < Formula
         -DCMAKE_EXE_LINKER_FLAGS=#{linux_linker_flags}
         -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld
         -DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=lld
-        -DCMAKE_INSTALL_RPATH=#{hbp}/lib;#{coin_lib};#{libomp_lib};#{med_lib};#{netgen_lib};#{pyside6_lib};#{vtk_lib}
+        -DCMAKE_INSTALL_RPATH=#{install_rpath}
         -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
       ]
     end
