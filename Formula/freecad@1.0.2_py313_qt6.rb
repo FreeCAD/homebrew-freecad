@@ -5,7 +5,7 @@ class FreecadAT102Py313Qt6 < Formula
   desc "Parametric 3D modeler"
   homepage "https://freecad.org/"
   license "GPL-2.0-only"
-  revision 5
+  revision 6
 
   PY_VER = "3.13".freeze
 
@@ -121,10 +121,11 @@ class FreecadAT102Py313Qt6 < Formula
   depends_on "cython"
   depends_on "doxygen"
   depends_on "expat"
+  depends_on "flann"
   depends_on "fmt"
   depends_on "fontconfig" if OS.linux?
   depends_on "freecad/freecad/calculix@2.23"
-  depends_on "freecad/freecad/coin3d@4.0.7_py313_qt6"
+  depends_on "freecad/freecad/coin3d@4.0.8_py313_qt6"
   depends_on "freecad/freecad/fc_bundle_py313_qt6"
   depends_on "freecad/freecad/med-file@5.0.0_py313"
   depends_on "freecad/freecad/netgen@6.2.2601" # uses py313
@@ -217,12 +218,13 @@ class FreecadAT102Py313Qt6 < Formula
     # cmake_prefix_paths << Formula["llvm"].prefix
     cmake_prefix_paths << Formula["boost"].prefix
     cmake_prefix_paths << Formula["calculix@2.23"].prefix
-    cmake_prefix_paths << Formula["coin3d@4.0.7_py313_qt6"].prefix
+    cmake_prefix_paths << Formula["coin3d@4.0.8_py313_qt6"].prefix
     cmake_prefix_paths << Formula["cups"].prefix
     cmake_prefix_paths << Formula["double-conversion"].prefix
     cmake_prefix_paths << Formula["doxygen"].prefix
     cmake_prefix_paths << Formula["eigen"].prefix
     cmake_prefix_paths << Formula["expat"].prefix
+    cmake_prefix_paths << Formula["flann"].prefix
     cmake_prefix_paths << Formula["fmt"].prefix
     cmake_prefix_paths << Formula["freeimage"].prefix
     cmake_prefix_paths << Formula["freetype"].prefix
@@ -337,9 +339,19 @@ class FreecadAT102Py313Qt6 < Formula
       puts openglu_inc_dir
       puts "----------------------------------------------------"
 
-      # NOTE: ipatch, linker req because, https://github.com/FreeCAD/homebrew-freecad/issues/546
       linux_linker_flags = "-L#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current " \
-                           "-Wl,-rpath,#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current"
+                           "-Wl,-rpath,#{HOMEBREW_PREFIX}/opt/gcc/lib/gcc/current " \
+                           "-L#{formula_opt_lib("tbb")} -ltbb " \
+                           "-fuse-ld=lld"
+
+      # NOTE: these are keg-only formula thus their libs do not exist in #{hbp}/lib
+      # ... thus causing rpath issues on *nix based systems
+      coin_lib = formula_opt_lib("coin3d@4.0.8_py313_qt6")
+      libomp_lib = formula_opt_lib("libomp")
+      med_lib = formula_opt_lib("med-file@5.0.0_py313")
+      netgen_lib = formula_opt_lib("netgen@6.2.2601")
+      pyside6_lib = formula_opt_lib("pyside6_py313")
+      vtk_lib = formula_opt_lib("vtk@9.5.2_py313")
 
       args_linux_only = %W[
         -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
@@ -349,10 +361,20 @@ class FreecadAT102Py313Qt6 < Formula
         -DCMAKE_AR=#{clang_ar}
         -DOPENGL_GLU_INCLUDE_DIR=#{openglu_inc_dir}
         -DCMAKE_EXE_LINKER_FLAGS=#{linux_linker_flags}
+        -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld
+        -DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=lld
+        -DCMAKE_INSTALL_RPATH=#{hbp}/lib;#{coin_lib};#{libomp_lib};#{med_lib};#{netgen_lib};#{pyside6_lib};#{vtk_lib}
+        -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
       ]
     end
 
     ninja_bin = formula_opt_bin("ninja")/"ninja"
+
+    # NOTE: when build with PCL enabled recent versions of pcl have updated to "imported targets"
+    ENV.append "CXXFLAGS", "-isystem #{Formula["flann"].include}"
+
+    # NOTE: tbb circa aug 2026 is giving missing header error ie. blocked_range.h
+    ENV.append "CXXFLAGS", "-isystem #{Formula["tbb"].include}"
 
     args = %W[
       -DHOMEBREW_PREFIX=#{hbp}
@@ -381,6 +403,7 @@ class FreecadAT102Py313Qt6 < Formula
       -DCMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH=FALSE
       -DCMAKE_FIND_USE_CMAKE_SYSTEM_PATH=FALSE
 
+      -DCMAKE_IGNORE_PATH=#{hbp}/Cellar/qt@5;#{hbp}/opt/qt@5;/lib64;/usr/lib64;
       -L
     ]
 
@@ -436,6 +459,16 @@ class FreecadAT102Py313Qt6 < Formula
       s.gsub! "${PACKAGE_WCDATE}", "2025-08-05T17:19:07-03:00"
       s.gsub! "${PACKAGE_WCURL}", "https://github.com/FreeCAD/FreeCAD"
     end
+
+    # NOTE: boost >= 1.90 + clang enforce two-phase lookup; CoinPtr<T> inherits
+    # boost::intrusive_ptr<T> but ViewProvider.h never declares the ADL overloads
+    # for SoBase-derived types. Upstream fix is PR #28623, not backported to 1.0.2.
+    inreplace buildpath/"src/Gui/ViewProvider.h",
+      "#include <boost/intrusive_ptr.hpp>",
+      "#include <boost/intrusive_ptr.hpp>\n" \
+      "#include <Inventor/misc/SoBase.h>\n\n" \
+      "inline void intrusive_ptr_add_ref(SoBase* obj) { obj->ref(); }\n" \
+      "inline void intrusive_ptr_release(SoBase* obj) { obj->unref(); }\n"
 
     system "cmake", *args, src_dir.to_s
     system "cmake", "--build", build_dir.to_s
