@@ -51,10 +51,11 @@ class FreecadAT114Py313Qt6 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "9ac9614e88952fbe3a11a90a5a61f2393d3557136b6b48535834a3295f79b47e"
-    sha256 cellar: :any, arm64_sequoia: "9adf362fcf3277b5c5a8a5dcb6fc2aadd10c686c7a87f7a8d5281614692fed16"
-    sha256               arm64_linux:   "c248677c6106e97a33b25aef1dedeca07d0d9a3102e8adadf79cf186c55443c6"
-    sha256               x86_64_linux:  "fb7dae9874c1cf6e28ff32c86cb09c6f1fdabf2d0e067bbebb208f20a1085b56"
+    rebuild 1
+    sha256 cellar: :any, arm64_tahoe:   "91639150326752d42ea99d8f9eb8519bb37563d114114e275b9488700a3b3d95"
+    sha256 cellar: :any, arm64_sequoia: "f9af766478c14e54cbfdf2233a051a34a535d03178eb81807ccfbfbde1e14166"
+    sha256               arm64_linux:   "60b64922c30c07655a9b8634925294902820d9512690bb765841de54bc44e0cc"
+    sha256               x86_64_linux:  "b41b14b0f89f7912ae555ab7ae9802f7224c3dd044c2ed6ed4be9cb3c369323e"
   end
 
   # populate version info lost from tarball ie. because not .git dir
