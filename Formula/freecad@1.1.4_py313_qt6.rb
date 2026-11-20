@@ -313,15 +313,16 @@ class FreecadAT114Py313Qt6 < Formula
                            "-L#{formula_opt_lib("tbb")} -ltbb " \
                            "-fuse-ld=lld"
 
-      # NOTE: these are keg-only formula thus their libs do not exist in #{hbp}/lib
+      # NOTE: keg-only and versioned (@) runtime deps may not be linked into #{hbp}/lib,
+      # ie. icu4c@79 is not keg-only on linux but can be left unlinked when another icu4c@ is linked
       # ... thus causing rpath issues on *nix based systems
-      keg_only_libs = deps.reject(&:build?)
-                          .map(&:to_formula)
-                          .select(&:keg_only?)
-                          .map(&:opt_lib)
-                          .select(&:directory?)
+      unlinked_dep_libs = deps.reject(&:build?)
+                              .map(&:to_formula)
+                              .select { |f| f.keg_only? || f.versioned_formula? }
+                              .map(&:opt_lib)
+                              .select(&:directory?)
 
-      install_rpath = [hbp/"lib", *keg_only_libs].join(";")
+      install_rpath = [hbp/"lib", *unlinked_dep_libs].join(";")
 
       args_linux_only = %W[
         -DX11_X11_INCLUDE_PATH=#{hbp}/opt/libx11/include/X11
