@@ -525,6 +525,16 @@ class FreecadAT114Py313Qt6 < Formula
     3. if multiple versions of freecad are installed then the post install
        step may fail, thus manual linking may be required to put this
        version of freecad in #{HOMEBREW_PREFIX}/bin
+
+    4. (linux) if the mouse cursor is tiny inside FreeCAD, the cursor theme
+       is probably not being found. check `xrdb -query | grep -i xcursor`;
+       an empty Xcursor.theme means libxcb-cursor looks for a "default" theme
+       that homebrew's search path does not include. either set a theme
+       (ie. Xcursor.theme: Adwaita, or via xfsettingsd / your DE), or launch with
+       XCURSOR_PATH=$HOME/.icons:#{HOMEBREW_PREFIX}/share/icons:/usr/share/icons
+
+       See the following github issue more info on this topic.
+       https://github.com/FreeCAD/homebrew-freecad/issues/670
     EOS
   end
 
