@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileNotice: Part of the FreeCAD project.
 
-class NetgenAT622601 < Formula
+class NetgenAT622607 < Formula
   desc "C++ Library of NETGEN's tetrahedral mesh generator"
   homepage "https://github.com/ngsolve/netgen"
   url "https://github.com/ngsolve/netgen.git",
     tag:      "v6.2.2607",
-    revision: "cf9e5f956a93c343f276a8a4bc960da2e8f24abc"
+    revision: "9642315f7a930701df33c917c537a51a4f3b46cd"
   license "LGPL-2.1-only"
   revision 1
   head "https://github.com/ngsolve/netgen.git", branch: "master"
@@ -67,21 +67,12 @@ class NetgenAT622601 < Formula
       -DUSE_SUPERBUILD=OFF
       -DBUILD_FOR_CONDA=OFF
       -DUSE_NATIVE_ARCH=OFF
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo
       -G Ninja
       -L
     ]
 
     ENV.append "CXXFLAGS", "-DPYBIND11_DETAILED_ERROR_MESSAGES"
-
-    # NOTE: fix incompatiblities with newer versions of pybind11
-    inreplace "libsrc/meshing/python_mesh.cpp" do |s|
-      s.gsub! '"parentelements", [](Mesh & self)',
-        '"parentelements", py::cpp_function([](Mesh & self)'
-      s.gsub! '"parentsurfaceelements", [](Mesh & self)',
-        '"parentsurfaceelements", py::cpp_function([](Mesh & self)'
-      s.gsub! "}, py::keep_alive<0,1>())",
-        "}, py::keep_alive<0,1>()))"
-    end
 
     system "cmake", "-S", ".", "-B", "build", *args
     system "cmake", "--build", "build"
@@ -147,7 +138,11 @@ class NetgenAT622601 < Formula
     system "./test"
 
     py_site = Language::Python.site_packages("python3.13")
-    ng_site = OS.mac? ? opt_prefix/"Contents/Resources"/py_site : opt_prefix/py_site
+    ng_site = if OS.mac?
+      opt_prefix/"Contents/Resources"/py_site
+    else
+      opt_prefix/py_site
+    end
 
     ENV.prepend_path "PYTHONPATH", formula_opt_prefix("freecad/freecad/numpy@2.5.4_py313")/Language::Python.site_packages("python3.13")
     ENV.prepend_path "PYTHONPATH", ng_site
