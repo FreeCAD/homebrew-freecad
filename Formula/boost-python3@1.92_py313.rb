@@ -65,8 +65,9 @@ class BoostPython3AT192Py313 < Formula
     end
 
     # Force boost to compile with the desired compiler
+    toolset = OS.mac? ? "darwin" : "gcc"
     (buildpath/"user-config.jam").write <<~EOS
-      using #{OS.mac? ? "darwin" : "gcc"} : : #{ENV.cxx} ;
+      using #{toolset} : : #{ENV.cxx} ;
       using python : #{pyver}
                    : #{python3}
                    : #{py_prefix}/include/python#{pyver}
