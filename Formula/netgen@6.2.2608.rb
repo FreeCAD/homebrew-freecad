@@ -6,7 +6,7 @@ class NetgenAT622608 < Formula
   homepage "https://github.com/ngsolve/netgen"
   url "https://github.com/ngsolve/netgen.git",
     tag:      "v6.2.2608",
-    revision: ""
+    revision: "96e5682f6ea43ba77ba3bb2ae4bb4bd1791f506e"
   license "LGPL-2.1-only"
   revision 1
   head "https://github.com/ngsolve/netgen.git", branch: "master"
