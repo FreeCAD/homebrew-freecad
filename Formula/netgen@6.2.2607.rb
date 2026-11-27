@@ -5,10 +5,10 @@ class NetgenAT622601 < Formula
   desc "C++ Library of NETGEN's tetrahedral mesh generator"
   homepage "https://github.com/ngsolve/netgen"
   url "https://github.com/ngsolve/netgen.git",
-    tag:      "v6.2.2601",
-    revision: "246352cf45534475117cedacbcb48eb15c21ed6a"
+    tag:      "v6.2.2607",
+    revision: "cf9e5f956a93c343f276a8a4bc960da2e8f24abc"
   license "LGPL-2.1-only"
-  revision 3
+  revision 1
   head "https://github.com/ngsolve/netgen.git", branch: "master"
 
   livecheck do
@@ -19,21 +19,13 @@ class NetgenAT622601 < Formula
     end
   end
 
-  bottle do
-    root_url "https://ghcr.io/v2/freecad/freecad"
-    sha256 cellar: :any, arm64_tahoe:   "23232163c7f1ec690377f9f0fae223be01bc5dd51a1ab3b3f6e87059313bdd5a"
-    sha256 cellar: :any, arm64_sequoia: "08d3835ee6a93c352e13342e1452dcb0efee94c8d39691d71a45799109e23970"
-    sha256               arm64_linux:   "c02b2fec3ed3f8b6a77e7017dd7a4b012753d5ded2b1e821040118ba49b5e9b4"
-    sha256               x86_64_linux:  "2e06860ac2abc541a4bdca0c7897604aa02163648cdf51eff102abe2e613f3a2"
-  end
-
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
   depends_on "llvm" => [:build, :test]
   depends_on "ninja" => :build
   depends_on "freecad/freecad/numpy@2.5.4_py313"
-  depends_on "opencascade"
+  depends_on "freecad/freecad/opencascade@8.0.1"
   depends_on "python@3.13"
   depends_on "zlib-ng-compat"
 
