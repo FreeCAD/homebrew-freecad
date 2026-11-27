@@ -48,7 +48,8 @@ class Pybind11Py312 < Formula
     system python_exe, "-m", "pip", "install", *std_pip_args(prefix: libexec), "."
 
     site_packages = Language::Python.site_packages(python_exe)
-    pth_contents = "import site; site.addsitedir('#{libexec/site_packages}')\n"
+    site_dir = libexec/site_packages
+    pth_contents = "import site; site.addsitedir('#{site_dir}')\n"
     (prefix/site_packages/"homebrew-pybind11.pth").write pth_contents
 
     pyversion = Language::Python.major_minor_version(python_exe)

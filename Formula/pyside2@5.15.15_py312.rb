@@ -374,7 +374,11 @@ class Pyside2AT51515Py312 < Formula
     shiboken_lib = if OS.mac?
       "shiboken2.cpython-312-darwin"
     else
-      arch = (Hardware::CPU.arch == :arm64) ? "aarch64" : "x86_64"
+      arch = if Hardware::CPU.arm?
+        "aarch64"
+      else
+        "x86_64"
+      end
       "shiboken2.cpython-312-#{arch}-linux-gnu"
     end
 

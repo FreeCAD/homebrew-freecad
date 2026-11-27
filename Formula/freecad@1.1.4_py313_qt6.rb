@@ -539,8 +539,10 @@ class FreecadAT114Py313Qt6 < Formula
   end
 
   test do
-    freecadcmd = OS.mac? ? prefix/"MacOS/FreeCADCmd" : bin/"FreeCADCmd"
+    env = { "FREECAD_USER_HOME" => testpath.to_s }
+
     if OS.mac?
+      freecadcmd = prefix/"MacOS/FreeCADCmd"
       # FreeCAD's App::ApplicationDirectories::configurePaths() calls
       # create_directories() on NSHomeDirectory()-derived paths during
       # initConfig(). NSHomeDirectory() resolves via getpwuid(), so neither
@@ -554,17 +556,15 @@ class FreecadAT114Py313Qt6 < Formula
       # Running `brew test` locally on a machine that has never run FreeCAD
       # will fail until upstream stops treating that failure as fatal.
       # TODO: file an upstream issue, and possibly a PR that fixes the issue.
-      with_env("FREECAD_USER_HOME" => testpath.to_s, "TMPDIR" => testpath.to_s) do
-        system freecadcmd, "-t", "0"
-      end
+      env["TMPDIR"] = testpath.to_s
     else
-      with_env(
-        "FREECAD_USER_HOME" => testpath.to_s,
-        "FREECAD_USER_DATA" => testpath.to_s,
-        "FREECAD_USER_TEMP" => testpath.to_s,
-      ) do
-        system freecadcmd, "-t", "0"
-      end
+      freecadcmd = bin/"FreeCADCmd"
+      env["FREECAD_USER_DATA"] = testpath.to_s
+      env["FREECAD_USER_TEMP"] = testpath.to_s
+    end
+
+    with_env(env) do
+      system freecadcmd, "-t", "0"
     end
   end
 end

@@ -64,7 +64,8 @@ class VtkAT952Py313 < Formula
     # TODO: Consider adding a DSL for this or change how we handle Python's `expat` dependency
     if OS.mac? && MacOS.version < :sequoia
       env_vars = %w[CMAKE_PREFIX_PATH HOMEBREW_INCLUDE_PATHS HOMEBREW_LIBRARY_PATHS PATH PKG_CONFIG_PATH]
-      ENV.remove env_vars, /(^|:)#{Regexp.escape(formula_opt_prefix("expat"))}[^:]*/
+      expat_prefix = Regexp.escape(formula_opt_prefix("expat"))
+      ENV.remove env_vars, /(^|:)#{expat_prefix}[^:]*/
       ENV.remove "HOMEBREW_DEPENDENCIES", "expat"
     end
 

@@ -155,7 +155,11 @@ class NetgenAT622601 < Formula
     system "./test"
 
     py_site = Language::Python.site_packages("python3.13")
-    ng_site = OS.mac? ? opt_prefix/"Contents/Resources"/py_site : opt_prefix/py_site
+    ng_site = if OS.mac?
+      opt_prefix/"Contents/Resources"/py_site
+    else
+      opt_prefix/py_site
+    end
 
     ENV.prepend_path "PYTHONPATH", formula_opt_prefix("freecad/freecad/numpy@2.5.4_py313")/Language::Python.site_packages("python3.13")
     ENV.prepend_path "PYTHONPATH", ng_site
