@@ -19,6 +19,15 @@ class NetgenAT622608 < Formula
     end
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/freecad/freecad"
+    manifest_sha256 "b582586ad8ac84faeba90b48e47bf18ffdcc4395439fe185c35b58cc9851df5d"
+    sha256 cellar: :any, arm64_tahoe:   "4f4507f01887e46130d25ea0f926748e63a175c03ca91287e193e82c9fca5dc8"
+    sha256 cellar: :any, arm64_sequoia: "244debc3360a6db802304a19622148ced5fb11fd33873914ba5e4911e2a8f727"
+    sha256               arm64_linux:   "b4313588f7a4c5c54f386d371cd79938a51bd96100438b945aee9d95bf937d96"
+    sha256               x86_64_linux:  "7c597a5c01c60991b300d6c46e7d3189f5ae98e87a5a8e26473d805626ecefc8"
+  end
+
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
